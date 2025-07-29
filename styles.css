@@ -1,0 +1,246 @@
+@font-face {
+  font-family: "Newake";
+  src: url("./fonts/Newake.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "Newake", Arial, sans-serif;
+  background: #f8f8f8;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+#flyer {
+  width: 1080px;
+  height: 1920px;
+  border: 1px solid black;
+  position: relative;
+  overflow: hidden;
+}
+
+.header {
+  padding: 5px;
+  font-size: 124px;
+  z-index: 3;
+  position: relative;
+}
+
+.tape {
+  position: absolute;
+  top: -110px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1340px;
+  height: 360px;
+  background-image: url("images/2.png");
+  z-index: 1;
+  margin: 0;
+  display: block;
+}
+
+.rect {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 480px;
+  height: 1920px;
+  background: #043f61;
+  mask-image: url("images/texture.png"), url("images/ruido.png");
+  mask-repeat: repeat, repeat;
+  mask-size: cover, auto 2.5%;
+  -webkit-mask-image: url("images/texture.png"), url("images/ruido.png");
+  -webkit-mask-repeat: repeat, repeat;
+  -webkit-mask-size: cover, auto 2.5%;
+  mask-composite: intersect;
+  z-index: 2;
+  margin: 0;
+  display: block;
+}
+
+.rect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 2;
+}
+
+.subheader {
+  font-size: 16px;
+  margin-top: -10px;
+}
+
+.poster-container img {
+  width: 766px;
+  height: auto;
+  border-radius: 10px;
+  z-index: 6;
+  position: relative;
+}
+
+#title {
+  font-size: 50px;
+  font-weight: lighter;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 5;
+  position: relative;
+}
+
+#director {
+  font-size: 30px;
+  z-index: 5;
+  position: relative;
+  margin-top: 10px;
+}
+
+#year {
+  font-size: 50px;
+  margin-bottom: 5px;
+  margin-top: 25px;
+  z-index: 5;
+  position: relative;
+}
+
+.event-data {
+  font-size: 30px;
+  background: #043f61;
+  padding: 5px;
+  position: absolute;
+  left: -8px;
+  bottom: -6px;
+  width: 1157px;
+  height: 150px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  mask-image: url("images/textura-2.png"), url("images/ruido.png");
+  mask-repeat: repeat, repeat;
+  mask-size: cover, auto 2.5%;
+  mask-composite: intersect;
+  -webkit-mask-image: url("images/textura-2.png"), url("images/ruido.png");
+  -webkit-mask-repeat: repeat, repeat;
+  -webkit-mask-size: cover, auto 2.5%;
+  -webkit-mask-composite: intersect;
+
+  z-index: 5;
+}
+
+.event-data::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
+}
+
+#org {
+  width: 100%;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 6;
+}
+
+#title,
+#year,
+#director,
+#org {
+  color: inherit;
+}
+
+.flyer-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  gap: 40px;
+}
+
+.flyer-date-group,
+.flyer-hour-group {
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.flyer-date {
+  font-size: 50px;
+  text-align: center;
+  width: 100%;
+  word-break: break-word;
+  line-height: 1.1;
+  margin-left: 45px;
+  margin-top: 10px;
+}
+
+.flyer-hour {
+  font-size: 50px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+  text-align: left;
+  margin-left: 20px;
+}
+
+.flyer-biblioteca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-top: 0;
+  text-align: left;
+  margin-left: 15px;
+}
+
+.flyer-location-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.flyer-main-group {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#title,
+#year,
+#director {
+  text-align: center;
+}
