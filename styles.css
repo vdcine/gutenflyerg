@@ -193,6 +193,8 @@ form {
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
+  z-index: 10000;
+  position: relative;
 }
 
 .flyer-date {

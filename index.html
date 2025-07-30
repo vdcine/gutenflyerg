@@ -26,74 +26,223 @@
           placeholder="Buscar película..."
           required
         />
+        <input type="text" id="movieYear" placeholder="Año de la película..." />
         <button type="submit">Buscar</button>
-        <label style="margin-left: 20px; font-size: 18px">
-          Color fondo:
-          <input type="color" id="bgColorPicker" value="#043f61" />
-        </label>
-        <label style="margin-left: 20px; font-size: 18px">
-          Color texto:
-          <input type="color" id="textColorPicker" value="black" />
-        </label>
+        <div style="margin-top: 16px; gap: 16px">
+          <label style="font-size: 18px">
+            Color fondo:
+            <input type="color" id="bgColorPicker" value="#043f61" />
+          </label>
+          <label style="font-size: 18px">
+            Color encabezado:
+            <input type="color" id="headerColorPicker" value="black" />
+          </label>
+          <label style="font-size: 18px">
+            Color info peli:
+            <input type="color" id="textColorPicker" value="black" />
+          </label>
+          <label style="font-size: 18px">
+            Color fecha:
+            <input type="color" id="dateColorPicker" value="black" />
+          </label>
+          <label style="font-size: 18px">
+            Color hora:
+            <input type="color" id="hourColorPicker" value="black" />
+          </label>
+          <label style="font-size: 18px">
+            Color organización:
+            <input type="color" id="orgColorPicker" value="black" />
+          </label>
+        </div>
       </form>
 
       <!-- Botón para exportar -->
       <button type="button" id="saveFlyer" style="margin-bottom: 20px">
         Guardar Imagen
       </button>
+      <div
+        class="flyer-flex-row"
+        style="
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          gap: 40px;
+        "
+      >
+        <div
+          class="flyer-flex-col"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+          "
+        >
+          <!-- CAROUSELS ARRIBA -->
+          <div
+            style="
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              gap: 40px;
+              flex-wrap: wrap;
+            "
+          >
+            <!-- Backdrop Carousel -->
+            <div
+              id="backdrop-carousel-container"
+              style="
+                width: 700px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+              "
+            >
+              <div style="font-weight: bold; margin-bottom: 10px">
+                Backdrops
+              </div>
+              <div
+                id="backdrop-carousel"
+                style="display: flex; align-items: center; gap: 20px"
+              >
+                <button id="backdrop-prev" style="font-size: 2rem">
+                  &#8592;
+                </button>
+                <img
+                  id="backdrop-carousel-img"
+                  src=""
+                  alt="Backdrop"
+                  style="
+                    max-width: 640px;
+                    max-height: 360px;
+                    border: 1px solid #ccc;
+                    background: #eee;
+                  "
+                />
+                <button id="backdrop-next" style="font-size: 2rem">
+                  &#8594;
+                </button>
+              </div>
+              <div
+                id="backdrop-counter"
+                style="margin-top: 8px; font-size: 1rem; color: #555"
+              ></div>
+              <button
+                id="set-backdrop-as-bg"
+                style="margin-top: 15px; font-size: 1rem"
+              >
+                Usar este backdrop como fondo del flyer
+              </button>
+              <button
+                id="remove-backdrop-bg"
+                style="margin-top: 5px; font-size: 1rem"
+              >
+                Quitar fondo de backdrop
+              </button>
+            </div>
 
-      <!-- FLYER -->
-      <div id="flyer">
-        <div class="tape"></div>
-        <div class="rect"></div>
-        <h1 class="header">VELADA DE CINE</h1>
-
-        <div class="poster-container">
-          <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
-        </div>
-
-        <div class="flyer-row">
-          <div class="flyer-date-group">
-            <input
-              type="text"
-              id="dateInput"
-              value="JUEVES 31 DE OCTUBRE"
-              style="display: none"
-            />
-            <div id="flyer-date" class="flyer-date">
-              JUEVES 31<br />DE OCTUBRE
+            <!-- Poster Carousel -->
+            <div
+              id="poster-carousel-container"
+              style="
+                width: 350px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+              "
+            >
+              <div style="font-weight: bold; margin-bottom: 10px">Posters</div>
+              <div
+                id="poster-carousel"
+                style="display: flex; align-items: center; gap: 20px"
+              >
+                <button id="poster-prev" style="font-size: 2rem">
+                  &#8592;
+                </button>
+                <img
+                  id="poster-carousel-img"
+                  src=""
+                  alt="Poster"
+                  style="
+                    max-width: 220px;
+                    max-height: 330px;
+                    border: 1px solid #ccc;
+                    background: #eee;
+                  "
+                />
+                <button id="poster-next" style="font-size: 2rem">
+                  &#8594;
+                </button>
+              </div>
+              <div
+                id="poster-counter"
+                style="margin-top: 8px; font-size: 1rem; color: #555"
+              ></div>
+              <button
+                id="set-poster-as-bg"
+                style="margin-top: 15px; font-size: 1rem"
+              >
+                Usar este poster como fondo del flyer
+              </button>
             </div>
           </div>
-          <div class="flyer-main-group">
-            <h3 id="title">Título</h3>
-            <p id="year">Año</p>
-            <p id="director">Director</p>
-          </div>
-          <div class="flyer-hour-group">
-            <input
-              type="text"
-              id="hourInput"
-              value="19:00 HS"
-              style="display: none"
-            />
-            <div id="flyer-hour" class="flyer-hour">19:00 HS</div>
-            <div class="flyer-biblioteca">
-              <img
-                src="/images/localization-icon-10217.png"
-                alt="ubicación"
-                class="flyer-location-icon"
-              />
-              <span>Biblioteca Menendez</span>
+
+          <!-- FLYER -->
+          <div id="flyer">
+            <div class="tape"></div>
+            <div class="rect"></div>
+            <h1 class="header">VELADA DE CINE</h1>
+
+            <div class="poster-container">
+              <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
+            </div>
+
+            <div class="flyer-row">
+              <div class="flyer-date-group">
+                <input
+                  type="text"
+                  id="dateInput"
+                  value="JUEVES 31 DE OCTUBRE"
+                  style="display: none"
+                />
+                <div id="flyer-date" class="flyer-date">
+                  JUEVES 31<br />DE OCTUBRE
+                </div>
+              </div>
+              <div class="flyer-main-group">
+                <h3 id="title">Título</h3>
+                <p id="year">Año</p>
+                <p id="director">Director</p>
+              </div>
+              <div class="flyer-hour-group">
+                <input
+                  type="text"
+                  id="hourInput"
+                  value="19:00 HS"
+                  style="display: none"
+                />
+                <div id="flyer-hour" class="flyer-hour">19:00 HS</div>
+                <div id="flyer-biblioteca" class="flyer-biblioteca">
+                  <img
+                    src="/images/localization-icon-10217.png"
+                    alt="ubicación"
+                    class="flyer-location-icon"
+                  />
+                  <span>Biblioteca Menendez</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="event-data">
+              <div class="rect2"></div>
+              <span id="org">
+                Organiza Matías Corona y Francisco Albani con apoyo<br />
+                de la Comision Directiva de la Biblioteca Publica J. Menendez
+              </span>
             </div>
           </div>
-        </div>
-
-        <div class="event-data">
-          <div class="rect2"></div>
-          <span id="org">
-            Organiza Matías Corona y Francisco Albani con apoyo<br />
-            de la Comision Directiva de la Biblioteca Publica J. Menendez
-          </span>
         </div>
       </div>
     </div>
