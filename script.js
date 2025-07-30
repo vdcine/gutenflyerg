@@ -54,7 +54,6 @@ const year = document.getElementById("year");
 const director = document.getElementById("director");
 const org = document.getElementById("org");
 textColorPicker.addEventListener("input", function (e) {
-  console.log(e.target.value);
   title.style.color = e.target.value;
   year.style.color = e.target.value;
   director.style.color = e.target.value;
@@ -116,8 +115,8 @@ document.getElementById("saveFlyer").addEventListener("click", () => {
     scale: 2,
   }).then((canvas) => {
     const link = document.createElement("a");
-    link.download = "flyer.svg";
-    link.href = canvas.toDataURL("image/svg+xml");
+    link.download = "flyer.png";
+    link.href = canvas.toDataURL("image/png");
     link.click();
   });
 });
