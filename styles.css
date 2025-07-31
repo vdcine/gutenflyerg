@@ -57,6 +57,7 @@ form {
   font-size: 124px;
   z-index: 3;
   position: relative;
+  margin-bottom: 0px;
 }
 
 .tape {
@@ -105,9 +106,59 @@ form {
   z-index: 2;
 }
 
+.rect2 {
+  position: absolute;
+  top: -10px;
+  left: 48%;
+  transform: translateX(-50%);
+  width: 1165px;
+  height: 650px;
+  background: #043f61;
+
+  z-index: 5;
+  margin: 0;
+  display: block;
+}
+
+.rect2::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
+}
+
 .subheader {
-  font-size: 16px;
-  margin-top: -10px;
+  width: 766px;
+  min-height: 100px;
+  margin: 0 auto;
+  margin-top: 10px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  position: relative;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 40px;
+  height: auto;
+  box-sizing: border-box;
+}
+
+.subheader h2 {
+  margin: 0;
+  padding: 5px;
+  font-size: 60px;
+  font-family: "Gilroy", sans-serif;
+  text-align: center;
+  word-break: break-word;
+  white-space: normal;
+  width: 100%;
 }
 
 .poster-container img {
@@ -116,6 +167,7 @@ form {
   border-radius: 10px;
   z-index: 6;
   position: relative;
+  top: -60px;
 }
 
 #title {
@@ -141,7 +193,7 @@ form {
 #year {
   font-size: 50px;
   margin-bottom: 5px;
-  margin-top: 25px;
+  margin-top: 15px;
   z-index: 5;
   position: relative;
   font-family: "Gilroy", sans-serif;
@@ -150,7 +202,7 @@ form {
 
 .event-data {
   font-size: 30px;
-  background: #043f61;
+
   padding: 5px;
   position: absolute;
   left: -8px;
@@ -162,19 +214,11 @@ form {
   align-items: center;
   justify-content: center;
   text-align: center;
-  mask-image: url("images/textura-2.png"), url("images/ruido.png");
-  mask-repeat: repeat, repeat;
-  mask-size: cover, auto 2.5%;
-  mask-composite: intersect;
-  -webkit-mask-image: url("images/textura-2.png"), url("images/ruido.png");
-  -webkit-mask-repeat: repeat, repeat;
-  -webkit-mask-size: cover, auto 2.5%;
-  -webkit-mask-composite: intersect;
 
   z-index: 5;
 }
 
-.event-data::after {
+/* .event-data::after {
   content: "";
   position: absolute;
   top: 0;
@@ -185,7 +229,7 @@ form {
   background: url("images/ruido.png");
   opacity: 0.18;
   z-index: 5;
-}
+} */
 
 #org {
   width: 100%;
@@ -195,6 +239,7 @@ form {
   z-index: 6;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
+  bottom: 5px;
 }
 
 #title,
@@ -210,7 +255,6 @@ form {
   justify-content: center;
   align-items: flex-start;
   width: 100%;
-  margin-top: 40px;
   margin-bottom: 20px;
   gap: 40px;
 }
@@ -224,18 +268,18 @@ form {
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
-  z-index: 10000;
+  z-index: 9000;
   position: relative;
 }
 
 .flyer-date {
   font-size: 50px;
   text-align: center;
-  width: 100%;
+  width: 120%;
   word-break: break-word;
   line-height: 1.1;
-  margin-left: 45px;
-  margin-top: 10px;
+  margin-left: 85px;
+  margin-top: 21px;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
 }
@@ -282,4 +326,18 @@ form {
 #year,
 #director {
   text-align: center;
+}
+
+#title {
+  font-size: 50px;
+  font-weight: lighter;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
 }

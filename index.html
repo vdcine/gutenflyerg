@@ -14,17 +14,10 @@
           >1- Ingresar API Key de TMDB
           <br />
           2- Buscar película (No es obligatorio ingresar el idioma de la
-          portada, en para ingles, es para español)
+          portada, 'en' para ingles, 'es' para español, en minuscula y sin
+          comillas todos los lenguajes)
           <br />
           3- Seleccionar pelicula de los resultados
-          <br />
-          4- Seleccionar backdrop o poster como fondo del flyer o dejar el fondo
-          por defecto y editar los colores.
-          <br />
-          5- Editar fecha y hora del evento haciendole doble click (Cambiar
-          colores con los color pickers)
-          <br />
-          6- Guardar imagen del flyer con el botón "Guardar Imagen"
         </span>
       </div>
       <!-- FORMULARIO -->
@@ -47,38 +40,8 @@
         <input type="text" id="movieLanguage" placeholder="Idioma portada" />
         <button type="submit">Buscar</button>
         <div id="movie-results" style="margin-top: 20px"></div>
-        <div style="margin-top: 16px; gap: 16px">
-          <label style="font-size: 18px">
-            Color fondo:
-            <input type="color" id="bgColorPicker" value="#043f61" />
-          </label>
-          <label style="font-size: 18px">
-            Color encabezado:
-            <input type="color" id="headerColorPicker" value="black" />
-          </label>
-          <label style="font-size: 18px">
-            Color info peli:
-            <input type="color" id="textColorPicker" value="black" />
-          </label>
-          <label style="font-size: 18px">
-            Color fecha:
-            <input type="color" id="dateColorPicker" value="black" />
-          </label>
-          <label style="font-size: 18px">
-            Color hora:
-            <input type="color" id="hourColorPicker" value="black" />
-          </label>
-          <label style="font-size: 18px">
-            Color organización:
-            <input type="color" id="orgColorPicker" value="black" />
-          </label>
-        </div>
       </form>
 
-      <!-- Botón para exportar -->
-      <button type="button" id="saveFlyer" style="margin-bottom: 20px">
-        Guardar Imagen
-      </button>
       <div
         class="flyer-flex-row"
         style="
@@ -98,6 +61,10 @@
             gap: 24px;
           "
         >
+          <span id="instrucciones"
+            >4- Seleccionar backdrop o poster como fondo del flyer o dejar el
+            fondo por defecto y editar los colores.</span
+          >
           <!-- CAROUSELS ARRIBA -->
           <div
             style="
@@ -206,6 +173,15 @@
                 Usar este poster como fondo del flyer
               </button>
             </div>
+            <span id="instrucciones"
+              >5- Para editar los textos del Ciclo, titulo de pelicula, fecha y
+              dia hacerle doble click.<br />
+              En el caso del titulo al darle Shift+Enter mientras editando se
+              agrega un salto de linea.<br />
+              Enter para guardar en todos.<br />
+              Para modificar colores de textos y cajas hacer UN click sobre los
+              mismos y luego seleccionar el recuadro que abre el color picker
+            </span>
           </div>
 
           <!-- FLYER -->
@@ -213,6 +189,10 @@
             <div class="tape"></div>
             <div class="rect"></div>
             <h1 class="header">VELADAS DE CINE</h1>
+
+            <div class="subheader">
+              <h2 id="ciclo">Ciclo</h2>
+            </div>
 
             <div class="poster-container">
               <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
@@ -264,8 +244,23 @@
           </div>
         </div>
       </div>
+      <span id="instrucciones">
+        <br />
+        6- Guardar imagen del flyer con el botón "Guardar Imagen"
+        <br />
+      </span>
+
+      <!-- Botón para exportar -->
+      <button type="button" id="saveFlyer" style="margin-bottom: 20px">
+        Guardar Imagen
+      </button>
     </div>
 
-    <script src="script.js"></script>
+    <input
+      type="color"
+      id="floatingColorPicker"
+      style="position: absolute; display: none; z-index: 9999"
+    />
   </body>
+  <script src="script.js"></script>
 </html>

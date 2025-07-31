@@ -6,25 +6,26 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     return input && input.value ? input.value : "";
   }
 
-  // Cuando hagas fetch a TMDB, usa:
   const API_KEY = getApiToken();
   const BASE_URL = "https://api.themoviedb.org/3";
 
   const query = document.getElementById("movieSearch").value;
   const language = document.getElementById("movieLanguage").value;
 
-  // Buscar película
   const searchRes = await fetch(
     `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${language}`
   );
+
   const searchData = await searchRes.json();
   if (searchData.results.length === 0)
     return alert("No se encontró la película.");
 
+  orderData = searchData.results.sort((a, b) => b.popularity - a.popularity);
+
   const resultsDiv = document.getElementById("movie-results");
   resultsDiv.innerHTML = "";
 
-  searchData.results.slice(0, 10).forEach(async (movie, idx) => {
+  orderData.slice(0, 10).forEach(async (movie, idx) => {
     const creditsRes = await fetch(
       `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
     );
@@ -61,7 +62,6 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         ? director.name
         : "Director no disponible";
 
-      // Obtener imágenes para carrousels
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
       );
@@ -75,14 +75,32 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       currentPoster = 0;
       showPoster(currentPoster);
 
-      // Opcional: resaltar el seleccionado
       Array.from(resultsDiv.children).forEach(
         (child) => (child.style.background = "")
       );
-      result.style.background = "#e0f7fa";
+      result.style.background = "#386119ff";
+
+      resultsDiv.style.display = "none";
+      showResultsBtn.style.display = "block";
     });
 
     resultsDiv.appendChild(result);
+    const showResultsBtn = document.createElement("button");
+    showResultsBtn.textContent = "Mostrar resultados de búsqueda";
+    showResultsBtn.id = "show-results-btn";
+    showResultsBtn.style.display = "none";
+    showResultsBtn.style.margin = "16px auto"; // <-- centra el botón horizontalmente
+    showResultsBtn.style.fontSize = "1rem";
+    showResultsBtn.style.textAlign = "center";
+    showResultsBtn.style.width = "fit-content";
+    showResultsBtn.style.position = "relative";
+
+    resultsDiv.parentNode.insertBefore(showResultsBtn, resultsDiv);
+
+    showResultsBtn.addEventListener("click", () => {
+      resultsDiv.style.display = "block";
+      showResultsBtn.style.display = "none";
+    });
   });
 });
 
@@ -184,51 +202,51 @@ document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
   }
 });
 
-const colorPicker = document.getElementById("bgColorPicker");
-const rect = document.querySelector(".rect");
-const rect2 = document.querySelector(".rect2");
-const eventData = document.querySelector(".event-data");
-colorPicker.addEventListener("input", function (e) {
-  rect.style.background = e.target.value;
-  rect2.style.background = e.target.value;
-  eventData.style.background = e.target.value;
-});
+// const colorPicker = document.getElementById("bgColorPicker");
+// const rect = document.querySelector(".rect");
+// const rect2 = document.querySelector(".rect2");
+// const eventData = document.querySelector(".event-data");
+// colorPicker.addEventListener("input", function (e) {
+//   rect.style.background = e.target.value;
+//   rect2.style.background = e.target.value;
+//   eventData.style.background = e.target.value;
+// });
 
-const textColorPicker = document.getElementById("textColorPicker");
-const title = document.getElementById("title");
-const year = document.getElementById("year");
-const director = document.getElementById("director");
-textColorPicker.addEventListener("input", function (e) {
-  title.style.color = e.target.value;
-  year.style.color = e.target.value;
-  director.style.color = e.target.value;
-});
+// const textColorPicker = document.getElementById("textColorPicker");
+// const title = document.getElementById("title");
+// const year = document.getElementById("year");
+// const director = document.getElementById("director");
+// textColorPicker.addEventListener("input", function (e) {
+//   title.style.color = e.target.value;
+//   year.style.color = e.target.value;
+//   director.style.color = e.target.value;
+// });
 
-const orgColorPicker = document.getElementById("orgColorPicker");
-const flyerOrg = document.getElementById("org");
-orgColorPicker.addEventListener("input", function (e) {
-  flyerOrg.style.color = e.target.value;
-});
+// const orgColorPicker = document.getElementById("orgColorPicker");
+// const flyerOrg = document.getElementById("org");
+// orgColorPicker.addEventListener("input", function (e) {
+//   flyerOrg.style.color = e.target.value;
+// });
 
-const headerColorPicker = document.getElementById("headerColorPicker");
-const flyerHeader = document.querySelector(".header");
-headerColorPicker.addEventListener("input", function (e) {
-  flyerHeader.style.color = e.target.value;
-});
+// const headerColorPicker = document.getElementById("headerColorPicker");
+// const flyerHeader = document.querySelector(".header");
+// headerColorPicker.addEventListener("input", function (e) {
+//   flyerHeader.style.color = e.target.value;
+// });
 
-const dateColorPicker = document.getElementById("dateColorPicker");
+// const dateColorPicker = document.getElementById("dateColorPicker");
 const flyerDate = document.getElementById("flyer-date");
-dateColorPicker.addEventListener("input", function (e) {
-  flyerDate.style.color = e.target.value;
-});
+// dateColorPicker.addEventListener("input", function (e) {
+//   flyerDate.style.color = e.target.value;
+// });
 
-const hourColorPicker = document.getElementById("hourColorPicker");
+// const hourColorPicker = document.getElementById("hourColorPicker");
 const flyerHour = document.getElementById("flyer-hour");
-const flyerBiblioteca = document.getElementById("flyer-biblioteca");
-hourColorPicker.addEventListener("input", function (e) {
-  flyerHour.style.color = e.target.value;
-  flyerBiblioteca.style.color = e.target.value;
-});
+// const flyerBiblioteca = document.getElementById("flyer-biblioteca");
+// hourColorPicker.addEventListener("input", function (e) {
+//   flyerHour.style.color = e.target.value;
+//   flyerBiblioteca.style.color = e.target.value;
+// });
 
 const dateInput = document.getElementById("dateInput");
 const hourInput = document.getElementById("hourInput");
@@ -271,6 +289,93 @@ hourInput.addEventListener("keydown", (e) => {
     hourInput.style.display = "none";
     e.preventDefault();
   }
+});
+
+const cicloH2 = document.getElementById("ciclo");
+
+const cicloInput = document.createElement("input");
+cicloInput.type = "text";
+cicloInput.style.display = "none";
+cicloInput.style.fontSize = "60px";
+cicloInput.style.fontFamily = "Gilroy, sans-serif";
+cicloInput.style.textAlign = "center";
+cicloInput.style.width = "100%";
+cicloInput.style.background = "rgba(255,255,255,0.4)";
+cicloInput.style.border = "none";
+cicloInput.style.outline = "none";
+cicloInput.style.fontWeight = "700";
+
+cicloH2.parentNode.insertBefore(cicloInput, cicloH2.nextSibling);
+cicloH2.addEventListener("dblclick", () => {
+  cicloInput.value = cicloH2.textContent;
+  cicloInput.style.display = "block";
+  cicloH2.style.display = "none";
+  cicloInput.focus();
+});
+
+cicloInput.addEventListener("blur", () => {
+  cicloH2.textContent = cicloInput.value;
+  cicloH2.style.display = "block";
+  cicloInput.style.display = "none";
+});
+
+cicloInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    cicloH2.textContent = cicloInput.value;
+    cicloH2.style.display = "block";
+    cicloInput.style.display = "none";
+    e.preventDefault();
+  }
+});
+
+const titleH3 = document.getElementById("title");
+
+const titleInput = document.createElement("input");
+titleInput.style.display = "none";
+titleInput.style.fontSize = "50px";
+titleInput.style.fontFamily = "Gilroy, sans-serif";
+titleInput.style.textAlign = "center";
+titleInput.style.width = "100%";
+titleInput.style.background = "rgba(255,255,255,0.85)";
+titleInput.style.color = "#222";
+titleInput.style.border = "2px solid #386119";
+titleInput.style.outline = "none";
+titleInput.style.fontWeight = "700";
+titleInput.style.borderRadius = "8px";
+titleInput.style.boxShadow = "0 2px 8px rgba(0,0,0,0.08)";
+titleInput.style.position = "relative";
+titleInput.style.zIndex = "10";
+
+titleH3.parentNode.insertBefore(titleInput, titleH3.nextSibling);
+
+titleH3.addEventListener("dblclick", () => {
+  titleInput.value = titleH3.textContent;
+  titleInput.style.display = "block";
+  titleH3.style.display = "none";
+  titleInput.focus();
+});
+
+titleInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    titleH3.innerHTML = titleInput.value.replace(/\n/g, "<br>");
+    titleH3.style.display = "block";
+    titleInput.style.display = "none";
+    e.preventDefault();
+  } else if (e.key === "Enter" && e.shiftKey) {
+    const cursorPos = titleInput.selectionStart;
+    const value = titleInput.value;
+    titleInput.value =
+      value.slice(0, cursorPos) + "<br>" + value.slice(cursorPos);
+
+    titleInput.selectionStart = titleInput.selectionEnd = cursorPos + 4;
+    e.preventDefault();
+  }
+});
+
+titleInput.addEventListener("blur", () => {
+  titleH3.innerHTML = titleInput.value.replace(/\n/g, "<br>");
+  titleH3.style.display = "block";
+  titleInput.style.display = "none";
 });
 
 /* document.getElementById("saveFlyer").addEventListener("click", () => {
@@ -321,7 +426,6 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
     if (bgImageMatch) {
       const imageUrl = bgImageMatch[1];
 
-      // Crear una imagen blur procesada
       try {
         const blurredDataUrl = await applyBlurToImage(imageUrl);
 
@@ -389,3 +493,118 @@ async function generateWithoutBlur(flyerElement) {
   link.click();
   document.body.removeChild(link);
 }
+
+const floatingColorPicker = document.getElementById("floatingColorPicker");
+let colorTargets = [];
+
+function rgbToHex(rgb) {
+  const result = rgb.match(/\d+/g);
+  if (!result || result.length < 3) return "#000000";
+  return (
+    "#" +
+    (
+      (1 << 24) +
+      (parseInt(result[0]) << 16) +
+      (parseInt(result[1]) << 8) +
+      parseInt(result[2])
+    )
+      .toString(16)
+      .slice(1)
+  );
+}
+
+function getColorTargets(el) {
+  if (el.classList.contains("rect") || el.classList.contains("rect2")) {
+    return [document.querySelector(".rect"), document.querySelector(".rect2")];
+  }
+
+  if (el.id === "flyer-hour" || el.id === "flyer-biblioteca") {
+    return [
+      document.getElementById("flyer-hour"),
+      document.getElementById("flyer-biblioteca"),
+    ];
+  }
+
+  return [el];
+}
+
+function getCurrentColorForTargets(targets) {
+  for (const target of targets) {
+    const inlineColor = target.style.backgroundColor || target.style.color;
+    if (inlineColor && inlineColor !== "") {
+      return rgbToHex(inlineColor);
+    }
+  }
+
+  const isBackground =
+    targets[0].classList.contains("rect") ||
+    targets[0].classList.contains("rect2");
+  const style = window.getComputedStyle(targets[0]);
+  return rgbToHex(isBackground ? style.backgroundColor : style.color);
+}
+
+function showColorPickerForElement(element, event) {
+  colorTargets = getColorTargets(element);
+  console.log("Color targets set to:", colorTargets);
+
+  const colorValue = getCurrentColorForTargets(colorTargets);
+
+  floatingColorPicker.value = colorValue;
+  floatingColorPicker.style.left = event.pageX + "px";
+  floatingColorPicker.style.top = event.pageY + "px";
+  floatingColorPicker.style.display = "block";
+  floatingColorPicker.style.width = "48px";
+  floatingColorPicker.style.height = "48px";
+  floatingColorPicker.style.border = "2px solid #333";
+  floatingColorPicker.style.borderRadius = "8px";
+  floatingColorPicker.focus();
+}
+
+floatingColorPicker.addEventListener("input", (e) => {
+  const value = e.target.value;
+  console.log(`Color changed to: ${value}`);
+  console.log("Changing these elements:", colorTargets);
+
+  colorTargets.forEach((target) => {
+    if (
+      target.classList.contains("rect") ||
+      target.classList.contains("rect2")
+    ) {
+      target.style.setProperty("background-color", value);
+    } else {
+      target.style.setProperty("color", value);
+    }
+  });
+});
+
+floatingColorPicker.addEventListener("blur", () => {
+  floatingColorPicker.style.display = "none";
+});
+
+[
+  document.querySelector(".header"),
+  document.getElementById("title"),
+  document.getElementById("year"),
+  document.getElementById("director"),
+  document.getElementById("flyer-date"),
+  document.getElementById("flyer-hour"),
+  document.getElementById("flyer-biblioteca"),
+  document.getElementById("org"),
+  document.querySelector(".rect"),
+  document.querySelector(".rect2"),
+  document.getElementById("ciclo"),
+].forEach((el) => {
+  if (el) {
+    el.addEventListener("click", (event) => {
+      showColorPickerForElement(el, event);
+      event.stopPropagation();
+    });
+  }
+});
+
+document.addEventListener("click", (e) => {
+  if (e.target !== floatingColorPicker) {
+    floatingColorPicker.style.display = "none";
+    colorTargets = [];
+  }
+});
