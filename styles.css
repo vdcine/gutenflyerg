@@ -5,6 +5,20 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Gilroy";
+  src: url("./fonts/GILROY-BOLD.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("./fonts/GILROY-EXTRABOLD.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
 body {
   font-family: "Newake", Arial, sans-serif;
   background: #f8f8f8;
@@ -27,6 +41,15 @@ form {
   border: 1px solid black;
   position: relative;
   overflow: hidden;
+}
+
+#instrucciones {
+  font-family: "Gilroy", sans-serif;
+  margin-bottom: 10px;
+}
+
+#movie-results {
+  font-family: "Gilroy", sans-serif;
 }
 
 .header {
@@ -102,6 +125,8 @@ form {
   margin-bottom: 5px;
   z-index: 5;
   position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
 }
 
 #director {
@@ -109,6 +134,8 @@ form {
   z-index: 5;
   position: relative;
   margin-top: 10px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
 }
 
 #year {
@@ -117,6 +144,8 @@ form {
   margin-top: 25px;
   z-index: 5;
   position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
 }
 
 .event-data {
@@ -164,6 +193,8 @@ form {
   text-align: center;
   position: relative;
   z-index: 6;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
 }
 
 #title,
@@ -205,6 +236,8 @@ form {
   line-height: 1.1;
   margin-left: 45px;
   margin-top: 10px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
 }
 
 .flyer-hour {
@@ -214,6 +247,8 @@ form {
   margin-bottom: 10px;
   text-align: left;
   margin-left: 20px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
 }
 
 .flyer-biblioteca {
@@ -224,6 +259,8 @@ form {
   margin-top: 0;
   text-align: left;
   margin-left: 15px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
 }
 
 .flyer-location-icon {

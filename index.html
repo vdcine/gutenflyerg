@@ -2,21 +2,39 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Flyer Cine</title>
+    <title>Gutenflyerg</title>
     <link rel="stylesheet" href="styles.css" />
     <!-- html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </head>
   <body>
     <div class="container">
+      <div id="instrucciones" style="margin-top: 20px">
+        <span
+          >1- Ingresar API Key de TMDB
+          <br />
+          2- Buscar película (No es obligatorio ingresar el idioma de la
+          portada, en para ingles, es para español)
+          <br />
+          3- Seleccionar pelicula de los resultados
+          <br />
+          4- Seleccionar backdrop o poster como fondo del flyer o dejar el fondo
+          por defecto y editar los colores.
+          <br />
+          5- Editar fecha y hora del evento haciendole doble click (Cambiar
+          colores con los color pickers)
+          <br />
+          6- Guardar imagen del flyer con el botón "Guardar Imagen"
+        </span>
+      </div>
       <!-- FORMULARIO -->
       <form id="movieForm">
         <label style="margin-left: 20px; font-size: 18px">
-          TMDB API Token:
+          TMDB API Key:
           <input
             type="text"
             id="tmdbToken"
-            placeholder="Pega tu API Token aquí"
+            placeholder="Pega tu API Key aquí"
             style="width: 260px"
           />
         </label>
@@ -26,8 +44,9 @@
           placeholder="Buscar película..."
           required
         />
-        <input type="text" id="movieYear" placeholder="Año de la película..." />
+        <input type="text" id="movieLanguage" placeholder="Idioma portada" />
         <button type="submit">Buscar</button>
+        <div id="movie-results" style="margin-top: 20px"></div>
         <div style="margin-top: 16px; gap: 16px">
           <label style="font-size: 18px">
             Color fondo:
@@ -193,7 +212,7 @@
           <div id="flyer">
             <div class="tape"></div>
             <div class="rect"></div>
-            <h1 class="header">VELADA DE CINE</h1>
+            <h1 class="header">VELADAS DE CINE</h1>
 
             <div class="poster-container">
               <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
@@ -230,7 +249,7 @@
                     alt="ubicación"
                     class="flyer-location-icon"
                   />
-                  <span>Biblioteca Menendez</span>
+                  <span>Biblioteca Menéndez</span>
                 </div>
               </div>
             </div>
@@ -239,7 +258,7 @@
               <div class="rect2"></div>
               <span id="org">
                 Organiza Matías Corona y Francisco Albani con apoyo<br />
-                de la Comision Directiva de la Biblioteca Publica J. Menendez
+                de la Comisión Directiva de la Biblioteca Pública J. Menéndez
               </span>
             </div>
           </div>

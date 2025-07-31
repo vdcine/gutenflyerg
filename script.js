@@ -11,47 +11,79 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   const BASE_URL = "https://api.themoviedb.org/3";
 
   const query = document.getElementById("movieSearch").value;
-  const year = document.getElementById("movieYear").value;
+  const language = document.getElementById("movieLanguage").value;
 
   // Buscar película
   const searchRes = await fetch(
-    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&year=${year}`
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${language}`
   );
   const searchData = await searchRes.json();
   if (searchData.results.length === 0)
     return alert("No se encontró la película.");
 
-  const movie = searchData.results[0];
-  document.getElementById("title").textContent = movie.title;
-  document.getElementById("year").textContent = new Date(
-    movie.release_date
-  ).getFullYear();
-  document.getElementById(
-    "poster"
-  ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  const resultsDiv = document.getElementById("movie-results");
+  resultsDiv.innerHTML = "";
 
-  // Obtener créditos (para director)
-  const creditsRes = await fetch(
-    `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
-  );
-  const creditsData = await creditsRes.json();
-  const director = creditsData.crew.find((c) => c.job === "Director");
-  document.getElementById("director").textContent = director
-    ? director.name
-    : "Director no disponible";
+  searchData.results.slice(0, 10).forEach(async (movie, idx) => {
+    const creditsRes = await fetch(
+      `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
+    );
+    const creditsData = await creditsRes.json();
+    const director = creditsData.crew.find((c) => c.job === "Director");
 
-  const imagesRes = await fetch(
-    `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
-  );
-  const imagesData = await imagesRes.json();
+    const result = document.createElement("div");
+    result.style.cursor = "pointer";
+    result.style.padding = "8px";
+    result.style.borderBottom = "1px solid #ccc";
+    result.style.display = "flex";
+    result.style.alignItems = "center";
+    result.innerHTML = `
+    <img src="https://image.tmdb.org/t/p/w92${
+      movie.poster_path
+    }" style="width:48px;height:auto;margin-right:12px;" />
+    <span style="font-weight:bold;">${movie.title}</span>
+    <span style="margin-left:12px;">(${new Date(
+      movie.release_date
+    ).getFullYear()})</span>
+    <span style="margin-left:12px;">${
+      director ? director.name : "Director no disponible"
+    }</span>
+  `;
+    result.addEventListener("click", async () => {
+      document.getElementById("title").textContent = movie.title;
+      document.getElementById("year").textContent = new Date(
+        movie.release_date
+      ).getFullYear();
+      document.getElementById(
+        "poster"
+      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      document.getElementById("director").textContent = director
+        ? director.name
+        : "Director no disponible";
 
-  backdrops = imagesData.backdrops || [];
-  currentBackdrop = 0;
-  showBackdrop(currentBackdrop);
+      // Obtener imágenes para carrousels
+      const imagesRes = await fetch(
+        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
+      );
+      const imagesData = await imagesRes.json();
 
-  posters = imagesData.posters || [];
-  currentPoster = 0;
-  showPoster(currentPoster);
+      backdrops = imagesData.backdrops || [];
+      currentBackdrop = 0;
+      showBackdrop(currentBackdrop);
+
+      posters = imagesData.posters || [];
+      currentPoster = 0;
+      showPoster(currentPoster);
+
+      // Opcional: resaltar el seleccionado
+      Array.from(resultsDiv.children).forEach(
+        (child) => (child.style.background = "")
+      );
+      result.style.background = "#e0f7fa";
+    });
+
+    resultsDiv.appendChild(result);
+  });
 });
 
 let backdrops = [];
@@ -112,32 +144,31 @@ document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
   if (!backdrops.length) return;
   const url = `https://image.tmdb.org/t/p/original${backdrops[currentBackdrop].file_path}`;
   const rect = document.querySelector(".rect");
-  rect.style.display = "none"; // Ocultar rectángulo
+  rect.style.display = "none";
   setBackdropAsBackground(url);
 });
 
 function setBackdropAsBackground(url) {
   const flyer = document.getElementById("flyer");
   let blurBg = document.getElementById("flyer-blur-bg");
+  if (blurBg) blurBg.remove();
 
-  if (!blurBg) {
-    blurBg = document.createElement("div");
-    blurBg.id = "flyer-blur-bg";
-    blurBg.style.position = "absolute";
-    blurBg.style.top = "0";
-    blurBg.style.left = "0";
-    blurBg.style.width = "100%";
-    blurBg.style.height = "100%";
-    blurBg.style.zIndex = "0";
-    blurBg.style.pointerEvents = "none";
-    blurBg.style.backgroundPosition = "center";
-    blurBg.style.backgroundSize = "cover";
-    blurBg.style.backgroundRepeat = "no-repeat";
-    blurBg.style.filter = "blur(4px) brightness(0.9)";
-    flyer.prepend(blurBg);
-  }
-
+  blurBg = document.createElement("div");
+  blurBg.id = "flyer-blur-bg";
+  blurBg.style.position = "absolute";
+  blurBg.style.top = "0";
+  blurBg.style.left = "0";
+  blurBg.style.width = "100%";
+  blurBg.style.height = "100%";
+  blurBg.style.zIndex = "0";
+  blurBg.style.pointerEvents = "none";
+  blurBg.style.backgroundPosition = "center";
+  blurBg.style.backgroundSize = "cover";
+  blurBg.style.backgroundRepeat = "no-repeat";
+  blurBg.style.filter = "blur(4px) brightness(0.9)";
   blurBg.style.backgroundImage = `url('${url}')`;
+  flyer.prepend(blurBg);
+
   flyer.style.backgroundImage = "";
 }
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
