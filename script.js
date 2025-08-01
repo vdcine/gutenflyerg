@@ -557,7 +557,6 @@ function getCurrentColorForTargets(targets) {
 
 function showColorPickerForElement(element, event) {
   colorTargets = getColorTargets(element);
-  console.log("Color targets set to:", colorTargets);
 
   const colorValue = getCurrentColorForTargets(colorTargets);
 
@@ -574,8 +573,6 @@ function showColorPickerForElement(element, event) {
 
 floatingColorPicker.addEventListener("input", (e) => {
   const value = e.target.value;
-  console.log(`Color changed to: ${value}`);
-  console.log("Changing these elements:", colorTargets);
 
   colorTargets.forEach((target) => {
     if (
