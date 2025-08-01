@@ -9,9 +9,11 @@
   </head>
   <body>
     <div class="container">
+      <h1 id="instrucciones">Gunteflyerg de Veladas de Cine</h1>
+      <br />
       <!-- FORMULARIO -->
       <form id="movieForm">
-        <h1 id="instrucciones">1°: Ingresar API Key de TMDB</h1>
+        <h2 id="instrucciones">1°: Ingresar API Key de TMDB</h2>
         <input
           type="text"
           id="tmdbToken"
@@ -26,7 +28,7 @@
           >
         </span>
         <hr />
-        <h1 id="instrucciones">2°: Buscar película</h1>
+        <h2 id="instrucciones">2°: Buscar película</h2>
         <span id="instrucciones">Título:</span>
         <input type="text" id="movieSearch" placeholder="Terminator" required />
         <br />
@@ -39,7 +41,7 @@
         <br />
         <button id="searchButton" type="submit">Buscar</button>
         <hr />
-        <h1 id="instrucciones">3°: Seleccionar pelicula de los resultados</h1>
+        <h2 id="instrucciones">3°: Seleccionar pelicula de los resultados</h2>
         <div id="movie-results" style="margin-top: 20px"></div>
         <hr />
       </form>
@@ -63,10 +65,13 @@
             gap: 24px;
           "
         >
-          <h1 id="instrucciones">
-            4°: Seleccionar backdrop o poster como fondo del flyer o dejar el
-            fondo por defecto y editar los colores.
-          </h1>
+          <h2 id="instrucciones">
+            4°: Seleccionar backdrop o poster como fondo.
+          </h2>
+          <h3 id="instrucciones" style="margin-top: 0px">
+            Puede dejarse el fondo por defecto de no querer usar backdrop o
+            poster.
+          </h3>
           <!-- CAROUSELS ARRIBA -->
           <div
             style="
@@ -88,6 +93,9 @@
                 align-items: center;
               "
             >
+              <button id="backdrops" style="margin-bottom: 10px">
+                Ver todos los backdrops
+              </button>
               <div style="font-weight: bold; margin-bottom: 10px">
                 Backdrops
               </div>
@@ -141,6 +149,9 @@
                 align-items: center;
               "
             >
+              <button id="posters" style="margin-bottom: 10px">
+                Ver todos los posters
+              </button>
               <div style="font-weight: bold; margin-bottom: 10px">Posters</div>
               <div
                 id="poster-carousel"
@@ -177,15 +188,17 @@
             </div>
           </div>
           <hr />
-          <h1 id="instrucciones">
-            5°: Para editar los textos del Ciclo, titulo de pelicula, fecha y
-            dia hacerle doble click.<br />
-            En el caso del titulo al darle Shift+Enter mientras editando se
-            agrega un salto de linea.<br />
-            Enter para guardar en todos.<br />
+          <h2 id="instrucciones">5°: Editar textos y colores.</h2>
+          <h3 id="instrucciones" style="margin-top: 0px">
+            Hacer doble click sobre el texto a editar (salvo header, año y
+            director)
+            <br />
+            En el caso del título al darle Shift+Enter mientras editando agrega
+            un salto de línea.
+            <br />
             Para modificar colores de textos y cajas hacer UN click sobre los
-            mismos y luego seleccionar el recuadro que abre el color picker
-          </h1>
+            mismos y luego seleccionar el recuadro que abre el color picker.
+          </h3>
 
           <div>
             <button id="toggle-rect">Ocultar rectángulo vertical</button>
@@ -210,11 +223,11 @@
                 <input
                   type="text"
                   id="dateInput"
-                  value="JUEVES 31 DE OCTUBRE"
+                  value="MIÉRCOLES 6 DE AGOSTO"
                   style="display: none"
                 />
                 <div id="flyer-date" class="flyer-date">
-                  JUEVES 31<br />DE OCTUBRE
+                  MIÉRCOLES 6<br />DE AGOSTO
                 </div>
               </div>
               <div class="flyer-main-group">
@@ -251,15 +264,15 @@
           </div>
         </div>
       </div>
-      <h1 id="instrucciones">
+      <h2 id="instrucciones">
         <br />
-        6°: Guardar imagen del flyer con el botón "Guardar Imagen"
+        6°: Guardar imagen del flyer
         <br />
-      </h1>
+      </h2>
 
       <!-- Botón para exportar -->
       <button type="button" id="saveFlyer" style="margin-bottom: 20px">
-        Guardar Imagen
+        Descargar
       </button>
     </div>
 

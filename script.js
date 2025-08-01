@@ -10,7 +10,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   const BASE_URL = "https://api.themoviedb.org/3";
 
   const query = document.getElementById("movieSearch").value;
-  const language = document.getElementById("movieLanguage").value;
+  const language = document.getElementById("movieLanguage").value || "en";
 
   const searchRes = await fetch(
     `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${language}`
@@ -20,12 +20,15 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   if (searchData.results.length === 0)
     return alert("No se encontró la película.");
 
-  orderData = searchData.results.sort((a, b) => b.popularity - a.popularity);
+  const orderedResults = [...searchData.results].sort(
+    (a, b) => b.popularity - a.popularity
+  );
 
   const resultsDiv = document.getElementById("movie-results");
   resultsDiv.innerHTML = "";
 
-  orderData.slice(0, 10).forEach(async (movie, idx) => {
+  for (let idx = 0; idx < Math.min(10, orderedResults.length); idx++) {
+    const movie = orderedResults[idx];
     const creditsRes = await fetch(
       `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
     );
@@ -51,6 +54,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     }</span>
   `;
     result.addEventListener("click", async () => {
+      window.selectedMovieId = movie.id;
       document.getElementById("title").textContent = movie.title;
       document.getElementById("year").textContent = new Date(
         movie.release_date
@@ -63,7 +67,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         : "Director no disponible";
 
       const imagesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
+        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
       );
       const imagesData = await imagesRes.json();
 
@@ -85,11 +89,12 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     });
 
     resultsDiv.appendChild(result);
+
     const showResultsBtn = document.createElement("button");
     showResultsBtn.textContent = "Mostrar resultados de búsqueda";
     showResultsBtn.id = "show-results-btn";
     showResultsBtn.style.display = "none";
-    showResultsBtn.style.margin = "16px auto"; // <-- centra el botón horizontalmente
+    showResultsBtn.style.margin = "16px auto";
     showResultsBtn.style.fontSize = "1rem";
     showResultsBtn.style.textAlign = "center";
     showResultsBtn.style.width = "fit-content";
@@ -101,7 +106,27 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       resultsDiv.style.display = "block";
       showResultsBtn.style.display = "none";
     });
-  });
+
+    const btnBackdrops = document.getElementById("backdrops");
+
+    btnBackdrops.addEventListener("click", () => {
+      if (!window.selectedMovieId) return;
+      window.open(
+        `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
+        "_blank"
+      );
+    });
+
+    const btnPosters = document.getElementById("posters");
+
+    btnPosters.addEventListener("click", () => {
+      if (!window.selectedMovieId) return;
+      window.open(
+        `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
+        "_blank"
+      );
+    });
+  }
 });
 
 let backdrops = [];
@@ -202,51 +227,8 @@ document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
   }
 });
 
-// const colorPicker = document.getElementById("bgColorPicker");
-// const rect = document.querySelector(".rect");
-// const rect2 = document.querySelector(".rect2");
-// const eventData = document.querySelector(".event-data");
-// colorPicker.addEventListener("input", function (e) {
-//   rect.style.background = e.target.value;
-//   rect2.style.background = e.target.value;
-//   eventData.style.background = e.target.value;
-// });
-
-// const textColorPicker = document.getElementById("textColorPicker");
-// const title = document.getElementById("title");
-// const year = document.getElementById("year");
-// const director = document.getElementById("director");
-// textColorPicker.addEventListener("input", function (e) {
-//   title.style.color = e.target.value;
-//   year.style.color = e.target.value;
-//   director.style.color = e.target.value;
-// });
-
-// const orgColorPicker = document.getElementById("orgColorPicker");
-// const flyerOrg = document.getElementById("org");
-// orgColorPicker.addEventListener("input", function (e) {
-//   flyerOrg.style.color = e.target.value;
-// });
-
-// const headerColorPicker = document.getElementById("headerColorPicker");
-// const flyerHeader = document.querySelector(".header");
-// headerColorPicker.addEventListener("input", function (e) {
-//   flyerHeader.style.color = e.target.value;
-// });
-
-// const dateColorPicker = document.getElementById("dateColorPicker");
 const flyerDate = document.getElementById("flyer-date");
-// dateColorPicker.addEventListener("input", function (e) {
-//   flyerDate.style.color = e.target.value;
-// });
-
-// const hourColorPicker = document.getElementById("hourColorPicker");
 const flyerHour = document.getElementById("flyer-hour");
-// const flyerBiblioteca = document.getElementById("flyer-biblioteca");
-// hourColorPicker.addEventListener("input", function (e) {
-//   flyerHour.style.color = e.target.value;
-//   flyerBiblioteca.style.color = e.target.value;
-// });
 
 const dateInput = document.getElementById("dateInput");
 const hourInput = document.getElementById("hourInput");
