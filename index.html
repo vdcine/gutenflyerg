@@ -11,36 +11,37 @@
     <div class="container">
       <!-- FORMULARIO -->
       <form id="movieForm">
-          <h1>1°: Ingresar API Key de TMDB</h1>
-        <input
-            type="text"
-            id="tmdbToken"
-            placeholder="Pega tu API Key aquí"
-            style="width: 260px"
-        />
-        </br>
-        Obtenela de <a href=https://www.themoviedb.org/settings/api>acá</a>.
-        <hr>
-        <h1>2°: Buscar película</h1>
-        <span>Título:</span>
+        <h1 id="instrucciones">1°: Ingresar API Key de TMDB</h1>
         <input
           type="text"
-          id="movieSearch"
-          placeholder="Terminator"
-          required
+          id="tmdbToken"
+          placeholder="Pega tu API Key aquí"
+          style="width: 260px"
         />
-        </br>
-        <span>Idioma:</span>
+        <br />
+        <span id="instrucciones">
+          Obtenela de
+          <a href="https://www.themoviedb.org/settings/api" target="_blank"
+            >acá</a
+          >
+        </span>
+        <hr />
+        <h1 id="instrucciones">2°: Buscar película</h1>
+        <span id="instrucciones">Título:</span>
+        <input type="text" id="movieSearch" placeholder="Terminator" required />
+        <br />
+        <span id="instrucciones">Idioma:</span>
         <input type="text" id="movieLanguage" placeholder="es" />
-        </br>
-        No es obligatorio.
-        'en' para ingles,
-        'es' para español
-        </br>
-        <button type="submit">Buscar</button>
-      <hr>
-        <h1>3°: Seleccionar pelicula de los resultados</h1>
+        <br />
+        <span id="instrucciones"
+          >No es obligatorio. 'en' para ingles, 'es' para español</span
+        >
+        <br />
+        <button id="searchButton" type="submit">Buscar</button>
+        <hr />
+        <h1 id="instrucciones">3°: Seleccionar pelicula de los resultados</h1>
         <div id="movie-results" style="margin-top: 20px"></div>
+        <hr />
       </form>
 
       <div
@@ -62,10 +63,10 @@
             gap: 24px;
           "
         >
-          <span id="instrucciones"
-            >4- Seleccionar backdrop o poster como fondo del flyer o dejar el
-            fondo por defecto y editar los colores.</span
-          >
+          <h1 id="instrucciones">
+            4°: Seleccionar backdrop o poster como fondo del flyer o dejar el
+            fondo por defecto y editar los colores.
+          </h1>
           <!-- CAROUSELS ARRIBA -->
           <div
             style="
@@ -174,15 +175,20 @@
                 Usar este poster como fondo del flyer
               </button>
             </div>
-            <span id="instrucciones"
-              >5- Para editar los textos del Ciclo, titulo de pelicula, fecha y
-              dia hacerle doble click.<br />
-              En el caso del titulo al darle Shift+Enter mientras editando se
-              agrega un salto de linea.<br />
-              Enter para guardar en todos.<br />
-              Para modificar colores de textos y cajas hacer UN click sobre los
-              mismos y luego seleccionar el recuadro que abre el color picker
-            </span>
+          </div>
+          <hr />
+          <h1 id="instrucciones">
+            5°: Para editar los textos del Ciclo, titulo de pelicula, fecha y
+            dia hacerle doble click.<br />
+            En el caso del titulo al darle Shift+Enter mientras editando se
+            agrega un salto de linea.<br />
+            Enter para guardar en todos.<br />
+            Para modificar colores de textos y cajas hacer UN click sobre los
+            mismos y luego seleccionar el recuadro que abre el color picker
+          </h1>
+
+          <div>
+            <button id="toggle-rect">Ocultar rectángulo vertical</button>
           </div>
 
           <!-- FLYER -->
@@ -245,11 +251,11 @@
           </div>
         </div>
       </div>
-      <span id="instrucciones">
+      <h1 id="instrucciones">
         <br />
-        6- Guardar imagen del flyer con el botón "Guardar Imagen"
+        6°: Guardar imagen del flyer con el botón "Guardar Imagen"
         <br />
-      </span>
+      </h1>
 
       <!-- Botón para exportar -->
       <button type="button" id="saveFlyer" style="margin-bottom: 20px">

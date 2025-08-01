@@ -250,6 +250,18 @@ const flyerHour = document.getElementById("flyer-hour");
 
 const dateInput = document.getElementById("dateInput");
 const hourInput = document.getElementById("hourInput");
+const rect = document.querySelector(".rect");
+const rectToggle = document.getElementById("toggle-rect");
+
+let rectHidden = false;
+
+rectToggle.addEventListener("click", () => {
+  rectHidden = !rectHidden;
+  rect.style.display = rectHidden ? "none" : "block";
+  rectToggle.textContent = rectHidden
+    ? "Mostrar rectángulo vertical"
+    : "Ocultar rectángulo vertical";
+});
 
 flyerDate.addEventListener("dblclick", () => {
   dateInput.style.display = "block";
@@ -499,7 +511,7 @@ let colorTargets = [];
 
 function rgbToHex(rgb) {
   const result = rgb.match(/\d+/g);
-  if (!result || result.length < 3) return "#000000";
+  if (!result || result.length < 3) return "#ffffff";
   return (
     "#" +
     (
@@ -568,7 +580,8 @@ floatingColorPicker.addEventListener("input", (e) => {
   colorTargets.forEach((target) => {
     if (
       target.classList.contains("rect") ||
-      target.classList.contains("rect2")
+      target.classList.contains("rect2") ||
+      target.id === "flyer"
     ) {
       target.style.setProperty("background-color", value);
     } else {
@@ -593,6 +606,7 @@ floatingColorPicker.addEventListener("blur", () => {
   document.querySelector(".rect"),
   document.querySelector(".rect2"),
   document.getElementById("ciclo"),
+  document.getElementById("flyer"),
 ].forEach((el) => {
   if (el) {
     el.addEventListener("click", (event) => {
