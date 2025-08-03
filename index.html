@@ -216,6 +216,7 @@
 
             <div class="poster-container">
               <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
+              <div class="dialogo-comic">¡Debate luego!</div>
             </div>
 
             <div class="flyer-row">
@@ -281,6 +282,28 @@
       id="floatingColorPicker"
       style="position: absolute; display: none; z-index: 9999"
     />
+    <div
+      id="comicColorPickerPanel"
+      style="
+        position: absolute;
+        display: none;
+        z-index: 9999;
+        background: #fff;
+        padding: 12px 16px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      "
+    >
+      <label style="display: block; margin-bottom: 8px">
+        Fondo <input type="color" id="comicBgColorPicker" />
+      </label>
+      <label style="display: block; margin-bottom: 8px">
+        Borde <input type="color" id="comicBorderColorPicker" />
+      </label>
+      <label style="display: block">
+        Texto <input type="color" id="comicTextColorPicker" />
+      </label>
+    </div>
   </body>
   <script src="script.js"></script>
 </html>

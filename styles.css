@@ -385,3 +385,22 @@ button {
   font-size: 14px;
   cursor: pointer;
 }
+
+.dialogo-comic {
+  position: absolute;
+  right: 10px;
+  top: 224px;
+  min-width: 120px;
+  max-width: 200px;
+  padding: 16px 20px 16px 20px;
+  background: #fffbe6;
+  color: #386119;
+  font-family: "Gilroy", sans-serif;
+  font-size: 1.8rem;
+  font-weight: bold;
+  border: 2px solid #386119;
+  border-radius: 32px 32px 32px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  text-align: center;
+}

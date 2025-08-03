@@ -106,27 +106,27 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       resultsDiv.style.display = "block";
       showResultsBtn.style.display = "none";
     });
-
-    const btnBackdrops = document.getElementById("backdrops");
-
-    btnBackdrops.addEventListener("click", () => {
-      if (!window.selectedMovieId) return;
-      window.open(
-        `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
-        "_blank"
-      );
-    });
-
-    const btnPosters = document.getElementById("posters");
-
-    btnPosters.addEventListener("click", () => {
-      if (!window.selectedMovieId) return;
-      window.open(
-        `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
-        "_blank"
-      );
-    });
   }
+
+  const btnBackdrops = document.getElementById("backdrops");
+
+  btnBackdrops.addEventListener("click", () => {
+    if (!window.selectedMovieId) return;
+    window.open(
+      `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
+      "_blank"
+    );
+  });
+
+  const btnPosters = document.getElementById("posters");
+
+  btnPosters.addEventListener("click", () => {
+    if (!window.selectedMovieId) return;
+    window.open(
+      `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
+      "_blank"
+    );
+  });
 });
 
 let backdrops = [];
@@ -447,7 +447,13 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
 
         // Descargar
         const link = document.createElement("a");
-        link.download = `flyer-cine-${Date.now()}.png`;
+        const flyerTitle = document
+          .getElementById("title")
+          .textContent.trim()
+          .replace(/\s+/g, "_")
+          .replace(/[^\w\-]/g, "");
+        const date = new Date().toISOString().slice(0, 10);
+        link.download = `${date}_${flyerTitle}_flyer.png`;
         link.href = canvas.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
@@ -599,5 +605,42 @@ document.addEventListener("click", (e) => {
   if (e.target !== floatingColorPicker) {
     floatingColorPicker.style.display = "none";
     colorTargets = [];
+  }
+});
+
+const comicBalloon = document.querySelector(".dialogo-comic");
+const comicColorPanel = document.getElementById("comicColorPickerPanel");
+const comicBgPicker = document.getElementById("comicBgColorPicker");
+const comicBorderPicker = document.getElementById("comicBorderColorPicker");
+const comicTextPicker = document.getElementById("comicTextColorPicker");
+
+comicBalloon.addEventListener("click", (event) => {
+  const style = window.getComputedStyle(comicBalloon);
+  comicBgPicker.value = rgbToHex(style.backgroundColor);
+  comicBorderPicker.value = rgbToHex(style.borderColor);
+  comicTextPicker.value = rgbToHex(style.color);
+
+  comicColorPanel.style.left = event.pageX + "px";
+  comicColorPanel.style.top = event.pageY + "px";
+  comicColorPanel.style.display = "block";
+  event.stopPropagation();
+});
+
+comicBgPicker.addEventListener("input", (e) => {
+  comicBalloon.style.backgroundColor = e.target.value;
+});
+
+comicBorderPicker.addEventListener("input", (e) => {
+  comicBalloon.style.borderColor = e.target.value;
+});
+
+comicTextPicker.addEventListener("input", (e) => {
+  comicBalloon.style.color = e.target.value;
+});
+
+// Hide panel when clicking elsewhere
+document.addEventListener("click", (e) => {
+  if (!comicColorPanel.contains(e.target)) {
+    comicColorPanel.style.display = "none";
   }
 });
