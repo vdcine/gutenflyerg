@@ -638,9 +638,84 @@ comicTextPicker.addEventListener("input", (e) => {
   comicBalloon.style.color = e.target.value;
 });
 
-// Hide panel when clicking elsewhere
 document.addEventListener("click", (e) => {
   if (!comicColorPanel.contains(e.target)) {
     comicColorPanel.style.display = "none";
   }
 });
+
+let eyedropperActive = false;
+let eyedropperColor = null;
+
+const activateEyedropperBtn = document.getElementById("activateEyedropper");
+const posterImg = document.getElementById("poster");
+
+activateEyedropperBtn.addEventListener("click", () => {
+  eyedropperActive = true;
+  posterImg.style.cursor = "crosshair";
+});
+
+posterImg.addEventListener("click", (e) => {
+  if (!eyedropperActive || !posterImg.src) return;
+  const canvas = document.createElement("canvas");
+  canvas.width = posterImg.naturalWidth;
+  canvas.height = posterImg.naturalHeight;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(
+    posterImg,
+    0,
+    0,
+    posterImg.naturalWidth,
+    posterImg.naturalHeight
+  );
+
+  const rect = posterImg.getBoundingClientRect();
+  const x = Math.round(
+    (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
+  );
+  const y = Math.round(
+    (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+  );
+  const pixel = ctx.getImageData(x, y, 1, 1).data;
+  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+  eyedropperColor = hex;
+
+  floatingColorPicker.value = hex;
+  floatingColorPicker.dispatchEvent(new Event("input"));
+
+  posterImg.style.cursor = "";
+  eyedropperActive = false;
+});
+
+document
+  .getElementById("useEyedropperColorText")
+  .addEventListener("click", () => {
+    if (eyedropperColor) {
+      document.getElementById("comicTextColorPicker").value = eyedropperColor;
+      document
+        .getElementById("comicTextColorPicker")
+        .dispatchEvent(new Event("input"));
+    }
+  });
+
+document
+  .getElementById("useEyedropperColorBorder")
+  .addEventListener("click", () => {
+    if (eyedropperColor) {
+      document.getElementById("comicBorderColorPicker").value = eyedropperColor;
+      document
+        .getElementById("comicBorderColorPicker")
+        .dispatchEvent(new Event("input"));
+    }
+  });
+
+document
+  .getElementById("useEyedropperColorBg")
+  .addEventListener("click", () => {
+    if (eyedropperColor) {
+      document.getElementById("comicBgColorPicker").value = eyedropperColor;
+      document
+        .getElementById("comicBgColorPicker")
+        .dispatchEvent(new Event("input"));
+    }
+  });
