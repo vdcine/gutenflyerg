@@ -499,12 +499,13 @@ let colorTargets = [];
 
 floatingColorPicker.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
-  
+
   colorTargets.forEach((target) => {
-    const isBackground = target.classList.contains("rect") || 
-                        target.classList.contains("rect2") || 
-                        target.id === "flyer";
-    
+    const isBackground =
+      target.classList.contains("rect") ||
+      target.classList.contains("rect2") ||
+      target.id === "flyer";
+
     if (isBackground) {
       target.style.backgroundColor = selectedColor;
     } else {
@@ -577,7 +578,7 @@ function showColorPickerForElement(element, event) {
   floatingColorPicker.style.height = "48px";
   floatingColorPicker.style.border = "2px solid #333";
   floatingColorPicker.style.borderRadius = "8px";
-  
+
   let eyedropperBtn = document.getElementById("floating-eyedropper-btn");
   if (!eyedropperBtn) {
     eyedropperBtn = document.createElement("button");
@@ -599,7 +600,7 @@ function showColorPickerForElement(element, event) {
       display: none;
     `;
     document.body.appendChild(eyedropperBtn);
-    
+
     eyedropperBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       activateEyedropper((selectedColor) => {
@@ -608,11 +609,11 @@ function showColorPickerForElement(element, event) {
       });
     });
   }
-  
-  eyedropperBtn.style.left = (event.pageX + 52) + "px";
+
+  eyedropperBtn.style.left = event.pageX + 52 + "px";
   eyedropperBtn.style.top = event.pageY + "px";
   eyedropperBtn.style.display = "block";
-  
+
   floatingColorPicker.focus();
 }
 
@@ -647,12 +648,15 @@ floatingColorPicker.addEventListener("blur", () => {
 });
 
 document.addEventListener("click", (e) => {
-  if (e.target !== floatingColorPicker && e.target.id !== "floating-eyedropper-btn") {
+  if (
+    e.target !== floatingColorPicker &&
+    e.target.id !== "floating-eyedropper-btn"
+  ) {
     floatingColorPicker.style.display = "none";
     const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
     if (eyedropperBtn) eyedropperBtn.style.display = "none";
     colorTargets = [];
-    
+
     if (eyedropperActive) {
       eyedropperActive = false;
       eyedropperCallback = null;
@@ -669,6 +673,10 @@ const comicColorPanel = document.getElementById("comicColorPickerPanel");
 const comicBgPicker = document.getElementById("comicBgColorPicker");
 const comicBorderPicker = document.getElementById("comicBorderColorPicker");
 const comicTextPicker = document.getElementById("comicTextColorPicker");
+const posterImg = document.getElementById("poster");
+
+let comicEyedropperActive = false;
+let comicEyedropperTarget = null;
 
 comicBalloon.addEventListener("click", (event) => {
   const style = window.getComputedStyle(comicBalloon);
@@ -685,17 +693,82 @@ comicBalloon.addEventListener("click", (event) => {
 comicBgPicker.addEventListener("input", (e) => {
   comicBalloon.style.backgroundColor = e.target.value;
 });
-
 comicBorderPicker.addEventListener("input", (e) => {
   comicBalloon.style.borderColor = e.target.value;
 });
-
 comicTextPicker.addEventListener("input", (e) => {
   comicBalloon.style.color = e.target.value;
 });
 
-document.addEventListener("click", (e) => {
-  if (!comicColorPanel.contains(e.target)) {
+document
+  .getElementById("activateEyedropperBg")
+  .addEventListener("click", (e) => {
+    comicEyedropperActive = true;
+    comicEyedropperTarget = comicBgPicker;
+    posterImg.style.cursor = "crosshair";
+
+    e.stopPropagation();
+  });
+document
+  .getElementById("activateEyedropperBorder")
+  .addEventListener("click", (e) => {
+    comicEyedropperActive = true;
+    comicEyedropperTarget = comicBorderPicker;
+    posterImg.style.cursor = "crosshair";
+
+    e.stopPropagation();
+  });
+document
+  .getElementById("activateEyedropperText")
+  .addEventListener("click", (e) => {
+    comicEyedropperActive = true;
+    comicEyedropperTarget = comicTextPicker;
+    posterImg.style.cursor = "crosshair";
+
+    e.stopPropagation();
+  });
+
+posterImg.addEventListener("click", (e) => {
+  if (!comicEyedropperActive || !comicEyedropperTarget || !posterImg.src)
+    return;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = posterImg.naturalWidth;
+  canvas.height = posterImg.naturalHeight;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(
+    posterImg,
+    0,
+    0,
+    posterImg.naturalWidth,
+    posterImg.naturalHeight
+  );
+
+  const rect = posterImg.getBoundingClientRect();
+  const x = Math.round(
+    (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
+  );
+  const y = Math.round(
+    (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+  );
+  const pixel = ctx.getImageData(x, y, 1, 1).data;
+  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+
+  comicEyedropperTarget.value = hex;
+  comicEyedropperTarget.dispatchEvent(new Event("input"));
+
+  posterImg.style.cursor = "";
+  document.body.style.cursor = "";
+  comicEyedropperActive = false;
+  comicEyedropperTarget = null;
+});
+
+document.addEventListener("mousedown", (e) => {
+  if (
+    comicColorPanel.style.display === "block" &&
+    !comicColorPanel.contains(e.target) &&
+    !e.target.classList.contains("dialogo-comic")
+  ) {
     comicColorPanel.style.display = "none";
   }
 });
@@ -705,30 +778,11 @@ let eyedropperColor = null;
 let eyedropperCallback = null;
 
 const activateEyedropperBtn = document.getElementById("activateEyedropper");
-const posterImg = document.getElementById("poster");
 
 function activateEyedropper(callback = null) {
   eyedropperActive = true;
   eyedropperCallback = callback;
   posterImg.style.cursor = "crosshair";
-  document.body.style.cursor = "crosshair";
-  
-  const message = document.createElement("div");
-  message.id = "eyedropper-message";
-  message.textContent = "Haz clic en el poster para seleccionar un color";
-  message.style.cssText = `
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    z-index: 10000;
-    font-size: 14px;
-  `;
-  document.body.appendChild(message);
 }
 
 activateEyedropperBtn.addEventListener("click", () => {
@@ -737,10 +791,10 @@ activateEyedropperBtn.addEventListener("click", () => {
 
 posterImg.addEventListener("click", (e) => {
   if (!eyedropperActive || !posterImg.src) return;
-  
+
   e.stopPropagation();
   e.preventDefault();
-  
+
   const canvas = document.createElement("canvas");
   canvas.width = posterImg.naturalWidth;
   canvas.height = posterImg.naturalHeight;
@@ -775,7 +829,4 @@ posterImg.addEventListener("click", (e) => {
   document.body.style.cursor = "";
   eyedropperActive = false;
   eyedropperCallback = null;
-  
-  const message = document.getElementById("eyedropper-message");
-  if (message) message.remove();
 });
