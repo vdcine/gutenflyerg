@@ -497,6 +497,22 @@ async function generateWithoutBlur(flyerElement) {
 const floatingColorPicker = document.getElementById("floatingColorPicker");
 let colorTargets = [];
 
+floatingColorPicker.addEventListener("input", (e) => {
+  const selectedColor = e.target.value;
+  
+  colorTargets.forEach((target) => {
+    const isBackground = target.classList.contains("rect") || 
+                        target.classList.contains("rect2") || 
+                        target.id === "flyer";
+    
+    if (isBackground) {
+      target.style.backgroundColor = selectedColor;
+    } else {
+      target.style.color = selectedColor;
+    }
+  });
+});
+
 function rgbToHex(rgb) {
   const result = rgb.match(/\d+/g);
   if (!result || result.length < 3) return "#ffffff";
@@ -525,6 +541,10 @@ function getColorTargets(el) {
     ];
   }
 
+  if (el.id === "flyer") {
+    return [el];
+  }
+
   return [el];
 }
 
@@ -538,7 +558,8 @@ function getCurrentColorForTargets(targets) {
 
   const isBackground =
     targets[0].classList.contains("rect") ||
-    targets[0].classList.contains("rect2");
+    targets[0].classList.contains("rect2") ||
+    targets[0].id === "flyer";
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
 }
@@ -556,27 +577,51 @@ function showColorPickerForElement(element, event) {
   floatingColorPicker.style.height = "48px";
   floatingColorPicker.style.border = "2px solid #333";
   floatingColorPicker.style.borderRadius = "8px";
+  
+  let eyedropperBtn = document.getElementById("floating-eyedropper-btn");
+  if (!eyedropperBtn) {
+    eyedropperBtn = document.createElement("button");
+    eyedropperBtn.id = "floating-eyedropper-btn";
+    eyedropperBtn.textContent = "CuentaGotas";
+    eyedropperBtn.title = "Seleccionar color del poster";
+    eyedropperBtn.style.cssText = `
+      position: absolute;
+      z-index: 99999;
+      left: 52px;
+      top: 0px;
+      width: 150px;
+      height: 70px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      font-size: 20px;
+      display: none;
+    `;
+    document.body.appendChild(eyedropperBtn);
+    
+    eyedropperBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      activateEyedropper((selectedColor) => {
+        floatingColorPicker.value = selectedColor;
+        floatingColorPicker.dispatchEvent(new Event("input"));
+      });
+    });
+  }
+  
+  eyedropperBtn.style.left = (event.pageX + 52) + "px";
+  eyedropperBtn.style.top = event.pageY + "px";
+  eyedropperBtn.style.display = "block";
+  
   floatingColorPicker.focus();
 }
 
-floatingColorPicker.addEventListener("input", (e) => {
-  const value = e.target.value;
-
-  colorTargets.forEach((target) => {
-    if (
-      target.classList.contains("rect") ||
-      target.classList.contains("rect2") ||
-      target.id === "flyer"
-    ) {
-      target.style.setProperty("background-color", value);
-    } else {
-      target.style.setProperty("color", value);
-    }
-  });
-});
-
 floatingColorPicker.addEventListener("blur", () => {
-  floatingColorPicker.style.display = "none";
+  setTimeout(() => {
+    floatingColorPicker.style.display = "none";
+    const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
+    if (eyedropperBtn) eyedropperBtn.style.display = "none";
+  }, 200);
 });
 
 [
@@ -602,9 +647,20 @@ floatingColorPicker.addEventListener("blur", () => {
 });
 
 document.addEventListener("click", (e) => {
-  if (e.target !== floatingColorPicker) {
+  if (e.target !== floatingColorPicker && e.target.id !== "floating-eyedropper-btn") {
     floatingColorPicker.style.display = "none";
+    const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
+    if (eyedropperBtn) eyedropperBtn.style.display = "none";
     colorTargets = [];
+    
+    if (eyedropperActive) {
+      eyedropperActive = false;
+      eyedropperCallback = null;
+      posterImg.style.cursor = "";
+      document.body.style.cursor = "";
+      const message = document.getElementById("eyedropper-message");
+      if (message) message.remove();
+    }
   }
 });
 
@@ -646,17 +702,45 @@ document.addEventListener("click", (e) => {
 
 let eyedropperActive = false;
 let eyedropperColor = null;
+let eyedropperCallback = null;
 
 const activateEyedropperBtn = document.getElementById("activateEyedropper");
 const posterImg = document.getElementById("poster");
 
-activateEyedropperBtn.addEventListener("click", () => {
+function activateEyedropper(callback = null) {
   eyedropperActive = true;
+  eyedropperCallback = callback;
   posterImg.style.cursor = "crosshair";
+  document.body.style.cursor = "crosshair";
+  
+  const message = document.createElement("div");
+  message.id = "eyedropper-message";
+  message.textContent = "Haz clic en el poster para seleccionar un color";
+  message.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 10000;
+    font-size: 14px;
+  `;
+  document.body.appendChild(message);
+}
+
+activateEyedropperBtn.addEventListener("click", () => {
+  activateEyedropper();
 });
 
 posterImg.addEventListener("click", (e) => {
   if (!eyedropperActive || !posterImg.src) return;
+  
+  e.stopPropagation();
+  e.preventDefault();
+  
   const canvas = document.createElement("canvas");
   canvas.width = posterImg.naturalWidth;
   canvas.height = posterImg.naturalHeight;
@@ -680,42 +764,18 @@ posterImg.addEventListener("click", (e) => {
   const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
   eyedropperColor = hex;
 
-  floatingColorPicker.value = hex;
-  floatingColorPicker.dispatchEvent(new Event("input"));
+  if (eyedropperCallback) {
+    eyedropperCallback(hex);
+  } else {
+    floatingColorPicker.value = hex;
+    floatingColorPicker.dispatchEvent(new Event("input"));
+  }
 
   posterImg.style.cursor = "";
+  document.body.style.cursor = "";
   eyedropperActive = false;
+  eyedropperCallback = null;
+  
+  const message = document.getElementById("eyedropper-message");
+  if (message) message.remove();
 });
-
-document
-  .getElementById("useEyedropperColorText")
-  .addEventListener("click", () => {
-    if (eyedropperColor) {
-      document.getElementById("comicTextColorPicker").value = eyedropperColor;
-      document
-        .getElementById("comicTextColorPicker")
-        .dispatchEvent(new Event("input"));
-    }
-  });
-
-document
-  .getElementById("useEyedropperColorBorder")
-  .addEventListener("click", () => {
-    if (eyedropperColor) {
-      document.getElementById("comicBorderColorPicker").value = eyedropperColor;
-      document
-        .getElementById("comicBorderColorPicker")
-        .dispatchEvent(new Event("input"));
-    }
-  });
-
-document
-  .getElementById("useEyedropperColorBg")
-  .addEventListener("click", () => {
-    if (eyedropperColor) {
-      document.getElementById("comicBgColorPicker").value = eyedropperColor;
-      document
-        .getElementById("comicBgColorPicker")
-        .dispatchEvent(new Event("input"));
-    }
-  });
