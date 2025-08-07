@@ -163,13 +163,17 @@ document.getElementById("poster-next").addEventListener("click", () => {
   showPoster(currentPoster);
 });
 
-document.getElementById("set-poster-as-bg").addEventListener("click", () => {
+document.getElementById("set-poster-as-poster").addEventListener("click", () => {
   if (!posters.length) return;
   const url = `https://image.tmdb.org/t/p/original${posters[currentPoster].file_path}`;
   const rect = document.querySelector(".rect");
   rect.style.display = "none";
-  setBackdropAsBackground(url);
+  setPoster(url);
 });
+
+function setPoster(url) {
+    document.getElementById("poster").src = url;
+}
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {
   if (!backdrops.length) return;
@@ -214,6 +218,7 @@ function setBackdropAsBackground(url) {
 
   flyer.style.backgroundImage = "";
 }
+
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
   const flyer = document.getElementById("flyer");
   const rect = document.querySelector(".rect");
