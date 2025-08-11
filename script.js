@@ -517,6 +517,9 @@ floatingColorPicker.addEventListener("input", (e) => {
       target.style.color = selectedColor;
     }
   });
+
+  const colorPreview = document.getElementById("floating-color-preview");
+  if (colorPreview) colorPreview.style.display = "none";
 });
 
 function rgbToHex(rgb) {
@@ -619,6 +622,46 @@ function showColorPickerForElement(element, event) {
   eyedropperBtn.style.top = event.pageY + "px";
   eyedropperBtn.style.display = "block";
 
+  let applyLastColorBtn = document.getElementById("apply-last-eyedropper-color-btn");
+  if (!applyLastColorBtn) {
+    applyLastColorBtn = document.createElement("button");
+    applyLastColorBtn.id = "apply-last-eyedropper-color-btn";
+    applyLastColorBtn.textContent = "Último color";
+    applyLastColorBtn.style.cssText = `
+      position: absolute;
+      z-index: 99999;
+      left: 52px;
+      top: 80px;
+      width: 140px;
+      height: 40px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      display: none;
+    `;
+    document.body.appendChild(applyLastColorBtn);
+    applyLastColorBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (window.lastEyedropperColor) {
+        floatingColorPicker.value = window.lastEyedropperColor;
+        floatingColorPicker.dispatchEvent(new Event("input"));
+      }
+    });
+  }
+  
+  if (window.lastEyedropperColor) {
+    applyLastColorBtn.style.left = event.pageX + 52 + "px";
+    applyLastColorBtn.style.top = event.pageY + 80 + "px";
+    applyLastColorBtn.style.display = "block";
+    applyLastColorBtn.style.background = window.lastEyedropperColor;
+    applyLastColorBtn.style.color = "#222";
+    applyLastColorBtn.title = window.lastEyedropperColor;
+  } else {
+    applyLastColorBtn.style.display = "none";
+  }
+
   floatingColorPicker.focus();
 }
 
@@ -627,6 +670,8 @@ floatingColorPicker.addEventListener("blur", () => {
     floatingColorPicker.style.display = "none";
     const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
     if (eyedropperBtn) eyedropperBtn.style.display = "none";
+    const applyLastColorBtn = document.getElementById("apply-last-eyedropper-color-btn");
+    if (applyLastColorBtn) applyLastColorBtn.style.display = "none";
   }, 200);
 });
 
@@ -782,12 +827,68 @@ let eyedropperActive = false;
 let eyedropperColor = null;
 let eyedropperCallback = null;
 
+function eyedropperMoveHandler(e) {
+  if (!eyedropperActive) return;
+  const colorPreview = document.getElementById("floating-color-preview");
+  if (!colorPreview) return;
+  colorPreview.style.left = (e.pageX + 20) + "px";
+  colorPreview.style.top = (e.pageY - 24) + "px";
+
+  if (posterImg.naturalWidth && posterImg.naturalHeight) {
+    const canvas = document.createElement("canvas");
+    canvas.width = posterImg.naturalWidth;
+    canvas.height = posterImg.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterImg,
+      0,
+      0,
+      posterImg.naturalWidth,
+      posterImg.naturalHeight
+    );
+    const rect = posterImg.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+    colorPreview.style.background = hex;
+  }
+}
+
 const activateEyedropperBtn = document.getElementById("activateEyedropper");
 
 function activateEyedropper(callback = null) {
   eyedropperActive = true;
   eyedropperCallback = callback;
   posterImg.style.cursor = "crosshair";
+  
+  let colorPreview = document.getElementById("floating-color-preview");
+  if (!colorPreview) {
+    colorPreview = document.createElement("div");
+    colorPreview.id = "floating-color-preview";
+    colorPreview.style.cssText = `
+      position: absolute;
+      z-index: 99999;
+      left: 0px;
+      top: 0px;
+      width: 48px;
+      height: 48px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      display: block;
+      pointer-events: none;
+    `;
+    document.body.appendChild(colorPreview);
+  }
+  colorPreview.style.display = "block";
+  colorPreview.style.background = "#fff";
+
+  posterImg.addEventListener("mousemove", eyedropperMoveHandler);
 }
 
 activateEyedropperBtn.addEventListener("click", () => {
@@ -823,12 +924,27 @@ posterImg.addEventListener("click", (e) => {
   const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
   eyedropperColor = hex;
 
+  window.lastEyedropperColor = hex;
+
+  let colorPreview = document.getElementById("floating-color-preview");
+  if (colorPreview) {
+    colorPreview.style.background = hex;
+    colorPreview.style.display = "block";
+    colorPreview.style.left = (e.pageX + 20) + "px";
+    colorPreview.style.top = (e.pageY - 24) + "px";
+  }
+
   if (eyedropperCallback) {
     eyedropperCallback(hex);
   } else {
     floatingColorPicker.value = hex;
     floatingColorPicker.dispatchEvent(new Event("input"));
   }
+
+  posterImg.removeEventListener("mousemove", eyedropperMoveHandler);
+  setTimeout(() => {
+    if (colorPreview) colorPreview.style.display = "none";
+  }, 400);
 
   posterImg.style.cursor = "";
   document.body.style.cursor = "";
