@@ -728,6 +728,56 @@ const posterImg = document.getElementById("poster");
 let comicEyedropperActive = false;
 let comicEyedropperTarget = null;
 
+function comicEyedropperMoveHandler(e) {
+  if (!comicEyedropperActive) return;
+  let comicColorPreview = document.getElementById("comic-color-preview");
+  if (!comicColorPreview) {
+    comicColorPreview = document.createElement("div");
+    comicColorPreview.id = "comic-color-preview";
+    comicColorPreview.style.cssText = `
+      position: absolute;
+      z-index: 99999;
+      left: 0px;
+      top: 0px;
+      width: 48px;
+      height: 48px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      display: block;
+      pointer-events: none;
+    `;
+    document.body.appendChild(comicColorPreview);
+  }
+  comicColorPreview.style.display = "block";
+  comicColorPreview.style.left = (e.pageX + 20) + "px";
+  comicColorPreview.style.top = (e.pageY - 24) + "px";
+
+  if (posterImg.naturalWidth && posterImg.naturalHeight) {
+    const canvas = document.createElement("canvas");
+    canvas.width = posterImg.naturalWidth;
+    canvas.height = posterImg.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterImg,
+      0,
+      0,
+      posterImg.naturalWidth,
+      posterImg.naturalHeight
+    );
+    const rect = posterImg.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+    comicColorPreview.style.background = hex;
+  }
+}
+
 comicBalloon.addEventListener("click", (event) => {
   const style = window.getComputedStyle(comicBalloon);
   comicBgPicker.value = rgbToHex(style.backgroundColor);
@@ -757,6 +807,8 @@ document
     comicEyedropperTarget = comicBgPicker;
     posterImg.style.cursor = "crosshair";
 
+    posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
+
     e.stopPropagation();
   });
 document
@@ -765,6 +817,8 @@ document
     comicEyedropperActive = true;
     comicEyedropperTarget = comicBorderPicker;
     posterImg.style.cursor = "crosshair";
+
+    posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
 
     e.stopPropagation();
   });
@@ -775,42 +829,52 @@ document
     comicEyedropperTarget = comicTextPicker;
     posterImg.style.cursor = "crosshair";
 
+    posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
+
     e.stopPropagation();
   });
 
 posterImg.addEventListener("click", (e) => {
-  if (!comicEyedropperActive || !comicEyedropperTarget || !posterImg.src)
+  // Evitar que el click del eyedropper comic dispare el color picker del flyer
+  if (comicEyedropperActive && comicEyedropperTarget && posterImg.src) {
+    e.stopPropagation();
+    var comicColorPreview = document.getElementById("comic-color-preview");
+    if (comicColorPreview) {
+      comicColorPreview.style.display = "none";
+    }
+    posterImg.removeEventListener("mousemove", comicEyedropperMoveHandler);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = posterImg.naturalWidth;
+    canvas.height = posterImg.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterImg,
+      0,
+      0,
+      posterImg.naturalWidth,
+      posterImg.naturalHeight
+    );
+
+    const rect = posterImg.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+
+    comicEyedropperTarget.value = hex;
+    comicEyedropperTarget.dispatchEvent(new Event("input"));
+
+    posterImg.style.cursor = "";
+    document.body.style.cursor = "";
+    comicEyedropperActive = false;
+    comicEyedropperTarget = null;
     return;
-
-  const canvas = document.createElement("canvas");
-  canvas.width = posterImg.naturalWidth;
-  canvas.height = posterImg.naturalHeight;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(
-    posterImg,
-    0,
-    0,
-    posterImg.naturalWidth,
-    posterImg.naturalHeight
-  );
-
-  const rect = posterImg.getBoundingClientRect();
-  const x = Math.round(
-    (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
-  );
-  const y = Math.round(
-    (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
-  );
-  const pixel = ctx.getImageData(x, y, 1, 1).data;
-  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-
-  comicEyedropperTarget.value = hex;
-  comicEyedropperTarget.dispatchEvent(new Event("input"));
-
-  posterImg.style.cursor = "";
-  document.body.style.cursor = "";
-  comicEyedropperActive = false;
-  comicEyedropperTarget = null;
+  }
 });
 
 document.addEventListener("mousedown", (e) => {
