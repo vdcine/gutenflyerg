@@ -727,6 +727,18 @@ const posterImg = document.getElementById("poster");
 
 let comicEyedropperActive = false;
 let comicEyedropperTarget = null;
+let lastComicEyedropperColor = null;
+
+function updateComicLastColorSquare() {
+  const lastColorSquare = document.getElementById("comicLastColorSquare");
+  if (lastComicEyedropperColor) {
+    lastColorSquare.style.background = lastComicEyedropperColor;
+    lastColorSquare.style.display = "block";
+    lastColorSquare.title = `Último color: ${lastComicEyedropperColor}`;
+  } else {
+    lastColorSquare.style.display = "none";
+  }
+}
 
 function comicEyedropperMoveHandler(e) {
   if (!comicEyedropperActive) return;
@@ -784,10 +796,78 @@ comicBalloon.addEventListener("click", (event) => {
   comicBorderPicker.value = rgbToHex(style.borderColor);
   comicTextPicker.value = rgbToHex(style.color);
 
+  updateComicLastColorSquare();
+
   comicColorPanel.style.left = event.pageX + "px";
   comicColorPanel.style.top = event.pageY + "px";
   comicColorPanel.style.display = "block";
   event.stopPropagation();
+});
+
+document.getElementById("comicLastColorSquare").addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (lastComicEyedropperColor) {
+    let contextMenu = document.getElementById("comicColorContextMenu");
+    if (!contextMenu) {
+      contextMenu = document.createElement("div");
+      contextMenu.id = "comicColorContextMenu";
+      contextMenu.style.cssText = `
+        position: absolute;
+        z-index: 10000;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 8px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        display: none;
+      `;
+      
+      const options = [
+        { text: "Aplicar al fondo", target: comicBgPicker },
+        { text: "Aplicar al borde", target: comicBorderPicker },
+        { text: "Aplicar al texto", target: comicTextPicker }
+      ];
+      
+      options.forEach(option => {
+        const menuItem = document.createElement("div");
+        menuItem.textContent = option.text;
+        menuItem.style.cssText = `
+          padding: 6px 12px;
+          cursor: pointer;
+          font-size: 14px;
+        `;
+        menuItem.addEventListener("mouseover", () => {
+          menuItem.style.background = "#f0f0f0";
+        });
+        menuItem.addEventListener("mouseout", () => {
+          menuItem.style.background = "";
+        });
+        menuItem.addEventListener("click", (e) => {
+          e.stopPropagation();
+          option.target.value = lastComicEyedropperColor;
+          option.target.dispatchEvent(new Event("input"));
+          contextMenu.style.display = "none";
+        });
+        contextMenu.appendChild(menuItem);
+      });
+      
+      document.body.appendChild(contextMenu);
+    }
+    
+    contextMenu.style.left = (e.pageX + 5) + "px";
+    contextMenu.style.top = (e.pageY + 5) + "px";
+    contextMenu.style.display = "block";
+    
+    setTimeout(() => {
+      const closeContextMenu = (e) => {
+        if (!contextMenu.contains(e.target)) {
+          contextMenu.style.display = "none";
+          document.removeEventListener("click", closeContextMenu);
+        }
+      };
+      document.addEventListener("click", closeContextMenu);
+    }, 10);
+  }
 });
 
 comicBgPicker.addEventListener("input", (e) => {
@@ -835,7 +915,6 @@ document
   });
 
 posterImg.addEventListener("click", (e) => {
-  // Evitar que el click del eyedropper comic dispare el color picker del flyer
   if (comicEyedropperActive && comicEyedropperTarget && posterImg.src) {
     e.stopPropagation();
     var comicColorPreview = document.getElementById("comic-color-preview");
@@ -866,6 +945,9 @@ posterImg.addEventListener("click", (e) => {
     const pixel = ctx.getImageData(x, y, 1, 1).data;
     const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
 
+    lastComicEyedropperColor = hex;
+    updateComicLastColorSquare();
+
     comicEyedropperTarget.value = hex;
     comicEyedropperTarget.dispatchEvent(new Event("input"));
 
@@ -884,6 +966,11 @@ document.addEventListener("mousedown", (e) => {
     !e.target.classList.contains("dialogo-comic")
   ) {
     comicColorPanel.style.display = "none";
+  }
+  
+  const contextMenu = document.getElementById("comicColorContextMenu");
+  if (contextMenu && contextMenu.style.display === "block" && !contextMenu.contains(e.target)) {
+    contextMenu.style.display = "none";
   }
 });
 
