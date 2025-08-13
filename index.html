@@ -307,6 +307,22 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       "
     >
+      <div style="display: flex; align-items: center; margin-bottom: 12px; gap: 8px;">
+        <span style="font-weight: bold;">Último color:</span>
+        <div
+          id="comicLastColorSquare"
+          style="
+            width: 24px;
+            height: 24px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            display: none;
+          "
+          title="Click para seleccionar el último color seleccionado"
+        ></div>
+      </div>
       <label style="display: block; margin-bottom: 8px">
         Fondo <input type="color" id="comicBgColorPicker" />
         <button
