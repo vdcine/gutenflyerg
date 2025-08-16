@@ -66,6 +66,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         ? director.name
         : "Director no disponible";
 
+      document.getElementById("duracion").textContent = `${movie.runtime} minutos`;
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
       );
@@ -680,6 +681,7 @@ floatingColorPicker.addEventListener("blur", () => {
   document.getElementById("title"),
   document.getElementById("year"),
   document.getElementById("director"),
+  document.getElementById("duracion"),
   document.getElementById("flyer-date"),
   document.getElementById("flyer-hour"),
   document.getElementById("flyer-biblioteca"),
