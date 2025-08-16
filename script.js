@@ -35,6 +35,10 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     const creditsData = await creditsRes.json();
     const director = creditsData.crew.find((c) => c.job === "Director");
 
+    const movieDetails = await(await fetch(
+        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}`
+    )).json();
+
     const result = document.createElement("div");
     result.style.cursor = "pointer";
     result.style.padding = "8px";
@@ -66,7 +70,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         ? director.name
         : "Director no disponible";
 
-      document.getElementById("duracion").textContent = `${movie.runtime} minutos`;
+      console.log(movieDetails)
+      document.getElementById("duracion").textContent = `${movieDetails.runtime} minutos`;
+
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
       );
