@@ -878,12 +878,32 @@ document.getElementById("comicLastColorSquare").addEventListener("click", (e) =>
   }
 });
 
+let comicTailBgStyle = document.getElementById('comic-tail-bg-style');
+if (!comicTailBgStyle) {
+  comicTailBgStyle = document.createElement('style');
+  comicTailBgStyle.id = 'comic-tail-bg-style';
+  document.head.appendChild(comicTailBgStyle);
+}
+
+let comicTailBorderStyle = document.getElementById('comic-tail-border-style');
+if (!comicTailBorderStyle) {
+  comicTailBorderStyle = document.createElement('style');
+  comicTailBorderStyle.id = 'comic-tail-border-style';
+  document.head.appendChild(comicTailBorderStyle);
+}
+
 comicBgPicker.addEventListener("input", (e) => {
-  comicBalloon.style.backgroundColor = e.target.value;
+  const selectedColor = e.target.value;
+  comicBalloon.style.backgroundColor = selectedColor;
+    comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${selectedColor} !important; }`;
 });
+
 comicBorderPicker.addEventListener("input", (e) => {
-  comicBalloon.style.borderColor = e.target.value;
+  const selectedColor = e.target.value;
+  comicBalloon.style.borderColor = selectedColor;
+    comicTailBorderStyle.textContent = `.dialogo-comic::before { border-top-color: ${selectedColor} !important; }`;
 });
+
 comicTextPicker.addEventListener("input", (e) => {
   comicBalloon.style.color = e.target.value;
 });

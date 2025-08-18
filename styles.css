@@ -398,19 +398,48 @@ button {
 
 .dialogo-comic {
   position: absolute;
-  right: 10px;
-  top: 224px;
-  min-width: 120px;
-  max-width: 200px;
-  padding: 16px 20px 16px 20px;
-  background: #fffbe6;
-  color: #386119;
+  left: 820px;
+  top: 230px;
+  width: 160px;
+  height: 90px;
+  padding: 8px 16px;
+  background: #ffff;
+  color: #000000;
   font-family: "Gilroy", sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: bold;
-  border: 2px solid #386119;
-  border-radius: 32px 32px 32px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2.5px solid #000000;
+  border-radius: 50%;
   z-index: 50;
   text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialogo-comic::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 15px solid #ffff;
+  transform: rotate(12deg);
+}
+
+.dialogo-comic::before {
+  content: "";
+  position: absolute;
+  bottom: -16px;
+  left: 47px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 17px solid #000000;
+  transform: rotate(12deg);
 }
