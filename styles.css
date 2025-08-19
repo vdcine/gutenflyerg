@@ -434,8 +434,8 @@ button {
 .dialogo-comic::before {
   content: "";
   position: absolute;
-  bottom: -16px;
-  left: 47px;
+  bottom: -14px;
+  left: 48px;
   width: 0;
   height: 0;
   border-left: 10px solid transparent;
