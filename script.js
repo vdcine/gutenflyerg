@@ -1,12 +1,7 @@
 document.getElementById("movieForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  function getApiToken() {
-    const input = document.getElementById("tmdbToken");
-    return input && input.value ? input.value : "";
-  }
-
-  const API_KEY = getApiToken();
+  const API_KEY = "c733c18f5b61209aa7ea217bd007b156";
   const BASE_URL = "https://api.themoviedb.org/3";
 
   const query = document.getElementById("movieSearch").value;
