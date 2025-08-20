@@ -67,7 +67,9 @@ form {
   transform: translateX(-50%);
   width: 1340px;
   height: 360px;
-  background-image: url("images/2.png");
+  background-color: red;
+  -webkit-mask-image: url("images/2.png");
+  mask-image: url("images/2.png");
   z-index: 1;
   margin: 0;
   display: block;

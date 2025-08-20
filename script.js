@@ -30,9 +30,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     const creditsData = await creditsRes.json();
     const director = creditsData.crew.find((c) => c.job === "Director");
 
-    const movieDetails = await(await fetch(
-        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}`
-    )).json();
+    const movieDetails = await (
+      await fetch(`${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}`)
+    ).json();
 
     const result = document.createElement("div");
     result.style.cursor = "pointer";
@@ -65,8 +65,10 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         ? director.name
         : "Director no disponible";
 
-      console.log(movieDetails)
-      document.getElementById("duracion").textContent = `${movieDetails.runtime} minutos`;
+      console.log(movieDetails);
+      document.getElementById(
+        "duracion"
+      ).textContent = `${movieDetails.runtime} minutos`;
 
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
@@ -165,16 +167,18 @@ document.getElementById("poster-next").addEventListener("click", () => {
   showPoster(currentPoster);
 });
 
-document.getElementById("set-poster-as-poster").addEventListener("click", () => {
-  if (!posters.length) return;
-  const url = `https://image.tmdb.org/t/p/original${posters[currentPoster].file_path}`;
-  const rect = document.querySelector(".rect");
-  rect.style.display = "none";
-  setPoster(url);
-});
+document
+  .getElementById("set-poster-as-poster")
+  .addEventListener("click", () => {
+    if (!posters.length) return;
+    const url = `https://image.tmdb.org/t/p/original${posters[currentPoster].file_path}`;
+    const rect = document.querySelector(".rect");
+    rect.style.display = "none";
+    setPoster(url);
+  });
 
 function setPoster(url) {
-    document.getElementById("poster").src = url;
+  document.getElementById("poster").src = url;
 }
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {
@@ -511,6 +515,7 @@ floatingColorPicker.addEventListener("input", (e) => {
     const isBackground =
       target.classList.contains("rect") ||
       target.classList.contains("rect2") ||
+      target.classList.contains("tape") ||
       target.id === "flyer";
 
     if (isBackground) {
@@ -624,7 +629,9 @@ function showColorPickerForElement(element, event) {
   eyedropperBtn.style.top = event.pageY + "px";
   eyedropperBtn.style.display = "block";
 
-  let applyLastColorBtn = document.getElementById("apply-last-eyedropper-color-btn");
+  let applyLastColorBtn = document.getElementById(
+    "apply-last-eyedropper-color-btn"
+  );
   if (!applyLastColorBtn) {
     applyLastColorBtn = document.createElement("button");
     applyLastColorBtn.id = "apply-last-eyedropper-color-btn";
@@ -652,7 +659,7 @@ function showColorPickerForElement(element, event) {
       }
     });
   }
-  
+
   if (window.lastEyedropperColor) {
     applyLastColorBtn.style.left = event.pageX + 52 + "px";
     applyLastColorBtn.style.top = event.pageY + 80 + "px";
@@ -672,7 +679,9 @@ floatingColorPicker.addEventListener("blur", () => {
     floatingColorPicker.style.display = "none";
     const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
     if (eyedropperBtn) eyedropperBtn.style.display = "none";
-    const applyLastColorBtn = document.getElementById("apply-last-eyedropper-color-btn");
+    const applyLastColorBtn = document.getElementById(
+      "apply-last-eyedropper-color-btn"
+    );
     if (applyLastColorBtn) applyLastColorBtn.style.display = "none";
   }, 200);
 });
@@ -691,6 +700,7 @@ floatingColorPicker.addEventListener("blur", () => {
   document.querySelector(".rect2"),
   document.getElementById("ciclo"),
   document.getElementById("flyer"),
+  document.querySelector(".tape"),
 ].forEach((el) => {
   if (el) {
     el.addEventListener("click", (event) => {
@@ -765,8 +775,8 @@ function comicEyedropperMoveHandler(e) {
     document.body.appendChild(comicColorPreview);
   }
   comicColorPreview.style.display = "block";
-  comicColorPreview.style.left = (e.pageX + 20) + "px";
-  comicColorPreview.style.top = (e.pageY - 24) + "px";
+  comicColorPreview.style.left = e.pageX + 20 + "px";
+  comicColorPreview.style.top = e.pageY - 24 + "px";
 
   if (posterImg.naturalWidth && posterImg.naturalHeight) {
     const canvas = document.createElement("canvas");
@@ -807,14 +817,16 @@ comicBalloon.addEventListener("click", (event) => {
   event.stopPropagation();
 });
 
-document.getElementById("comicLastColorSquare").addEventListener("click", (e) => {
-  e.stopPropagation();
-  if (lastComicEyedropperColor) {
-    let contextMenu = document.getElementById("comicColorContextMenu");
-    if (!contextMenu) {
-      contextMenu = document.createElement("div");
-      contextMenu.id = "comicColorContextMenu";
-      contextMenu.style.cssText = `
+document
+  .getElementById("comicLastColorSquare")
+  .addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (lastComicEyedropperColor) {
+      let contextMenu = document.getElementById("comicColorContextMenu");
+      if (!contextMenu) {
+        contextMenu = document.createElement("div");
+        contextMenu.id = "comicColorContextMenu";
+        contextMenu.style.cssText = `
         position: absolute;
         z-index: 10000;
         background: #fff;
@@ -824,79 +836,79 @@ document.getElementById("comicLastColorSquare").addEventListener("click", (e) =>
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         display: none;
       `;
-      
-      const options = [
-        { text: "Aplicar al fondo", target: comicBgPicker },
-        { text: "Aplicar al borde", target: comicBorderPicker },
-        { text: "Aplicar al texto", target: comicTextPicker }
-      ];
-      
-      options.forEach(option => {
-        const menuItem = document.createElement("div");
-        menuItem.textContent = option.text;
-        menuItem.style.cssText = `
+
+        const options = [
+          { text: "Aplicar al fondo", target: comicBgPicker },
+          { text: "Aplicar al borde", target: comicBorderPicker },
+          { text: "Aplicar al texto", target: comicTextPicker },
+        ];
+
+        options.forEach((option) => {
+          const menuItem = document.createElement("div");
+          menuItem.textContent = option.text;
+          menuItem.style.cssText = `
           padding: 6px 12px;
           cursor: pointer;
           font-size: 14px;
         `;
-        menuItem.addEventListener("mouseover", () => {
-          menuItem.style.background = "#f0f0f0";
+          menuItem.addEventListener("mouseover", () => {
+            menuItem.style.background = "#f0f0f0";
+          });
+          menuItem.addEventListener("mouseout", () => {
+            menuItem.style.background = "";
+          });
+          menuItem.addEventListener("click", (e) => {
+            e.stopPropagation();
+            option.target.value = lastComicEyedropperColor;
+            option.target.dispatchEvent(new Event("input"));
+            contextMenu.style.display = "none";
+          });
+          contextMenu.appendChild(menuItem);
         });
-        menuItem.addEventListener("mouseout", () => {
-          menuItem.style.background = "";
-        });
-        menuItem.addEventListener("click", (e) => {
-          e.stopPropagation();
-          option.target.value = lastComicEyedropperColor;
-          option.target.dispatchEvent(new Event("input"));
-          contextMenu.style.display = "none";
-        });
-        contextMenu.appendChild(menuItem);
-      });
-      
-      document.body.appendChild(contextMenu);
-    }
-    
-    contextMenu.style.left = (e.pageX + 5) + "px";
-    contextMenu.style.top = (e.pageY + 5) + "px";
-    contextMenu.style.display = "block";
-    
-    setTimeout(() => {
-      const closeContextMenu = (e) => {
-        if (!contextMenu.contains(e.target)) {
-          contextMenu.style.display = "none";
-          document.removeEventListener("click", closeContextMenu);
-        }
-      };
-      document.addEventListener("click", closeContextMenu);
-    }, 10);
-  }
-});
 
-let comicTailBgStyle = document.getElementById('comic-tail-bg-style');
+        document.body.appendChild(contextMenu);
+      }
+
+      contextMenu.style.left = e.pageX + 5 + "px";
+      contextMenu.style.top = e.pageY + 5 + "px";
+      contextMenu.style.display = "block";
+
+      setTimeout(() => {
+        const closeContextMenu = (e) => {
+          if (!contextMenu.contains(e.target)) {
+            contextMenu.style.display = "none";
+            document.removeEventListener("click", closeContextMenu);
+          }
+        };
+        document.addEventListener("click", closeContextMenu);
+      }, 10);
+    }
+  });
+
+let comicTailBgStyle = document.getElementById("comic-tail-bg-style");
 if (!comicTailBgStyle) {
-  comicTailBgStyle = document.createElement('style');
-  comicTailBgStyle.id = 'comic-tail-bg-style';
+  comicTailBgStyle = document.createElement("style");
+  comicTailBgStyle.id = "comic-tail-bg-style";
   document.head.appendChild(comicTailBgStyle);
 }
 
-let comicTailBorderStyle = document.getElementById('comic-tail-border-style');
+let comicTailBorderStyle = document.getElementById("comic-tail-border-style");
 if (!comicTailBorderStyle) {
-  comicTailBorderStyle = document.createElement('style');
-  comicTailBorderStyle.id = 'comic-tail-border-style';
+  comicTailBorderStyle = document.createElement("style");
+  comicTailBorderStyle.id = "comic-tail-border-style";
   document.head.appendChild(comicTailBorderStyle);
 }
 
 comicBgPicker.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
   comicBalloon.style.backgroundColor = selectedColor;
-    comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${selectedColor} !important; }`;
+  comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${selectedColor} !important; }`;
 });
 
 comicBorderPicker.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
   comicBalloon.style.borderColor = selectedColor;
-    comicTailBorderStyle.textContent = `.dialogo-comic::before { border-top-color: ${selectedColor} !important; }`;
+  comicTailBorderStyle.textContent = `.dialogo-comic::before { border-top-color: ${selectedColor} !important; }`;
 });
 
 comicTextPicker.addEventListener("input", (e) => {
@@ -990,9 +1002,13 @@ document.addEventListener("mousedown", (e) => {
   ) {
     comicColorPanel.style.display = "none";
   }
-  
+
   const contextMenu = document.getElementById("comicColorContextMenu");
-  if (contextMenu && contextMenu.style.display === "block" && !contextMenu.contains(e.target)) {
+  if (
+    contextMenu &&
+    contextMenu.style.display === "block" &&
+    !contextMenu.contains(e.target)
+  ) {
     contextMenu.style.display = "none";
   }
 });
@@ -1005,8 +1021,8 @@ function eyedropperMoveHandler(e) {
   if (!eyedropperActive) return;
   const colorPreview = document.getElementById("floating-color-preview");
   if (!colorPreview) return;
-  colorPreview.style.left = (e.pageX + 20) + "px";
-  colorPreview.style.top = (e.pageY - 24) + "px";
+  colorPreview.style.left = e.pageX + 20 + "px";
+  colorPreview.style.top = e.pageY - 24 + "px";
 
   if (posterImg.naturalWidth && posterImg.naturalHeight) {
     const canvas = document.createElement("canvas");
@@ -1039,7 +1055,7 @@ function activateEyedropper(callback = null) {
   eyedropperActive = true;
   eyedropperCallback = callback;
   posterImg.style.cursor = "crosshair";
-  
+
   let colorPreview = document.getElementById("floating-color-preview");
   if (!colorPreview) {
     colorPreview = document.createElement("div");
@@ -1104,8 +1120,8 @@ posterImg.addEventListener("click", (e) => {
   if (colorPreview) {
     colorPreview.style.background = hex;
     colorPreview.style.display = "block";
-    colorPreview.style.left = (e.pageX + 20) + "px";
-    colorPreview.style.top = (e.pageY - 24) + "px";
+    colorPreview.style.left = e.pageX + 20 + "px";
+    colorPreview.style.top = e.pageY - 24 + "px";
   }
 
   if (eyedropperCallback) {
