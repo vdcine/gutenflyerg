@@ -429,20 +429,7 @@ button {
   border-right: 12px solid transparent;
   border-top: 15px solid #ffff;
   transform: rotate(12deg);
-}
-
-.comic-tail-noise {
-  position: absolute;
-  bottom: -12px;
-  left: 52px;
-  width: 20px;
-  height: 15px;
-  background: url("images/ruido.png") repeat;
-  opacity: 0.18;
-  pointer-events: none;
   z-index: 2;
-  clip-path: polygon(0 100%, 40% 0, 100% 100%);
-  transform: rotate(72deg);
 }
 
 .dialogo-comic::before {
@@ -455,6 +442,34 @@ button {
   pointer-events: none;
   background: url("images/ruido.png");
   opacity: 0.18;
-  z-index: 1;
+  z-index: 4;
   border-radius: 50%;
+}
+
+.comic-tail-noise {
+  position: absolute;
+  bottom: -10px;
+  left: 54px;
+  width: 16px;
+  height: 15px;
+  background: url("images/ruido.png") repeat;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 3;
+  transform: rotate(72deg);
+  clip-path: polygon(40% 0%, 100% 100%, 0% 100%);
+}
+
+/* Borde negro del triángulo */
+.comic-tail-border {
+  position: absolute;
+  bottom: -16px;
+  left: 49px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 13px solid transparent;
+  border-top: 17px solid #000000;
+  transform: rotate(11deg);
+  z-index: 1;
 }

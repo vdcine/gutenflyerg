@@ -908,7 +908,7 @@ comicBgPicker.addEventListener("input", (e) => {
 comicBorderPicker.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
   comicBalloon.style.borderColor = selectedColor;
-  comicTailBorderStyle.textContent = `.dialogo-comic::before { border-top-color: ${selectedColor} !important; }`;
+  comicTailBorderStyle.textContent = `.comic-tail-border { border-top-color: ${selectedColor} !important; }`;
 });
 
 comicTextPicker.addEventListener("input", (e) => {
