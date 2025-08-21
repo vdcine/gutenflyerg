@@ -141,7 +141,14 @@ let currentPoster = 0;
 function showBackdrop(index) {
   if (!backdrops.length) return;
   const img = document.getElementById("backdrop-carousel-img");
-  img.src = `https://image.tmdb.org/t/p/original${backdrops[index].file_path}`;
+  const filePath = backdrops[index].file_path;
+
+  if (filePath.startsWith('http')) {
+    img.src = filePath;
+  } else {
+    img.src = `https://image.tmdb.org/t/p/original${filePath}`;
+  }
+
   document.getElementById("backdrop-counter").textContent = `Backdrop ${
     index + 1
   } de ${backdrops.length}`;
@@ -150,7 +157,14 @@ function showBackdrop(index) {
 function showPoster(index) {
   if (!posters.length) return;
   const img = document.getElementById("poster-carousel-img");
-  img.src = `https://image.tmdb.org/t/p/original${posters[index].file_path}`;
+  const filePath = posters[index].file_path;
+
+  if (filePath.startsWith('http')) {
+    img.src = filePath;
+  } else {
+    img.src = `https://image.tmdb.org/t/p/original${filePath}`;
+  }
+
   document.getElementById("poster-counter").textContent = `Poster ${
     index + 1
   } de ${posters.length}`;
@@ -171,7 +185,10 @@ document
   .getElementById("set-poster-as-poster")
   .addEventListener("click", () => {
     if (!posters.length) return;
-    const url = `https://image.tmdb.org/t/p/original${posters[currentPoster].file_path}`;
+    const filePath = posters[currentPoster].file_path;
+    const url = filePath.startsWith('http')
+      ? filePath
+      : `https://image.tmdb.org/t/p/original${filePath}`;
     const rect = document.querySelector(".rect");
     rect.style.display = "none";
     setPoster(url);
@@ -195,7 +212,10 @@ document.getElementById("backdrop-next").addEventListener("click", () => {
 
 document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
   if (!backdrops.length) return;
-  const url = `https://image.tmdb.org/t/p/original${backdrops[currentBackdrop].file_path}`;
+  const filePath = backdrops[currentBackdrop].file_path;
+  const url = filePath.startsWith('http')
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
   const rect = document.querySelector(".rect");
   rect.style.display = "none";
   setBackdropAsBackground(url);
@@ -1141,3 +1161,156 @@ posterImg.addEventListener("click", (e) => {
   eyedropperActive = false;
   eyedropperCallback = null;
 });
+
+document.getElementById("load-backdrop-direct").addEventListener("click", () => {
+  const input = document.getElementById("backdrop-direct-input").value.trim();
+
+  if (!input) {
+    alert("Por favor, ingresa una URL del backdrop");
+    return;
+  }
+
+  if (!input.startsWith('http')) {
+    alert("Por favor, ingresa una URL completa que comience con http:// o https://");
+    return;
+  }
+
+  let filePath = '';
+  if (input.includes('image.tmdb.org/t/p/original')) {
+    filePath = input.replace('https://image.tmdb.org/t/p/original', '');
+  } else {
+    filePath = input;
+  }
+
+  const newBackdrop = {
+    file_path: filePath,
+    aspect_ratio: 1.778
+  };
+
+  backdrops.unshift(newBackdrop);
+  currentBackdrop = 0;
+
+  showBackdrop(currentBackdrop);
+
+  document.getElementById("backdrop-direct-input").value = "";
+});
+
+document.getElementById("load-poster-direct").addEventListener("click", () => {
+  const input = document.getElementById("poster-direct-input").value.trim();
+
+  if (!input) {
+    alert("Por favor, ingresa una URL del poster");
+    return;
+  }
+
+  if (!input.startsWith('http')) {
+    alert("Por favor, ingresa una URL completa que comience con http:// o https://");
+    return;
+  }
+
+  let filePath = '';
+  if (input.includes('image.tmdb.org/t/p/original')) {
+    filePath = input.replace('https://image.tmdb.org/t/p/original', '');
+  } else {
+    filePath = input;
+  }
+
+  const newPoster = {
+    file_path: filePath,
+    aspect_ratio: 0.667
+  };
+
+  posters.unshift(newPoster);
+  currentPoster = 0;
+
+  showPoster(currentPoster);
+
+  document.getElementById("poster-direct-input").value = "";
+});
+
+document.getElementById("backdrop-carousel-img").addEventListener("click", () => {
+  if (backdrops.length > 0) {
+    const currentBackdropData = backdrops[currentBackdrop];
+    const filePath = currentBackdropData.file_path;
+
+    const fullUrl = filePath.startsWith('http')
+      ? filePath
+      : `https://image.tmdb.org/t/p/original${filePath}`;
+
+    showImageInfo("Backdrop", filePath, fullUrl);
+  }
+});
+
+document.getElementById("poster-carousel-img").addEventListener("click", () => {
+  if (posters.length > 0) {
+    const currentPosterData = posters[currentPoster];
+    const filePath = currentPosterData.file_path;
+
+    const fullUrl = filePath.startsWith('http')
+      ? filePath
+      : `https://image.tmdb.org/t/p/original${filePath}`;
+
+    showImageInfo("Poster", filePath, fullUrl);
+  }
+});
+
+function showImageInfo(type, filePath, fullUrl) {
+  const existingModal = document.getElementById("image-info-modal");
+  if (existingModal) {
+    existingModal.remove();
+  }
+
+  const modal = document.createElement("div");
+  modal.id = "image-info-modal";
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+
+  const modalContent = document.createElement("div");
+  modalContent.style.cssText = `
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+  `;
+
+  modalContent.innerHTML = `
+    <h3>Información del ${type}</h3>
+    <p><strong>URL de la imagen:</strong></p>
+    <input type="text" readonly value="${fullUrl}" style="width: 100%; padding: 5px; margin-bottom: 20px; font-family: monospace;">
+    <div style="display: flex; gap: 10px; justify-content: center;">
+      <button id="copy-url" style="padding: 8px 16px;">Copiar URL</button>
+      <button id="close-modal" style="padding: 8px 16px; background: #ccc;">Cerrar</button>
+    </div>
+  `;
+
+  modal.appendChild(modalContent);
+  document.body.appendChild(modal);
+
+  document.getElementById("copy-url").addEventListener("click", () => {
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      alert("URL copiada al portapapeles");
+    });
+  });
+
+  document.getElementById("close-modal").addEventListener("click", () => {
+    modal.remove();
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+}
