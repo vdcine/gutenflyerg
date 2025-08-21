@@ -477,7 +477,7 @@ button {
 #poster-direct-input {
   border: 2px solid #386119;
   border-radius: 4px;
-  font-family: 'Gilroy', sans-serif;
+  font-family: "Gilroy", sans-serif;
   font-size: 14px;
 }
 
@@ -495,7 +495,7 @@ button {
   border: none;
   border-radius: 4px;
   padding: 6px 12px;
-  font-family: 'Gilroy', sans-serif;
+  font-family: "Gilroy", sans-serif;
   font-weight: 600;
   cursor: pointer;
   font-size: 14px;
@@ -530,7 +530,7 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-family: 'Gilroy', sans-serif;
+  font-family: "Gilroy", sans-serif;
 }
 
 #image-info-modal button:hover {
@@ -543,4 +543,43 @@ button {
 
 #image-info-modal button#close-modal:hover {
   background: #444;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 12px;
+  background: #14181e;
+  color: #dbe5ee;
+}
+
+.panel label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  margin-right: 10px;
+  justify-self: left;
+}
+
+.panel input[type="text"],
+.panel input[type="number"] {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #29303a;
+  background: #101419;
+  color: #e8f1ff;
+}
+
+.panel button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #283241;
+  background: #1a2430;
+  color: #e8f1ff;
+  cursor: pointer;
+  font-weight: 700;
 }

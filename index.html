@@ -94,9 +94,9 @@
                   type="text"
                   id="backdrop-direct-input"
                   placeholder="Pegar URL de backdrop"
-                  style="width: 500px; margin-bottom: 5px; padding: 5px;"
+                  style="width: 500px; margin-bottom: 5px; padding: 5px"
                 />
-                <button id="load-backdrop-direct" style="margin-left: 5px;">
+                <button id="load-backdrop-direct" style="margin-left: 5px">
                   Cargar backdrop directo
                 </button>
               </div>
@@ -161,9 +161,9 @@
                   type="text"
                   id="poster-direct-input"
                   placeholder="Pegar URL de poster"
-                  style="width: 300px; margin-bottom: 5px; padding: 5px;"
+                  style="width: 300px; margin-bottom: 5px; padding: 5px"
                 />
-                <button id="load-poster-direct" style="margin-left: 5px;">
+                <button id="load-poster-direct" style="margin-left: 5px">
                   Cargar poster directo
                 </button>
               </div>
@@ -205,15 +205,38 @@
           <hr />
           <h2 id="instrucciones">4°: Editar textos y colores.</h2>
           <h3 id="instrucciones" style="margin-top: 0px">
-            Hacer doble click sobre el texto a editar (salvo header, año y
-            director)
+            Utilizar el formulario para cambiar lo deseado.
             <br />
-            En el caso del título al darle Shift+Enter mientras editando agrega
-            un salto de línea.
+            En el caso del título al darle Shift+Enter o Enter en el textarea
+            agrega un salto de línea.
             <br />
             Para modificar colores de textos y cajas hacer UN click sobre los
             mismos y luego seleccionar el recuadro que abre el color picker.
           </h3>
+
+          <div class="panel">
+            <div>
+              <label>Ciclo</label>
+              <input id="cicloInput" type="text" value="Ciclo" />
+            </div>
+
+            <div>
+              <label>Fecha</label>
+              <input id="dateInput" type="date" value="2025-08-06" />
+            </div>
+            <div>
+              <label>Hora</label>
+              <input id="hourInput" type="time" value="19:00" />
+            </div>
+            <div>
+              <label>Título</label>
+              <textarea id="titleInput" rows="2"></textarea>
+            </div>
+
+            <div class="full">
+              <button id="applyTxtBtn">Aplicar textos</button>
+            </div>
+          </div>
 
           <div>
             <button id="toggle-rect">Ocultar rectángulo vertical</button>
@@ -231,7 +254,7 @@
 
             <div class="poster-container">
               <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
-              <div class="dialogo-comic">
+              <div id="bubble" class="dialogo-comic">
                 ¡Debate luego!
                 <div class="comic-tail-border"></div>
                 <div class="comic-tail-noise"></div>

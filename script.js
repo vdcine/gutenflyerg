@@ -55,6 +55,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     result.addEventListener("click", async () => {
       window.selectedMovieId = movie.id;
       document.getElementById("title").textContent = movie.title;
+      document.getElementById("titleInput").value = movie.title;
       document.getElementById("year").textContent = new Date(
         movie.release_date
       ).getFullYear();
@@ -143,7 +144,7 @@ function showBackdrop(index) {
   const img = document.getElementById("backdrop-carousel-img");
   const filePath = backdrops[index].file_path;
 
-  if (filePath.startsWith('http')) {
+  if (filePath.startsWith("http")) {
     img.src = filePath;
   } else {
     img.src = `https://image.tmdb.org/t/p/original${filePath}`;
@@ -159,7 +160,7 @@ function showPoster(index) {
   const img = document.getElementById("poster-carousel-img");
   const filePath = posters[index].file_path;
 
-  if (filePath.startsWith('http')) {
+  if (filePath.startsWith("http")) {
     img.src = filePath;
   } else {
     img.src = `https://image.tmdb.org/t/p/original${filePath}`;
@@ -186,7 +187,7 @@ document
   .addEventListener("click", () => {
     if (!posters.length) return;
     const filePath = posters[currentPoster].file_path;
-    const url = filePath.startsWith('http')
+    const url = filePath.startsWith("http")
       ? filePath
       : `https://image.tmdb.org/t/p/original${filePath}`;
     const rect = document.querySelector(".rect");
@@ -213,7 +214,7 @@ document.getElementById("backdrop-next").addEventListener("click", () => {
 document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
   if (!backdrops.length) return;
   const filePath = backdrops[currentBackdrop].file_path;
-  const url = filePath.startsWith('http')
+  const url = filePath.startsWith("http")
     ? filePath
     : `https://image.tmdb.org/t/p/original${filePath}`;
   const rect = document.querySelector(".rect");
@@ -276,46 +277,6 @@ rectToggle.addEventListener("click", () => {
     : "Ocultar rectángulo vertical";
 });
 
-flyerDate.addEventListener("dblclick", () => {
-  dateInput.style.display = "block";
-  flyerDate.style.display = "none";
-  dateInput.value = flyerDate.innerHTML.replace(/<br\s*\/?>/gi, "\n");
-  dateInput.focus();
-});
-dateInput.addEventListener("blur", () => {
-  flyerDate.innerHTML = dateInput.value.replace(/\n/g, "<br>");
-  flyerDate.style.display = "block";
-  dateInput.style.display = "none";
-});
-dateInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    flyerDate.innerHTML = dateInput.value.replace(/\n/g, "<br>");
-    flyerDate.style.display = "block";
-    dateInput.style.display = "none";
-    e.preventDefault();
-  }
-});
-
-flyerHour.addEventListener("dblclick", () => {
-  hourInput.style.display = "block";
-  flyerHour.style.display = "none";
-  hourInput.value = flyerHour.textContent;
-  hourInput.focus();
-});
-hourInput.addEventListener("blur", () => {
-  flyerHour.textContent = hourInput.value;
-  flyerHour.style.display = "block";
-  hourInput.style.display = "none";
-});
-hourInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    flyerHour.textContent = hourInput.value;
-    flyerHour.style.display = "block";
-    hourInput.style.display = "none";
-    e.preventDefault();
-  }
-});
-
 const cicloH2 = document.getElementById("ciclo");
 
 const cicloInput = document.createElement("input");
@@ -331,27 +292,6 @@ cicloInput.style.outline = "none";
 cicloInput.style.fontWeight = "700";
 
 cicloH2.parentNode.insertBefore(cicloInput, cicloH2.nextSibling);
-cicloH2.addEventListener("dblclick", () => {
-  cicloInput.value = cicloH2.textContent;
-  cicloInput.style.display = "block";
-  cicloH2.style.display = "none";
-  cicloInput.focus();
-});
-
-cicloInput.addEventListener("blur", () => {
-  cicloH2.textContent = cicloInput.value;
-  cicloH2.style.display = "block";
-  cicloInput.style.display = "none";
-});
-
-cicloInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    cicloH2.textContent = cicloInput.value;
-    cicloH2.style.display = "block";
-    cicloInput.style.display = "none";
-    e.preventDefault();
-  }
-});
 
 const titleH3 = document.getElementById("title");
 
@@ -372,36 +312,6 @@ titleInput.style.position = "relative";
 titleInput.style.zIndex = "10";
 
 titleH3.parentNode.insertBefore(titleInput, titleH3.nextSibling);
-
-titleH3.addEventListener("dblclick", () => {
-  titleInput.value = titleH3.textContent;
-  titleInput.style.display = "block";
-  titleH3.style.display = "none";
-  titleInput.focus();
-});
-
-titleInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    titleH3.innerHTML = titleInput.value.replace(/\n/g, "<br>");
-    titleH3.style.display = "block";
-    titleInput.style.display = "none";
-    e.preventDefault();
-  } else if (e.key === "Enter" && e.shiftKey) {
-    const cursorPos = titleInput.selectionStart;
-    const value = titleInput.value;
-    titleInput.value =
-      value.slice(0, cursorPos) + "<br>" + value.slice(cursorPos);
-
-    titleInput.selectionStart = titleInput.selectionEnd = cursorPos + 4;
-    e.preventDefault();
-  }
-});
-
-titleInput.addEventListener("blur", () => {
-  titleH3.innerHTML = titleInput.value.replace(/\n/g, "<br>");
-  titleH3.style.display = "block";
-  titleInput.style.display = "none";
-});
 
 /* document.getElementById("saveFlyer").addEventListener("click", () => {
   const flyer = document.getElementById("flyer");
@@ -1162,38 +1072,42 @@ posterImg.addEventListener("click", (e) => {
   eyedropperCallback = null;
 });
 
-document.getElementById("load-backdrop-direct").addEventListener("click", () => {
-  const input = document.getElementById("backdrop-direct-input").value.trim();
+document
+  .getElementById("load-backdrop-direct")
+  .addEventListener("click", () => {
+    const input = document.getElementById("backdrop-direct-input").value.trim();
 
-  if (!input) {
-    alert("Por favor, ingresa una URL del backdrop");
-    return;
-  }
+    if (!input) {
+      alert("Por favor, ingresa una URL del backdrop");
+      return;
+    }
 
-  if (!input.startsWith('http')) {
-    alert("Por favor, ingresa una URL completa que comience con http:// o https://");
-    return;
-  }
+    if (!input.startsWith("http")) {
+      alert(
+        "Por favor, ingresa una URL completa que comience con http:// o https://"
+      );
+      return;
+    }
 
-  let filePath = '';
-  if (input.includes('image.tmdb.org/t/p/original')) {
-    filePath = input.replace('https://image.tmdb.org/t/p/original', '');
-  } else {
-    filePath = input;
-  }
+    let filePath = "";
+    if (input.includes("image.tmdb.org/t/p/original")) {
+      filePath = input.replace("https://image.tmdb.org/t/p/original", "");
+    } else {
+      filePath = input;
+    }
 
-  const newBackdrop = {
-    file_path: filePath,
-    aspect_ratio: 1.778
-  };
+    const newBackdrop = {
+      file_path: filePath,
+      aspect_ratio: 1.778,
+    };
 
-  backdrops.unshift(newBackdrop);
-  currentBackdrop = 0;
+    backdrops.unshift(newBackdrop);
+    currentBackdrop = 0;
 
-  showBackdrop(currentBackdrop);
+    showBackdrop(currentBackdrop);
 
-  document.getElementById("backdrop-direct-input").value = "";
-});
+    document.getElementById("backdrop-direct-input").value = "";
+  });
 
 document.getElementById("load-poster-direct").addEventListener("click", () => {
   const input = document.getElementById("poster-direct-input").value.trim();
@@ -1203,21 +1117,23 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
     return;
   }
 
-  if (!input.startsWith('http')) {
-    alert("Por favor, ingresa una URL completa que comience con http:// o https://");
+  if (!input.startsWith("http")) {
+    alert(
+      "Por favor, ingresa una URL completa que comience con http:// o https://"
+    );
     return;
   }
 
-  let filePath = '';
-  if (input.includes('image.tmdb.org/t/p/original')) {
-    filePath = input.replace('https://image.tmdb.org/t/p/original', '');
+  let filePath = "";
+  if (input.includes("image.tmdb.org/t/p/original")) {
+    filePath = input.replace("https://image.tmdb.org/t/p/original", "");
   } else {
     filePath = input;
   }
 
   const newPoster = {
     file_path: filePath,
-    aspect_ratio: 0.667
+    aspect_ratio: 0.667,
   };
 
   posters.unshift(newPoster);
@@ -1228,25 +1144,27 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
   document.getElementById("poster-direct-input").value = "";
 });
 
-document.getElementById("backdrop-carousel-img").addEventListener("click", () => {
-  if (backdrops.length > 0) {
-    const currentBackdropData = backdrops[currentBackdrop];
-    const filePath = currentBackdropData.file_path;
+document
+  .getElementById("backdrop-carousel-img")
+  .addEventListener("click", () => {
+    if (backdrops.length > 0) {
+      const currentBackdropData = backdrops[currentBackdrop];
+      const filePath = currentBackdropData.file_path;
 
-    const fullUrl = filePath.startsWith('http')
-      ? filePath
-      : `https://image.tmdb.org/t/p/original${filePath}`;
+      const fullUrl = filePath.startsWith("http")
+        ? filePath
+        : `https://image.tmdb.org/t/p/original${filePath}`;
 
-    showImageInfo("Backdrop", filePath, fullUrl);
-  }
-});
+      showImageInfo("Backdrop", filePath, fullUrl);
+    }
+  });
 
 document.getElementById("poster-carousel-img").addEventListener("click", () => {
   if (posters.length > 0) {
     const currentPosterData = posters[currentPoster];
     const filePath = currentPosterData.file_path;
 
-    const fullUrl = filePath.startsWith('http')
+    const fullUrl = filePath.startsWith("http")
       ? filePath
       : `https://image.tmdb.org/t/p/original${filePath}`;
 
@@ -1314,3 +1232,53 @@ function showImageInfo(type, filePath, fullUrl) {
     }
   });
 }
+
+document.getElementById("applyTxtBtn").addEventListener("click", () => {
+  const ciclo = document.getElementById("cicloInput").value.trim();
+  const dateRaw = document.getElementById("dateInput").value.trim();
+  const hourRaw = document.getElementById("hourInput").value.trim();
+  const titulo = document.getElementById("titleInput").value.trim();
+  document.getElementById("title").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
+
+  document.getElementById("ciclo").textContent = ciclo || "Ciclo";
+
+  function formatDateToSpanish(dateStr) {
+    if (!dateStr) return "";
+    const dias = [
+      "DOMINGO",
+      "LUNES",
+      "MARTES",
+      "MIÉRCOLES",
+      "JUEVES",
+      "VIERNES",
+      "SÁBADO",
+    ];
+    const meses = [
+      "ENERO",
+      "FEBRERO",
+      "MARZO",
+      "ABRIL",
+      "MAYO",
+      "JUNIO",
+      "JULIO",
+      "AGOSTO",
+      "SEPTIEMBRE",
+      "OCTUBRE",
+      "NOVIEMBRE",
+      "DICIEMBRE",
+    ];
+    // Parse as local date
+    const [year, month, day] = dateStr.split("-");
+    const d = new Date(year, month - 1, day);
+    if (isNaN(d)) return dateStr;
+    return `${dias[d.getDay()]} ${d.getDate()} DE ${meses[d.getMonth()]}`;
+  }
+
+  const formattedDate = formatDateToSpanish(dateRaw);
+  document.getElementById("flyer-date").innerHTML = formattedDate;
+
+  const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
+  document.getElementById("flyer-hour").textContent = formattedHour;
+});
