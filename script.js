@@ -113,9 +113,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     });
   }
 
-  const btnBackdrops = document.getElementById("backdrops");
-
-  btnBackdrops.addEventListener("click", () => {
+  const linkBackdrops = document.getElementById("backdrops");
+  linkBackdrops.addEventListener("click", (e) => {
+    e.preventDefault();
     if (!window.selectedMovieId) return;
     window.open(
       `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
@@ -123,9 +123,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     );
   });
 
-  const btnPosters = document.getElementById("posters");
-
-  btnPosters.addEventListener("click", () => {
+  const linkPosters = document.getElementById("posters");
+  linkPosters.addEventListener("click", (e) => {
+    e.preventDefault();
     if (!window.selectedMovieId) return;
     window.open(
       `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
