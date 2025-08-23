@@ -1233,6 +1233,24 @@ function showImageInfo(type, filePath, fullUrl) {
   });
 }
 
+document
+  .getElementById("flyerDateFontSizeInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-date").style.fontSize =
+      e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerHourFontSizeInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-hour").style.fontSize =
+      e.target.value + "px";
+  });
+
+document.getElementById("rectWidthInput").addEventListener("input", (e) => {
+  document.querySelector(".rect").style.width = e.target.value + "px";
+});
+
 document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const ciclo = document.getElementById("cicloInput").value.trim();
   const dateRaw = document.getElementById("dateInput").value.trim();
