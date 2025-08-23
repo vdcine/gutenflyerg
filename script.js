@@ -72,18 +72,18 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       ).textContent = `${movieDetails.runtime} minutos`;
 
       const flyerFeed = document.getElementById("flyer-feed");
-      flyerFeed.querySelector("#title").textContent = movie.title;
-      flyerFeed.querySelector("#year").textContent = new Date(
+      flyerFeed.querySelector("#title-feed").textContent = movie.title;
+      flyerFeed.querySelector("#year-feed").textContent = new Date(
         movie.release_date
       ).getFullYear();
       flyerFeed.querySelector(
         "#poster"
       ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-      flyerFeed.querySelector("#director").textContent = director
+      flyerFeed.querySelector("#director-feed").textContent = director
         ? director.name
         : "Director no disponible";
       flyerFeed.querySelector(
-        "#duracion"
+        "#duracion-feed"
       ).textContent = `${movieDetails.runtime} minutos`;
 
       const imagesRes = await fetch(
@@ -607,10 +607,17 @@ function getColorTargets(el) {
     ];
   }
 
-  if (el.id === "flyer-hour" || el.id === "flyer-biblioteca") {
+  if (
+    el.id === "flyer-hour" ||
+    el.id === "flyer-biblioteca" ||
+    el.id === "flyer-hour-feed" ||
+    el.id === "flyer-biblioteca-feed"
+  ) {
     return [
       document.getElementById("flyer-hour"),
       document.getElementById("flyer-biblioteca"),
+      document.getElementById("flyer-hour-feed"),
+      document.getElementById("flyer-biblioteca-feed"),
     ];
   }
 
@@ -752,9 +759,16 @@ floatingColorPicker.addEventListener("blur", () => {
   document.getElementById("year"),
   document.getElementById("director"),
   document.getElementById("duracion"),
+  document.getElementById("title-feed"),
+  document.getElementById("year-feed"),
+  document.getElementById("director-feed"),
+  document.getElementById("duracion-feed"),
   document.getElementById("flyer-date"),
+  document.getElementById("flyer-date-feed"),
   document.getElementById("flyer-hour"),
+  document.getElementById("flyer-hour-feed"),
   document.getElementById("flyer-biblioteca"),
+  document.getElementById("flyer-biblioteca-feed"),
   document.getElementById("org"),
   document.querySelector(".rect"),
   document.querySelector(".rect-feed"),
@@ -1435,12 +1449,12 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
 
   const flyerFeed = document.getElementById("flyer-feed");
   if (flyerFeed) {
-    flyerFeed.querySelector("#title").innerHTML = (
+    flyerFeed.querySelector("#title-feed").innerHTML = (
       titulo || "Título de la película"
     ).replace(/\n/g, "<br>");
     flyerFeed.querySelector("#ciclo").textContent = ciclo || "Ciclo";
-    flyerFeed.querySelector("#flyer-date").innerHTML = formattedDate;
-    flyerFeed.querySelector("#flyer-hour").textContent = formattedHour;
+    flyerFeed.querySelector("#flyer-date-feed").innerHTML = formattedDate;
+    flyerFeed.querySelector("#flyer-hour-feed").textContent = formattedHour;
   }
 });
 
