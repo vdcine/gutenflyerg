@@ -71,6 +71,21 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "duracion"
       ).textContent = `${movieDetails.runtime} minutos`;
 
+      const flyerFeed = document.getElementById("flyer-feed");
+      flyerFeed.querySelector("#title").textContent = movie.title;
+      flyerFeed.querySelector("#year").textContent = new Date(
+        movie.release_date
+      ).getFullYear();
+      flyerFeed.querySelector(
+        "#poster"
+      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      flyerFeed.querySelector("#director").textContent = director
+        ? director.name
+        : "Director no disponible";
+      flyerFeed.querySelector(
+        "#duracion"
+      ).textContent = `${movieDetails.runtime} minutos`;
+
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
       );
@@ -218,12 +233,15 @@ document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
     ? filePath
     : `https://image.tmdb.org/t/p/original${filePath}`;
   const rect = document.querySelector(".rect");
+  const rectFeed = document.querySelector(".rect-feed");
   rect.style.display = "none";
+  rectFeed.style.display = "none";
   setBackdropAsBackground(url);
 });
 
 function setBackdropAsBackground(url) {
-  const flyer = document.getElementById("flyer");
+  const flyerStory = document.getElementById("flyer-story");
+  const flyerFeed = document.getElementById("flyer-feed");
   let blurBg = document.getElementById("flyer-blur-bg");
   if (blurBg) blurBg.remove();
 
@@ -241,17 +259,24 @@ function setBackdropAsBackground(url) {
   blurBg.style.backgroundRepeat = "no-repeat";
   blurBg.style.filter = "blur(4px) brightness(0.9)";
   blurBg.style.backgroundImage = `url('${url}')`;
-  flyer.prepend(blurBg);
+  flyerStory.prepend(blurBg);
+  flyerFeed.prepend(blurBg.cloneNode());
 
-  flyer.style.backgroundImage = "";
+  flyerFeed.style.backgroundImage = "";
+  flyerStory.style.backgroundImage = "";
 }
 
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
-  const flyer = document.getElementById("flyer");
+  const flyerStory = document.getElementById("flyer-story");
+  const flyerFeed = document.getElementById("flyer-feed");
   const rect = document.querySelector(".rect");
-  rect.style.display = "block";
+  const rectFeed = document.querySelector(".rect-feed");
 
-  flyer.style.backgroundImage = "";
+  rect.style.display = "block";
+  rectFeed.style.display = "block";
+
+  flyerStory.style.backgroundImage = "";
+  flyerFeed.style.backgroundImage = "";
 
   const blurBg = document.getElementById("flyer-blur-bg");
   if (blurBg) {
@@ -265,6 +290,8 @@ const flyerHour = document.getElementById("flyer-hour");
 const dateInput = document.getElementById("dateInput");
 const hourInput = document.getElementById("hourInput");
 const rect = document.querySelector(".rect");
+const rectFeed = document.querySelector(".rect-feed");
+
 const rectToggle = document.getElementById("toggle-rect");
 
 let rectHidden = false;
@@ -272,6 +299,7 @@ let rectHidden = false;
 rectToggle.addEventListener("click", () => {
   rectHidden = !rectHidden;
   rect.style.display = rectHidden ? "none" : "block";
+  rectFeed.style.display = rectHidden ? "none" : "block";
   rectToggle.textContent = rectHidden
     ? "Mostrar rectángulo vertical"
     : "Ocultar rectángulo vertical";
@@ -350,7 +378,7 @@ async function applyBlurToImage(imageUrl) {
 }
 
 document.getElementById("saveFlyer").addEventListener("click", async () => {
-  const flyerElement = document.getElementById("flyer");
+  const flyerElement = document.getElementById("flyer-story");
   const blurBg = document.getElementById("flyer-blur-bg");
 
   if (blurBg && blurBg.style.backgroundImage) {
@@ -435,6 +463,92 @@ async function generateWithoutBlur(flyerElement) {
   document.body.removeChild(link);
 }
 
+document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
+  const flyerElement = document.getElementById("flyer-feed");
+  const blurBg = document.getElementById("flyer-blur-bg");
+
+  if (blurBg && blurBg.style.backgroundImage) {
+    const bgImageMatch = blurBg.style.backgroundImage.match(
+      /url\(['"]?([^'"]+)['"]?\)/
+    );
+
+    if (bgImageMatch) {
+      const imageUrl = bgImageMatch[1];
+
+      try {
+        const blurredDataUrl = await applyBlurToImage(imageUrl);
+
+        const originalFilter = blurBg.style.filter;
+        const originalBgImage = blurBg.style.backgroundImage;
+
+        blurBg.style.filter = "none";
+        blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        const canvas = await html2canvas(flyerElement, {
+          width: 1080,
+          height: 1080,
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#ffffff",
+          scrollX: 0,
+          scrollY: 0,
+        });
+
+        blurBg.style.filter = originalFilter;
+        blurBg.style.backgroundImage = originalBgImage;
+
+        // Descargar
+        const link = document.createElement("a");
+        const flyerTitle = document
+          .getElementById("title")
+          .textContent.trim()
+          .replace(/\s+/g, "_")
+          .replace(/[^\w\-]/g, "");
+        const date = new Date().toISOString().slice(0, 10);
+        link.download = `${date}_${flyerTitle}_flyer.png`;
+        link.href = canvas.toDataURL("image/png");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (blurError) {
+        console.warn(
+          "Error al aplicar blur, usando método alternativo:",
+          blurError
+        );
+
+        await generateWithoutBlur(flyerElement);
+      }
+    } else {
+      await generateWithoutBlur(flyerElement);
+    }
+  } else {
+    await generateWithoutBlur(flyerElement);
+  }
+});
+
+async function generateWithoutBlur(flyerElement) {
+  const canvas = await html2canvas(flyerElement, {
+    width: 1080,
+    height: 1080,
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: "#ffffff",
+    scrollX: 0,
+    scrollY: 0,
+  });
+
+  const link = document.createElement("a");
+  link.download = `flyer-cine-${Date.now()}.png`;
+  link.href = canvas.toDataURL("image/png");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 const floatingColorPicker = document.getElementById("floatingColorPicker");
 let colorTargets = [];
 
@@ -444,9 +558,12 @@ floatingColorPicker.addEventListener("input", (e) => {
   colorTargets.forEach((target) => {
     const isBackground =
       target.classList.contains("rect") ||
+      target.classList.contains("rect-feed") ||
       target.classList.contains("rect2") ||
+      target.classList.contains("rect2-feed") ||
       target.classList.contains("tape") ||
-      target.id === "flyer";
+      target.id === "flyer-story" ||
+      target.id === "flyer-feed";
 
     if (isBackground) {
       target.style.backgroundColor = selectedColor;
@@ -476,8 +593,18 @@ function rgbToHex(rgb) {
 }
 
 function getColorTargets(el) {
-  if (el.classList.contains("rect") || el.classList.contains("rect2")) {
-    return [document.querySelector(".rect"), document.querySelector(".rect2")];
+  if (
+    el.classList.contains("rect") ||
+    el.classList.contains("rect2") ||
+    el.classList.contains("rect-feed") ||
+    el.classList.contains("rect2-feed")
+  ) {
+    return [
+      document.querySelector(".rect"),
+      document.querySelector(".rect2"),
+      document.querySelector(".rect-feed"),
+      document.querySelector(".rect2-feed"),
+    ];
   }
 
   if (el.id === "flyer-hour" || el.id === "flyer-biblioteca") {
@@ -487,7 +614,7 @@ function getColorTargets(el) {
     ];
   }
 
-  if (el.id === "flyer") {
+  if (el.id === "flyer-story" || el.id === "flyer-feed") {
     return [el];
   }
 
@@ -504,8 +631,11 @@ function getCurrentColorForTargets(targets) {
 
   const isBackground =
     targets[0].classList.contains("rect") ||
+    targets[0].classList.contains("rect-feed") ||
     targets[0].classList.contains("rect2") ||
-    targets[0].id === "flyer";
+    targets[0].classList.contains("rect2-feed") ||
+    targets[0].id === "flyer-story" ||
+    targets[0].id === "flyer-feed";
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
 }
@@ -627,9 +757,11 @@ floatingColorPicker.addEventListener("blur", () => {
   document.getElementById("flyer-biblioteca"),
   document.getElementById("org"),
   document.querySelector(".rect"),
-  document.querySelector(".rect2"),
+  document.querySelector(".rect-feed"),
+  document.querySelector(".rect2-feed"),
   document.getElementById("ciclo"),
-  document.getElementById("flyer"),
+  document.getElementById("flyer-feed"),
+  document.getElementById("flyer-story"),
   document.querySelector(".tape"),
 ].forEach((el) => {
   if (el) {
@@ -1249,6 +1381,7 @@ document
 
 document.getElementById("rectWidthInput").addEventListener("input", (e) => {
   document.querySelector(".rect").style.width = e.target.value + "px";
+  document.querySelector(".rect-feed").style.width = e.target.value + "px";
 });
 
 document.getElementById("applyTxtBtn").addEventListener("click", () => {
@@ -1287,7 +1420,7 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
       "NOVIEMBRE",
       "DICIEMBRE",
     ];
-    // Parse as local date
+
     const [year, month, day] = dateStr.split("-");
     const d = new Date(year, month - 1, day);
     if (isNaN(d)) return dateStr;
@@ -1299,4 +1432,32 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
 
   const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
   document.getElementById("flyer-hour").textContent = formattedHour;
+
+  const flyerFeed = document.getElementById("flyer-feed");
+  if (flyerFeed) {
+    flyerFeed.querySelector("#title").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+    flyerFeed.querySelector("#ciclo").textContent = ciclo || "Ciclo";
+    flyerFeed.querySelector("#flyer-date").innerHTML = formattedDate;
+    flyerFeed.querySelector("#flyer-hour").textContent = formattedHour;
+  }
+});
+
+// TABS
+
+document.getElementById("tab-story").addEventListener("click", () => {
+  document.getElementById("flyer-story").style.display = "block";
+  document.getElementById("flyer-feed").style.display = "none";
+  document.getElementById("tab-story").classList.add("active");
+  document.getElementById("tab-feed").classList.remove("active");
+});
+
+document.getElementById("tab-feed").addEventListener("click", () => {
+  document.getElementById("flyer-story").style.display = "none";
+  document.getElementById("flyer-feed").style.display = "block";
+  document.getElementById("tab-feed").classList.add("active");
+  document.getElementById("tab-story").classList.remove("active");
+  document.getElementById("saveFlyerFeed").style.display = "block";
+  document.getElementById("saveFlyer").style.display = "none";
 });

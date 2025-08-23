@@ -287,7 +287,7 @@
                 type="number"
                 min="10"
                 max="1000"
-                value="480"
+                value="460"
                 style="width: 80px"
               />
               px
@@ -298,8 +298,17 @@
             <button id="toggle-rect">Ocultar rectángulo vertical</button>
           </div>
 
+          <div
+            class="flyer-tabs"
+            style="display: flex; gap: 12px; margin-bottom: 18px"
+          >
+            <button id="tab-story" class="flyer-tab active">
+              Historia Instagram
+            </button>
+            <button id="tab-feed" class="flyer-tab">Feed Instagram</button>
+          </div>
           <!-- FLYER -->
-          <div id="flyer">
+          <div id="flyer-story" class="flyer-version" style="display: block">
             <div class="tape"></div>
             <div class="rect"></div>
             <h1 class="header">VELADAS DE CINE</h1>
@@ -362,6 +371,92 @@
               </span>
             </div>
           </div>
+
+          <div id="flyer-feed" class="flyer-version" style="display: none">
+            <div class="tape" style="top: -152px"></div>
+            <div class="rect-feed"></div>
+            <h1 class="header" style="font-size: 85px">VELADAS DE CINE</h1>
+
+            <div class="subheader" style="width: 400px; top: 30px">
+              <h2 id="ciclo" style="font-size: 36px">Ciclo</h2>
+            </div>
+
+            <div class="poster-container">
+              <img
+                id="poster"
+                src=""
+                alt="Poster"
+                crossorigin="anonymous"
+                style="top: -70px; width: 400px; height: 600px"
+              />
+              <div id="bubble" class="dialogo-comic">
+                ¡Debate luego!
+                <div class="comic-tail-border"></div>
+                <div class="comic-tail-noise"></div>
+              </div>
+            </div>
+
+            <div class="flyer-row" style="position: relative; top: -70px">
+              <div
+                class="flyer-date-group"
+                style="position: relative; top: -100px"
+              >
+                <input
+                  type="text"
+                  id="dateInput"
+                  value="MIÉRCOLES 6 DE AGOSTO"
+                  style="display: none"
+                />
+                <div id="flyer-date" class="flyer-date" style="font-size: 36px">
+                  MIÉRCOLES 6<br />DE AGOSTO
+                </div>
+              </div>
+              <div class="flyer-main-group">
+                <h3 id="title" style="font-size: 36px">Título</h3>
+                <p id="year" style="font-size: 36px">Año</p>
+                <p id="director" style="font-size: 36px">Director</p>
+                <p id="duracion" style="font-size: 36px">100 minutos</p>
+              </div>
+              <div
+                class="flyer-hour-group"
+                style="position: relative; top: -130px"
+              >
+                <input
+                  type="text"
+                  id="hourInput"
+                  value="19:00 HS"
+                  style="display: none"
+                />
+                <div
+                  id="flyer-hour"
+                  class="flyer-hour"
+                  style="
+                    font-size: 36px;
+                    text-align: center;
+                    margin-left: -15px;
+                  "
+                >
+                  19:00 HS
+                </div>
+                <div id="flyer-biblioteca" class="flyer-biblioteca">
+                  <img
+                    src="images/icon.png"
+                    alt="ubicación"
+                    class="flyer-location-icon"
+                  />
+                  <span>Biblioteca Menéndez</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="event-data" style="height: 70px">
+              <div class="rect2-feed" style="height: 80px"></div>
+              <span id="org" style="font-size: medium">
+                Organizan Matías Corona y Francisco Albani con apoyo de la
+                Comisión Directiva de la Biblioteca Menéndez.
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       <h2 id="instrucciones">
@@ -373,6 +468,23 @@
       <!-- Botón para exportar -->
       <button type="button" id="saveFlyer" style="margin-bottom: 20px">
         Descargar
+      </button>
+
+      <button
+        type="button"
+        id="saveFlyerFeed"
+        style="
+          margin-bottom: 20px;
+          display: none;
+          margin-top: 20px;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer;
+          margin-left: auto;
+          margin-right: auto;
+        "
+      >
+        Descargar para feed
       </button>
     </div>
 
