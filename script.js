@@ -422,7 +422,7 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
           .replace(/\s+/g, "_")
           .replace(/[^\w\-]/g, "");
         const date = new Date().toISOString().slice(0, 10);
-        link.download = `${date}_${flyerTitle}_flyer.png`;
+        link.download = `${date}_${flyerTitle}_story.png`;
         link.href = canvas.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
@@ -433,35 +433,15 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
           blurError
         );
 
-        await generateWithoutBlur(flyerElement);
+        await generateWithoutBlur(flyerElement, true);
       }
     } else {
-      await generateWithoutBlur(flyerElement);
+      await generateWithoutBlur(flyerElement, true);
     }
   } else {
-    await generateWithoutBlur(flyerElement);
+    await generateWithoutBlur(flyerElement, true);
   }
 });
-
-async function generateWithoutBlur(flyerElement) {
-  const canvas = await html2canvas(flyerElement, {
-    width: 1080,
-    height: 1920,
-    scale: 2,
-    useCORS: true,
-    allowTaint: true,
-    backgroundColor: "#ffffff",
-    scrollX: 0,
-    scrollY: 0,
-  });
-
-  const link = document.createElement("a");
-  link.download = `flyer-cine-${Date.now()}.png`;
-  link.href = canvas.toDataURL("image/png");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
 
 document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
   const flyerElement = document.getElementById("flyer-feed");
@@ -508,7 +488,7 @@ document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
           .replace(/\s+/g, "_")
           .replace(/[^\w\-]/g, "");
         const date = new Date().toISOString().slice(0, 10);
-        link.download = `${date}_${flyerTitle}_flyer.png`;
+        link.download = `${date}_${flyerTitle}_feed.png`;
         link.href = canvas.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
@@ -519,20 +499,24 @@ document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
           blurError
         );
 
-        await generateWithoutBlur(flyerElement);
+        await generateWithoutBlur(flyerElement, false);
       }
     } else {
-      await generateWithoutBlur(flyerElement);
+      await generateWithoutBlur(flyerElement, false);
     }
   } else {
-    await generateWithoutBlur(flyerElement);
+    await generateWithoutBlur(flyerElement, false);
   }
 });
 
-async function generateWithoutBlur(flyerElement) {
+async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
+  const dimensions = isStoryFormat
+    ? { width: 1080, height: 1920 }
+    : { width: 1080, height: 1080 };
+
   const canvas = await html2canvas(flyerElement, {
-    width: 1080,
-    height: 1080,
+    width: dimensions.width,
+    height: dimensions.height,
     scale: 2,
     useCORS: true,
     allowTaint: true,
@@ -542,7 +526,14 @@ async function generateWithoutBlur(flyerElement) {
   });
 
   const link = document.createElement("a");
-  link.download = `flyer-cine-${Date.now()}.png`;
+  const flyerTitle = document
+    .getElementById("title")
+    .textContent.trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^\w\-]/g, "");
+  const date = new Date().toISOString().slice(0, 10);
+  const formatType = isStoryFormat ? "story" : "feed";
+  link.download = `${date}_${flyerTitle}_${formatType}.png`;
   link.href = canvas.toDataURL("image/png");
   document.body.appendChild(link);
   link.click();
