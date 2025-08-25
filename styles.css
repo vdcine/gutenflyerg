@@ -35,9 +35,17 @@ form {
   margin-bottom: 20px;
 }
 
-#flyer {
+#flyer-story {
   width: 1080px;
   height: 1920px;
+  border: 1px solid black;
+  position: relative;
+  overflow: hidden;
+}
+
+#flyer-feed {
+  width: 1080px;
+  height: 1080px;
   border: 1px solid black;
   position: relative;
   overflow: hidden;
@@ -79,7 +87,7 @@ form {
   top: -10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 480px;
+  width: 460px;
   height: 1920px;
   background: #043f61;
   mask-image: url("images/texture.png"), url("images/ruido.png");
@@ -107,6 +115,39 @@ form {
   z-index: 2;
 }
 
+.rect-feed {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 460px;
+  height: 1920px;
+  background: #043f61;
+  mask-image: url("images/texture.png"), url("images/ruido.png");
+  mask-repeat: repeat, repeat;
+  mask-size: cover, auto 2.5%;
+  -webkit-mask-image: url("images/texture.png"), url("images/ruido.png");
+  -webkit-mask-repeat: repeat, repeat;
+  -webkit-mask-size: cover, auto 2.5%;
+  mask-composite: intersect;
+  z-index: 2;
+  margin: 0;
+  display: block;
+}
+
+.rect-feed::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 2;
+}
+
 .rect2 {
   position: absolute;
   top: 60px;
@@ -119,6 +160,33 @@ form {
 }
 
 .rect2::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
+}
+
+.rect2-feed {
+  position: absolute;
+  top: -10px;
+  left: 48%;
+  transform: translateX(-50%);
+  width: 1165px;
+  height: 650px;
+  background: #043f61;
+
+  z-index: 5;
+  margin: 0;
+  display: block;
+}
+
+.rect2-feed::after {
   content: "";
   position: absolute;
   top: 0;
@@ -217,6 +285,46 @@ form {
   font-weight: 700;
 }
 
+#title-feed {
+  font-size: 50px;
+  font-weight: lighter;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#director-feed {
+  font-size: 30px;
+  z-index: 5;
+  position: relative;
+  margin-top: 10px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#year-feed {
+  font-size: 50px;
+  margin-bottom: 5px;
+  margin-top: 15px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#duracion-feed {
+  font-size: 20px;
+  margin-bottom: 5px;
+  margin-top: 15px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
 .event-data {
   font-size: 30px;
   padding: 5px;
@@ -264,6 +372,13 @@ form {
   color: inherit;
 }
 
+#title-feed,
+#year-feed,
+#director-feed,
+#org {
+  color: inherit;
+}
+
 .flyer-row {
   display: flex;
   flex-direction: row;
@@ -292,7 +407,7 @@ form {
   width: 100%;
   word-break: break-word;
   line-height: 1.1;
-  margin-left: 40px;
+  margin-left: 70px;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
 }
@@ -309,6 +424,29 @@ form {
 }
 
 .flyer-biblioteca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-top: 0;
+  text-align: left;
+  margin-left: 15px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+}
+
+.flyer-hour-feed {
+  font-size: 50px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+  text-align: left;
+  margin-left: 20px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+}
+
+.flyer-biblioteca-feed {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -346,6 +484,26 @@ form {
   margin-top: 5px;
   margin-bottom: 5px;
   z-index: 10;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
+}
+
+#title-feed,
+#year-feed,
+#director-feed {
+  text-align: center;
+}
+
+#title-feed {
+  font-size: 50px;
+  font-weight: lighter;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 5;
   position: relative;
   font-family: "Gilroy", sans-serif;
   font-weight: 700;
@@ -393,7 +551,7 @@ hr {
 
 button {
   margin-top: 10px;
-  padding: 5px 10px;
+  /* padding: 5px 10px; */
   font-size: 14px;
   cursor: pointer;
 }
@@ -584,4 +742,18 @@ button {
   color: #e8f1ff;
   cursor: pointer;
   font-weight: 700;
+}
+
+.flyer-tab.active {
+  background: #386119;
+  color: #fff;
+}
+.flyer-tab {
+  background: #eee;
+  color: #222;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-weight: bold;
 }

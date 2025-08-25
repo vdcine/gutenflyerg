@@ -71,6 +71,21 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "duracion"
       ).textContent = `${movieDetails.runtime} minutos`;
 
+      const flyerFeed = document.getElementById("flyer-feed");
+      flyerFeed.querySelector("#title-feed").textContent = movie.title;
+      flyerFeed.querySelector("#year-feed").textContent = new Date(
+        movie.release_date
+      ).getFullYear();
+      flyerFeed.querySelector(
+        "#poster"
+      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      flyerFeed.querySelector("#director-feed").textContent = director
+        ? director.name
+        : "Director no disponible";
+      flyerFeed.querySelector(
+        "#duracion-feed"
+      ).textContent = `${movieDetails.runtime} minutos`;
+
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
       );
@@ -113,9 +128,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     });
   }
 
-  const btnBackdrops = document.getElementById("backdrops");
-
-  btnBackdrops.addEventListener("click", () => {
+  const linkBackdrops = document.getElementById("backdrops");
+  linkBackdrops.addEventListener("click", (e) => {
+    e.preventDefault();
     if (!window.selectedMovieId) return;
     window.open(
       `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
@@ -123,9 +138,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     );
   });
 
-  const btnPosters = document.getElementById("posters");
-
-  btnPosters.addEventListener("click", () => {
+  const linkPosters = document.getElementById("posters");
+  linkPosters.addEventListener("click", (e) => {
+    e.preventDefault();
     if (!window.selectedMovieId) return;
     window.open(
       `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
@@ -218,17 +233,20 @@ document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
     ? filePath
     : `https://image.tmdb.org/t/p/original${filePath}`;
   const rect = document.querySelector(".rect");
+  const rectFeed = document.querySelector(".rect-feed");
   rect.style.display = "none";
+  rectFeed.style.display = "none";
   setBackdropAsBackground(url);
+  setBackdropAsBackgroundFeed(url);
 });
 
 function setBackdropAsBackground(url) {
-  const flyer = document.getElementById("flyer");
-  let blurBg = document.getElementById("flyer-blur-bg");
+  const flyerStory = document.getElementById("flyer-story");
+  let blurBg = document.getElementById("flyer-blur-bg-story");
   if (blurBg) blurBg.remove();
 
   blurBg = document.createElement("div");
-  blurBg.id = "flyer-blur-bg";
+  blurBg.id = "flyer-blur-bg-story";
   blurBg.style.position = "absolute";
   blurBg.style.top = "0";
   blurBg.style.left = "0";
@@ -241,21 +259,54 @@ function setBackdropAsBackground(url) {
   blurBg.style.backgroundRepeat = "no-repeat";
   blurBg.style.filter = "blur(4px) brightness(0.9)";
   blurBg.style.backgroundImage = `url('${url}')`;
-  flyer.prepend(blurBg);
+  flyerStory.prepend(blurBg);
 
-  flyer.style.backgroundImage = "";
+  flyerStory.style.backgroundImage = "";
+}
+
+function setBackdropAsBackgroundFeed(url) {
+  const flyerFeed = document.getElementById("flyer-feed");
+  let blurBg = document.getElementById("flyer-blur-bg-feed");
+  if (blurBg) blurBg.remove();
+
+  blurBg = document.createElement("div");
+  blurBg.id = "flyer-blur-bg-feed";
+  blurBg.style.position = "absolute";
+  blurBg.style.top = "0";
+  blurBg.style.left = "0";
+  blurBg.style.width = "100%";
+  blurBg.style.height = "100%";
+  blurBg.style.zIndex = "0";
+  blurBg.style.pointerEvents = "none";
+  blurBg.style.backgroundPosition = "center";
+  blurBg.style.backgroundSize = "cover";
+  blurBg.style.backgroundRepeat = "no-repeat";
+  blurBg.style.filter = "blur(4px) brightness(0.9)";
+  blurBg.style.backgroundImage = `url('${url}')`;
+  flyerFeed.prepend(blurBg);
+
+  flyerFeed.style.backgroundImage = "";
 }
 
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
-  const flyer = document.getElementById("flyer");
+  const flyerStory = document.getElementById("flyer-story");
+  const flyerFeed = document.getElementById("flyer-feed");
   const rect = document.querySelector(".rect");
+  const rectFeed = document.querySelector(".rect-feed");
+
   rect.style.display = "block";
+  rectFeed.style.display = "block";
 
-  flyer.style.backgroundImage = "";
+  flyerStory.style.backgroundImage = "";
+  flyerFeed.style.backgroundImage = "";
 
-  const blurBg = document.getElementById("flyer-blur-bg");
-  if (blurBg) {
-    blurBg.remove();
+  const blurBgStory = document.getElementById("flyer-blur-bg-story");
+  const blurBgFeed = document.getElementById("flyer-blur-bg-feed");
+  if (blurBgStory) {
+    blurBgStory.remove();
+  }
+  if (blurBgFeed) {
+    blurBgFeed.remove();
   }
 });
 
@@ -265,6 +316,8 @@ const flyerHour = document.getElementById("flyer-hour");
 const dateInput = document.getElementById("dateInput");
 const hourInput = document.getElementById("hourInput");
 const rect = document.querySelector(".rect");
+const rectFeed = document.querySelector(".rect-feed");
+
 const rectToggle = document.getElementById("toggle-rect");
 
 let rectHidden = false;
@@ -272,6 +325,7 @@ let rectHidden = false;
 rectToggle.addEventListener("click", () => {
   rectHidden = !rectHidden;
   rect.style.display = rectHidden ? "none" : "block";
+  rectFeed.style.display = rectHidden ? "none" : "block";
   rectToggle.textContent = rectHidden
     ? "Mostrar rectángulo vertical"
     : "Ocultar rectángulo vertical";
@@ -350,8 +404,8 @@ async function applyBlurToImage(imageUrl) {
 }
 
 document.getElementById("saveFlyer").addEventListener("click", async () => {
-  const flyerElement = document.getElementById("flyer");
-  const blurBg = document.getElementById("flyer-blur-bg");
+  const flyerElement = document.getElementById("flyer-story");
+  const blurBg = document.getElementById("flyer-blur-bg-story");
 
   if (blurBg && blurBg.style.backgroundImage) {
     const bgImageMatch = blurBg.style.backgroundImage.match(
@@ -394,7 +448,7 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
           .replace(/\s+/g, "_")
           .replace(/[^\w\-]/g, "");
         const date = new Date().toISOString().slice(0, 10);
-        link.download = `${date}_${flyerTitle}_flyer.png`;
+        link.download = `${date}_${flyerTitle}_story.png`;
         link.href = canvas.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
@@ -405,20 +459,90 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
           blurError
         );
 
-        await generateWithoutBlur(flyerElement);
+        await generateWithoutBlur(flyerElement, true);
       }
     } else {
-      await generateWithoutBlur(flyerElement);
+      await generateWithoutBlur(flyerElement, true);
     }
   } else {
-    await generateWithoutBlur(flyerElement);
+    await generateWithoutBlur(flyerElement, true);
   }
 });
 
-async function generateWithoutBlur(flyerElement) {
+document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
+  const flyerElement = document.getElementById("flyer-feed");
+  const blurBg = document.getElementById("flyer-blur-bg-feed");
+
+  if (blurBg && blurBg.style.backgroundImage) {
+    const bgImageMatch = blurBg.style.backgroundImage.match(
+      /url\(['"]?([^'"]+)['"]?\)/
+    );
+
+    if (bgImageMatch) {
+      const imageUrl = bgImageMatch[1];
+
+      try {
+        const blurredDataUrl = await applyBlurToImage(imageUrl);
+
+        const originalFilter = blurBg.style.filter;
+        const originalBgImage = blurBg.style.backgroundImage;
+
+        blurBg.style.filter = "none";
+        blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        const canvas = await html2canvas(flyerElement, {
+          width: 1080,
+          height: 1080,
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#ffffff",
+          scrollX: 0,
+          scrollY: 0,
+        });
+
+        blurBg.style.filter = originalFilter;
+        blurBg.style.backgroundImage = originalBgImage;
+
+        // Descargar
+        const link = document.createElement("a");
+        const flyerTitle = document
+          .getElementById("title")
+          .textContent.trim()
+          .replace(/\s+/g, "_")
+          .replace(/[^\w\-]/g, "");
+        const date = new Date().toISOString().slice(0, 10);
+        link.download = `${date}_${flyerTitle}_feed.png`;
+        link.href = canvas.toDataURL("image/png");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (blurError) {
+        console.warn(
+          "Error al aplicar blur, usando método alternativo:",
+          blurError
+        );
+
+        await generateWithoutBlur(flyerElement, false);
+      }
+    } else {
+      await generateWithoutBlur(flyerElement, false);
+    }
+  } else {
+    await generateWithoutBlur(flyerElement, false);
+  }
+});
+
+async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
+  const dimensions = isStoryFormat
+    ? { width: 1080, height: 1920 }
+    : { width: 1080, height: 1080 };
+
   const canvas = await html2canvas(flyerElement, {
-    width: 1080,
-    height: 1920,
+    width: dimensions.width,
+    height: dimensions.height,
     scale: 2,
     useCORS: true,
     allowTaint: true,
@@ -428,7 +552,14 @@ async function generateWithoutBlur(flyerElement) {
   });
 
   const link = document.createElement("a");
-  link.download = `flyer-cine-${Date.now()}.png`;
+  const flyerTitle = document
+    .getElementById("title")
+    .textContent.trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^\w\-]/g, "");
+  const date = new Date().toISOString().slice(0, 10);
+  const formatType = isStoryFormat ? "story" : "feed";
+  link.download = `${date}_${flyerTitle}_${formatType}.png`;
   link.href = canvas.toDataURL("image/png");
   document.body.appendChild(link);
   link.click();
@@ -444,9 +575,12 @@ floatingColorPicker.addEventListener("input", (e) => {
   colorTargets.forEach((target) => {
     const isBackground =
       target.classList.contains("rect") ||
+      target.classList.contains("rect-feed") ||
       target.classList.contains("rect2") ||
+      target.classList.contains("rect2-feed") ||
       target.classList.contains("tape") ||
-      target.id === "flyer";
+      target.id === "flyer-story" ||
+      target.id === "flyer-feed";
 
     if (isBackground) {
       target.style.backgroundColor = selectedColor;
@@ -476,18 +610,35 @@ function rgbToHex(rgb) {
 }
 
 function getColorTargets(el) {
-  if (el.classList.contains("rect") || el.classList.contains("rect2")) {
-    return [document.querySelector(".rect"), document.querySelector(".rect2")];
-  }
-
-  if (el.id === "flyer-hour" || el.id === "flyer-biblioteca") {
+  if (
+    el.classList.contains("rect") ||
+    el.classList.contains("rect2") ||
+    el.classList.contains("rect-feed") ||
+    el.classList.contains("rect2-feed")
+  ) {
     return [
-      document.getElementById("flyer-hour"),
-      document.getElementById("flyer-biblioteca"),
+      document.querySelector(".rect"),
+      document.querySelector(".rect2"),
+      document.querySelector(".rect-feed"),
+      document.querySelector(".rect2-feed"),
     ];
   }
 
-  if (el.id === "flyer") {
+  if (
+    el.id === "flyer-hour" ||
+    el.id === "flyer-biblioteca" ||
+    el.id === "flyer-hour-feed" ||
+    el.id === "flyer-biblioteca-feed"
+  ) {
+    return [
+      document.getElementById("flyer-hour"),
+      document.getElementById("flyer-biblioteca"),
+      document.getElementById("flyer-hour-feed"),
+      document.getElementById("flyer-biblioteca-feed"),
+    ];
+  }
+
+  if (el.id === "flyer-story" || el.id === "flyer-feed") {
     return [el];
   }
 
@@ -504,8 +655,11 @@ function getCurrentColorForTargets(targets) {
 
   const isBackground =
     targets[0].classList.contains("rect") ||
+    targets[0].classList.contains("rect-feed") ||
     targets[0].classList.contains("rect2") ||
-    targets[0].id === "flyer";
+    targets[0].classList.contains("rect2-feed") ||
+    targets[0].id === "flyer-story" ||
+    targets[0].id === "flyer-feed";
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
 }
@@ -622,14 +776,23 @@ floatingColorPicker.addEventListener("blur", () => {
   document.getElementById("year"),
   document.getElementById("director"),
   document.getElementById("duracion"),
+  document.getElementById("title-feed"),
+  document.getElementById("year-feed"),
+  document.getElementById("director-feed"),
+  document.getElementById("duracion-feed"),
   document.getElementById("flyer-date"),
+  document.getElementById("flyer-date-feed"),
   document.getElementById("flyer-hour"),
+  document.getElementById("flyer-hour-feed"),
   document.getElementById("flyer-biblioteca"),
+  document.getElementById("flyer-biblioteca-feed"),
   document.getElementById("org"),
   document.querySelector(".rect"),
-  document.querySelector(".rect2"),
+  document.querySelector(".rect-feed"),
+  document.querySelector(".rect2-feed"),
   document.getElementById("ciclo"),
-  document.getElementById("flyer"),
+  document.getElementById("flyer-feed"),
+  document.getElementById("flyer-story"),
   document.querySelector(".tape"),
 ].forEach((el) => {
   if (el) {
@@ -1233,6 +1396,25 @@ function showImageInfo(type, filePath, fullUrl) {
   });
 }
 
+document
+  .getElementById("flyerDateFontSizeInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-date").style.fontSize =
+      e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerHourFontSizeInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-hour").style.fontSize =
+      e.target.value + "px";
+  });
+
+document.getElementById("rectWidthInput").addEventListener("input", (e) => {
+  document.querySelector(".rect").style.width = e.target.value + "px";
+  document.querySelector(".rect-feed").style.width = e.target.value + "px";
+});
+
 document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const ciclo = document.getElementById("cicloInput").value.trim();
   const dateRaw = document.getElementById("dateInput").value.trim();
@@ -1269,7 +1451,7 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
       "NOVIEMBRE",
       "DICIEMBRE",
     ];
-    // Parse as local date
+
     const [year, month, day] = dateStr.split("-");
     const d = new Date(year, month - 1, day);
     if (isNaN(d)) return dateStr;
@@ -1281,4 +1463,32 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
 
   const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
   document.getElementById("flyer-hour").textContent = formattedHour;
+
+  const flyerFeed = document.getElementById("flyer-feed");
+  if (flyerFeed) {
+    flyerFeed.querySelector("#title-feed").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+    flyerFeed.querySelector("#ciclo").textContent = ciclo || "Ciclo";
+    flyerFeed.querySelector("#flyer-date-feed").innerHTML = formattedDate;
+    flyerFeed.querySelector("#flyer-hour-feed").textContent = formattedHour;
+  }
+});
+
+// TABS
+
+document.getElementById("tab-story").addEventListener("click", () => {
+  document.getElementById("flyer-story").style.display = "block";
+  document.getElementById("flyer-feed").style.display = "none";
+  document.getElementById("tab-story").classList.add("active");
+  document.getElementById("tab-feed").classList.remove("active");
+});
+
+document.getElementById("tab-feed").addEventListener("click", () => {
+  document.getElementById("flyer-story").style.display = "none";
+  document.getElementById("flyer-feed").style.display = "block";
+  document.getElementById("tab-feed").classList.add("active");
+  document.getElementById("tab-story").classList.remove("active");
+  document.getElementById("saveFlyerFeed").style.display = "block";
+  document.getElementById("saveFlyer").style.display = "none";
 });
