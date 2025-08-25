@@ -237,16 +237,16 @@ document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
   rect.style.display = "none";
   rectFeed.style.display = "none";
   setBackdropAsBackground(url);
+  setBackdropAsBackgroundFeed(url);
 });
 
 function setBackdropAsBackground(url) {
   const flyerStory = document.getElementById("flyer-story");
-  const flyerFeed = document.getElementById("flyer-feed");
-  let blurBg = document.getElementById("flyer-blur-bg");
+  let blurBg = document.getElementById("flyer-blur-bg-story");
   if (blurBg) blurBg.remove();
 
   blurBg = document.createElement("div");
-  blurBg.id = "flyer-blur-bg";
+  blurBg.id = "flyer-blur-bg-story";
   blurBg.style.position = "absolute";
   blurBg.style.top = "0";
   blurBg.style.left = "0";
@@ -260,10 +260,32 @@ function setBackdropAsBackground(url) {
   blurBg.style.filter = "blur(4px) brightness(0.9)";
   blurBg.style.backgroundImage = `url('${url}')`;
   flyerStory.prepend(blurBg);
-  flyerFeed.prepend(blurBg.cloneNode());
+
+  flyerStory.style.backgroundImage = "";
+}
+
+function setBackdropAsBackgroundFeed(url) {
+  const flyerFeed = document.getElementById("flyer-feed");
+  let blurBg = document.getElementById("flyer-blur-bg-feed");
+  if (blurBg) blurBg.remove();
+
+  blurBg = document.createElement("div");
+  blurBg.id = "flyer-blur-bg-feed";
+  blurBg.style.position = "absolute";
+  blurBg.style.top = "0";
+  blurBg.style.left = "0";
+  blurBg.style.width = "100%";
+  blurBg.style.height = "100%";
+  blurBg.style.zIndex = "0";
+  blurBg.style.pointerEvents = "none";
+  blurBg.style.backgroundPosition = "center";
+  blurBg.style.backgroundSize = "cover";
+  blurBg.style.backgroundRepeat = "no-repeat";
+  blurBg.style.filter = "blur(4px) brightness(0.9)";
+  blurBg.style.backgroundImage = `url('${url}')`;
+  flyerFeed.prepend(blurBg);
 
   flyerFeed.style.backgroundImage = "";
-  flyerStory.style.backgroundImage = "";
 }
 
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
@@ -278,9 +300,13 @@ document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
   flyerStory.style.backgroundImage = "";
   flyerFeed.style.backgroundImage = "";
 
-  const blurBg = document.getElementById("flyer-blur-bg");
-  if (blurBg) {
-    blurBg.remove();
+  const blurBgStory = document.getElementById("flyer-blur-bg-story");
+  const blurBgFeed = document.getElementById("flyer-blur-bg-feed");
+  if (blurBgStory) {
+    blurBgStory.remove();
+  }
+  if (blurBgFeed) {
+    blurBgFeed.remove();
   }
 });
 
@@ -379,7 +405,7 @@ async function applyBlurToImage(imageUrl) {
 
 document.getElementById("saveFlyer").addEventListener("click", async () => {
   const flyerElement = document.getElementById("flyer-story");
-  const blurBg = document.getElementById("flyer-blur-bg");
+  const blurBg = document.getElementById("flyer-blur-bg-story");
 
   if (blurBg && blurBg.style.backgroundImage) {
     const bgImageMatch = blurBg.style.backgroundImage.match(
@@ -445,7 +471,7 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
 
 document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
   const flyerElement = document.getElementById("flyer-feed");
-  const blurBg = document.getElementById("flyer-blur-bg");
+  const blurBg = document.getElementById("flyer-blur-bg-feed");
 
   if (blurBg && blurBg.style.backgroundImage) {
     const bgImageMatch = blurBg.style.backgroundImage.match(
