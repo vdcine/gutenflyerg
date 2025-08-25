@@ -396,7 +396,7 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 90px;
+  margin-top: 50px;
   z-index: 10;
   position: relative;
 }
@@ -407,7 +407,7 @@ form {
   width: 100%;
   margin-left: 50px;
   font-family: "Gilroy", sans-serif;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .flyer-hour {
