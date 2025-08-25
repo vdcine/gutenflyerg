@@ -377,78 +377,63 @@
             <div class="rect-feed"></div>
             <h1 class="header-feed" style="font-size: 85px">VELADAS DE CINE</h1>
 
-            <div class="subheader" style="width: 400px; top: 30px">
+            <div class="subheader-feed">
               <h2 id="ciclo" style="font-size: 36px">Ciclo</h2>
             </div>
 
-            <div class="poster-container">
-              <img
-                id="poster"
-                src=""
-                alt="Poster"
-                crossorigin="anonymous"
-                style="top: -70px; width: 400px; height: 600px"
-              />
-              <div id="bubble" class="dialogo-comic">
-                ¡Debate luego!
-                <div class="comic-tail-border"></div>
-                <div class="comic-tail-noise"></div>
-              </div>
-            </div>
-
-            <div class="flyer-row" style="position: relative; top: -70px">
+            <div class="feed-flex-row">
+              <!-- Poster grande a la izquierda -->
               <div
-                class="flyer-date-group"
-                style="position: relative; top: -100px"
+                class="feed-poster-col"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                "
               >
-                <input
-                  type="text"
-                  id="dateInput"
-                  value="MIÉRCOLES 6 DE AGOSTO"
-                  style="display: none"
+                <img
+                  id="poster-feed"
+                  src=""
+                  alt="Poster"
+                  crossorigin="anonymous"
                 />
-                <div
-                  id="flyer-date-feed"
-                  class="flyer-date"
-                  style="font-size: 36px"
-                >
-                  MIÉRCOLES 6<br />DE AGOSTO
-                </div>
               </div>
-              <div class="flyer-main-group">
-                <h3 id="title-feed" style="font-size: 36px">Título</h3>
-                <p id="year-feed" style="font-size: 36px">Año</p>
-                <p id="director-feed" style="font-size: 36px">Director</p>
-                <p id="duracion-feed" style="font-size: 36px">100 minutos</p>
-              </div>
+              <!-- Fecha y hora a la derecha -->
               <div
-                class="flyer-hour-group"
-                style="position: relative; top: -130px"
+                class="feed-info-col"
+                style="display: flex; flex-direction: column; gap: 32px"
               >
-                <input
-                  type="text"
-                  id="hourInput"
-                  value="19:00 HS"
-                  style="display: none"
-                />
-                <div
-                  id="flyer-hour-feed"
-                  class="flyer-hour"
-                  style="
-                    font-size: 36px;
-                    text-align: center;
-                    margin-left: -15px;
-                  "
-                >
-                  19:00 HS
+                <div class="flyer-date-group-feed">
+                  <div
+                    id="flyer-date-feed"
+                    class="flyer-date-feed"
+                    style="font-size: 36px"
+                  >
+                    MIÉRCOLES 6<br />DE AGOSTO
+                  </div>
                 </div>
-                <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
-                  <img
-                    src="images/icon.png"
-                    alt="ubicación"
-                    class="flyer-location-icon"
-                  />
-                  <span>Biblioteca Menéndez</span>
+                <div class="flyer-hour-group-feed">
+                  <div
+                    id="flyer-hour-feed"
+                    class="flyer-hour-feed"
+                    style="font-size: 36px; text-align: center"
+                  >
+                    19:00 HS
+                  </div>
+                  <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
+                    <img
+                      src="images/icon.png"
+                      alt="ubicación"
+                      class="flyer-location-icon"
+                    />
+                    <span>Biblioteca Menéndez</span>
+                  </div>
+                </div>
+                <div class="flyer-main-group">
+                  <h3 id="title-feed">Título</h3>
+                  <p id="year-feed">Año</p>
+                  <p id="director-feed">Director</p>
+                  <p id="duracion-feed">100 minutos</p>
                 </div>
               </div>
             </div>

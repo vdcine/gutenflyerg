@@ -77,7 +77,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         movie.release_date
       ).getFullYear();
       flyerFeed.querySelector(
-        "#poster"
+        "#poster-feed"
       ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
       flyerFeed.querySelector("#director-feed").textContent = director
         ? director.name
@@ -205,13 +205,13 @@ document
     const url = filePath.startsWith("http")
       ? filePath
       : `https://image.tmdb.org/t/p/original${filePath}`;
-    const rect = document.querySelector(".rect");
-    rect.style.display = "none";
+
     setPoster(url);
   });
 
 function setPoster(url) {
   document.getElementById("poster").src = url;
+  document.getElementById("poster-feed").src = url;
 }
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {

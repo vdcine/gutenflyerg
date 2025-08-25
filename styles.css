@@ -211,18 +211,41 @@ form {
   width: 920px;
   min-height: 100px;
   margin: 0 auto;
+  margin-top: 10px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.4);
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 16;
+  position: relative;
+  z-index: 8;
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 215px;
+  top: 40px;
   height: auto;
   box-sizing: border-box;
+  font-family: "Gilroy", sans-serif;
+  text-align: center;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.subheader-feed {
+  width: 522px;
+  min-height: 100px;
+  margin-left: 109px;
+  top: 40px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  position: relative;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  box-sizing: border-box;
+  font-family: "Gilroy", sans-serif;
+  text-align: center;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .subheader h2 {
@@ -250,6 +273,12 @@ form {
   border-radius: 10px;
   z-index: 15;
   position: relative;
+  top: -60px;
+}
+
+#poster-feed {
+  width: 523px;
+  height: 785px;
 }
 
 #title {
@@ -409,7 +438,8 @@ form {
 }
 
 .flyer-date-group,
-.flyer-hour-group {
+.flyer-hour-group,
+.flyer-date-group-feed {
   width: 260px;
   min-width: 260px;
   max-width: 260px;
@@ -417,7 +447,18 @@ form {
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
-  z-index: 10;
+  z-index: 9000;
+  position: relative;
+}
+
+.flyer-hour-group-feed {
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 9000;
   position: relative;
 }
 
@@ -427,28 +468,27 @@ form {
   width: 100%;
   margin-left: 50px;
   font-family: "Gilroy", sans-serif;
-  font-weight: 650;
+  font-weight: 600;
+}
+
+.flyer-date-feed {
+  font-size: 50px;
+  text-align: center;
+  width: 115%;
+  word-break: break-word;
+  line-height: 1.1;
+
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
 }
 
 .flyer-hour {
-  font-size: 45px;
+  font-size: 50px;
   text-align: center;
   width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   text-align: left;
-  margin-left: 30px;
-  font-family: "Gilroy", sans-serif;
-  font-weight: 650;
-}
-
-.flyer-biblioteca {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  margin-top: 0;
-  text-align: left;
-  margin-left: 15px;
+  margin-left: 20px;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
 }
@@ -459,7 +499,18 @@ form {
   width: 100%;
   margin-bottom: 10px;
   text-align: left;
-  margin-left: 20px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+}
+
+.flyer-biblioteca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-top: 0;
+  text-align: left;
+  margin-left: 15px;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
 }
@@ -774,4 +825,34 @@ button {
   padding: 8px 18px;
   cursor: pointer;
   font-weight: bold;
+}
+
+.feed-flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 70px;
+}
+
+.feed-poster-col img {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  width: 766px;
+  height: auto;
+  border-radius: 10px;
+  z-index: 6;
+  position: relative;
+  top: -65px;
+}
+
+.feed-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.flyer-main-group {
+  margin-top: 24px;
 }
