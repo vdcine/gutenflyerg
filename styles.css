@@ -211,21 +211,18 @@ form {
   width: 920px;
   min-height: 100px;
   margin: 0 auto;
-  margin-top: 10px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.4);
-  position: relative;
-  z-index: 8;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 16;
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 40px;
+  top: 215px;
   height: auto;
   box-sizing: border-box;
-  font-family: "Gilroy", sans-serif;
-  text-align: center;
-  word-break: break-word;
-  white-space: normal;
 }
 
 .subheader-feed {
@@ -273,7 +270,6 @@ form {
   border-radius: 10px;
   z-index: 15;
   position: relative;
-  top: -60px;
 }
 
 #poster-feed {
@@ -423,8 +419,7 @@ form {
 
 #title-feed,
 #year-feed,
-#director-feed,
-#org {
+#director-feed {
   color: inherit;
 }
 
@@ -438,7 +433,18 @@ form {
 }
 
 .flyer-date-group,
-.flyer-hour-group,
+.flyer-hour-group {
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  z-index: 10;
+  position: relative;
+}
+
 .flyer-date-group-feed {
   width: 260px;
   min-width: 260px;
@@ -468,7 +474,7 @@ form {
   width: 100%;
   margin-left: 50px;
   font-family: "Gilroy", sans-serif;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .flyer-date-feed {
@@ -490,7 +496,7 @@ form {
   text-align: left;
   margin-left: 20px;
   font-family: "Gilroy", sans-serif;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .flyer-hour-feed {
