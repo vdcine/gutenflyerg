@@ -772,6 +772,7 @@ floatingColorPicker.addEventListener("blur", () => {
 
 [
   document.querySelector(".header"),
+  document.querySelector(".header-feed"),
   document.getElementById("title"),
   document.getElementById("year"),
   document.getElementById("director"),
@@ -787,6 +788,7 @@ floatingColorPicker.addEventListener("blur", () => {
   document.getElementById("flyer-biblioteca"),
   document.getElementById("flyer-biblioteca-feed"),
   document.getElementById("org"),
+  document.getElementById("org-feed"),
   document.querySelector(".rect"),
   document.querySelector(".rect-feed"),
   document.querySelector(".rect2-feed"),

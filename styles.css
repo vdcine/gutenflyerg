@@ -69,6 +69,14 @@ form {
   margin-top: 60px;
 }
 
+.header-feed {
+  padding: 5px;
+  font-size: 124px;
+  z-index: 3;
+  position: relative;
+  margin-bottom: 0px;
+}
+
 .tape {
   position: absolute;
   top: -130px;
@@ -363,6 +371,18 @@ form {
   font-weight: 600;
   bottom: -25px;
   font-size: 21px;
+}
+
+#org-feed {
+  width: 100%;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 6;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+  bottom: 5px;
+  color: inherit;
 }
 
 #title,
