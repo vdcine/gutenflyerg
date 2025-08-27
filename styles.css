@@ -616,6 +616,12 @@ form {
   align-self: stretch;
 }
 
+.full {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 hr {
   width: 100%;
   border: none;
