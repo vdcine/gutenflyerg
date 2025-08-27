@@ -1484,6 +1484,8 @@ document.getElementById("tab-story").addEventListener("click", () => {
   document.getElementById("flyer-feed").style.display = "none";
   document.getElementById("tab-story").classList.add("active");
   document.getElementById("tab-feed").classList.remove("active");
+  document.getElementById("saveFlyer").style.display = "block";
+  document.getElementById("saveFlyerFeed").style.display = "none";
 });
 
 document.getElementById("tab-feed").addEventListener("click", () => {
