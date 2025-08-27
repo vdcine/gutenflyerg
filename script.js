@@ -1494,3 +1494,29 @@ document.getElementById("tab-feed").addEventListener("click", () => {
   document.getElementById("saveFlyerFeed").style.display = "block";
   document.getElementById("saveFlyer").style.display = "none";
 });
+
+document.getElementById("applyStrokeBtn").addEventListener("click", () => {
+  const select = document.getElementById("strokeTargetSelect");
+  const color = document.getElementById("strokeColorInput").value;
+  Array.from(select.selectedOptions).forEach((option) => {
+    const target = document.getElementById(option.value);
+    if (target) {
+      target.style.textShadow = `
+        -1px -1px 0 ${color},
+        1px -1px 0 ${color},
+        -1px 1px 0 ${color},
+        1px 1px 0 ${color}
+      `;
+    }
+  });
+});
+
+document.getElementById("removeStrokeBtn").addEventListener("click", () => {
+  const select = document.getElementById("strokeTargetSelect");
+  Array.from(select.selectedOptions).forEach((option) => {
+    const target = document.getElementById(option.value);
+    if (target) {
+      target.style.textShadow = "";
+    }
+  });
+});

@@ -231,6 +231,14 @@
             <br />
             Para modificar colores de textos y cajas hacer UN click sobre los
             mismos y luego seleccionar el recuadro que abre el color picker.
+            <br />
+            <br />
+            Para aplicar borde a los textos, seleccionar el texto a agregarselo
+            de la lista, se puede seleccionar mas de uno haciendo CTRL + Click,
+            <br />
+            una vez seleccionado todos los items deseados de la lista, elegir el
+            color, y hacer click en el boton aplicar borde. Lo mismo para
+            remover, seleccionar todos los deseados y clickear en remover borde
           </h3>
 
           <div class="panel">
@@ -254,6 +262,37 @@
 
             <div class="full">
               <button id="applyTxtBtn">Aplicar textos</button>
+            </div>
+
+            <label>Borde textos</label>
+            <select id="strokeTargetSelect" multiple size="6">
+              <option value="header">Encabezado</option>
+              <option value="title">Título</option>
+              <option value="year">Año</option>
+              <option value="director">Director</option>
+              <option value="duracion">Duración</option>
+              <option value="flyer-date">Fecha</option>
+              <option value="flyer-hour">Hora</option>
+              <option value="flyer-biblioteca">Ubicación</option>
+              <option value="header-feed">Encabezado version feed</option>
+              <option value="title-feed">Título feed</option>
+              <option value="year-feed">Año feed</option>
+              <option value="director-feed">Director feed</option>
+              <option value="duracion-feed">Duración feed</option>
+              <option value="flyer-date-feed">Fecha feed</option>
+              <option value="flyer-hour-feed">Hora feed</option>
+              <option value="flyer-biblioteca-feed">Ubicación feed</option>
+            </select>
+            <input
+              type="color"
+              name="strokeColor"
+              id="strokeColorInput"
+              value="#000000"
+            />
+
+            <div style="display: flex; flex-direction: row">
+              <button id="applyStrokeBtn">Aplicar borde</button>
+              <button id="removeStrokeBtn">Quitar borde</button>
             </div>
 
             <div>
@@ -311,7 +350,7 @@
           <div id="flyer-story" class="flyer-version" style="display: block">
             <div class="tape"></div>
             <div class="rect"></div>
-            <h1 class="header">VELADAS DE CINE</h1>
+            <h1 class="header" id="header">VELADAS DE CINE</h1>
 
             <div class="subheader">
               <h2 id="ciclo">Ciclo</h2>
@@ -375,7 +414,9 @@
           <div id="flyer-feed" class="flyer-version" style="display: none">
             <div class="tape" style="top: -152px"></div>
             <div class="rect-feed"></div>
-            <h1 class="header-feed" style="font-size: 85px">VELADAS DE CINE</h1>
+            <h1 class="header-feed" id="header-feed" style="font-size: 85px">
+              VELADAS DE CINE
+            </h1>
 
             <div class="subheader-feed">
               <h2 id="ciclo" style="font-size: 36px">Ciclo</h2>
@@ -406,7 +447,7 @@
                 <div class="flyer-date-group-feed">
                   <div
                     id="flyer-date-feed"
-                    class="flyer-date-feed"
+                    class="flyer-date-feed fancy-text"
                     style="font-size: 36px"
                   >
                     MIÉRCOLES 6<br />DE AGOSTO
