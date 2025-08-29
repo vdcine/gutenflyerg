@@ -491,6 +491,7 @@
           </div>
         </div>
       </div>
+
       <h2 id="instrucciones">
         <br />
         5°: Guardar imagen del flyer
@@ -531,6 +532,151 @@
       >
         Descargar para feed
       </button>
+
+      <!-- RESEÑAS -->
+      <div
+        class="flyer-flex-col"
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 24px;
+        "
+      >
+        <div id="flyer-story" class="flyer-version" style="display: block">
+          <div class="tape"></div>
+          <div class="rect"></div>
+          <h1 class="header-review" id="header">RESEÑA DE PELÍCULA</h1>
+
+          <!-- <div class="subheader">
+            <h2 id="ciclo">Ciclo</h2>
+          </div> -->
+
+          <!--  <div class="poster-container">
+            <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
+            <div id="bubble" class="dialogo-comic">
+              ¡Debate luego!
+              <div class="comic-tail-border"></div>
+              <div class="comic-tail-noise"></div>
+            </div>
+          </div> -->
+
+          <div class="feed-flex-row-review">
+            <!-- Poster grande a la izquierda -->
+            <div
+              class="feed-poster-col-review"
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <img
+                id="poster-review"
+                src=""
+                alt="Poster"
+                crossorigin="anonymous"
+              />
+            </div>
+            <!-- Fecha y hora a la derecha -->
+            <div class="feed-info-col-review">
+              <div class="flyer-main-group-feed">
+                <h3 id="title-review">Título</h3>
+                <p id="origen-review">Origen:</p>
+                <p id="duracion-review">100 minutos</p>
+                <p id="director-review">Director</p>
+                <p id="year-review">Año</p>
+              </div>
+              <div class="flyer-date-group-feed">
+                <div
+                  id="flyer-date-feed"
+                  class="flyer-date-feed fancy-text"
+                  style="font-size: 36px"
+                >
+                  SINAPSIS
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-data">
+            <div class="rect2"></div>
+            <span id="org">
+              Organizan Matías Corona y Francisco Albani con apoyo de la
+              Comisión Directiva de la Biblioteca Menéndez.
+            </span>
+          </div>
+        </div>
+
+        <div id="flyer-feed" class="flyer-version" style="display: none">
+          <div class="tape" style="top: -152px"></div>
+          <div class="rect-feed"></div>
+          <h1 class="header-feed" id="header-feed" style="font-size: 85px">
+            VELADAS DE CINE
+          </h1>
+
+          <div class="subheader-feed">
+            <h2 id="ciclo" style="font-size: 36px">Ciclo</h2>
+          </div>
+
+          <div class="feed-flex-row">
+            <!-- Poster grande a la izquierda -->
+            <div
+              class="feed-poster-col"
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <img
+                id="poster-feed"
+                src=""
+                alt="Poster"
+                crossorigin="anonymous"
+              />
+            </div>
+            <!-- Fecha y hora a la derecha -->
+            <div
+              class="feed-info-col"
+              style="display: flex; flex-direction: column; gap: 32px"
+            >
+              <div class="flyer-date-group-feed">
+                <div
+                  id="flyer-date-feed"
+                  class="flyer-date-feed fancy-text"
+                  style="font-size: 36px"
+                >
+                  MIÉRCOLES 6<br />DE AGOSTO
+                </div>
+              </div>
+              <div class="flyer-hour-group-feed">
+                <div
+                  id="flyer-hour-feed"
+                  class="flyer-hour-feed"
+                  style="font-size: 36px; text-align: center"
+                >
+                  19:00 HS
+                </div>
+                <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
+                  <img
+                    src="images/icon.png"
+                    alt="ubicación"
+                    class="flyer-location-icon"
+                  />
+                  <span>Biblioteca Menéndez</span>
+                </div>
+              </div>
+              <div class="flyer-main-group-feed">
+                <h3 id="title-feed">Título</h3>
+                <p id="year-feed">Año</p>
+                <p id="director-feed">Director</p>
+                <p id="duracion-feed">100 minutos</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-data" style="height: 70px">
+            <div class="rect2-feed" style="height: 80px"></div>
+            <span id="org-feed" style="font-size: medium">
+              Organizan Matías Corona y Francisco Albani con apoyo de la
+              Comisión Directiva de la Biblioteca Menéndez.
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <input

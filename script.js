@@ -86,6 +86,27 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "#duracion-feed"
       ).textContent = `${movieDetails.runtime} minutos`;
 
+      document.getElementById(
+        "poster-review"
+      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      document.getElementById(
+        "duracion-review"
+      ).textContent = `${movieDetails.runtime} minutos`;
+      document.getElementById("title-review").textContent = movie.title;
+      document.getElementById("year-review").textContent = new Date(
+        movie.release_date
+      ).getFullYear();
+      document.getElementById("director-review").textContent = director
+        ? director.name
+        : "Director no disponible";
+
+      const countryCode = movieDetails.origin_country[0];
+      const flag = getCountryFlagEmoji(countryCode);
+      const countryName = countryNamesES[countryCode] || countryCode;
+      document.getElementById(
+        "origen-review"
+      ).textContent = `Origen: ${flag} ${countryName}`;
+
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
       );
@@ -107,6 +128,34 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       resultsDiv.style.display = "none";
       showResultsBtn.style.display = "block";
     });
+
+    function getCountryFlagEmoji(countryCode) {
+      if (!countryCode || countryCode.length !== 2) return "";
+
+      const code = countryCode.toUpperCase();
+
+      return String.fromCodePoint(
+        ...[...code].map((c) => 127397 + c.charCodeAt())
+      );
+    }
+
+    const countryNamesES = {
+      AR: "Argentina",
+      US: "Estados Unidos",
+      FR: "Francia",
+      IT: "Italia",
+      ES: "España",
+      GB: "Reino Unido",
+      DE: "Alemania",
+      JP: "Japón",
+      CN: "China",
+      BR: "Brasil",
+      MX: "México",
+      CA: "Canadá",
+      RU: "Rusia",
+      IN: "India",
+      KR: "Corea del Sur",
+    };
 
     resultsDiv.appendChild(result);
 
@@ -212,6 +261,7 @@ document
 function setPoster(url) {
   document.getElementById("poster").src = url;
   document.getElementById("poster-feed").src = url;
+  document.getElementById("poster-review").src = url;
 }
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {

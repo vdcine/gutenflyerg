@@ -77,6 +77,16 @@ form {
   margin-bottom: 0px;
 }
 
+.header-review {
+  padding: 5px;
+  font-size: 88px;
+  z-index: 3;
+  position: relative;
+  margin-bottom: 0px;
+  margin-top: 60px;
+  font-family: "Gilroy", sans-serif;
+}
+
 .tape {
   position: absolute;
   top: -130px;
@@ -352,6 +362,57 @@ form {
   font-size: 20px;
   margin-bottom: 5px;
   margin-top: 15px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#title-review {
+  font-size: 50px;
+  font-weight: lighter;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#director-review {
+  font-size: 20px;
+  z-index: 5;
+  position: relative;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#year-review {
+  font-size: 20px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#duracion-review {
+  font-size: 20px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#origen-review {
+  font-size: 20px;
+  margin-bottom: 4px;
+  margin-top: 4px;
   z-index: 5;
   position: relative;
   font-family: "Gilroy", sans-serif;
@@ -847,6 +908,14 @@ button {
   gap: 70px;
 }
 
+.feed-flex-row-review {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 135px;
+}
+
 .feed-poster-col img {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
   width: 766px;
@@ -857,12 +926,32 @@ button {
   top: -65px;
 }
 
+.feed-poster-col-review img {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  width: 600px;
+  height: auto;
+  border-radius: 10px;
+  z-index: 6;
+  position: relative;
+  top: 60px;
+}
+
 .feed-info-col {
   display: flex;
   flex-direction: column;
   gap: 32px;
   align-items: center;
   margin-right: 10px;
+}
+
+.feed-info-col-review {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  margin-right: 10px;
+  position: relative;
+  top: 90px;
 }
 
 .flyer-main-group {
