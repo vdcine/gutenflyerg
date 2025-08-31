@@ -1435,3 +1435,177 @@ button {
   display: flex;
   flex-direction: column;
 }
+
+.browsers-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.browser {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 8px 12px;
+  background-color: #555;
+  color: white;
+  font-family: "Gilroy", sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.browser-ok {
+  padding: 8px 12px;
+  background-color: #4caf50;
+  color: white;
+  font-family: "Gilroy", sans-serif;
+  margin-right: 10px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.browser-x {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  height: 28px;
+  padding: 8px 12px;
+  background-color: #f44336;
+  color: white;
+  font-family: "Gilroy", sans-serif;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.browser-logo {
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.edad-sugerida-input {
+  display: flex;
+  flex-direction: column;
+}
+
+/* css para ciclos de cine */
+.cycle-movies-container {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  z-index: 5;
+  position: relative;
+}
+
+.cycle-movies-alternating {
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+}
+
+.movie-item-alternating {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-item-alternating:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+.cycle-movies-feed-container {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  position: relative;
+  margin: 20px 0;
+}
+
+.cycle-movies-feed-horizontal {
+  max-width: 100%;
+}
+
+.movie-item-feed {
+  transition: transform 0.2s ease;
+}
+
+.movie-item-feed:hover {
+  transform: scale(1.05);
+}
+
+.cycle-movies-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  border: 2px dashed #ccc;
+}
+
+.cycle-info {
+  z-index: 5;
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.feed-content {
+  z-index: 5;
+  position: relative;
+}
+
+.feed-event-info {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 15px;
+  backdrop-filter: blur(5px);
+}
+
+.movie-item-alternating img {
+  transition: transform 0.3s ease;
+}
+
+.movie-item-alternating:hover img {
+  transform: scale(1.1);
+}
+
+.movie-item-feed img {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie-item-feed:hover img {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .movie-item-alternating {
+    flex-direction: column !important;
+    text-align: center !important;
+    margin: 0 auto 25px auto !important;
+  }
+
+  .movie-item-alternating img {
+    margin: 0 0 15px 0 !important;
+  }
+
+  .cycle-movies-feed-horizontal {
+    flex-direction: column;
+    align-items: center;
+  }
+}
