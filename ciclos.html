@@ -162,10 +162,6 @@
             </div>
 
             <div>
-              <label>Fecha</label>
-              <input id="dateInput" type="date" value="2025-08-06" />
-            </div>
-            <div>
               <label>Hora</label>
               <input id="hourInput" type="time" value="19:00" />
             </div>
@@ -174,11 +170,20 @@
               <button id="applyTxtBtn">Aplicar cambios</button>
             </div>
 
+            <div id="individual-dates-section" style="margin-top: 20px; display: none;">
+              <hr style="margin: 15px 0; border-top: 1px solid #444;">
+              <label style="margin-bottom: 10px; display: block;">Fechas individuales por película</label>
+              <div id="individual-dates-container" style="display: flex; flex-direction: column; gap: 8px;">
+              </div>
+              <div class="full" style="margin-top: 10px;">
+                <button id="applyIndividualDatesBtn">Aplicar fechas individuales</button>
+              </div>
+            </div>
+
             <label>Borde textos</label>
-            <select id="strokeTargetSelect" multiple size="6">
+            <select id="strokeTargetSelect" multiple size="5">
               <option value="header">Encabezado</option>
               <option value="ciclo">Nombre del ciclo</option>
-              <option value="flyer-date">Fecha</option>
               <option value="flyer-hour">Hora</option>
               <option value="flyer-biblioteca">Ubicación</option>
               <option value="movie-title">Títulos de películas</option>
@@ -198,18 +203,6 @@
               <button id="removeStrokeBtn">Quitar borde</button>
             </div>
 
-            <div>
-              <label>Tamaño fecha</label>
-              <input
-                id="flyerDateFontSizeInput"
-                type="number"
-                min="10"
-                max="100"
-                value="50"
-                style="width: 80px"
-              />
-              px
-            </div>
             <div>
               <label>Tamaño hora</label>
               <input
@@ -258,30 +251,28 @@
             <div class="subheader">
               <h2 id="ciclo">Ciclo Temático</h2>
             </div>
-
-            <div class="cycle-info" style="text-align: center; margin: 20px 0;">
-              <div class="flyer-date-group" style="margin-bottom: 10px;">
-                <div id="flyer-date" class="flyer-date">
-                  MIÉRCOLES 6<br />DE AGOSTO
-                </div>
-              </div>
-              <div class="flyer-hour-group">
-                <div id="flyer-hour" class="flyer-hour">19:00 HS</div>
-                <div id="flyer-biblioteca" class="flyer-biblioteca">
-                  <img
-                    src="images/icon.png"
-                    alt="ubicación"
-                    class="flyer-location-icon"
-                  />
-                  <span>Biblioteca Menéndez</span>
-                </div>
-              </div>
-            </div>
-
             <!-- Contenedor de películas del ciclo -->
             <div id="cycle-movies" class="cycle-movies-container">
               <div class="cycle-movies-placeholder">
                 <p>Agrega películas al ciclo para verlas aquí</p>
+              </div>
+            </div>
+
+            <div class="cycle-info" style="text-align: center;">
+              <div style="display: flex; justify-content: space-between; align-items: center; max-width: 880px; margin: 0 auto;">
+                <div class="flyer-hour-group" style="text-align: left;">
+                  <div id="flyer-hour" class="flyer-hour-ciclos">19:00 HS</div>
+                </div>
+                <div class="flyer-biblioteca-group" style="text-align: right;">
+                  <div id="flyer-biblioteca" class="flyer-biblioteca-ciclos">
+                    <img
+                      src="images/icon.png"
+                      alt="ubicación"
+                      class="flyer-location-icon"
+                    />
+                    <span>Auditorio<br />Biblioteca<br /> Menéndez</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -307,16 +298,7 @@
 
             <div class="feed-content" style="display: flex; flex-direction: column; gap: 20px; padding: 20px;">
               <!-- Informacion del evento -->
-              <div class="feed-event-info" style="display: flex; justify-content: space-between; align-items: center;">
-                <div class="flyer-date-group-feed">
-                  <div
-                    id="flyer-date-feed"
-                    class="flyer-date-feed fancy-text"
-                    style="font-size: 36px"
-                  >
-                    MIÉRCOLES 6<br />DE AGOSTO
-                  </div>
-                </div>
+              <div class="feed-event-info" style="display: flex; justify-content: center; align-items: center;">
                 <div class="flyer-hour-group-feed">
                   <div
                     id="flyer-hour-feed"

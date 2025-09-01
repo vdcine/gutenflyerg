@@ -826,6 +826,17 @@ form {
   font-weight: 650;
 }
 
+/* Estilos específicos para ciclos */
+.flyer-hour-ciclos {
+  font-size: 45px;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 5px;
+  margin-left: 0;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 650;
+}
+
 .flyer-hour-feed {
   font-size: 50px;
   text-align: center;
@@ -844,6 +855,19 @@ form {
   margin-top: 0;
   text-align: left;
   margin-left: 15px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+}
+
+/* Estilos específicos para ciclos */
+.flyer-biblioteca-ciclos {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 30px;
+  margin-top: 0;
+  text-align: right;
+  margin-left: 0;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
 }
@@ -1500,19 +1524,24 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0;
   z-index: 5;
+  margin-top: 100px;
   position: relative;
+  height: 1400px;
 }
 
 .cycle-movies-alternating {
   width: 100%;
-  max-width: 900px;
+  max-width: 920px;
   margin: auto;
 }
 
 .movie-item-alternating {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 900px;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 250px;
 }
 
 .movie-item-alternating:hover {
@@ -1555,13 +1584,13 @@ button {
 .cycle-info {
   z-index: 5;
   position: relative;
-  background: rgba(255, 255, 255, 0.9);
+  /* background: rgba(255, 255, 255, 0.9); */
   border-radius: 12px;
   padding: 15px;
-  margin: 20px auto;
-  max-width: 600px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
+  max-width: 1080px;
+
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px); */
 }
 
 .feed-content {
