@@ -31,7 +31,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     const director = creditsData.crew.find((c) => c.job === "Director");
 
     const movieDetails = await (
-      await fetch(`${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}`)
+      await fetch(
+        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`
+      )
     ).json();
 
     const result = document.createElement("div");
@@ -96,6 +98,8 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       document.getElementById("year-review").textContent = new Date(
         movie.release_date
       ).getFullYear();
+      document.getElementById("sinapsis-review").textContent =
+        movieDetails.overview;
       document.getElementById("director-review").textContent = director
         ? director.name
         : "Director no disponible";
@@ -284,10 +288,13 @@ document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
     : `https://image.tmdb.org/t/p/original${filePath}`;
   const rect = document.querySelector(".rect");
   const rectFeed = document.querySelector(".rect-feed");
+  const rectReview = document.querySelector(".rect-review");
   rect.style.display = "none";
   rectFeed.style.display = "none";
+  rectReview.style.display = "none";
   setBackdropAsBackground(url);
   setBackdropAsBackgroundFeed(url);
+  setBackdropAsBackgroundReview(url);
 });
 
 function setBackdropAsBackground(url) {
@@ -336,6 +343,30 @@ function setBackdropAsBackgroundFeed(url) {
   flyerFeed.prepend(blurBg);
 
   flyerFeed.style.backgroundImage = "";
+}
+
+function setBackdropAsBackgroundReview(url) {
+  const flyerReview = document.getElementById("flyer-story-review");
+  let blurBg = document.getElementById("flyer-blur-bg-review");
+  if (blurBg) blurBg.remove();
+
+  blurBg = document.createElement("div");
+  blurBg.id = "flyer-blur-bg-review";
+  blurBg.style.position = "absolute";
+  blurBg.style.top = "0";
+  blurBg.style.left = "0";
+  blurBg.style.width = "100%";
+  blurBg.style.height = "100%";
+  blurBg.style.zIndex = "0";
+  blurBg.style.pointerEvents = "none";
+  blurBg.style.backgroundPosition = "center";
+  blurBg.style.backgroundSize = "cover";
+  blurBg.style.backgroundRepeat = "no-repeat";
+  blurBg.style.filter = "blur(4px) brightness(0.9)";
+  blurBg.style.backgroundImage = `url('${url}')`;
+  flyerReview.prepend(blurBg);
+
+  flyerReview.style.backgroundImage = "";
 }
 
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
@@ -585,6 +616,74 @@ document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
   }
 });
 
+document
+  .getElementById("saveFlyerReview")
+  .addEventListener("click", async () => {
+    const flyerElement = document.getElementById("flyer-story-review");
+    const blurBg = document.getElementById("flyer-blur-bg-review");
+
+    if (blurBg && blurBg.style.backgroundImage) {
+      const bgImageMatch = blurBg.style.backgroundImage.match(
+        /url\(['"]?([^'"]+)['"]?\)/
+      );
+
+      if (bgImageMatch) {
+        const imageUrl = bgImageMatch[1];
+
+        try {
+          const blurredDataUrl = await applyBlurToImage(imageUrl);
+
+          const originalFilter = blurBg.style.filter;
+          const originalBgImage = blurBg.style.backgroundImage;
+
+          blurBg.style.filter = "none";
+          blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
+
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          const canvas = await html2canvas(flyerElement, {
+            width: 1080,
+            height: 1920,
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#ffffff",
+            scrollX: 0,
+            scrollY: 0,
+          });
+
+          blurBg.style.filter = originalFilter;
+          blurBg.style.backgroundImage = originalBgImage;
+
+          // Descargar
+          const link = document.createElement("a");
+          const flyerTitle = document
+            .getElementById("title")
+            .textContent.trim()
+            .replace(/\s+/g, "_")
+            .replace(/[^\w\-]/g, "");
+          const date = new Date().toISOString().slice(0, 10);
+          link.download = `${date}_${flyerTitle}_review.png`;
+          link.href = canvas.toDataURL("image/png");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (blurError) {
+          console.warn(
+            "Error al aplicar blur, usando método alternativo:",
+            blurError
+          );
+
+          await generateWithoutBlur(flyerElement, true);
+        }
+      } else {
+        await generateWithoutBlur(flyerElement, true);
+      }
+    } else {
+      await generateWithoutBlur(flyerElement, true);
+    }
+  });
+
 async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
   const dimensions = isStoryFormat
     ? { width: 1080, height: 1920 }
@@ -628,9 +727,11 @@ floatingColorPicker.addEventListener("input", (e) => {
       target.classList.contains("rect-feed") ||
       target.classList.contains("rect2") ||
       target.classList.contains("rect2-feed") ||
+      target.classList.contains("rect2-review") ||
       target.classList.contains("tape") ||
       target.id === "flyer-story" ||
-      target.id === "flyer-feed";
+      target.id === "flyer-feed" ||
+      target.id === "flyer-story-review";
 
     if (isBackground) {
       target.style.backgroundColor = selectedColor;
@@ -664,13 +765,15 @@ function getColorTargets(el) {
     el.classList.contains("rect") ||
     el.classList.contains("rect2") ||
     el.classList.contains("rect-feed") ||
-    el.classList.contains("rect2-feed")
+    el.classList.contains("rect2-feed") ||
+    el.classList.contains("rect2-review")
   ) {
     return [
       document.querySelector(".rect"),
       document.querySelector(".rect2"),
       document.querySelector(".rect-feed"),
       document.querySelector(".rect2-feed"),
+      document.querySelector(".rect2-review"),
     ];
   }
 
@@ -708,8 +811,10 @@ function getCurrentColorForTargets(targets) {
     targets[0].classList.contains("rect-feed") ||
     targets[0].classList.contains("rect2") ||
     targets[0].classList.contains("rect2-feed") ||
+    targets[0].classList.contains("rect2-review") ||
     targets[0].id === "flyer-story" ||
-    targets[0].id === "flyer-feed";
+    targets[0].id === "flyer-feed" ||
+    targets[0].id === "flyer-story-review";
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
 }
@@ -823,10 +928,14 @@ floatingColorPicker.addEventListener("blur", () => {
 [
   document.querySelector(".header"),
   document.querySelector(".header-feed"),
+  document.querySelector(".header-review"),
   document.getElementById("title"),
-  document.getElementById("year"),
-  document.getElementById("director"),
-  document.getElementById("duracion"),
+  document.getElementById("title-review"),
+  document.getElementById("origen-review"),
+  document.getElementById("year-review"),
+  document.getElementById("director-review"),
+  document.getElementById("duracion-review"),
+  document.getElementById("sinapsis-review"),
   document.getElementById("title-feed"),
   document.getElementById("year-feed"),
   document.getElementById("director-feed"),
@@ -839,12 +948,15 @@ floatingColorPicker.addEventListener("blur", () => {
   document.getElementById("flyer-biblioteca-feed"),
   document.getElementById("org"),
   document.getElementById("org-feed"),
+  document.getElementById("org-review"),
   document.querySelector(".rect"),
   document.querySelector(".rect-feed"),
   document.querySelector(".rect2-feed"),
+  document.querySelector(".rect2-review"),
   document.getElementById("ciclo"),
   document.getElementById("flyer-feed"),
   document.getElementById("flyer-story"),
+  document.getElementById("flyer-story-review"),
   document.querySelector(".tape"),
 ].forEach((el) => {
   if (el) {
@@ -1475,6 +1587,9 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   document.getElementById("title").innerHTML = (
     titulo || "Título de la película"
   ).replace(/\n/g, "<br>");
+  document.getElementById("title-review").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
 
   document.getElementById("ciclo").textContent = ciclo || "Ciclo";
 
@@ -1536,6 +1651,7 @@ document.getElementById("tab-story").addEventListener("click", () => {
   document.getElementById("tab-feed").classList.remove("active");
   document.getElementById("saveFlyer").style.display = "block";
   document.getElementById("saveFlyerFeed").style.display = "none";
+  document.getElementById("saveFlyerReview").style.display = "block";
 });
 
 document.getElementById("tab-feed").addEventListener("click", () => {
@@ -1545,6 +1661,7 @@ document.getElementById("tab-feed").addEventListener("click", () => {
   document.getElementById("tab-story").classList.remove("active");
   document.getElementById("saveFlyerFeed").style.display = "block";
   document.getElementById("saveFlyer").style.display = "none";
+  document.getElementById("saveFlyerReview").style.display = "none";
 });
 
 document.getElementById("applyStrokeBtn").addEventListener("click", () => {

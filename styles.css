@@ -43,6 +43,17 @@ form {
   overflow: hidden;
 }
 
+#flyer-story-review {
+  width: 1080px;
+  height: 1920px;
+  border: 1px solid black;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #flyer-feed {
   width: 1080px;
   height: 1080px;
@@ -175,6 +186,43 @@ form {
   z-index: 5;
   margin: 0;
   display: block;
+}
+
+.rect2::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
+}
+
+.rect2-review {
+  position: absolute;
+  top: 60px;
+  width: 100%;
+  height: 140px;
+  background: #043f61;
+  z-index: 5;
+  margin: 0;
+  display: block;
+}
+
+.rect2-review::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
 }
 
 .rect2::after {
@@ -380,7 +428,7 @@ form {
 }
 
 #director-review {
-  font-size: 20px;
+  font-size: 30px;
   z-index: 5;
   position: relative;
   margin-bottom: 4px;
@@ -390,7 +438,7 @@ form {
 }
 
 #year-review {
-  font-size: 20px;
+  font-size: 30px;
   margin-bottom: 4px;
   margin-top: 4px;
   z-index: 5;
@@ -400,7 +448,7 @@ form {
 }
 
 #duracion-review {
-  font-size: 20px;
+  font-size: 30px;
   margin-bottom: 4px;
   margin-top: 4px;
   z-index: 5;
@@ -410,7 +458,7 @@ form {
 }
 
 #origen-review {
-  font-size: 20px;
+  font-size: 30px;
   margin-bottom: 4px;
   margin-top: 4px;
   z-index: 5;
@@ -457,6 +505,19 @@ form {
   font-weight: 600;
   bottom: -25px;
   font-size: 21px;
+}
+
+#org-review {
+  width: 100%;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 6;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+  bottom: -25px;
+  font-size: 21px;
+  color: inherit;
 }
 
 #org-feed {
@@ -518,6 +579,16 @@ form {
   position: relative;
 }
 
+.flyer-date-group-review {
+  width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 200px;
+  z-index: 9000;
+  position: relative;
+}
+
 .flyer-hour-group-feed {
   width: 260px;
   min-width: 260px;
@@ -542,6 +613,17 @@ form {
   font-size: 50px;
   text-align: center;
   width: 115%;
+  word-break: break-word;
+  line-height: 1.1;
+
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+}
+
+#sinapsis-review {
+  font-size: 50px;
+  text-align: center;
+
   word-break: break-word;
   line-height: 1.1;
 
@@ -912,8 +994,8 @@ button {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-start;
-  gap: 135px;
+  align-items: center;
+  margin-top: 30px;
 }
 
 .feed-poster-col img {
@@ -934,6 +1016,7 @@ button {
   z-index: 6;
   position: relative;
   top: 60px;
+  margin-left: 30px;
 }
 
 .feed-info-col {
@@ -950,6 +1033,7 @@ button {
   gap: 32px;
   align-items: center;
   margin-right: 10px;
+  margin-left: 25px;
   position: relative;
   top: 90px;
 }
