@@ -127,26 +127,26 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       showResultsBtn.style.display = "none";
     });
   }
+});
 
-  const linkBackdrops = document.getElementById("backdrops");
-  linkBackdrops.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (!window.selectedMovieId) return;
-    window.open(
-      `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
-      "_blank"
-    );
-  });
+const linkBackdrops = document.getElementById("backdrops");
+linkBackdrops.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (!window.selectedMovieId) return;
+  window.open(
+    `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
+    "_blank"
+  );
+});
 
-  const linkPosters = document.getElementById("posters");
-  linkPosters.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (!window.selectedMovieId) return;
-    window.open(
-      `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
-      "_blank"
-    );
-  });
+const linkPosters = document.getElementById("posters");
+linkPosters.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (!window.selectedMovieId) return;
+  window.open(
+    `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
+    "_blank"
+  );
 });
 
 let backdrops = [];
