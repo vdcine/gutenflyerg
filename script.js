@@ -58,6 +58,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       window.selectedMovieId = movie.id;
       document.getElementById("title").textContent = movie.title;
       document.getElementById("titleInput").value = movie.title;
+      document.getElementById("titleInputFeed").value = movie.title;
       document.getElementById("year").textContent = new Date(
         movie.release_date
       ).getFullYear();
@@ -1574,9 +1575,26 @@ document
       e.target.value + "px";
   });
 
+document
+  .getElementById("flyerDateFontSizeInputFeed")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-date-feed").style.fontSize =
+      e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerHourFontSizeInputFeed")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-hour-feed").style.fontSize =
+      e.target.value + "px";
+  });
+
+document.getElementById("rectWidthInputFeed").addEventListener("input", (e) => {
+  document.querySelector(".rect-feed").style.width = e.target.value + "px";
+});
+
 document.getElementById("rectWidthInput").addEventListener("input", (e) => {
   document.querySelector(".rect").style.width = e.target.value + "px";
-  document.querySelector(".rect-feed").style.width = e.target.value + "px";
 });
 
 document.getElementById("applyTxtBtn").addEventListener("click", () => {
@@ -1642,6 +1660,59 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   }
 });
 
+document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
+  const ciclo = document.getElementById("cicloInputFeed").value.trim();
+  const dateRaw = document.getElementById("dateInputFeed").value.trim();
+  const hourRaw = document.getElementById("hourInputFeed").value.trim();
+  const titulo = document.getElementById("titleInputFeed").value.trim();
+
+  function formatDateToSpanish(dateStr) {
+    if (!dateStr) return "";
+    const dias = [
+      "DOMINGO",
+      "LUNES",
+      "MARTES",
+      "MIÉRCOLES",
+      "JUEVES",
+      "VIERNES",
+      "SÁBADO",
+    ];
+    const meses = [
+      "ENERO",
+      "FEBRERO",
+      "MARZO",
+      "ABRIL",
+      "MAYO",
+      "JUNIO",
+      "JULIO",
+      "AGOSTO",
+      "SEPTIEMBRE",
+      "OCTUBRE",
+      "NOVIEMBRE",
+      "DICIEMBRE",
+    ];
+
+    const [year, month, day] = dateStr.split("-");
+    const d = new Date(year, month - 1, day);
+    if (isNaN(d)) return dateStr;
+    return `${dias[d.getDay()]} ${d.getDate()} DE ${meses[d.getMonth()]}`;
+  }
+
+  const formattedDate = formatDateToSpanish(dateRaw);
+
+  const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
+
+  const flyerFeed = document.getElementById("flyer-feed");
+  if (flyerFeed) {
+    flyerFeed.querySelector("#title-feed").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+    flyerFeed.querySelector("#ciclo").textContent = ciclo || "Ciclo";
+    flyerFeed.querySelector("#flyer-date-feed").innerHTML = formattedDate;
+    flyerFeed.querySelector("#flyer-hour-feed").textContent = formattedHour;
+  }
+});
+
 // TABS
 
 document.getElementById("tab-story").addEventListener("click", () => {
@@ -1652,6 +1723,8 @@ document.getElementById("tab-story").addEventListener("click", () => {
   document.getElementById("saveFlyer").style.display = "block";
   document.getElementById("saveFlyerFeed").style.display = "none";
   document.getElementById("saveFlyerReview").style.display = "block";
+  document.querySelector(".panel-feed").style.display = "none";
+  document.querySelector(".panel").style.display = "flex";
 });
 
 document.getElementById("tab-feed").addEventListener("click", () => {
@@ -1662,6 +1735,8 @@ document.getElementById("tab-feed").addEventListener("click", () => {
   document.getElementById("saveFlyerFeed").style.display = "block";
   document.getElementById("saveFlyer").style.display = "none";
   document.getElementById("saveFlyerReview").style.display = "none";
+  document.querySelector(".panel-feed").style.display = "flex";
+  document.querySelector(".panel").style.display = "none";
 });
 
 document.getElementById("applyStrokeBtn").addEventListener("click", () => {
@@ -1682,6 +1757,32 @@ document.getElementById("applyStrokeBtn").addEventListener("click", () => {
 
 document.getElementById("removeStrokeBtn").addEventListener("click", () => {
   const select = document.getElementById("strokeTargetSelect");
+  Array.from(select.selectedOptions).forEach((option) => {
+    const target = document.getElementById(option.value);
+    if (target) {
+      target.style.textShadow = "";
+    }
+  });
+});
+
+document.getElementById("applyStrokeBtnFeed").addEventListener("click", () => {
+  const select = document.getElementById("strokeTargetSelectFeed");
+  const color = document.getElementById("strokeColorInputFeed").value;
+  Array.from(select.selectedOptions).forEach((option) => {
+    const target = document.getElementById(option.value);
+    if (target) {
+      target.style.textShadow = `
+        -1px -1px 0 ${color},
+        1px -1px 0 ${color},
+        -1px 1px 0 ${color},
+        1px 1px 0 ${color}
+      `;
+    }
+  });
+});
+
+document.getElementById("removeStrokeBtnFeed").addEventListener("click", () => {
+  const select = document.getElementById("strokeTargetSelectFeed");
   Array.from(select.selectedOptions).forEach((option) => {
     const target = document.getElementById(option.value);
     if (target) {

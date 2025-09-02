@@ -54,6 +54,10 @@ form {
   align-items: center;
 }
 
+.flyer-container {
+  display: flex;
+}
+
 #flyer-feed {
   width: 1080px;
   height: 1080px;
@@ -277,7 +281,7 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 215px;
+  top: 222px;
   height: auto;
   box-sizing: border-box;
 }
@@ -932,11 +936,54 @@ button {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-left: 10px;
   align-items: start;
   padding: 14px;
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
+  max-height: 635px;
+}
+
+.panel-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 12px;
+  background: #14181e;
+  color: #dbe5ee;
+  max-height: 635px;
+}
+
+.panel-feed label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  margin-right: 10px;
+  justify-self: left;
+}
+
+.panel-feed input[type="text"],
+.panel-feed input[type="number"] {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #29303a;
+  background: #101419;
+  color: #e8f1ff;
+}
+
+.panel-feed button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #283241;
+  background: #1a2430;
+  color: #e8f1ff;
+  cursor: pointer;
+  font-weight: 700;
 }
 
 .panel label {
