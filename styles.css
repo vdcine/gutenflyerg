@@ -90,12 +90,11 @@ form {
 
 .header-review {
   padding: 5px;
-  font-size: 88px;
+  font-size: 100px;
   z-index: 3;
   position: relative;
   margin-bottom: 0px;
-  margin-top: 60px;
-  font-family: "Gilroy", sans-serif;
+  margin-top: 70px;
 }
 
 .tape {
