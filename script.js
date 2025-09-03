@@ -43,7 +43,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     result.style.display = "flex";
     result.style.alignItems = "center";
     result.innerHTML = `
-    <img src="https://image.tmdb.org/t/p/w92${
+    <img src="https://image.tmdb.org/t/p/w500${
       movie.poster_path
     }" style="width:48px;height:auto;margin-right:12px;" />
     <span style="font-weight:bold;">${movie.title}</span>
