@@ -76,6 +76,13 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "duracion"
       ).textContent = `${movieDetails.runtime} minutos`;
 
+      const url = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+
+      setBackdropAsBackground(url);
+      setBackdropAsBackgroundFeed(url);
+      setBackdropAsBackgroundReview(url);
+      setBackdropAsBackgroundReviewFeed(url);
+
       const flyerFeed = document.getElementById("flyer-feed");
       flyerFeed.querySelector("#title-feed").textContent = movie.title;
       flyerFeed.querySelector("#year-feed").textContent = new Date(
@@ -270,24 +277,26 @@ document.getElementById("poster-prev").addEventListener("click", () => {
   if (!posters.length) return;
   currentPoster = (currentPoster - 1 + posters.length) % posters.length;
   showPoster(currentPoster);
+  if (!posters.length) return;
+  const filePath = posters[currentPoster].file_path;
+  const url = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
+
+  setPoster(url);
 });
 document.getElementById("poster-next").addEventListener("click", () => {
   if (!posters.length) return;
   currentPoster = (currentPoster + 1) % posters.length;
   showPoster(currentPoster);
+  if (!posters.length) return;
+  const filePath = posters[currentPoster].file_path;
+  const url = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
+
+  setPoster(url);
 });
-
-document
-  .getElementById("set-poster-as-poster")
-  .addEventListener("click", () => {
-    if (!posters.length) return;
-    const filePath = posters[currentPoster].file_path;
-    const url = filePath.startsWith("http")
-      ? filePath
-      : `https://image.tmdb.org/t/p/original${filePath}`;
-
-    setPoster(url);
-  });
 
 function setPoster(url) {
   document.getElementById("poster").src = url;
@@ -300,15 +309,27 @@ document.getElementById("backdrop-prev").addEventListener("click", () => {
   if (!backdrops.length) return;
   currentBackdrop = (currentBackdrop - 1 + backdrops.length) % backdrops.length;
   showBackdrop(currentBackdrop);
+  if (!backdrops.length) return;
+  const filePath = backdrops[currentBackdrop].file_path;
+  const url = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
+  const rect = document.querySelector(".rect");
+  const rectFeed = document.querySelector(".rect-feed");
+  const rectReview = document.querySelector(".rect-review");
+  rect.style.display = "none";
+  rectFeed.style.display = "none";
+  rectReview.style.display = "none";
+  setBackdropAsBackground(url);
+  setBackdropAsBackgroundFeed(url);
+  setBackdropAsBackgroundReview(url);
+  setBackdropAsBackgroundReviewFeed(url);
 });
 
 document.getElementById("backdrop-next").addEventListener("click", () => {
   if (!backdrops.length) return;
   currentBackdrop = (currentBackdrop + 1) % backdrops.length;
   showBackdrop(currentBackdrop);
-});
-
-document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
   if (!backdrops.length) return;
   const filePath = backdrops[currentBackdrop].file_path;
   const url = filePath.startsWith("http")
