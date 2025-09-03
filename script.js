@@ -31,7 +31,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     const director = creditsData.crew.find((c) => c.job === "Director");
 
     const movieDetails = await (
-      await fetch(`${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}`)
+      await fetch(
+        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`
+      )
     ).json();
 
     const result = document.createElement("div");
@@ -56,6 +58,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       window.selectedMovieId = movie.id;
       document.getElementById("title").textContent = movie.title;
       document.getElementById("titleInput").value = movie.title;
+      document.getElementById("titleInputFeed").value = movie.title;
+      document.getElementById("titleInputReview").value = movie.title;
+      document.getElementById("titleInputReviewFeed").value = movie.title;
       document.getElementById("year").textContent = new Date(
         movie.release_date
       ).getFullYear();
@@ -86,6 +91,53 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "#duracion-feed"
       ).textContent = `${movieDetails.runtime} minutos`;
 
+      document.getElementById(
+        "poster-review"
+      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      document.getElementById(
+        "duracion-review"
+      ).textContent = `${movieDetails.runtime} minutos`;
+      document.getElementById("title-review").textContent = movie.title;
+      document.getElementById("year-review").textContent = new Date(
+        movie.release_date
+      ).getFullYear();
+      document.getElementById("sinapsis-review").textContent =
+        movieDetails.overview;
+      document.getElementById("sinapsisInputReview").value =
+        movieDetails.overview;
+      document.getElementById("director-review").textContent = director
+        ? director.name
+        : "Director no disponible";
+
+      const countryCode = movieDetails.origin_country[0];
+      const flag = getCountryFlagEmoji(countryCode);
+      const countryName = countryNamesES[countryCode] || countryCode;
+      document.getElementById(
+        "origen-review"
+      ).textContent = `Origen: ${flag} ${countryName}`;
+
+      document.getElementById(
+        "poster-review-feed"
+      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      document.getElementById(
+        "duracion-review-feed"
+      ).textContent = `${movieDetails.runtime} minutos`;
+      document.getElementById("title-review-feed").textContent = movie.title;
+      document.getElementById("year-review-feed").textContent = new Date(
+        movie.release_date
+      ).getFullYear();
+      document.getElementById("sinapsis-review-feed").textContent =
+        movieDetails.overview;
+      document.getElementById("sinapsisInputReviewFeed").value =
+        movieDetails.overview;
+      document.getElementById("director-review-feed").textContent = director
+        ? director.name
+        : "Director no disponible";
+
+      document.getElementById(
+        "origen-review-feed"
+      ).textContent = `Origen: ${flag} ${countryName}`;
+
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
       );
@@ -107,6 +159,34 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       resultsDiv.style.display = "none";
       showResultsBtn.style.display = "block";
     });
+
+    function getCountryFlagEmoji(countryCode) {
+      if (!countryCode || countryCode.length !== 2) return "";
+
+      const code = countryCode.toUpperCase();
+
+      return String.fromCodePoint(
+        ...[...code].map((c) => 127397 + c.charCodeAt())
+      );
+    }
+
+    const countryNamesES = {
+      AR: "Argentina",
+      US: "Estados Unidos",
+      FR: "Francia",
+      IT: "Italia",
+      ES: "España",
+      GB: "Reino Unido",
+      DE: "Alemania",
+      JP: "Japón",
+      CN: "China",
+      BR: "Brasil",
+      MX: "México",
+      CA: "Canadá",
+      RU: "Rusia",
+      IN: "India",
+      KR: "Corea del Sur",
+    };
 
     resultsDiv.appendChild(result);
 
@@ -212,6 +292,8 @@ document
 function setPoster(url) {
   document.getElementById("poster").src = url;
   document.getElementById("poster-feed").src = url;
+  document.getElementById("poster-review").src = url;
+  document.getElementById("poster-review-feed").src = url;
 }
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {
@@ -234,10 +316,14 @@ document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
     : `https://image.tmdb.org/t/p/original${filePath}`;
   const rect = document.querySelector(".rect");
   const rectFeed = document.querySelector(".rect-feed");
+  const rectReview = document.querySelector(".rect-review");
   rect.style.display = "none";
   rectFeed.style.display = "none";
+  rectReview.style.display = "none";
   setBackdropAsBackground(url);
   setBackdropAsBackgroundFeed(url);
+  setBackdropAsBackgroundReview(url);
+  setBackdropAsBackgroundReviewFeed(url);
 });
 
 function setBackdropAsBackground(url) {
@@ -288,9 +374,59 @@ function setBackdropAsBackgroundFeed(url) {
   flyerFeed.style.backgroundImage = "";
 }
 
+function setBackdropAsBackgroundReview(url) {
+  const flyerReview = document.getElementById("flyer-story-review");
+  let blurBg = document.getElementById("flyer-blur-bg-review");
+  if (blurBg) blurBg.remove();
+
+  blurBg = document.createElement("div");
+  blurBg.id = "flyer-blur-bg-review";
+  blurBg.style.position = "absolute";
+  blurBg.style.top = "0";
+  blurBg.style.left = "0";
+  blurBg.style.width = "100%";
+  blurBg.style.height = "100%";
+  blurBg.style.zIndex = "0";
+  blurBg.style.pointerEvents = "none";
+  blurBg.style.backgroundPosition = "center";
+  blurBg.style.backgroundSize = "cover";
+  blurBg.style.backgroundRepeat = "no-repeat";
+  blurBg.style.filter = "blur(4px) brightness(0.9)";
+  blurBg.style.backgroundImage = `url('${url}')`;
+  flyerReview.prepend(blurBg);
+
+  flyerReview.style.backgroundImage = "";
+}
+
+function setBackdropAsBackgroundReviewFeed(url) {
+  const flyerReview = document.getElementById("flyer-feed-review");
+  let blurBg = document.getElementById("flyer-blur-bg-review-feed");
+  if (blurBg) blurBg.remove();
+
+  blurBg = document.createElement("div");
+  blurBg.id = "flyer-blur-bg-review-feed";
+  blurBg.style.position = "absolute";
+  blurBg.style.top = "0";
+  blurBg.style.left = "0";
+  blurBg.style.width = "100%";
+  blurBg.style.height = "100%";
+  blurBg.style.zIndex = "0";
+  blurBg.style.pointerEvents = "none";
+  blurBg.style.backgroundPosition = "center";
+  blurBg.style.backgroundSize = "cover";
+  blurBg.style.backgroundRepeat = "no-repeat";
+  blurBg.style.filter = "blur(4px) brightness(0.9)";
+  blurBg.style.backgroundImage = `url('${url}')`;
+  flyerReview.prepend(blurBg);
+
+  flyerReview.style.backgroundImage = "";
+}
+
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
   const flyerStory = document.getElementById("flyer-story");
   const flyerFeed = document.getElementById("flyer-feed");
+  const flyerReview = document.getElementById("flyer-story-review");
+  const flyerReviewFeed = document.getElementById("flyer-feed-review");
   const rect = document.querySelector(".rect");
   const rectFeed = document.querySelector(".rect-feed");
 
@@ -299,14 +435,25 @@ document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
 
   flyerStory.style.backgroundImage = "";
   flyerFeed.style.backgroundImage = "";
+  flyerReview.style.backgroundImage = "";
+  flyerReviewFeed.style.backgroundImage = "";
 
   const blurBgStory = document.getElementById("flyer-blur-bg-story");
   const blurBgFeed = document.getElementById("flyer-blur-bg-feed");
+  const blurBgReview = document.getElementById("flyer-blur-bg-review");
+  const blurBgReviewFeed = document.getElementById("flyer-blur-bg-review-feed");
+
   if (blurBgStory) {
     blurBgStory.remove();
   }
   if (blurBgFeed) {
     blurBgFeed.remove();
+  }
+  if (blurBgReview) {
+    blurBgReview.remove();
+  }
+  if (blurBgReviewFeed) {
+    blurBgReviewFeed.remove();
   }
 });
 
@@ -535,6 +682,142 @@ document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
   }
 });
 
+document
+  .getElementById("saveFlyerReview")
+  .addEventListener("click", async () => {
+    const flyerElement = document.getElementById("flyer-story-review");
+    const blurBg = document.getElementById("flyer-blur-bg-review");
+
+    if (blurBg && blurBg.style.backgroundImage) {
+      const bgImageMatch = blurBg.style.backgroundImage.match(
+        /url\(['"]?([^'"]+)['"]?\)/
+      );
+
+      if (bgImageMatch) {
+        const imageUrl = bgImageMatch[1];
+
+        try {
+          const blurredDataUrl = await applyBlurToImage(imageUrl);
+
+          const originalFilter = blurBg.style.filter;
+          const originalBgImage = blurBg.style.backgroundImage;
+
+          blurBg.style.filter = "none";
+          blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
+
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          const canvas = await html2canvas(flyerElement, {
+            width: 1080,
+            height: 1920,
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#ffffff",
+            scrollX: 0,
+            scrollY: 0,
+          });
+
+          blurBg.style.filter = originalFilter;
+          blurBg.style.backgroundImage = originalBgImage;
+
+          // Descargar
+          const link = document.createElement("a");
+          const flyerTitle = document
+            .getElementById("title")
+            .textContent.trim()
+            .replace(/\s+/g, "_")
+            .replace(/[^\w\-]/g, "");
+          const date = new Date().toISOString().slice(0, 10);
+          link.download = `${date}_${flyerTitle}_review.png`;
+          link.href = canvas.toDataURL("image/png");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (blurError) {
+          console.warn(
+            "Error al aplicar blur, usando método alternativo:",
+            blurError
+          );
+
+          await generateWithoutBlur(flyerElement, true);
+        }
+      } else {
+        await generateWithoutBlur(flyerElement, true);
+      }
+    } else {
+      await generateWithoutBlur(flyerElement, true);
+    }
+  });
+
+document
+  .getElementById("saveFlyerReviewFeed")
+  .addEventListener("click", async () => {
+    const flyerElement = document.getElementById("flyer-feed-review");
+    const blurBg = document.getElementById("flyer-blur-bg-review-feed");
+
+    if (blurBg && blurBg.style.backgroundImage) {
+      const bgImageMatch = blurBg.style.backgroundImage.match(
+        /url\(['"]?([^'"]+)['"]?\)/
+      );
+
+      if (bgImageMatch) {
+        const imageUrl = bgImageMatch[1];
+
+        try {
+          const blurredDataUrl = await applyBlurToImage(imageUrl);
+
+          const originalFilter = blurBg.style.filter;
+          const originalBgImage = blurBg.style.backgroundImage;
+
+          blurBg.style.filter = "none";
+          blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
+
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          const canvas = await html2canvas(flyerElement, {
+            width: 1080,
+            height: 1080,
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#ffffff",
+            scrollX: 0,
+            scrollY: 0,
+          });
+
+          blurBg.style.filter = originalFilter;
+          blurBg.style.backgroundImage = originalBgImage;
+
+          // Descargar
+          const link = document.createElement("a");
+          const flyerTitle = document
+            .getElementById("title-review-feed")
+            .textContent.trim()
+            .replace(/\s+/g, "_")
+            .replace(/[^\w\-]/g, "");
+          const date = new Date().toISOString().slice(0, 10);
+          link.download = `${date}_${flyerTitle}_review-feed.png`;
+          link.href = canvas.toDataURL("image/png");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (blurError) {
+          console.warn(
+            "Error al aplicar blur, usando método alternativo:",
+            blurError
+          );
+
+          await generateWithoutBlur(flyerElement, true);
+        }
+      } else {
+        await generateWithoutBlur(flyerElement, true);
+      }
+    } else {
+      await generateWithoutBlur(flyerElement, true);
+    }
+  });
+
 async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
   const dimensions = isStoryFormat
     ? { width: 1080, height: 1920 }
@@ -578,9 +861,13 @@ floatingColorPicker.addEventListener("input", (e) => {
       target.classList.contains("rect-feed") ||
       target.classList.contains("rect2") ||
       target.classList.contains("rect2-feed") ||
+      target.classList.contains("rect2-review") ||
+      target.classList.contains("rect2-review-feed") ||
       target.classList.contains("tape") ||
       target.id === "flyer-story" ||
-      target.id === "flyer-feed";
+      target.id === "flyer-feed" ||
+      target.id === "flyer-story-review" ||
+      target.id === "flyer-feed-review";
 
     if (isBackground) {
       target.style.backgroundColor = selectedColor;
@@ -614,13 +901,17 @@ function getColorTargets(el) {
     el.classList.contains("rect") ||
     el.classList.contains("rect2") ||
     el.classList.contains("rect-feed") ||
-    el.classList.contains("rect2-feed")
+    el.classList.contains("rect2-feed") ||
+    el.classList.contains("rect2-review") ||
+    el.classList.contains("rect2-review-feed")
   ) {
     return [
       document.querySelector(".rect"),
       document.querySelector(".rect2"),
       document.querySelector(".rect-feed"),
       document.querySelector(".rect2-feed"),
+      document.querySelector(".rect2-review"),
+      document.querySelector(".rect2-review-feed"),
     ];
   }
 
@@ -658,8 +949,12 @@ function getCurrentColorForTargets(targets) {
     targets[0].classList.contains("rect-feed") ||
     targets[0].classList.contains("rect2") ||
     targets[0].classList.contains("rect2-feed") ||
+    targets[0].classList.contains("rect2-review") ||
+    targets[0].classList.contains("rect2-review-feed") ||
     targets[0].id === "flyer-story" ||
-    targets[0].id === "flyer-feed";
+    targets[0].id === "flyer-feed" ||
+    targets[0].id === "flyer-story-review" ||
+    targets[0].id === "flyer-feed-review";
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
 }
@@ -773,10 +1068,21 @@ floatingColorPicker.addEventListener("blur", () => {
 [
   document.querySelector(".header"),
   document.querySelector(".header-feed"),
+  document.querySelector(".header-review"),
+  document.querySelector(".header-feed-review"),
   document.getElementById("title"),
-  document.getElementById("year"),
-  document.getElementById("director"),
-  document.getElementById("duracion"),
+  document.getElementById("title-review"),
+  document.getElementById("origen-review"),
+  document.getElementById("year-review"),
+  document.getElementById("director-review"),
+  document.getElementById("duracion-review"),
+  document.getElementById("sinapsis-review"),
+  document.getElementById("title-review-feed"),
+  document.getElementById("origen-review-feed"),
+  document.getElementById("year-review-feed"),
+  document.getElementById("director-review-feed"),
+  document.getElementById("duracion-review-feed"),
+  document.getElementById("sinapsis-review-feed"),
   document.getElementById("title-feed"),
   document.getElementById("year-feed"),
   document.getElementById("director-feed"),
@@ -789,12 +1095,18 @@ floatingColorPicker.addEventListener("blur", () => {
   document.getElementById("flyer-biblioteca-feed"),
   document.getElementById("org"),
   document.getElementById("org-feed"),
+  document.getElementById("org-review"),
+  document.getElementById("org-review-feed"),
   document.querySelector(".rect"),
   document.querySelector(".rect-feed"),
   document.querySelector(".rect2-feed"),
+  document.querySelector(".rect2-review"),
+  document.querySelector(".rect2-review-feed"),
   document.getElementById("ciclo"),
   document.getElementById("flyer-feed"),
   document.getElementById("flyer-story"),
+  document.getElementById("flyer-story-review"),
+  document.getElementById("flyer-feed-review"),
   document.querySelector(".tape"),
 ].forEach((el) => {
   if (el) {
@@ -1412,9 +1724,53 @@ document
       e.target.value + "px";
   });
 
+document
+  .getElementById("flyerDateFontSizeInputFeed")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-date-feed").style.fontSize =
+      e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerTitleFontSizeInputFeed")
+  .addEventListener("input", (e) => {
+    document.getElementById("title-feed").style.fontSize =
+      e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerYearFontSizeInputFeed")
+  .addEventListener("input", (e) => {
+    document.getElementById("year-feed").style.fontSize = e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerSynopsisFontSizeInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("sinapsis-review-feed").style.fontSize =
+      e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerSynopsisFontSizeInputStory")
+  .addEventListener("input", (e) => {
+    document.getElementById("sinapsis-review").style.fontSize =
+      e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerHourFontSizeInputFeed")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-hour-feed").style.fontSize =
+      e.target.value + "px";
+  });
+
+document.getElementById("rectWidthInputFeed").addEventListener("input", (e) => {
+  document.querySelector(".rect-feed").style.width = e.target.value + "px";
+});
+
 document.getElementById("rectWidthInput").addEventListener("input", (e) => {
   document.querySelector(".rect").style.width = e.target.value + "px";
-  document.querySelector(".rect-feed").style.width = e.target.value + "px";
 });
 
 document.getElementById("applyTxtBtn").addEventListener("click", () => {
@@ -1465,6 +1821,49 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
 
   const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
   document.getElementById("flyer-hour").textContent = formattedHour;
+});
+
+document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
+  const ciclo = document.getElementById("cicloInputFeed").value.trim();
+  const dateRaw = document.getElementById("dateInputFeed").value.trim();
+  const hourRaw = document.getElementById("hourInputFeed").value.trim();
+  const titulo = document.getElementById("titleInputFeed").value.trim();
+
+  function formatDateToSpanish(dateStr) {
+    if (!dateStr) return "";
+    const dias = [
+      "DOMINGO",
+      "LUNES",
+      "MARTES",
+      "MIÉRCOLES",
+      "JUEVES",
+      "VIERNES",
+      "SÁBADO",
+    ];
+    const meses = [
+      "ENERO",
+      "FEBRERO",
+      "MARZO",
+      "ABRIL",
+      "MAYO",
+      "JUNIO",
+      "JULIO",
+      "AGOSTO",
+      "SEPTIEMBRE",
+      "OCTUBRE",
+      "NOVIEMBRE",
+      "DICIEMBRE",
+    ];
+
+    const [year, month, day] = dateStr.split("-");
+    const d = new Date(year, month - 1, day);
+    if (isNaN(d)) return dateStr;
+    return `${dias[d.getDay()]} ${d.getDate()} DE ${meses[d.getMonth()]}`;
+  }
+
+  const formattedDate = formatDateToSpanish(dateRaw);
+
+  const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
 
   const flyerFeed = document.getElementById("flyer-feed");
   if (flyerFeed) {
@@ -1477,24 +1876,76 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   }
 });
 
+document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
+  const titulo = document.getElementById("titleInputReview").value.trim();
+  const sinapsis = document.getElementById("sinapsisInputReview").value.trim();
+
+  const flyerReview = document.getElementById("flyer-story-review");
+  if (flyerReview) {
+    flyerReview.querySelector("#title-review").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+
+    flyerReview.querySelector("#sinapsis-review").innerHTML = (
+      sinapsis || "Sinopsis de la película"
+    ).replace(/\n/g, "<br>");
+  }
+});
+
+document
+  .getElementById("applyTxtBtnReviewFeed")
+  .addEventListener("click", () => {
+    const titulo = document.getElementById("titleInputReviewFeed").value.trim();
+    const sinapsis = document
+      .getElementById("sinapsisInputReviewFeed")
+      .value.trim();
+
+    const flyerReview = document.getElementById("flyer-feed-review");
+    if (flyerReview) {
+      flyerReview.querySelector("#title-review-feed").innerHTML = (
+        titulo || "Título de la película"
+      ).replace(/\n/g, "<br>");
+
+      flyerReview.querySelector("#sinapsis-review-feed").innerHTML = (
+        sinapsis || "Sinopsis de la película"
+      ).replace(/\n/g, "<br>");
+    }
+  });
+
 // TABS
 
 document.getElementById("tab-story").addEventListener("click", () => {
   document.getElementById("flyer-story").style.display = "block";
+  document.getElementById("flyer-story-review").style.display = "flex";
   document.getElementById("flyer-feed").style.display = "none";
+  document.getElementById("flyer-feed-review").style.display = "none";
   document.getElementById("tab-story").classList.add("active");
   document.getElementById("tab-feed").classList.remove("active");
   document.getElementById("saveFlyer").style.display = "block";
   document.getElementById("saveFlyerFeed").style.display = "none";
+  document.getElementById("saveFlyerReview").style.display = "block";
+  document.getElementById("saveFlyerReviewFeed").style.display = "none";
+  document.querySelector(".panel-feed").style.display = "none";
+  document.querySelector(".panel-review").style.display = "flex";
+  document.querySelector(".panel-review-feed").style.display = "none";
+  document.querySelector(".panel").style.display = "flex";
 });
 
 document.getElementById("tab-feed").addEventListener("click", () => {
   document.getElementById("flyer-story").style.display = "none";
   document.getElementById("flyer-feed").style.display = "block";
+  document.getElementById("flyer-story-review").style.display = "none";
+  document.getElementById("flyer-feed-review").style.display = "flex";
   document.getElementById("tab-feed").classList.add("active");
   document.getElementById("tab-story").classList.remove("active");
   document.getElementById("saveFlyerFeed").style.display = "block";
   document.getElementById("saveFlyer").style.display = "none";
+  document.getElementById("saveFlyerReview").style.display = "none";
+  document.getElementById("saveFlyerReviewFeed").style.display = "block";
+  document.querySelector(".panel-feed").style.display = "flex";
+  document.querySelector(".panel-review").style.display = "none";
+  document.querySelector(".panel-review-feed").style.display = "flex";
+  document.querySelector(".panel").style.display = "none";
 });
 
 document.getElementById("applyStrokeBtn").addEventListener("click", () => {
@@ -1522,3 +1973,89 @@ document.getElementById("removeStrokeBtn").addEventListener("click", () => {
     }
   });
 });
+
+document.getElementById("applyStrokeBtnFeed").addEventListener("click", () => {
+  const select = document.getElementById("strokeTargetSelectFeed");
+  const color = document.getElementById("strokeColorInputFeed").value;
+  Array.from(select.selectedOptions).forEach((option) => {
+    const target = document.getElementById(option.value);
+    if (target) {
+      target.style.textShadow = `
+        -1px -1px 0 ${color},
+        1px -1px 0 ${color},
+        -1px 1px 0 ${color},
+        1px 1px 0 ${color}
+      `;
+    }
+  });
+});
+
+document.getElementById("removeStrokeBtnFeed").addEventListener("click", () => {
+  const select = document.getElementById("strokeTargetSelectFeed");
+  Array.from(select.selectedOptions).forEach((option) => {
+    const target = document.getElementById(option.value);
+    if (target) {
+      target.style.textShadow = "";
+    }
+  });
+});
+
+document
+  .getElementById("applyStrokeBtnReview")
+  .addEventListener("click", () => {
+    const select = document.getElementById("strokeTargetSelectReview");
+    const color = document.getElementById("strokeColorInputReview").value;
+    Array.from(select.selectedOptions).forEach((option) => {
+      const target = document.getElementById(option.value);
+      if (target) {
+        target.style.textShadow = `
+        -1px -1px 0 ${color},
+        1px -1px 0 ${color},
+        -1px 1px 0 ${color},
+        1px 1px 0 ${color}
+      `;
+      }
+    });
+  });
+
+document
+  .getElementById("removeStrokeBtnReview")
+  .addEventListener("click", () => {
+    const select = document.getElementById("strokeTargetSelectReview");
+    Array.from(select.selectedOptions).forEach((option) => {
+      const target = document.getElementById(option.value);
+      if (target) {
+        target.style.textShadow = "";
+      }
+    });
+  });
+
+document
+  .getElementById("applyStrokeBtnReviewFeed")
+  .addEventListener("click", () => {
+    const select = document.getElementById("strokeTargetSelectReviewFeed");
+    const color = document.getElementById("strokeColorInputReviewFeed").value;
+    Array.from(select.selectedOptions).forEach((option) => {
+      const target = document.getElementById(option.value);
+      if (target) {
+        target.style.textShadow = `
+        -1px -1px 0 ${color},
+        1px -1px 0 ${color},
+        -1px 1px 0 ${color},
+        1px 1px 0 ${color}
+      `;
+      }
+    });
+  });
+
+document
+  .getElementById("removeStrokeBtnReviewFeed")
+  .addEventListener("click", () => {
+    const select = document.getElementById("strokeTargetSelectReviewFeed");
+    Array.from(select.selectedOptions).forEach((option) => {
+      const target = document.getElementById(option.value);
+      if (target) {
+        target.style.textShadow = "";
+      }
+    });
+  });

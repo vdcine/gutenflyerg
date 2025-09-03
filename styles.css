@@ -43,12 +43,38 @@ form {
   overflow: hidden;
 }
 
+#flyer-story-review {
+  width: 1080px;
+  height: 1920px;
+  border: 1px solid black;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flyer-container {
+  display: flex;
+}
+
 #flyer-feed {
   width: 1080px;
   height: 1080px;
   border: 1px solid black;
   position: relative;
   overflow: hidden;
+}
+
+#flyer-feed-review {
+  width: 1080px;
+  height: 1080px;
+  border: 1px solid black;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #instrucciones {
@@ -75,6 +101,24 @@ form {
   z-index: 3;
   position: relative;
   margin-bottom: 0px;
+}
+
+.header-review {
+  padding: 5px;
+  font-size: 100px;
+  z-index: 3;
+  position: relative;
+  margin-bottom: 0px;
+  margin-top: 70px;
+}
+
+.header-feed-review {
+  padding: 5px;
+  font-size: 100px;
+  z-index: 3;
+  position: relative;
+  margin-bottom: 0px;
+  margin-top: 70px;
 }
 
 .tape {
@@ -180,6 +224,67 @@ form {
   z-index: 5;
 }
 
+.rect2-review {
+  position: absolute;
+  top: 60px;
+  width: 100%;
+  height: 140px;
+  background: #043f61;
+  z-index: 5;
+  margin: 0;
+  display: block;
+}
+
+.rect2-review::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
+}
+
+.rect2-review-feed {
+  position: absolute;
+  top: 60px;
+  width: 100%;
+  height: 140px;
+  background: #043f61;
+  z-index: 5;
+  margin: 0;
+  display: block;
+}
+
+.rect2-review-feed::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
+}
+
+.rect2::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
+}
+
 .rect2-feed {
   position: absolute;
   top: -10px;
@@ -220,7 +325,7 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 215px;
+  top: 222px;
   height: auto;
   box-sizing: border-box;
 }
@@ -320,6 +425,7 @@ form {
 
 #title-feed {
   font-size: 50px;
+  max-width: 258px;
   font-weight: lighter;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -352,6 +458,108 @@ form {
   font-size: 20px;
   margin-bottom: 5px;
   margin-top: 15px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#title-review {
+  font-size: 50px;
+  font-weight: lighter;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#director-review {
+  font-size: 30px;
+  z-index: 5;
+  position: relative;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#year-review {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#duracion-review {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#origen-review {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#title-review-feed {
+  font-size: 50px;
+  font-weight: lighter;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#director-review-feed {
+  font-size: 30px;
+  z-index: 5;
+  position: relative;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#year-review-feed {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#duracion-review-feed {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#origen-review-feed {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
   z-index: 5;
   position: relative;
   font-family: "Gilroy", sans-serif;
@@ -398,6 +606,19 @@ form {
   font-size: 21px;
 }
 
+#org-review {
+  width: 100%;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 6;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+  bottom: -25px;
+  font-size: 21px;
+  color: inherit;
+}
+
 #org-feed {
   width: 100%;
   display: block;
@@ -406,7 +627,21 @@ form {
   z-index: 6;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
-  bottom: 5px;
+  bottom: 8px;
+  font-size: 21px;
+  color: inherit;
+}
+
+#org-review-feed {
+  width: 100%;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 6;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+  bottom: -25px;
+  font-size: 21px;
   color: inherit;
 }
 
@@ -457,6 +692,16 @@ form {
   position: relative;
 }
 
+.flyer-date-group-review {
+  width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 200px;
+  z-index: 9000;
+  position: relative;
+}
+
 .flyer-hour-group-feed {
   width: 260px;
   min-width: 260px;
@@ -481,6 +726,28 @@ form {
   font-size: 50px;
   text-align: center;
   width: 115%;
+  word-break: break-word;
+  line-height: 1.1;
+
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+}
+
+#sinapsis-review {
+  font-size: 50px;
+  text-align: center;
+
+  word-break: break-word;
+  line-height: 1.1;
+
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+}
+
+#sinapsis-review-feed {
+  font-size: 50px;
+  text-align: center;
+
   word-break: break-word;
   line-height: 1.1;
 
@@ -790,11 +1057,56 @@ button {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-left: 10px;
   align-items: start;
   padding: 14px;
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
+  max-height: 635px;
+  font-family: "Gilroy", sans-serif;
+}
+
+.panel-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 12px;
+  background: #14181e;
+  color: #dbe5ee;
+  max-height: 710px;
+  font-family: "Gilroy", sans-serif;
+}
+
+.panel-feed label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  margin-right: 10px;
+  justify-self: left;
+}
+
+.panel-feed input[type="text"],
+.panel-feed input[type="number"] {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #29303a;
+  background: #101419;
+  color: #e8f1ff;
+}
+
+.panel-feed button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #283241;
+  background: #1a2430;
+  color: #e8f1ff;
+  cursor: pointer;
+  font-weight: 700;
 }
 
 .panel label {
@@ -816,6 +1128,90 @@ button {
 }
 
 .panel button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #283241;
+  background: #1a2430;
+  color: #e8f1ff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.panel-review {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 12px;
+  background: #14181e;
+  color: #dbe5ee;
+  max-height: 500px;
+  font-family: "Gilroy", sans-serif;
+}
+
+.panel-review label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  margin-right: 10px;
+  justify-self: left;
+}
+
+.panel-review input[type="text"],
+.panel-review input[type="number"] {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #29303a;
+  background: #101419;
+  color: #e8f1ff;
+}
+
+.panel-review button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #283241;
+  background: #1a2430;
+  color: #e8f1ff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.panel-review-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 12px;
+  background: #14181e;
+  color: #dbe5ee;
+  max-height: 500px;
+  font-family: "Gilroy", sans-serif;
+}
+
+.panel-review-feed label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  margin-right: 10px;
+  justify-self: left;
+}
+
+.panel-review-feed input[type="text"],
+.panel-review-feed input[type="number"] {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #29303a;
+  background: #101419;
+  color: #e8f1ff;
+}
+
+.panel-review-feed button {
   padding: 10px 14px;
   border-radius: 10px;
   border: 1px solid #283241;
@@ -847,6 +1243,14 @@ button {
   gap: 70px;
 }
 
+.feed-flex-row-review {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
 .feed-poster-col img {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
   width: 766px;
@@ -857,12 +1261,56 @@ button {
   top: -65px;
 }
 
+.feed-poster-col-review img {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  width: 350px;
+  height: auto;
+  border-radius: 10px;
+  z-index: 6;
+  position: relative;
+  top: 10px;
+  margin-left: 30px;
+}
+
+.story-poster-col-review img {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  width: 600px;
+  height: auto;
+  border-radius: 10px;
+  z-index: 6;
+  position: relative;
+  top: 60px;
+  margin-left: 30px;
+}
+
 .feed-info-col {
   display: flex;
   flex-direction: column;
   gap: 32px;
   align-items: center;
   margin-right: 10px;
+}
+
+.feed-info-col-review {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+
+  margin-left: 25px;
+  position: relative;
+  top: 10px;
+}
+
+.story-info-col-review {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  margin-right: 10px;
+  margin-left: 25px;
+  position: relative;
+  top: 90px;
 }
 
 .flyer-main-group {
