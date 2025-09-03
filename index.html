@@ -479,8 +479,8 @@
                     </div>
                   </div>
                   <div class="flyer-main-group-feed">
-                    <h3 id="title-feed">Título</h3>
-                    <p id="year-feed">Año</p>
+                    <h3 id="title-feed" style="font-size: 42px">Título</h3>
+                    <p id="year-feed" style="font-size: 40px">Año</p>
                     <p id="director-feed">Director</p>
                     <p id="duracion-feed">100 minutos</p>
                   </div>
@@ -543,6 +543,32 @@
                   Aplicar borde
                 </button>
                 <button id="removeStrokeBtnFeed">Quitar borde</button>
+              </div>
+
+              <div>
+                <label>Tamaño titulo</label>
+                <input
+                  id="flyerTitleFontSizeInputFeed"
+                  type="number"
+                  min="10"
+                  max="60"
+                  value="42"
+                  style="width: 80px"
+                />
+                px
+              </div>
+
+              <div>
+                <label>Tamaño año</label>
+                <input
+                  id="flyerYearFontSizeInputFeed"
+                  type="number"
+                  min="10"
+                  max="60"
+                  value="42"
+                  style="width: 80px"
+                />
+                px
               </div>
 
               <div>
@@ -629,146 +655,283 @@
 
       <!-- RESEÑAS -->
       <div
-        class="flyer-flex-col"
+        class="flyer-flex-row"
         style="
           display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 24px;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          gap: 40px;
         "
       >
-        <div id="flyer-story-review" class="flyer-version">
-          <div class="tape"></div>
-          <div class="rect-review"></div>
-          <h1 class="header-review" id="header">VELADAS DE CINE</h1>
+        <div
+          class="flyer-flex-col"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+          "
+        >
+          <div class="flyer-container">
+            <div id="flyer-story-review" class="flyer-version">
+              <div class="tape"></div>
+              <div class="rect-review"></div>
+              <h1 class="header-review" id="header-review">VELADAS DE CINE</h1>
 
-          <!-- <div class="subheader">
-            <h2 id="ciclo">Ciclo</h2>
-          </div> -->
-
-          <!--  <div class="poster-container">
-            <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
-            <div id="bubble" class="dialogo-comic">
-              ¡Debate luego!
-              <div class="comic-tail-border"></div>
-              <div class="comic-tail-noise"></div>
-            </div>
-          </div> -->
-
-          <div class="feed-flex-row-review">
-            <!-- Poster grande a la izquierda -->
-            <div
-              class="feed-poster-col-review"
-              style="display: flex; flex-direction: column; align-items: center"
-            >
-              <img
-                id="poster-review"
-                src=""
-                alt="Poster"
-                crossorigin="anonymous"
-              />
-            </div>
-            <!-- Fecha y hora a la derecha -->
-            <div class="feed-info-col-review">
-              <div class="flyer-main-group-feed">
-                <h3 id="title-review">Título</h3>
-                <p id="origen-review">Origen:</p>
-                <p id="duracion-review">100 minutos</p>
-                <p id="director-review">Director</p>
-                <p id="year-review">Año</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="flyer-date-group-review">
-            <div
-              id="sinapsis-review"
-              class="fancy-text"
-              style="font-size: 36px"
-            >
-              SINAPSIS
-            </div>
-          </div>
-
-          <div class="event-data">
-            <div class="rect2-review"></div>
-            <span id="org-review">
-              Organizan Matías Corona y Francisco Albani con apoyo de la
-              Comisión Directiva de la Biblioteca Menéndez.
-            </span>
-          </div>
-        </div>
-
-        <div id="flyer-feed" class="flyer-version" style="display: none">
-          <div class="tape" style="top: -152px"></div>
-          <div class="rect-feed"></div>
-          <h1 class="header-feed" id="header-feed" style="font-size: 85px">
-            VELADAS DE CINE
-          </h1>
-
-          <div class="subheader-feed">
-            <h2 id="ciclo" style="font-size: 36px">Ciclo</h2>
-          </div>
-
-          <div class="feed-flex-row">
-            <!-- Poster grande a la izquierda -->
-            <div
-              class="feed-poster-col"
-              style="display: flex; flex-direction: column; align-items: center"
-            >
-              <img
-                id="poster-feed"
-                src=""
-                alt="Poster"
-                crossorigin="anonymous"
-              />
-            </div>
-            <!-- Fecha y hora a la derecha -->
-            <div
-              class="feed-info-col"
-              style="display: flex; flex-direction: column; gap: 32px"
-            >
-              <div class="flyer-date-group-feed">
+              <div class="feed-flex-row-review">
+                <!-- Poster grande a la izquierda -->
                 <div
-                  id="flyer-date-feed"
-                  class="flyer-date-feed fancy-text"
+                  class="story-poster-col-review"
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                  "
+                >
+                  <img
+                    id="poster-review"
+                    src=""
+                    alt="Poster"
+                    crossorigin="anonymous"
+                  />
+                </div>
+                <!-- Fecha y hora a la derecha -->
+                <div class="story-info-col-review">
+                  <div class="flyer-main-group-feed">
+                    <h3 id="title-review">Título</h3>
+                    <p id="origen-review">Origen:</p>
+                    <p id="duracion-review">100 minutos</p>
+                    <p id="director-review">Director</p>
+                    <p id="year-review">Año</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flyer-date-group-review">
+                <div
+                  id="sinapsis-review"
+                  class="fancy-text"
                   style="font-size: 36px"
                 >
-                  MIÉRCOLES 6<br />DE AGOSTO
+                  SINAPSIS
                 </div>
               </div>
-              <div class="flyer-hour-group-feed">
-                <div
-                  id="flyer-hour-feed"
-                  class="flyer-hour-feed"
-                  style="font-size: 36px; text-align: center"
-                >
-                  19:00 HS
-                </div>
-                <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
-                  <img
-                    src="images/icon.png"
-                    alt="ubicación"
-                    class="flyer-location-icon"
-                  />
-                  <span>Biblioteca Menéndez</span>
-                </div>
-              </div>
-              <div class="flyer-main-group-feed">
-                <h3 id="title-feed">Título</h3>
-                <p id="year-feed">Año</p>
-                <p id="director-feed">Director</p>
-                <p id="duracion-feed">100 minutos</p>
+
+              <div class="event-data">
+                <div class="rect2-review"></div>
+                <span id="org-review">
+                  Organizan Matías Corona y Francisco Albani con apoyo de la
+                  Comisión Directiva de la Biblioteca Menéndez.
+                </span>
               </div>
             </div>
-          </div>
+            <div class="panel-review">
+              <div>
+                <label>Título</label>
+                <textarea id="titleInputReview" rows="2"></textarea>
+              </div>
 
-          <div class="event-data" style="height: 70px">
-            <div class="rect2-feed" style="height: 80px"></div>
-            <span id="org-feed" style="font-size: medium">
-              Organizan Matías Corona y Francisco Albani con apoyo de la
-              Comisión Directiva de la Biblioteca Menéndez.
-            </span>
+              <div>
+                <label>Sinapsis</label>
+                <textarea id="sinapsisInputReview" rows="6"></textarea>
+              </div>
+
+              <div class="full">
+                <button id="applyTxtBtnReview">Aplicar cambios</button>
+              </div>
+
+              <label>Borde textos</label>
+              <div class="bordes" style="display: flex">
+                <select id="strokeTargetSelectReview" multiple size="7">
+                  <option value="header-review">Encabezado</option>
+                  <option value="title-review">Título</option>
+                  <option value="year-review">Año</option>
+                  <option value="director-review">Director</option>
+                  <option value="duracion-review">Duración</option>
+                  <option value="origen-review">Origen</option>
+                  <option value="sinapsis-review">Sinapsis</option>
+                </select>
+                <input
+                  type="color"
+                  name="strokeColor"
+                  id="strokeColorInputReview"
+                  value="#000000"
+                />
+              </div>
+
+              <div style="display: flex; flex-direction: row">
+                <button id="applyStrokeBtnReview" style="margin-right: 5px">
+                  Aplicar borde
+                </button>
+                <button id="removeStrokeBtnReview">Quitar borde</button>
+              </div>
+              <div>
+                <label>Tamaño sinapsis</label>
+                <input
+                  id="flyerSynopsisFontSizeInputStory"
+                  type="number"
+                  min="10"
+                  max="100"
+                  value="40"
+                  style="width: 80px"
+                />
+                px
+              </div>
+            </div>
+
+            <div
+              class="flyer-flex-row"
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: center;
+                gap: 40px;
+              "
+            >
+              <div
+                class="flyer-flex-col"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 24px;
+                "
+              >
+                <div class="flyer-container">
+                  <div
+                    id="flyer-feed-review"
+                    class="flyer-version"
+                    style="display: none"
+                  >
+                    <div class="tape"></div>
+                    <div class="rect-review"></div>
+                    <h1 class="header-feed-review" id="header-review-feed">
+                      VELADAS DE CINE
+                    </h1>
+
+                    <div class="feed-flex-row-review">
+                      <!-- Poster grande a la izquierda -->
+                      <div
+                        class="feed-poster-col-review"
+                        style="
+                          display: flex;
+                          flex-direction: column;
+                          align-items: center;
+                        "
+                      >
+                        <img
+                          id="poster-review-feed"
+                          src=""
+                          alt="Poster"
+                          crossorigin="anonymous"
+                        />
+                      </div>
+                      <!-- Fecha y hora a la derecha -->
+                      <div class="feed-info-col-review">
+                        <div class="flyer-main-group-feed">
+                          <h3 id="title-review-feed">Título</h3>
+                          <p id="origen-review-feed">Origen:</p>
+                          <p id="duracion-review-feed">100 minutos</p>
+                          <p id="director-review-feed">Director</p>
+                          <p id="year-review-feed">Año</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flyer-date-group-review"
+                      style="margin-top: 40px"
+                    >
+                      <div
+                        id="sinapsis-review-feed"
+                        class="fancy-text"
+                        style="font-size: 22px"
+                      >
+                        SINAPSIS
+                      </div>
+                    </div>
+
+                    <div class="event-data">
+                      <div class="rect2-review-feed"></div>
+                      <span id="org-review-feed">
+                        Organizan Matías Corona y Francisco Albani con apoyo de
+                        la Comisión Directiva de la Biblioteca Menéndez.
+                      </span>
+                    </div>
+                  </div>
+                  <div class="panel-review-feed" style="display: none">
+                    <div>
+                      <label>Título</label>
+                      <textarea id="titleInputReviewFeed" rows="2"></textarea>
+                    </div>
+
+                    <div>
+                      <label>Sinapsis</label>
+                      <textarea
+                        id="sinapsisInputReviewFeed"
+                        rows="6"
+                      ></textarea>
+                    </div>
+
+                    <div class="full">
+                      <button id="applyTxtBtnReviewFeed">
+                        Aplicar cambios
+                      </button>
+                    </div>
+
+                    <label>Borde textos</label>
+                    <div class="bordes" style="display: flex">
+                      <select
+                        id="strokeTargetSelectReviewFeed"
+                        multiple
+                        size="7"
+                      >
+                        <option value="header-review-feed">Encabezado</option>
+                        <option value="title-review-feed">Título</option>
+                        <option value="year-review-feed">Año</option>
+                        <option value="director-review-feed">Director</option>
+                        <option value="duracion-review-feed">Duración</option>
+                        <option value="origen-review-feed">Origen</option>
+                        <option value="sinapsis-review-feed">Sinapsis</option>
+                      </select>
+                      <input
+                        type="color"
+                        name="strokeColor"
+                        id="strokeColorInputReviewFeed"
+                        value="#000000"
+                      />
+                    </div>
+
+                    <div style="display: flex; flex-direction: row">
+                      <button
+                        id="applyStrokeBtnReviewFeed"
+                        style="margin-right: 5px"
+                      >
+                        Aplicar borde
+                      </button>
+                      <button id="removeStrokeBtnReviewFeed">
+                        Quitar borde
+                      </button>
+                    </div>
+
+                    <div>
+                      <label>Tamaño sinapsis</label>
+                      <input
+                        id="flyerSynopsisFontSizeInput"
+                        type="number"
+                        min="10"
+                        max="100"
+                        value="22"
+                        style="width: 80px"
+                      />
+                      px
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -783,6 +946,23 @@
           cursor: pointer;
           margin-left: auto;
           margin-right: auto;
+        "
+      >
+        Descargar review
+      </button>
+
+      <button
+        type="button"
+        id="saveFlyerReviewFeed"
+        style="
+          margin-bottom: 20px;
+          margin-top: 20px;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer;
+          margin-left: auto;
+          margin-right: auto;
+          display: none;
         "
       >
         Descargar review

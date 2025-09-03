@@ -66,6 +66,17 @@ form {
   overflow: hidden;
 }
 
+#flyer-feed-review {
+  width: 1080px;
+  height: 1080px;
+  border: 1px solid black;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #instrucciones {
   font-family: "Gilroy", sans-serif;
   margin-bottom: 10px;
@@ -93,6 +104,15 @@ form {
 }
 
 .header-review {
+  padding: 5px;
+  font-size: 100px;
+  z-index: 3;
+  position: relative;
+  margin-bottom: 0px;
+  margin-top: 70px;
+}
+
+.header-feed-review {
   padding: 5px;
   font-size: 100px;
   z-index: 3;
@@ -216,6 +236,30 @@ form {
 }
 
 .rect2-review::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url("images/ruido.png");
+  opacity: 0.18;
+  z-index: 5;
+}
+
+.rect2-review-feed {
+  position: absolute;
+  top: 60px;
+  width: 100%;
+  height: 140px;
+  background: #043f61;
+  z-index: 5;
+  margin: 0;
+  display: block;
+}
+
+.rect2-review-feed::after {
   content: "";
   position: absolute;
   top: 0;
@@ -381,6 +425,7 @@ form {
 
 #title-feed {
   font-size: 50px;
+  max-width: 258px;
   font-weight: lighter;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -470,6 +515,57 @@ form {
   font-weight: 700;
 }
 
+#title-review-feed {
+  font-size: 50px;
+  font-weight: lighter;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#director-review-feed {
+  font-size: 30px;
+  z-index: 5;
+  position: relative;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#year-review-feed {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#duracion-review-feed {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
+#origen-review-feed {
+  font-size: 30px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  z-index: 5;
+  position: relative;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
+}
+
 .event-data {
   font-size: 30px;
   padding: 5px;
@@ -531,7 +627,21 @@ form {
   z-index: 6;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
-  bottom: 5px;
+  bottom: 8px;
+  font-size: 21px;
+  color: inherit;
+}
+
+#org-review-feed {
+  width: 100%;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 6;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+  bottom: -25px;
+  font-size: 21px;
   color: inherit;
 }
 
@@ -624,6 +734,17 @@ form {
 }
 
 #sinapsis-review {
+  font-size: 50px;
+  text-align: center;
+
+  word-break: break-word;
+  line-height: 1.1;
+
+  font-family: "Gilroy", sans-serif;
+  font-weight: 600;
+}
+
+#sinapsis-review-feed {
   font-size: 50px;
   text-align: center;
 
@@ -943,6 +1064,7 @@ button {
   background: #14181e;
   color: #dbe5ee;
   max-height: 635px;
+  font-family: "Gilroy", sans-serif;
 }
 
 .panel-feed {
@@ -955,7 +1077,8 @@ button {
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
-  max-height: 635px;
+  max-height: 710px;
+  font-family: "Gilroy", sans-serif;
 }
 
 .panel-feed label {
@@ -1014,6 +1137,90 @@ button {
   font-weight: 700;
 }
 
+.panel-review {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 12px;
+  background: #14181e;
+  color: #dbe5ee;
+  max-height: 500px;
+  font-family: "Gilroy", sans-serif;
+}
+
+.panel-review label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  margin-right: 10px;
+  justify-self: left;
+}
+
+.panel-review input[type="text"],
+.panel-review input[type="number"] {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #29303a;
+  background: #101419;
+  color: #e8f1ff;
+}
+
+.panel-review button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #283241;
+  background: #1a2430;
+  color: #e8f1ff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.panel-review-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 12px;
+  background: #14181e;
+  color: #dbe5ee;
+  max-height: 500px;
+  font-family: "Gilroy", sans-serif;
+}
+
+.panel-review-feed label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  margin-right: 10px;
+  justify-self: left;
+}
+
+.panel-review-feed input[type="text"],
+.panel-review-feed input[type="number"] {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #29303a;
+  background: #101419;
+  color: #e8f1ff;
+}
+
+.panel-review-feed button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #283241;
+  background: #1a2430;
+  color: #e8f1ff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
 .flyer-tab.active {
   background: #386119;
   color: #fff;
@@ -1056,6 +1263,17 @@ button {
 
 .feed-poster-col-review img {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  width: 350px;
+  height: auto;
+  border-radius: 10px;
+  z-index: 6;
+  position: relative;
+  top: 10px;
+  margin-left: 30px;
+}
+
+.story-poster-col-review img {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
   width: 600px;
   height: auto;
   border-radius: 10px;
@@ -1074,6 +1292,17 @@ button {
 }
 
 .feed-info-col-review {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+
+  margin-left: 25px;
+  position: relative;
+  top: 10px;
+}
+
+.story-info-col-review {
   display: flex;
   flex-direction: column;
   gap: 32px;
