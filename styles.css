@@ -1254,7 +1254,7 @@ button {
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
-  max-height: 500px;
+  max-height: 560px;
   font-family: "Gilroy", sans-serif;
 }
 
@@ -1433,4 +1433,9 @@ button {
   height: 28px;
   vertical-align: middle;
   margin-right: 8px;
+}
+
+.edad-sugerida-input {
+  display: flex;
+  flex-direction: column;
 }
