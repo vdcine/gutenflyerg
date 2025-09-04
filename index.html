@@ -268,12 +268,6 @@
 
               <div class="flyer-row">
                 <div class="flyer-date-group">
-                  <input
-                    type="text"
-                    id="dateInput"
-                    value="MIÉRCOLES 6 DE AGOSTO"
-                    style="display: none"
-                  />
                   <div id="flyer-date" class="flyer-date">
                     MIÉRCOLES 6<br />DE AGOSTO
                   </div>
@@ -283,14 +277,9 @@
                   <p id="year">Año</p>
                   <p id="director">Director</p>
                   <p id="duracion">100 minutos</p>
+                  <p id="edad-sugerida" class="edad-sugerida" style="display: none;"></p>
                 </div>
                 <div class="flyer-hour-group">
-                  <input
-                    type="text"
-                    id="hourInput"
-                    value="19:00 HS"
-                    style="display: none"
-                  />
                   <div id="flyer-hour" class="flyer-hour">19:00 HS</div>
                   <div id="flyer-biblioteca" class="flyer-biblioteca">
                     <img
@@ -330,6 +319,11 @@
                 <label>Título</label>
                 <textarea id="titleInput" rows="2"></textarea>
               </div>
+              
+              <div>
+                <label>Edad sugerida (opcional)</label>
+                <input id="edadSugeridaInput" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+              </div>
 
               <div class="full">
                 <button id="applyTxtBtn">Aplicar cambios</button>
@@ -343,6 +337,7 @@
                   <option value="year">Año</option>
                   <option value="director">Director</option>
                   <option value="duracion">Duración</option>
+                  <option value="edad-sugerida">Edad sugerida</option>
                   <option value="flyer-date">Fecha</option>
                   <option value="flyer-hour">Hora</option>
                   <option value="flyer-biblioteca">Ubicación</option>
@@ -474,6 +469,7 @@
                     <p id="year-feed" style="font-size: 40px">Año</p>
                     <p id="director-feed">Director</p>
                     <p id="duracion-feed">100 minutos</p>
+                    <p id="edad-sugerida-feed" class="edad-sugerida-feed" style="display: none;"></p>
                   </div>
                 </div>
               </div>
@@ -504,6 +500,11 @@
                 <label>Título</label>
                 <textarea id="titleInputFeed" rows="2"></textarea>
               </div>
+              
+              <div>
+                <label>Edad sugerida (opcional)</label>
+                <input id="edadSugeridaInputFeed" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+              </div>
 
               <div class="full">
                 <button id="applyTxtBtnFeed">Aplicar cambios</button>
@@ -517,6 +518,7 @@
                   <option value="year-feed">Año</option>
                   <option value="director-feed">Director</option>
                   <option value="duracion-feed">Duración</option>
+                  <option value="edad-sugerida-feed">Edad sugerida</option>
                   <option value="flyer-date-feed">Fecha</option>
                   <option value="flyer-hour-feed">Hora</option>
                   <option value="flyer-biblioteca-feed">Ubicación</option>
@@ -693,6 +695,7 @@
                     <h3 id="title-review">Título</h3>
                     <p id="origen-review">Origen:</p>
                     <p id="duracion-review">100 minutos</p>
+                    <p id="edad-sugerida-review" class="edad-sugerida-review" style="display: none;"></p>
                     <p id="director-review">Director</p>
                     <p id="year-review">Año</p>
                   </div>
@@ -722,6 +725,11 @@
                 <label>Título</label>
                 <textarea id="titleInputReview" rows="2"></textarea>
               </div>
+              
+              <div>
+                <label>Edad sugerida (opcional)</label>
+                <input id="edadSugeridaInputReview" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+              </div>
 
               <div>
                 <label>Sinapsis</label>
@@ -740,6 +748,7 @@
                   <option value="year-review">Año</option>
                   <option value="director-review">Director</option>
                   <option value="duracion-review">Duración</option>
+                  <option value="edad-sugerida-review">Edad sugerida</option>
                   <option value="origen-review">Origen</option>
                   <option value="sinapsis-review">Sinapsis</option>
                 </select>
@@ -825,6 +834,7 @@
                           <h3 id="title-review-feed">Título</h3>
                           <p id="origen-review-feed">Origen:</p>
                           <p id="duracion-review-feed">100 minutos</p>
+                          <p id="edad-sugerida-review-feed" class="edad-sugerida-review-feed" style="display: none;"></p>
                           <p id="director-review-feed">Director</p>
                           <p id="year-review-feed">Año</p>
                         </div>
@@ -857,6 +867,11 @@
                       <label>Título</label>
                       <textarea id="titleInputReviewFeed" rows="2"></textarea>
                     </div>
+                    
+                    <div>
+                      <label>Edad sugerida (opcional)</label>
+                      <input id="edadSugeridaInputReviewFeed" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+                    </div>
 
                     <div>
                       <label>Sinapsis</label>
@@ -884,6 +899,7 @@
                         <option value="year-review-feed">Año</option>
                         <option value="director-review-feed">Director</option>
                         <option value="duracion-review-feed">Duración</option>
+                        <option value="edad-sugerida-review-feed">Edad sugerida</option>
                         <option value="origen-review-feed">Origen</option>
                         <option value="sinapsis-review-feed">Sinapsis</option>
                       </select>

@@ -56,11 +56,83 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   `;
     result.addEventListener("click", async () => {
       window.selectedMovieId = movie.id;
+      
+      const releaseDatesRes = await fetch(
+        `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
+      );
+      const releaseDatesData = await releaseDatesRes.json();
+
+      // Mapeo de certificaciones para normalizar los valores de arg https://calificaciones.incaa.gob.ar/
+      const certificationMap = {
+        "AA": "ATP",
+        "A": "ATP", 
+        "ATP": "ATP",
+        "13": "+13",
+        "16": "+16", 
+        "18": "+18",
+        "SAM13": "SAM 13",
+        "SAM16": "SAM 16", 
+        "SAM18": "SAM 18",
+        "M": "+13",
+        "G": "ATP",
+        "PG": "+13",
+        "PG-13": "+13",
+        "R": "+16",
+        "NC-17": "+18"
+      };
+      
+      let certification = "";
+      const countriesOrder = ["AR"];// Se pueden agregar otros codigos de paises
+      
+      for (const country of countriesOrder) {
+        const countryData = releaseDatesData.results.find(r => r.iso_3166_1 === country);
+        if (countryData && countryData.release_dates.length > 0) {
+          const certData = countryData.release_dates.find(rd => rd.certification !== "");
+          if (certData && certData.certification) {
+            certification = certData.certification;
+            break;
+          }
+        }
+      }
+      
+      if (!certification) {
+        for (const result of releaseDatesData.results) {
+          const certData = result.release_dates.find(rd => rd.certification !== "");
+          if (certData && certData.certification) {
+            certification = certData.certification;
+            break;
+          }
+        }
+      }
+      
+      const mappedCertification = certificationMap[certification] || certification;
+      
       document.getElementById("title").textContent = movie.title;
       document.getElementById("titleInput").value = movie.title;
       document.getElementById("titleInputFeed").value = movie.title;
       document.getElementById("titleInputReview").value = movie.title;
       document.getElementById("titleInputReviewFeed").value = movie.title;
+      
+      if (mappedCertification) {
+        document.getElementById("edadSugeridaInput").value = mappedCertification;
+        document.getElementById("edadSugeridaInputFeed").value = mappedCertification;
+        document.getElementById("edadSugeridaInputReview").value = mappedCertification;
+        document.getElementById("edadSugeridaInputReviewFeed").value = mappedCertification;
+        
+        const edadElements = [
+          document.getElementById("edad-sugerida"),
+          document.getElementById("edad-sugerida-feed"),
+          document.getElementById("edad-sugerida-review"),
+          document.getElementById("edad-sugerida-review-feed")
+        ];
+        
+        edadElements.forEach(el => {
+          if (el) {
+            el.textContent = mappedCertification;
+            el.style.display = "inline-block";
+          }
+        });
+      }
       document.getElementById("year").textContent = new Date(
         movie.release_date
       ).getFullYear();
@@ -1092,22 +1164,29 @@ floatingColorPicker.addEventListener("blur", () => {
   document.querySelector(".header-review"),
   document.querySelector(".header-feed-review"),
   document.getElementById("title"),
+  document.getElementById("year"),
+  document.getElementById("director"),
+  document.getElementById("duracion"),
+  document.getElementById("edad-sugerida"),
   document.getElementById("title-review"),
   document.getElementById("origen-review"),
   document.getElementById("year-review"),
   document.getElementById("director-review"),
   document.getElementById("duracion-review"),
+  document.getElementById("edad-sugerida-review"),
   document.getElementById("sinapsis-review"),
   document.getElementById("title-review-feed"),
   document.getElementById("origen-review-feed"),
   document.getElementById("year-review-feed"),
   document.getElementById("director-review-feed"),
   document.getElementById("duracion-review-feed"),
+  document.getElementById("edad-sugerida-review-feed"),
   document.getElementById("sinapsis-review-feed"),
   document.getElementById("title-feed"),
   document.getElementById("year-feed"),
   document.getElementById("director-feed"),
   document.getElementById("duracion-feed"),
+  document.getElementById("edad-sugerida-feed"),
   document.getElementById("flyer-date"),
   document.getElementById("flyer-date-feed"),
   document.getElementById("flyer-hour"),
@@ -1799,11 +1878,22 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const dateRaw = document.getElementById("dateInput").value.trim();
   const hourRaw = document.getElementById("hourInput").value.trim();
   const titulo = document.getElementById("titleInput").value.trim();
+  const edadSugerida = document.getElementById("edadSugeridaInput").value.trim();
+  
   document.getElementById("title").innerHTML = (
     titulo || "Título de la película"
   ).replace(/\n/g, "<br>");
 
   document.getElementById("ciclo").textContent = ciclo || "Ciclo";
+
+  // Manejar edad sugerida - mostrar solo si hay contenido
+  const edadSugeridaElement = document.getElementById("edad-sugerida");
+  if (edadSugerida) {
+    edadSugeridaElement.textContent = edadSugerida;
+    edadSugeridaElement.style.display = "inline-block";
+  } else {
+    edadSugeridaElement.style.display = "none";
+  }
 
   function formatDateToSpanish(dateStr) {
     if (!dateStr) return "";
@@ -1849,6 +1939,16 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
   const dateRaw = document.getElementById("dateInputFeed").value.trim();
   const hourRaw = document.getElementById("hourInputFeed").value.trim();
   const titulo = document.getElementById("titleInputFeed").value.trim();
+  const edadSugerida = document.getElementById("edadSugeridaInputFeed").value.trim();
+
+  // Manejar edad sugerida - mostrar solo si hay contenido
+  const edadSugeridaElement = document.getElementById("edad-sugerida-feed");
+  if (edadSugerida) {
+    edadSugeridaElement.textContent = edadSugerida;
+    edadSugeridaElement.style.display = "inline-block";
+  } else {
+    edadSugeridaElement.style.display = "none";
+  }
 
   function formatDateToSpanish(dateStr) {
     if (!dateStr) return "";
@@ -1900,6 +2000,7 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
 document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
   const titulo = document.getElementById("titleInputReview").value.trim();
   const sinapsis = document.getElementById("sinapsisInputReview").value.trim();
+  const edadSugerida = document.getElementById("edadSugeridaInputReview").value.trim();
 
   const flyerReview = document.getElementById("flyer-story-review");
   if (flyerReview) {
@@ -1910,6 +2011,15 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
     flyerReview.querySelector("#sinapsis-review").innerHTML = (
       sinapsis || "Sinopsis de la película"
     ).replace(/\n/g, "<br>");
+
+    // Manejar edad sugerida - mostrar solo si hay contenido
+    const edadSugeridaElement = flyerReview.querySelector("#edad-sugerida-review");
+    if (edadSugerida) {
+      edadSugeridaElement.textContent = edadSugerida;
+      edadSugeridaElement.style.display = "inline-block";
+    } else {
+      edadSugeridaElement.style.display = "none";
+    }
   }
 });
 
@@ -1920,6 +2030,7 @@ document
     const sinapsis = document
       .getElementById("sinapsisInputReviewFeed")
       .value.trim();
+    const edadSugerida = document.getElementById("edadSugeridaInputReviewFeed").value.trim();
 
     const flyerReview = document.getElementById("flyer-feed-review");
     if (flyerReview) {
@@ -1930,6 +2041,15 @@ document
       flyerReview.querySelector("#sinapsis-review-feed").innerHTML = (
         sinapsis || "Sinopsis de la película"
       ).replace(/\n/g, "<br>");
+
+      // Manejar edad sugerida - mostrar solo si hay contenido
+      const edadSugeridaElement = flyerReview.querySelector("#edad-sugerida-review-feed");
+      if (edadSugerida) {
+        edadSugeridaElement.textContent = edadSugerida;
+        edadSugeridaElement.style.display = "inline-block";
+      } else {
+        edadSugeridaElement.style.display = "none";
+      }
     }
   });
 
