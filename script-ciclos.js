@@ -320,7 +320,6 @@ function updateIndividualDatesSection() {
     container.appendChild(dateInput);
   });
 
-  // Agregar event listeners a los nuevos inputs de fecha
   addIndividualDateListeners();
 }
 
@@ -352,22 +351,22 @@ function calculateMovieItemSize(movieCount) {
   switch (movieCount) {
     case 1:
       itemSpacing = 100;
-      itemPadding = 60;
+      itemPadding = 50;
       posterWidth = 280;
       break;
     case 2:
-      itemSpacing = 160;
-      itemPadding = 65;
+      itemSpacing = 100;
+      itemPadding = 35;
       posterWidth = 300;
       break;
     case 3:
-      itemSpacing = 60;
-      itemPadding = 45;
+      itemSpacing = 50;
+      itemPadding = 25;
       posterWidth = 220;
       break;
     case 4:
       itemSpacing = 25;
-      itemPadding = 30;
+      itemPadding = 10;
       posterWidth = 140;
       break;
     default:
@@ -452,14 +451,14 @@ function updateStoryFlyer() {
           ">
             <div class="movie-title" style="
               font-weight: bold; 
-              font-size: ${sizes.width > 140 ? '18px' : sizes.width > 120 ? '16px' : '14px'}; 
+              font-size: ${sizes.width > 140 ? '32px' : sizes.width > 120 ? '26px' : '22px'};
               margin-bottom: 8px;
               color: #2c3e50;
               text-shadow: none;
               line-height: 1.2;
             ">${movie.title}</div>
             <div class="movie-info" style="
-              font-size: ${sizes.width > 140 ? '14px' : sizes.width > 120 ? '12px' : '11px'}; 
+              font-size: ${sizes.width > 140 ? '26px' : sizes.width > 120 ? '24px' : '20px'};
               color: #7f8c8d;
               line-height: 1.4;
               text-shadow: none;
@@ -476,7 +475,7 @@ function updateStoryFlyer() {
             border-radius: 8px;
             font-family: 'Gilroy', sans-serif;
             font-weight: 600;
-            font-size: ${sizes.width > 140 ? '14px' : '12px'};
+            font-size: ${sizes.width > 140 ? '28px' : '20px'};
             text-align: center;
             min-width: 80px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -491,7 +490,7 @@ function updateStoryFlyer() {
             border-radius: 8px;
             font-family: 'Gilroy', sans-serif;
             font-weight: 600;
-            font-size: ${sizes.width > 140 ? '14px' : '12px'};
+            font-size: ${sizes.width > 140 ? '28px' : '20px'};
             text-align: center;
             min-width: 80px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -506,14 +505,14 @@ function updateStoryFlyer() {
           ">
             <div class="movie-title" style="
               font-weight: bold; 
-              font-size: ${sizes.width > 140 ? '18px' : sizes.width > 120 ? '16px' : '14px'}; 
+              font-size: ${sizes.width > 140 ? '32px' : sizes.width > 120 ? '26px' : '22px'};
               margin-bottom: 8px;
               color: #2c3e50;
               text-shadow: none;
               line-height: 1.2;
             ">${movie.title}</div>
             <div class="movie-info" style="
-              font-size: ${sizes.width > 140 ? '14px' : sizes.width > 120 ? '12px' : '11px'}; 
+              font-size: ${sizes.width > 140 ? '26px' : sizes.width > 120 ? '24px' : '20px'};
               color: #7f8c8d;
               line-height: 1.4;
               text-shadow: none;
