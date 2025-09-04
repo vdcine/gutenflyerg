@@ -18,6 +18,30 @@
   <body>
     <div class="container">
       <h1 id="instrucciones">Gunteflyerg de Veladas de Cine</h1>
+      <div class="browsers-container">
+        <div class="browser">
+          <img src="images/firefox.svg" alt="Firefox" class="browser-logo" />
+          <span>Firefox</span>
+        </div>
+        <div class="browser-ok">
+          <span> ✔</span>
+        </div>
+        <div class="browser">
+          <img src="images/chrome.png" alt="Chrome" class="browser-logo" />
+          <span>Chrome</span>
+        </div>
+        <div class="browser-x">X</div>
+        <div class="browser">
+          <img src="images/edge.png" alt="Edge" class="browser-logo" />
+          <span>Edge</span>
+        </div>
+        <div class="browser-x">X</div>
+        <div class="browser">
+          <img src="images/brave.png" alt="Brave" class="browser-logo" />
+          <span>Brave</span>
+        </div>
+        <div class="browser-x">X</div>
+      </div>
       <hr />
       <!-- FORMULARIO -->
       <form id="movieForm">
@@ -277,7 +301,11 @@
                   <p id="year">Año</p>
                   <p id="director">Director</p>
                   <p id="duracion">100 minutos</p>
-                  <p id="edad-sugerida" class="edad-sugerida" style="display: none;"></p>
+                  <p
+                    id="edad-sugerida"
+                    class="edad-sugerida"
+                    style="display: none"
+                  ></p>
                 </div>
                 <div class="flyer-hour-group">
                   <div id="flyer-hour" class="flyer-hour">19:00 HS</div>
@@ -319,10 +347,14 @@
                 <label>Título</label>
                 <textarea id="titleInput" rows="2"></textarea>
               </div>
-              
+
               <div>
                 <label>Edad sugerida (opcional)</label>
-                <input id="edadSugeridaInput" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+                <input
+                  id="edadSugeridaInput"
+                  type="text"
+                  placeholder="Ej: +13, Apta todo público, etc."
+                />
               </div>
 
               <div class="full">
@@ -469,7 +501,11 @@
                     <p id="year-feed" style="font-size: 40px">Año</p>
                     <p id="director-feed">Director</p>
                     <p id="duracion-feed">100 minutos</p>
-                    <p id="edad-sugerida-feed" class="edad-sugerida-feed" style="display: none;"></p>
+                    <p
+                      id="edad-sugerida-feed"
+                      class="edad-sugerida-feed"
+                      style="display: none"
+                    ></p>
                   </div>
                 </div>
               </div>
@@ -500,10 +536,14 @@
                 <label>Título</label>
                 <textarea id="titleInputFeed" rows="2"></textarea>
               </div>
-              
+
               <div>
                 <label>Edad sugerida (opcional)</label>
-                <input id="edadSugeridaInputFeed" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+                <input
+                  id="edadSugeridaInputFeed"
+                  type="text"
+                  placeholder="Ej: +13, Apta todo público, etc."
+                />
               </div>
 
               <div class="full">
@@ -695,7 +735,11 @@
                     <h3 id="title-review">Título</h3>
                     <p id="origen-review">Origen:</p>
                     <p id="duracion-review">100 minutos</p>
-                    <p id="edad-sugerida-review" class="edad-sugerida-review" style="display: none;"></p>
+                    <p
+                      id="edad-sugerida-review"
+                      class="edad-sugerida-review"
+                      style="display: none"
+                    ></p>
                     <p id="director-review">Director</p>
                     <p id="year-review">Año</p>
                   </div>
@@ -725,10 +769,14 @@
                 <label>Título</label>
                 <textarea id="titleInputReview" rows="2"></textarea>
               </div>
-              
+
               <div>
                 <label>Edad sugerida (opcional)</label>
-                <input id="edadSugeridaInputReview" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+                <input
+                  id="edadSugeridaInputReview"
+                  type="text"
+                  placeholder="Ej: +13, Apta todo público, etc."
+                />
               </div>
 
               <div>
@@ -834,7 +882,11 @@
                           <h3 id="title-review-feed">Título</h3>
                           <p id="origen-review-feed">Origen:</p>
                           <p id="duracion-review-feed">100 minutos</p>
-                          <p id="edad-sugerida-review-feed" class="edad-sugerida-review-feed" style="display: none;"></p>
+                          <p
+                            id="edad-sugerida-review-feed"
+                            class="edad-sugerida-review-feed"
+                            style="display: none"
+                          ></p>
                           <p id="director-review-feed">Director</p>
                           <p id="year-review-feed">Año</p>
                         </div>
@@ -867,10 +919,14 @@
                       <label>Título</label>
                       <textarea id="titleInputReviewFeed" rows="2"></textarea>
                     </div>
-                    
+
                     <div>
                       <label>Edad sugerida (opcional)</label>
-                      <input id="edadSugeridaInputReviewFeed" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+                      <input
+                        id="edadSugeridaInputReviewFeed"
+                        type="text"
+                        placeholder="Ej: +13, Apta todo público, etc."
+                      />
                     </div>
 
                     <div>
@@ -899,7 +955,9 @@
                         <option value="year-review-feed">Año</option>
                         <option value="director-review-feed">Director</option>
                         <option value="duracion-review-feed">Duración</option>
-                        <option value="edad-sugerida-review-feed">Edad sugerida</option>
+                        <option value="edad-sugerida-review-feed">
+                          Edad sugerida
+                        </option>
                         <option value="origen-review-feed">Origen</option>
                         <option value="sinapsis-review-feed">Sinapsis</option>
                       </select>
