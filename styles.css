@@ -1381,3 +1381,61 @@ button {
 .flyer-main-group {
   margin-top: 5px;
 }
+
+.browsers-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.browser {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 8px 12px;
+  background-color: #555;
+  color: white;
+  font-family: "Gilroy", sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.browser-ok {
+  padding: 8px 12px;
+  background-color: #4caf50;
+  color: white;
+  font-family: "Gilroy", sans-serif;
+  margin-right: 10px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.browser-x {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  height: 28px;
+  padding: 8px 12px;
+  background-color: #f44336;
+  color: white;
+  font-family: "Gilroy", sans-serif;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.browser-logo {
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.edad-sugerida-input {
+  display: flex;
+  flex-direction: column;
+}
