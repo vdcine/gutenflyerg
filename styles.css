@@ -397,7 +397,7 @@ form {
   font-size: 25px;
   z-index: 10;
   position: relative;
-  margin-top: 5px;
+  margin-top: 2px;
   margin-bottom: 0px;
   font-family: "Gilroy", sans-serif;
   font-weight: 700;
@@ -415,7 +415,7 @@ form {
 
 #duracion {
   font-size: 20px;
-  margin-bottom: 2px;
+  margin-bottom: 0px;
   margin-top: 0px;
   z-index: 10;
   position: relative;

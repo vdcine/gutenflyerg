@@ -1879,14 +1879,13 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const hourRaw = document.getElementById("hourInput").value.trim();
   const titulo = document.getElementById("titleInput").value.trim();
   const edadSugerida = document.getElementById("edadSugeridaInput").value.trim();
-  
+
   document.getElementById("title").innerHTML = (
     titulo || "Título de la película"
   ).replace(/\n/g, "<br>");
 
   document.getElementById("ciclo").textContent = ciclo || "Ciclo";
 
-  // Manejar edad sugerida - mostrar solo si hay contenido
   const edadSugeridaElement = document.getElementById("edad-sugerida");
   if (edadSugerida) {
     edadSugeridaElement.textContent = edadSugerida;
@@ -1941,7 +1940,6 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
   const titulo = document.getElementById("titleInputFeed").value.trim();
   const edadSugerida = document.getElementById("edadSugeridaInputFeed").value.trim();
 
-  // Manejar edad sugerida - mostrar solo si hay contenido
   const edadSugeridaElement = document.getElementById("edad-sugerida-feed");
   if (edadSugerida) {
     edadSugeridaElement.textContent = edadSugerida;
@@ -2012,7 +2010,6 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
       sinapsis || "Sinopsis de la película"
     ).replace(/\n/g, "<br>");
 
-    // Manejar edad sugerida - mostrar solo si hay contenido
     const edadSugeridaElement = flyerReview.querySelector("#edad-sugerida-review");
     if (edadSugerida) {
       edadSugeridaElement.textContent = edadSugerida;
@@ -2042,7 +2039,6 @@ document
         sinapsis || "Sinopsis de la película"
       ).replace(/\n/g, "<br>");
 
-      // Manejar edad sugerida - mostrar solo si hay contenido
       const edadSugeridaElement = flyerReview.querySelector("#edad-sugerida-review-feed");
       if (edadSugerida) {
         edadSugeridaElement.textContent = edadSugerida;
