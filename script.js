@@ -1683,6 +1683,19 @@ document
 
     showBackdrop(currentBackdrop);
 
+    // Aplicar automáticamente como fondo del flyer
+    const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
+    const rect = document.querySelector(".rect");
+    const rectFeed = document.querySelector(".rect-feed");
+    const rectReview = document.querySelector(".rect-review");
+    rect.style.display = "none";
+    rectFeed.style.display = "none";
+    rectReview.style.display = "none";
+    setBackdropAsBackground(fullUrl);
+    setBackdropAsBackgroundFeed(fullUrl);
+    setBackdropAsBackgroundReview(fullUrl);
+    setBackdropAsBackgroundReviewFeed(fullUrl);
+
     document.getElementById("backdrop-direct-input").value = "";
   });
 
@@ -1717,9 +1730,66 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
   currentPoster = 0;
 
   showPoster(currentPoster);
+  const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
+  setPoster(fullUrl);
 
   document.getElementById("poster-direct-input").value = "";
 });
+
+function applyBackdropDirect(url) {
+  if (!url || !url.startsWith("http")) return;
+
+  let filePath = "";
+  if (url.includes("image.tmdb.org/t/p/original")) {
+    filePath = url.replace("https://image.tmdb.org/t/p/original", "");
+  } else {
+    filePath = url;
+  }
+
+  const newBackdrop = {
+    file_path: filePath,
+    aspect_ratio: 1.778,
+  };
+
+  backdrops.unshift(newBackdrop);
+  currentBackdrop = 0;
+  showBackdrop(currentBackdrop);
+
+  const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
+  const rect = document.querySelector(".rect");
+  const rectFeed = document.querySelector(".rect-feed");
+  const rectReview = document.querySelector(".rect-review");
+  rect.style.display = "none";
+  rectFeed.style.display = "none";
+  rectReview.style.display = "none";
+  setBackdropAsBackground(fullUrl);
+  setBackdropAsBackgroundFeed(fullUrl);
+  setBackdropAsBackgroundReview(fullUrl);
+  setBackdropAsBackgroundReviewFeed(fullUrl);
+}
+
+function applyPosterDirect(url) {
+  if (!url || !url.startsWith("http")) return;
+
+  let filePath = "";
+  if (url.includes("image.tmdb.org/t/p/original")) {
+    filePath = url.replace("https://image.tmdb.org/t/p/original", "");
+  } else {
+    filePath = url;
+  }
+
+  const newPoster = {
+    file_path: filePath,
+    aspect_ratio: 0.667,
+  };
+
+  posters.unshift(newPoster);
+  currentPoster = 0;
+  showPoster(currentPoster);
+
+  const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
+  setPoster(fullUrl);
+}
 
 document
   .getElementById("backdrop-carousel-img")

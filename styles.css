@@ -333,7 +333,7 @@ form {
 .subheader-feed {
   width: 522px;
   min-height: 100px;
-  margin-left: 109px;
+  margin-left: 90px;
   top: 40px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.4);
@@ -1254,7 +1254,7 @@ button {
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
-  max-height: 500px;
+  max-height: 560px;
   font-family: "Gilroy", sans-serif;
 }
 
