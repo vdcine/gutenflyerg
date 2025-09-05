@@ -333,8 +333,8 @@ form {
 .subheader-feed {
   width: 522px;
   min-height: 100px;
-  margin-left: 90px;
-  top: 40px;
+  margin-left: 109px;
+  top: 39px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.4);
   position: relative;
@@ -432,11 +432,10 @@ form {
   font-family: "Gilroy", sans-serif;
   font-weight: 700;
   background-color: rgba(199, 194, 194, 0.9);
-  color: #dc3d2c;
+  color: white;
   padding: 3px 8px;
   border-radius: 4px;
   display: inline-block;
-  border: 2px solid #6b0e048c;
 }
 
 #title-feed {
@@ -493,7 +492,6 @@ form {
   padding: 3px 8px;
   border-radius: 4px;
   display: inline-block;
-  border: 2px solid #6b0e048c;
 }
 
 #title-review {
@@ -550,7 +548,6 @@ form {
   padding: 4px 10px;
   border-radius: 4px;
   display: inline-block;
-  border: 2px solid #6b0e048c;
 }
 
 #origen-review {
@@ -617,7 +614,6 @@ form {
   padding: 4px 10px;
   border-radius: 4px;
   display: inline-block;
-  border: 2px solid #6b0e048c;
 }
 
 #origen-review-feed {
@@ -1128,7 +1124,7 @@ button {
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
-  max-height: 700px;
+  max-height: 770px;
   font-family: "Gilroy", sans-serif;
 }
 
@@ -1212,7 +1208,7 @@ button {
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
-  max-height: 560px;
+  max-height: 600px;
   font-family: "Gilroy", sans-serif;
 }
 
@@ -1379,7 +1375,7 @@ button {
 }
 
 .flyer-main-group {
-  margin-top: 5px;
+  margin-top: 24px;
 }
 
 .browsers-container {

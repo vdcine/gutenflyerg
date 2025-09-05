@@ -56,80 +56,122 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   `;
     result.addEventListener("click", async () => {
       window.selectedMovieId = movie.id;
-      
+
       const releaseDatesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
       );
       const releaseDatesData = await releaseDatesRes.json();
+      console.log(releaseDatesData);
 
       // Mapeo de certificaciones para normalizar los valores de arg https://calificaciones.incaa.gob.ar/
       const certificationMap = {
-        "AA": "ATP",
-        "A": "ATP", 
-        "ATP": "ATP",
-        "13": "+13",
-        "16": "+16", 
-        "18": "+18",
-        "SAM13": "SAM 13",
-        "SAM16": "SAM 16", 
-        "SAM18": "SAM 18",
-        "M": "+13",
-        "G": "ATP",
-        "PG": "+13",
+        AA: "ATP",
+        A: "ATP",
+        ATP: "ATP",
+        Atp: "ATP",
+        12: "+13",
+        13: "+13",
+        14: "+13",
+        16: "+16",
+        18: "+18",
+        SAM13: "SAM 13",
+        SAM16: "SAM 16",
+        SAM18: "SAM 18",
+        "MA15+": "+16",
+        M: "+13",
+        G: "ATP",
+        PG: "+13",
         "PG-13": "+13",
-        "R": "+16",
-        "NC-17": "+18"
+        R: "+16",
+        "NC-17": "+18",
+        NR: "",
       };
-      
+
       let certification = "";
-      const countriesOrder = ["AR"];// Se pueden agregar otros codigos de paises
-      
+      const countriesOrder = ["AR"]; // Se pueden agregar otros codigos de paises
+
       for (const country of countriesOrder) {
-        const countryData = releaseDatesData.results.find(r => r.iso_3166_1 === country);
+        const countryData = releaseDatesData.results.find(
+          (r) => r.iso_3166_1 === country
+        );
         if (countryData && countryData.release_dates.length > 0) {
-          const certData = countryData.release_dates.find(rd => rd.certification !== "");
+          const certData = countryData.release_dates.find(
+            (rd) => rd.certification !== ""
+          );
           if (certData && certData.certification) {
             certification = certData.certification;
             break;
           }
         }
       }
-      
+
       if (!certification) {
         for (const result of releaseDatesData.results) {
-          const certData = result.release_dates.find(rd => rd.certification !== "");
+          const certData = result.release_dates.find(
+            (rd) => rd.certification !== ""
+          );
           if (certData && certData.certification) {
             certification = certData.certification;
             break;
           }
         }
       }
-      
-      const mappedCertification = certificationMap[certification] || certification;
-      
+
+      const mappedCertification =
+        certificationMap[certification] || certification;
+
       document.getElementById("title").textContent = movie.title;
       document.getElementById("titleInput").value = movie.title;
       document.getElementById("titleInputFeed").value = movie.title;
       document.getElementById("titleInputReview").value = movie.title;
       document.getElementById("titleInputReviewFeed").value = movie.title;
-      
+
       if (mappedCertification) {
-        document.getElementById("edadSugeridaInput").value = mappedCertification;
-        document.getElementById("edadSugeridaInputFeed").value = mappedCertification;
-        document.getElementById("edadSugeridaInputReview").value = mappedCertification;
-        document.getElementById("edadSugeridaInputReviewFeed").value = mappedCertification;
-        
+        document.getElementById("edadSugeridaInput").value =
+          mappedCertification;
+        document.getElementById("edadSugeridaInputFeed").value =
+          mappedCertification;
+        document.getElementById("edadSugeridaInputReview").value =
+          mappedCertification;
+        document.getElementById("edadSugeridaInputReviewFeed").value =
+          mappedCertification;
+
         const edadElements = [
           document.getElementById("edad-sugerida"),
           document.getElementById("edad-sugerida-feed"),
           document.getElementById("edad-sugerida-review"),
-          document.getElementById("edad-sugerida-review-feed")
+          document.getElementById("edad-sugerida-review-feed"),
         ];
-        
-        edadElements.forEach(el => {
+
+        edadElements.forEach((el) => {
           if (el) {
             el.textContent = mappedCertification;
             el.style.display = "inline-block";
+            if (mappedCertification === "ATP") {
+              el.style.backgroundColor = "#4CAF50"; // Verde para ATP
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+13" ||
+              mappedCertification === "SAM 13"
+            ) {
+              el.style.backgroundColor = "#2196F3"; // Azul para +13
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+16" ||
+              mappedCertification === "SAM 16"
+            ) {
+              el.style.backgroundColor = "#FF9800"; // Naranja para +16
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+18" ||
+              mappedCertification === "SAM 18"
+            ) {
+              el.style.backgroundColor = "#f44336"; // Rojo para +18
+              el.style.color = "white";
+            } else {
+              el.style.backgroundColor = "#777"; // Gris para otros
+              el.style.color = "white";
+            }
           }
         });
       }
@@ -1684,7 +1726,9 @@ document
     showBackdrop(currentBackdrop);
 
     // Aplicar automáticamente como fondo del flyer
-    const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
+    const fullUrl = filePath.startsWith("http")
+      ? filePath
+      : `https://image.tmdb.org/t/p/original${filePath}`;
     const rect = document.querySelector(".rect");
     const rectFeed = document.querySelector(".rect-feed");
     const rectReview = document.querySelector(".rect-review");
@@ -1730,7 +1774,9 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
   currentPoster = 0;
 
   showPoster(currentPoster);
-  const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
+  const fullUrl = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
   setPoster(fullUrl);
 
   document.getElementById("poster-direct-input").value = "";
@@ -1755,7 +1801,9 @@ function applyBackdropDirect(url) {
   currentBackdrop = 0;
   showBackdrop(currentBackdrop);
 
-  const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
+  const fullUrl = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
   const rect = document.querySelector(".rect");
   const rectFeed = document.querySelector(".rect-feed");
   const rectReview = document.querySelector(".rect-review");
@@ -1787,7 +1835,9 @@ function applyPosterDirect(url) {
   currentPoster = 0;
   showPoster(currentPoster);
 
-  const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
+  const fullUrl = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
   setPoster(fullUrl);
 }
 
@@ -1895,6 +1945,26 @@ document
   });
 
 document
+  .getElementById("flyerTitleFontSizeInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("title").style.fontSize = e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerTitleMarginTopInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-main-group").style.marginTop =
+      e.target.value + "px";
+  });
+
+document
+  .getElementById("flyerTitleFontSizeInputReview")
+  .addEventListener("input", (e) => {
+    document.getElementById("title-review").style.fontSize =
+      e.target.value + "px";
+  });
+
+document
   .getElementById("flyerDateFontSizeInputFeed")
   .addEventListener("input", (e) => {
     document.getElementById("flyer-date-feed").style.fontSize =
@@ -1948,7 +2018,9 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const dateRaw = document.getElementById("dateInput").value.trim();
   const hourRaw = document.getElementById("hourInput").value.trim();
   const titulo = document.getElementById("titleInput").value.trim();
-  const edadSugerida = document.getElementById("edadSugeridaInput").value.trim();
+  const edadSugerida = document
+    .getElementById("edadSugeridaInput")
+    .value.trim();
 
   document.getElementById("title").innerHTML = (
     titulo || "Título de la película"
@@ -2008,7 +2080,9 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
   const dateRaw = document.getElementById("dateInputFeed").value.trim();
   const hourRaw = document.getElementById("hourInputFeed").value.trim();
   const titulo = document.getElementById("titleInputFeed").value.trim();
-  const edadSugerida = document.getElementById("edadSugeridaInputFeed").value.trim();
+  const edadSugerida = document
+    .getElementById("edadSugeridaInputFeed")
+    .value.trim();
 
   const edadSugeridaElement = document.getElementById("edad-sugerida-feed");
   if (edadSugerida) {
@@ -2068,7 +2142,9 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
 document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
   const titulo = document.getElementById("titleInputReview").value.trim();
   const sinapsis = document.getElementById("sinapsisInputReview").value.trim();
-  const edadSugerida = document.getElementById("edadSugeridaInputReview").value.trim();
+  const edadSugerida = document
+    .getElementById("edadSugeridaInputReview")
+    .value.trim();
 
   const flyerReview = document.getElementById("flyer-story-review");
   if (flyerReview) {
@@ -2080,7 +2156,9 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
       sinapsis || "Sinopsis de la película"
     ).replace(/\n/g, "<br>");
 
-    const edadSugeridaElement = flyerReview.querySelector("#edad-sugerida-review");
+    const edadSugeridaElement = flyerReview.querySelector(
+      "#edad-sugerida-review"
+    );
     if (edadSugerida) {
       edadSugeridaElement.textContent = edadSugerida;
       edadSugeridaElement.style.display = "inline-block";
@@ -2097,7 +2175,9 @@ document
     const sinapsis = document
       .getElementById("sinapsisInputReviewFeed")
       .value.trim();
-    const edadSugerida = document.getElementById("edadSugeridaInputReviewFeed").value.trim();
+    const edadSugerida = document
+      .getElementById("edadSugeridaInputReviewFeed")
+      .value.trim();
 
     const flyerReview = document.getElementById("flyer-feed-review");
     if (flyerReview) {
@@ -2109,7 +2189,9 @@ document
         sinapsis || "Sinopsis de la película"
       ).replace(/\n/g, "<br>");
 
-      const edadSugeridaElement = flyerReview.querySelector("#edad-sugerida-review-feed");
+      const edadSugeridaElement = flyerReview.querySelector(
+        "#edad-sugerida-review-feed"
+      );
       if (edadSugerida) {
         edadSugeridaElement.textContent = edadSugerida;
         edadSugeridaElement.style.display = "inline-block";
