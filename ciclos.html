@@ -402,68 +402,80 @@
             </div>
 
             <div
+              class="feed-content"
+              style="display: flex; flex-direction: column"
+            >
+              <div id="cycle-movies-feed" class="cycle-movies-feed-container">
+                <div class="cycle-movies-placeholder">
+                  <p>Agrega películas al ciclo para verlas aquí</p>
+                </div>
+              </div>
+            </div>
+
+            <div
               class="cycle-description-feed"
-              style="text-align: center; margin: 15px auto; max-width: 600px"
+              style="
+                position: absolute;
+                left: 340px;
+                text-align: center;
+                width: 400px;
+                height: 130px;
+                max-height: 150px;
+                min-height: 50px;
+                z-index: 10;
+                top: 890px;
+              "
             >
               <div
                 id="cycle-description-text-feed"
                 class="cycle-description-text-feed"
                 style="
                   font-family: 'Gilroy', sans-serif;
-                  font-size: 18px;
+                  font-size: 30px;
                   font-weight: 400;
                   color: #fff;
                   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
                   padding: 12px 20px;
                   background: rgba(255, 255, 255, 0.1);
-                  border: 2px dashed #4a9eff;
                   border-radius: 10px;
                   backdrop-filter: blur(5px);
                 "
               >
-                Una selección especial de películas
+                Nombre del Ciclo
               </div>
             </div>
 
             <div
-              class="feed-content"
+              class="feed-event-info"
               style="
                 display: flex;
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
+                justify-content: space-between;
+                align-items: center;
               "
             >
-              <div
-                class="feed-event-info"
-                style="
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                <div class="flyer-hour-group-feed">
-                  <div
-                    id="flyer-hour-feed"
-                    class="flyer-hour-feed"
-                    style="font-size: 36px; text-align: center"
-                  >
-                    19:00 HS
-                  </div>
-                  <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
-                    <img
-                      src="images/icon.png"
-                      alt="ubicación"
-                      class="flyer-location-icon"
-                    />
-                    <span>Biblioteca Menéndez</span>
-                  </div>
+              <div class="flyer-hour-group-feed" style="text-align: left">
+                <div
+                  id="flyer-hour-feed"
+                  class="flyer-hour-feed"
+                  style="font-size: 36px; text-align: left"
+                >
+                  19:00 HS
                 </div>
               </div>
-
-              <div id="cycle-movies-feed" class="cycle-movies-feed-container">
-                <div class="cycle-movies-placeholder">
-                  <p>Agrega películas al ciclo para verlas aquí</p>
+              <div
+                class="flyer-biblioteca-group-feed"
+                style="text-align: right"
+              >
+                <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
+                  <img
+                    src="images/icon.png"
+                    alt="ubicación"
+                    class="flyer-location-icon"
+                  />
+                  <span>
+                    Auditorio<br />Biblioteca<br />
+                    Menéndez
+                  </span>
                 </div>
               </div>
             </div>

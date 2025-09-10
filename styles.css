@@ -101,6 +101,7 @@ form {
   z-index: 3;
   position: relative;
   margin-bottom: 0px;
+  margin-top: 45px !important;
 }
 
 .header-review {
@@ -332,9 +333,8 @@ form {
 
 .subheader-feed {
   width: 522px;
-  min-height: 100px;
-  margin-left: 109px;
-  top: 39px;
+  max-height: 80px;
+  top: 20px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.4);
   position: relative;
@@ -348,6 +348,7 @@ form {
   text-align: center;
   word-break: break-word;
   white-space: normal;
+  left: 279px;
 }
 
 .subheader h2 {
@@ -767,10 +768,11 @@ form {
   min-width: 260px;
   max-width: 260px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   z-index: 9000;
   position: relative;
+  gap: 600px;
 }
 
 .flyer-date {
@@ -826,7 +828,6 @@ form {
   font-weight: 650;
 }
 
-/* Estilos específicos para ciclos */
 .flyer-hour-ciclos {
   font-size: 45px;
   text-align: left;
@@ -841,7 +842,6 @@ form {
   font-size: 50px;
   text-align: center;
   width: 100%;
-  margin-bottom: 10px;
   text-align: left;
   font-family: "Gilroy", sans-serif;
   font-weight: 600;
@@ -859,7 +859,6 @@ form {
   font-weight: 600;
 }
 
-/* Estilos específicos para ciclos */
 .flyer-biblioteca-ciclos {
   display: flex;
   align-items: center;
@@ -984,7 +983,6 @@ hr {
 
 button {
   margin-top: 10px;
-  /* padding: 5px 10px; */
   font-size: 14px;
   cursor: pointer;
 }
@@ -1544,25 +1542,17 @@ button {
 }
 
 .cycle-movies-feed-container {
-  min-height: 150px;
+  max-height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 5;
   position: relative;
-  margin: 20px 0;
+  top: 35px;
 }
 
 .cycle-movies-feed-horizontal {
   max-width: 100%;
-}
-
-.movie-item-feed {
-  transition: transform 0.2s ease;
-}
-
-.movie-item-feed:hover {
-  transform: scale(1.05);
 }
 
 .cycle-movies-placeholder {
@@ -1578,13 +1568,9 @@ button {
 .cycle-info {
   z-index: 5;
   position: relative;
-  /* background: rgba(255, 255, 255, 0.9); */
   border-radius: 12px;
   padding: 15px;
   max-width: 1080px;
-
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px); */
 }
 
 .feed-content {
@@ -1593,19 +1579,12 @@ button {
 }
 
 .feed-event-info {
-  background: rgba(255, 255, 255, 0.9);
+  z-index: 5;
+  position: relative;
   border-radius: 8px;
   padding: 15px;
-  backdrop-filter: blur(5px);
-}
-
-.movie-item-feed img {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.movie-item-feed:hover img {
-  transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 1080px;
+  top: 100px;
 }
 
 @media (max-width: 768px) {
@@ -1629,7 +1608,6 @@ button {
   }
 }
 
-/* fechas individuales */
 .movie-date-individual {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   white-space: nowrap;

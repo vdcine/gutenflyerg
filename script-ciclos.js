@@ -654,32 +654,32 @@ function updateFeedFlyer() {
 
   switch (movieCount) {
     case 1:
-      posterSize = 120;
-      fontSize = { title: "12px", info: "10px", date: "8px" };
-      spacing = 20;
+      posterSize = 320;
+      fontSize = { title: "28px", info: "20px", date: "35px" };
+      spacing = 30;
       break;
     case 2:
-      posterSize = 100;
-      fontSize = { title: "11px", info: "9px", date: "7px" };
-      spacing = 18;
+      posterSize = 300;
+      fontSize = { title: "24px", info: "18px", date: "35px" };
+      spacing = 70;
       break;
     case 3:
-      posterSize = 85;
-      fontSize = { title: "10px", info: "8px", date: "6px" };
-      spacing = 15;
+      posterSize = 270;
+      fontSize = { title: "22px", info: "16px", date: "35px" };
+      spacing = 35;
       break;
     case 4:
-      posterSize = 75;
-      fontSize = { title: "9px", info: "7px", date: "6px" };
-      spacing = 12;
+      posterSize = 230;
+      fontSize = { title: "20px", info: "14px", date: "30px" };
+      spacing = 5;
       break;
     default:
-      posterSize = 70;
-      fontSize = { title: "8px", info: "7px", date: "5px" };
-      spacing = 10;
+      posterSize = 230;
+      fontSize = { title: "18px", info: "12px", date: "30px" };
+      spacing = 18;
   }
 
-  let html = `<div class="cycle-movies-feed-horizontal" style="display: flex; gap: ${spacing}px; justify-content: center; flex-wrap: wrap; background: rgba(255, 255, 255, 0.95); border-radius: 12px; padding: 20px; backdrop-filter: blur(10px);">`;
+  let html = `<div class="cycle-movies-feed-horizontal" style="display: flex; gap: ${spacing}px; justify-content: center; flex-wrap: wrap;">`;
 
   selectedMovies.forEach((movie, index) => {
     const movieDate = individualDates[movie.id];
@@ -710,12 +710,18 @@ function updateFeedFlyer() {
             right: 6px;
             background: rgba(4, 63, 97, 0.9);
             color: white;
-            padding: 3px 6px;
-            border-radius: 4px;
+            padding: 0;
+            border-radius: 50%;
             font-family: 'Gilroy', sans-serif;
             font-weight: 600;
             font-size: ${fontSize.date};
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
           ">
             ${formattedMovieDate}
           </div>
@@ -1101,7 +1107,9 @@ floatingColorPicker.addEventListener("input", (e) => {
       target.classList.contains("movie-item-feed") ||
       target.id === "flyer-story" ||
       target.id === "flyer-feed" ||
-      (target.classList.contains("movie-date-individual") && isBackgroundMode);
+      (target.classList.contains("movie-date-individual") &&
+        isBackgroundMode) ||
+      (target.classList.contains("movie-date-feed") && isBackgroundMode);
 
     if (isBackground) {
       target.style.backgroundColor = selectedColor;
@@ -1212,6 +1220,10 @@ function getColorTargets(el) {
     return document.querySelectorAll(".movie-date-individual");
   }
 
+  if (el.classList.contains("movie-date-feed")) {
+    return document.querySelectorAll(".movie-date-feed");
+  }
+
   if (
     el.classList.contains("movie-item-alternating") ||
     el.classList.contains("movie-item-feed")
@@ -1242,7 +1254,8 @@ function getCurrentColorForTargets(targets) {
     targets[0].id === "flyer-story" ||
     targets[0].id === "flyer-feed" ||
     (targets[0].classList.contains("movie-date-individual") &&
-      isBackgroundMode);
+      isBackgroundMode) ||
+    (targets[0].classList.contains("movie-date-feed") && isBackgroundMode);
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
 }
@@ -1250,12 +1263,28 @@ function getCurrentColorForTargets(targets) {
 function showColorPickerForElement(element, event) {
   colorTargets = getColorTargets(element);
 
-  if (element.classList.contains("movie-date-individual")) {
+  if (
+    element.classList.contains("movie-date-individual") ||
+    element.classList.contains("movie-date-feed")
+  ) {
     const rect = element.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
     const elementWidth = rect.width;
+    const elementHeight = rect.height;
 
-    isBackgroundMode = clickX < 20 || clickX > elementWidth - 20;
+    if (element.classList.contains("movie-date-feed")) {
+      const centerX = elementWidth / 2;
+      const centerY = elementHeight / 2;
+      const distanceFromCenter = Math.sqrt(
+        Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2)
+      );
+      const radius = Math.min(elementWidth, elementHeight) / 2;
+
+      isBackgroundMode = distanceFromCenter > radius * 0.7;
+    } else {
+      isBackgroundMode = clickX < 20 || clickX > elementWidth - 20;
+    }
   } else {
     isBackgroundMode = false;
   }
@@ -1306,7 +1335,10 @@ function showColorPickerForElement(element, event) {
   eyedropperBtn.style.top = event.pageY + "px";
   eyedropperBtn.style.display = "block";
 
-  if (element.classList.contains("movie-date-individual")) {
+  if (
+    element.classList.contains("movie-date-individual") ||
+    element.classList.contains("movie-date-feed")
+  ) {
     eyedropperBtn.textContent = isBackgroundMode
       ? "CuentaGotas (Fondo)"
       : "CuentaGotas (Texto)";
@@ -1412,6 +1444,7 @@ document.addEventListener("click", (e) => {
     e.target.classList.contains("movie-info") ||
     e.target.classList.contains("movie-info-feed") ||
     e.target.classList.contains("movie-date-individual") ||
+    e.target.classList.contains("movie-date-feed") ||
     e.target.classList.contains("movie-item-alternating") ||
     e.target.classList.contains("movie-item-feed")
   ) {
