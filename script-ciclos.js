@@ -654,7 +654,7 @@ function updateFeedFlyer() {
 
   switch (movieCount) {
     case 1:
-      posterSize = 320;
+      posterSize = 310;
       fontSize = { title: "28px", info: "20px", date: "35px" };
       spacing = 30;
       break;
@@ -716,8 +716,8 @@ function updateFeedFlyer() {
             font-weight: 600;
             font-size: ${fontSize.date};
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            width: 70px;
-            height: 70px;
+            width: 75px;
+            height: 75px;
             display: flex;
             align-items: center;
             justify-content: center;
