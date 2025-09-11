@@ -192,98 +192,6 @@
             modificar colores haz click sobre los elementos del flyer.
           </h3>
 
-          <div class="panel">
-            <div>
-              <label>Nombre del Ciclo</label>
-              <input id="cicloInput" type="text" value="Ciclo Temático" />
-            </div>
-
-            <div class="full">
-              <label>Ciclo</label>
-              <input
-                id="cycleDescriptionInput"
-                type="text"
-                value="Nombre del Ciclo"
-              />
-            </div>
-
-            <div>
-              <label>Hora</label>
-              <input id="hourInput" type="time" value="19:00" />
-            </div>
-
-            <div class="full">
-              <button id="applyTxtBtn">Aplicar cambios</button>
-            </div>
-
-            <div
-              id="individual-dates-section"
-              style="margin-top: 20px; display: none"
-            >
-              <hr style="margin: 15px 0; border-top: 1px solid #444" />
-              <label style="margin-bottom: 10px; display: block"
-                >Fechas individuales por película</label
-              >
-              <div
-                id="individual-dates-container"
-                style="display: flex; flex-direction: column; gap: 8px"
-              ></div>
-              <div class="full" style="margin-top: 10px">
-                <button id="applyIndividualDatesBtn">
-                  Aplicar fechas individuales
-                </button>
-              </div>
-            </div>
-
-            <label>Borde textos</label>
-            <select id="strokeTargetSelect" multiple size="5">
-              <option value="header">Encabezado</option>
-              <option value="ciclo">Nombre del ciclo</option>
-              <option value="flyer-hour">Hora</option>
-              <option value="flyer-biblioteca">Ubicación</option>
-              <option value="movie-title">Títulos de películas</option>
-              <option value="movie-info">Info de películas</option>
-            </select>
-            <input
-              type="color"
-              name="strokeColor"
-              id="strokeColorInput"
-              value="#000000"
-            />
-
-            <div style="display: flex; flex-direction: row">
-              <button id="applyStrokeBtn" style="margin-right: 5px">
-                Aplicar borde
-              </button>
-              <button id="removeStrokeBtn">Quitar borde</button>
-            </div>
-
-            <div>
-              <label>Tamaño hora</label>
-              <input
-                id="flyerHourFontSizeInput"
-                type="number"
-                min="10"
-                max="100"
-                value="50"
-                style="width: 80px"
-              />
-              px
-            </div>
-            <div>
-              <label>Ancho rectángulo</label>
-              <input
-                id="rectWidthInput"
-                type="number"
-                min="10"
-                max="1000"
-                value="460"
-                style="width: 80px"
-              />
-              px
-            </div>
-          </div>
-
           <div>
             <button id="toggle-rect">Ocultar rectángulo vertical</button>
           </div>
@@ -298,239 +206,356 @@
             <button id="tab-feed" class="flyer-tab">Feed Instagram</button>
           </div>
 
-          <div id="flyer-story" class="flyer-version" style="display: block">
-            <div class="tape"></div>
-            <div class="rect"></div>
-            <h1 class="header" id="header">VELADAS DE CINE</h1>
-
-            <div class="subheader">
-              <h2 id="ciclo">Ciclo Temático</h2>
-            </div>
-            <!-- Contenedor de películas del ciclo -->
-            <div id="cycle-movies" class="cycle-movies-container">
-              <div class="cycle-movies-placeholder">
-                <p>Agrega películas al ciclo para verlas aquí</p>
-              </div>
-            </div>
-
-            <div
-              class="cycle-description"
-              style="
-                position: absolute;
-                left: 340px;
-                text-align: center;
-                width: 400px;
-                height: 130px;
-                max-height: 150px;
-                min-height: 50px;
-                z-index: 10;
-              "
-            >
+          <div class="flyer-container">
+            <div>
               <div
-                id="cycle-description-text"
-                class="cycle-description-text"
-                style="
-                  font-family: 'Gilroy', sans-serif;
-                  font-size: 40px;
-                  font-weight: 400;
-                  color: #fff;
-                  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-                  padding: 5px 15px;
-                  background: rgba(255, 255, 255, 0.1);
-                  border-radius: 12px;
-                  backdrop-filter: blur(5px);
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  text-align: center;
-                  min-height: 120px;
-                  min-width: fit-content;
-                  max-height: 120px;
-                "
+                id="flyer-story"
+                class="flyer-version"
+                style="display: block"
               >
-                Nombre del Ciclo
-              </div>
-            </div>
+                <div class="tape"></div>
+                <div class="rect"></div>
+                <h1 class="header" id="header">VELADAS DE CINE</h1>
 
-            <div class="cycle-info" style="text-align: center">
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  max-width: 880px;
-                  margin: 0 auto;
-                "
-              >
-                <div class="flyer-hour-group" style="text-align: left">
-                  <div id="flyer-hour" class="flyer-hour-ciclos">19:00 HS</div>
+                <div class="subheader">
+                  <h2 id="ciclo">Ciclo Temático</h2>
                 </div>
-                <div class="flyer-biblioteca-group" style="text-align: right">
-                  <div id="flyer-biblioteca" class="flyer-biblioteca-ciclos">
-                    <img
-                      src="images/icon.png"
-                      alt="ubicación"
-                      class="flyer-location-icon"
-                    />
-                    <span
-                      >Auditorio<br />Biblioteca<br />
-                      Menéndez</span
-                    >
+                <!-- Contenedor de películas del ciclo -->
+                <div id="cycle-movies" class="cycle-movies-container">
+                  <div class="cycle-movies-placeholder">
+                    <p>Agrega películas al ciclo para verlas aquí</p>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="event-data">
-              <div class="rect2"></div>
-              <span id="org">
-                Organizan Matías Corona y Francisco Albani con apoyo de la
-                Comisión Directiva de la Biblioteca Menéndez.
-              </span>
-            </div>
-          </div>
-
-          <div id="flyer-feed" class="flyer-version" style="display: none">
-            <div class="tape" style="top: -152px"></div>
-            <div class="rect-feed"></div>
-            <h1 class="header-feed" id="header-feed" style="font-size: 85px">
-              VELADAS DE CINE
-            </h1>
-
-            <div class="subheader-feed">
-              <h2 id="ciclo-feed" style="font-size: 36px">Ciclo Temático</h2>
-            </div>
-
-            <div
-              class="feed-content"
-              style="display: flex; flex-direction: column"
-            >
-              <div id="cycle-movies-feed" class="cycle-movies-feed-container">
-                <div class="cycle-movies-placeholder">
-                  <p>Agrega películas al ciclo para verlas aquí</p>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="cycle-description-feed"
-              style="
-                position: absolute;
-                left: 340px;
-                text-align: center;
-                width: 400px;
-                height: 130px;
-                max-height: 150px;
-                min-height: 50px;
-                z-index: 10;
-                top: 880px;
-              "
-            >
-              <div
-                id="cycle-description-text-feed"
-                class="cycle-description-text-feed"
-                style="
-                  font-family: 'Gilroy', sans-serif;
-                  font-size: 35px;
-                  font-weight: 400;
-                  color: #fff;
-                  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-                  padding: 12px 20px;
-                  background: rgba(255, 255, 255, 0.1);
-                  border-radius: 10px;
-                  backdrop-filter: blur(5px);
-                "
-              >
-                Nombre del Ciclo
-              </div>
-            </div>
-
-            <div
-              class="feed-event-info"
-              style="
-                display: flex;
-                justify-content: center;
-                gap: 475px;
-                align-items: center;
-              "
-            >
-              <div class="flyer-hour-group-feed" style="text-align: left">
                 <div
-                  id="flyer-hour-feed"
-                  class="flyer-hour-feed"
-                  style="font-size: 36px; text-align: left"
+                  class="cycle-description"
+                  style="
+                    position: absolute;
+                    left: 340px;
+                    text-align: center;
+                    width: 400px;
+                    height: 130px;
+                    max-height: 150px;
+                    min-height: 50px;
+                    z-index: 10;
+                  "
                 >
-                  19:00 HS
+                  <div
+                    id="cycle-description-text"
+                    class="cycle-description-text"
+                    style="
+                      font-family: 'Gilroy', sans-serif;
+                      font-size: 40px;
+                      font-weight: 400;
+                      color: #fff;
+                      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                      padding: 5px 15px;
+                      background: rgba(255, 255, 255, 0.1);
+                      border-radius: 12px;
+                      backdrop-filter: blur(5px);
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      text-align: center;
+                      min-height: 120px;
+                      min-width: fit-content;
+                      max-height: 120px;
+                    "
+                  >
+                    Nombre del Ciclo
+                  </div>
+                </div>
+
+                <div class="cycle-info" style="text-align: center">
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      max-width: 880px;
+                      margin: 0 auto;
+                    "
+                  >
+                    <div class="flyer-hour-group" style="text-align: left">
+                      <div id="flyer-hour" class="flyer-hour-ciclos">
+                        19:00 HS
+                      </div>
+                    </div>
+                    <div
+                      class="flyer-biblioteca-group"
+                      style="text-align: right"
+                    >
+                      <div
+                        id="flyer-biblioteca"
+                        class="flyer-biblioteca-ciclos"
+                      >
+                        <img
+                          src="images/icon.png"
+                          alt="ubicación"
+                          class="flyer-location-icon"
+                        />
+                        <span
+                          >Auditorio<br />Biblioteca<br />
+                          Menéndez</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="event-data">
+                  <div class="rect2"></div>
+                  <span id="org">
+                    Organizan Matías Corona y Francisco Albani con apoyo de la
+                    Comisión Directiva de la Biblioteca Menéndez.
+                  </span>
                 </div>
               </div>
-              <div
-                class="flyer-biblioteca-group-feed"
-                style="text-align: right"
-              >
-                <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
-                  <img
-                    src="images/icon.png"
-                    alt="ubicación"
-                    class="flyer-location-icon"
-                  />
-                  <span>
-                    Auditorio<br />Biblioteca<br />
-                    Menéndez
+
+              <div id="flyer-feed" class="flyer-version" style="display: none">
+                <div class="tape" style="top: -152px"></div>
+                <div class="rect-feed"></div>
+                <h1
+                  class="header-feed"
+                  id="header-feed"
+                  style="font-size: 85px"
+                >
+                  VELADAS DE CINE
+                </h1>
+
+                <div class="subheader-feed">
+                  <h2 id="ciclo-feed" style="font-size: 36px">
+                    Ciclo Temático
+                  </h2>
+                </div>
+
+                <div
+                  class="feed-content"
+                  style="display: flex; flex-direction: column"
+                >
+                  <div
+                    id="cycle-movies-feed"
+                    class="cycle-movies-feed-container"
+                  >
+                    <div class="cycle-movies-placeholder">
+                      <p>Agrega películas al ciclo para verlas aquí</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="cycle-description-feed"
+                  style="
+                    position: absolute;
+                    left: 340px;
+                    text-align: center;
+                    width: 400px;
+                    height: 130px;
+                    max-height: 150px;
+                    min-height: 50px;
+                    z-index: 10;
+                    top: 880px;
+                  "
+                >
+                  <div
+                    id="cycle-description-text-feed"
+                    class="cycle-description-text-feed"
+                    style="
+                      font-family: 'Gilroy', sans-serif;
+                      font-size: 35px;
+                      font-weight: 400;
+                      color: #fff;
+                      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                      padding: 12px 20px;
+                      background: rgba(255, 255, 255, 0.1);
+                      border-radius: 10px;
+                      backdrop-filter: blur(5px);
+                    "
+                  >
+                    Nombre del Ciclo
+                  </div>
+                </div>
+
+                <div
+                  class="feed-event-info"
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    gap: 475px;
+                    align-items: center;
+                  "
+                >
+                  <div class="flyer-hour-group-feed" style="text-align: left">
+                    <div
+                      id="flyer-hour-feed"
+                      class="flyer-hour-feed"
+                      style="font-size: 36px; text-align: left"
+                    >
+                      19:00 HS
+                    </div>
+                  </div>
+                  <div
+                    class="flyer-biblioteca-group-feed"
+                    style="text-align: right"
+                  >
+                    <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
+                      <img
+                        src="images/icon.png"
+                        alt="ubicación"
+                        class="flyer-location-icon"
+                      />
+                      <span>
+                        Auditorio<br />Biblioteca<br />
+                        Menéndez
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="event-data" style="height: 70px">
+                  <div class="rect2-feed" style="height: 80px"></div>
+                  <span id="org-feed" style="font-size: medium">
+                    Organizan Matías Corona y Francisco Albani con apoyo de la
+                    Comisión Directiva de la Biblioteca Menéndez.
                   </span>
                 </div>
               </div>
             </div>
 
-            <div class="event-data" style="height: 70px">
-              <div class="rect2-feed" style="height: 80px"></div>
-              <span id="org-feed" style="font-size: medium">
-                Organizan Matías Corona y Francisco Albani con apoyo de la
-                Comisión Directiva de la Biblioteca Menéndez.
-              </span>
+            <div class="panel">
+              <div>
+                <label>Nombre del Ciclo</label>
+                <input id="cicloInput" type="text" value="Ciclo Temático" />
+              </div>
+
+              <div class="full">
+                <label>Ciclo</label>
+                <input
+                  id="cycleDescriptionInput"
+                  type="text"
+                  value="Nombre del Ciclo"
+                />
+              </div>
+
+              <div>
+                <label>Hora</label>
+                <input id="hourInput" type="time" value="19:00" />
+              </div>
+
+              <div class="full">
+                <button id="applyTxtBtn">Aplicar cambios</button>
+              </div>
+
+              <div
+                id="individual-dates-section"
+                style="margin-top: 20px; display: none"
+              >
+                <hr style="margin: 15px 0; border-top: 1px solid #444" />
+                <label style="margin-bottom: 10px; display: block"
+                  >Fechas individuales por película</label
+                >
+                <div
+                  id="individual-dates-container"
+                  style="display: flex; flex-direction: column; gap: 8px"
+                ></div>
+                <div class="full" style="margin-top: 10px">
+                  <button id="applyIndividualDatesBtn">
+                    Aplicar fechas individuales
+                  </button>
+                </div>
+              </div>
+
+              <label>Borde textos</label>
+              <select id="strokeTargetSelect" multiple size="5">
+                <option value="header">Encabezado</option>
+                <option value="ciclo">Nombre del ciclo</option>
+                <option value="flyer-hour">Hora</option>
+                <option value="flyer-biblioteca">Ubicación</option>
+                <option value="movie-title">Títulos de películas</option>
+                <option value="movie-info">Info de películas</option>
+              </select>
+              <input
+                type="color"
+                name="strokeColor"
+                id="strokeColorInput"
+                value="#000000"
+              />
+
+              <div style="display: flex; flex-direction: row">
+                <button id="applyStrokeBtn" style="margin-right: 5px">
+                  Aplicar borde
+                </button>
+                <button id="removeStrokeBtn">Quitar borde</button>
+              </div>
+
+              <div>
+                <label>Tamaño hora</label>
+                <input
+                  id="flyerHourFontSizeInput"
+                  type="number"
+                  min="10"
+                  max="100"
+                  value="50"
+                  style="width: 80px"
+                />
+                px
+              </div>
+              <div>
+                <label>Ancho rectángulo</label>
+                <input
+                  id="rectWidthInput"
+                  type="number"
+                  min="10"
+                  max="1000"
+                  value="460"
+                  style="width: 80px"
+                />
+                px
+              </div>
             </div>
           </div>
+
+          <h2 id="instrucciones">
+            <br />
+            5°: Guardar imagen del flyer
+            <br />
+          </h2>
+
+          <button
+            type="button"
+            id="saveFlyer"
+            style="
+              margin-bottom: 20px;
+              display: block;
+              margin-top: 20px;
+              padding: 10px 20px;
+              font-size: 16px;
+              cursor: pointer;
+              margin-left: auto;
+              margin-right: auto;
+            "
+          >
+            Descargar Historia
+          </button>
+
+          <button
+            type="button"
+            id="saveFlyerFeed"
+            style="
+              margin-bottom: 20px;
+              display: none;
+              margin-top: 20px;
+              padding: 10px 20px;
+              font-size: 16px;
+              cursor: pointer;
+              margin-left: auto;
+              margin-right: auto;
+            "
+          >
+            Descargar Feed
+          </button>
         </div>
       </div>
-
-      <h2 id="instrucciones">
-        <br />
-        5°: Guardar imagen del flyer
-        <br />
-      </h2>
-
-      <button
-        type="button"
-        id="saveFlyer"
-        style="
-          margin-bottom: 20px;
-          display: block;
-          margin-top: 20px;
-          padding: 10px 20px;
-          font-size: 16px;
-          cursor: pointer;
-          margin-left: auto;
-          margin-right: auto;
-        "
-      >
-        Descargar Historia
-      </button>
-
-      <button
-        type="button"
-        id="saveFlyerFeed"
-        style="
-          margin-bottom: 20px;
-          display: none;
-          margin-top: 20px;
-          padding: 10px 20px;
-          font-size: 16px;
-          cursor: pointer;
-          margin-left: auto;
-          margin-right: auto;
-        "
-      >
-        Descargar Feed
-      </button>
     </div>
 
     <input
