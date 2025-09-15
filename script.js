@@ -78,6 +78,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         12: "+13",
         13: "+13",
         14: "+13",
+        15: "+16",
         16: "+16",
         18: "+18",
         SAM13: "SAM 13",
@@ -2031,15 +2032,108 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   document.getElementById("title").innerHTML = (
     titulo || "Título de la película"
   ).replace(/\n/g, "<br>");
+  document.getElementById("title-feed").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
+  document.getElementById("title-review").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
+  document.getElementById("title-review-feed").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
+  document.getElementById("titleInputReview").value = titulo;
+  document.getElementById("titleInput").value = titulo;
+  document.getElementById("titleInputFeed").value = titulo;
+  document.getElementById("titleInputReviewFeed").value = titulo;
 
   document.getElementById("ciclo").textContent = ciclo || "Ciclo";
+  document.getElementById("ciclo-feed").textContent = ciclo || "Ciclo";
 
-  const edadSugeridaElement = document.getElementById("edad-sugerida");
-  if (edadSugerida) {
-    edadSugeridaElement.textContent = edadSugerida;
-    edadSugeridaElement.style.display = "inline-block";
-  } else {
-    edadSugeridaElement.style.display = "none";
+  const certificationMap = {
+    AA: "ATP",
+    A: "ATP",
+    ATP: "ATP",
+    Atp: "ATP",
+    12: "+13",
+    13: "+13",
+    14: "+13",
+    15: "+16",
+    16: "+16",
+    18: "+18",
+    SAM13: "SAM 13",
+    SAM16: "SAM 16",
+    SAM18: "SAM 18",
+    "MA15+": "+16",
+    M: "+13",
+    G: "ATP",
+    PG: "+13",
+    "PG-13": "+13",
+    R: "+16",
+    "NC-17": "+18",
+    NR: "",
+  };
+
+  const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
+
+  if (mappedCertification) {
+    if (edadSugerida) {
+      document.getElementById("edadSugeridaInput").value = mappedCertification;
+      document.getElementById("edad-sugerida").textContent =
+        mappedCertification;
+      document.getElementById("edad-sugerida-feed").textContent =
+        mappedCertification;
+      document.getElementById("edad-sugerida-review").textContent =
+        mappedCertification;
+      document.getElementById("edad-sugerida-review-feed").textContent =
+        mappedCertification;
+      document.getElementById("edadSugeridaInputFeed").value =
+        mappedCertification;
+      document.getElementById("edadSugeridaInputReview").value =
+        mappedCertification;
+      document.getElementById("edadSugeridaInputReviewFeed").value =
+        mappedCertification;
+    } else {
+      edadSugeridaElement.style.display = "none";
+    }
+
+    const edadElements = [
+      document.getElementById("edad-sugerida"),
+      document.getElementById("edad-sugerida-feed"),
+      document.getElementById("edad-sugerida-review"),
+      document.getElementById("edad-sugerida-review-feed"),
+    ];
+
+    edadElements.forEach((el) => {
+      if (el) {
+        el.textContent = mappedCertification;
+        el.style.display = "inline-block";
+        if (mappedCertification === "ATP") {
+          el.style.backgroundColor = "#4CAF50"; // Verde para ATP
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+13" ||
+          mappedCertification === "SAM 13"
+        ) {
+          el.style.backgroundColor = "#2196F3"; // Azul para +13
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+16" ||
+          mappedCertification === "SAM 16"
+        ) {
+          el.style.backgroundColor = "#FF9800"; // Naranja para +16
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+18" ||
+          mappedCertification === "SAM 18"
+        ) {
+          el.style.backgroundColor = "#f44336"; // Rojo para +18
+          el.style.color = "white";
+        } else {
+          el.style.backgroundColor = "#777"; // Gris para otros
+          el.style.color = "white";
+        }
+      }
+    });
   }
 
   function formatDateToSpanish(dateStr) {
@@ -2076,9 +2170,11 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
 
   const formattedDate = formatDateToSpanish(dateRaw);
   document.getElementById("flyer-date").innerHTML = formattedDate;
+  document.getElementById("flyer-date-feed").innerHTML = formattedDate;
 
   const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
   document.getElementById("flyer-hour").textContent = formattedHour;
+  document.getElementById("flyer-hour-feed").textContent = formattedHour;
 });
 
 document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
@@ -2090,12 +2186,91 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
     .getElementById("edadSugeridaInputFeed")
     .value.trim();
 
-  const edadSugeridaElement = document.getElementById("edad-sugerida-feed");
-  if (edadSugerida) {
-    edadSugeridaElement.textContent = edadSugerida;
-    edadSugeridaElement.style.display = "inline-block";
-  } else {
-    edadSugeridaElement.style.display = "none";
+  const certificationMap = {
+    AA: "ATP",
+    A: "ATP",
+    ATP: "ATP",
+    Atp: "ATP",
+    12: "+13",
+    13: "+13",
+    14: "+13",
+    15: "+16",
+    16: "+16",
+    18: "+18",
+    SAM13: "SAM 13",
+    SAM16: "SAM 16",
+    SAM18: "SAM 18",
+    "MA15+": "+16",
+    M: "+13",
+    G: "ATP",
+    PG: "+13",
+    "PG-13": "+13",
+    R: "+16",
+    "NC-17": "+18",
+    NR: "",
+  };
+
+  const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
+
+  if (mappedCertification) {
+    if (edadSugerida) {
+      document.getElementById("edadSugeridaInput").value = mappedCertification;
+      document.getElementById("edad-sugerida").textContent =
+        mappedCertification;
+      document.getElementById("edad-sugerida-feed").textContent =
+        mappedCertification;
+      document.getElementById("edad-sugerida-review").textContent =
+        mappedCertification;
+      document.getElementById("edad-sugerida-review-feed").textContent =
+        mappedCertification;
+      document.getElementById("edadSugeridaInputFeed").value =
+        mappedCertification;
+      document.getElementById("edadSugeridaInputReview").value =
+        mappedCertification;
+      document.getElementById("edadSugeridaInputReviewFeed").value =
+        mappedCertification;
+    } else {
+      edadSugeridaElement.style.display = "none";
+    }
+
+    const edadElements = [
+      document.getElementById("edad-sugerida"),
+      document.getElementById("edad-sugerida-feed"),
+      document.getElementById("edad-sugerida-review"),
+      document.getElementById("edad-sugerida-review-feed"),
+    ];
+
+    edadElements.forEach((el) => {
+      if (el) {
+        el.textContent = mappedCertification;
+        el.style.display = "inline-block";
+        if (mappedCertification === "ATP") {
+          el.style.backgroundColor = "#4CAF50"; // Verde para ATP
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+13" ||
+          mappedCertification === "SAM 13"
+        ) {
+          el.style.backgroundColor = "#2196F3"; // Azul para +13
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+16" ||
+          mappedCertification === "SAM 16"
+        ) {
+          el.style.backgroundColor = "#FF9800"; // Naranja para +16
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+18" ||
+          mappedCertification === "SAM 18"
+        ) {
+          el.style.backgroundColor = "#f44336"; // Rojo para +18
+          el.style.color = "white";
+        } else {
+          el.style.backgroundColor = "#777"; // Gris para otros
+          el.style.color = "white";
+        }
+      }
+    });
   }
 
   function formatDateToSpanish(dateStr) {
@@ -2139,9 +2314,15 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
     flyerFeed.querySelector("#title-feed").innerHTML = (
       titulo || "Título de la película"
     ).replace(/\n/g, "<br>");
-    flyerFeed.querySelector("#ciclo").textContent = ciclo || "Ciclo";
+    document.getElementById("title").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+    flyerFeed.querySelector("#ciclo-feed").textContent = ciclo || "Ciclo";
+    document.getElementById("ciclo").textContent = ciclo || "Ciclo";
     flyerFeed.querySelector("#flyer-date-feed").innerHTML = formattedDate;
+    document.getElementById("flyer-date").innerHTML = formattedDate;
     flyerFeed.querySelector("#flyer-hour-feed").textContent = formattedHour;
+    document.getElementById("flyer-hour").textContent = formattedHour;
   }
 });
 
@@ -2152,24 +2333,121 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
     .getElementById("edadSugeridaInputReview")
     .value.trim();
 
+  document.getElementById("title").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
+  document.getElementById("title-feed").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
+  document.getElementById("title-review").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
+  document.getElementById("title-review-feed").innerHTML = (
+    titulo || "Título de la película"
+  ).replace(/\n/g, "<br>");
+  document.getElementById("titleInputReview").value = titulo;
+  document.getElementById("titleInput").value = titulo;
+  document.getElementById("titleInputFeed").value = titulo;
+  document.getElementById("titleInputReviewFeed").value = titulo;
+
   const flyerReview = document.getElementById("flyer-story-review");
   if (flyerReview) {
-    flyerReview.querySelector("#title-review").innerHTML = (
-      titulo || "Título de la película"
-    ).replace(/\n/g, "<br>");
-
     flyerReview.querySelector("#sinapsis-review").innerHTML = (
       sinapsis || "Sinopsis de la película"
     ).replace(/\n/g, "<br>");
+    document.getElementById("sinapsisInputReview").value = sinapsis;
 
-    const edadSugeridaElement = flyerReview.querySelector(
-      "#edad-sugerida-review"
-    );
-    if (edadSugerida) {
-      edadSugeridaElement.textContent = edadSugerida;
-      edadSugeridaElement.style.display = "inline-block";
-    } else {
-      edadSugeridaElement.style.display = "none";
+    document.getElementById("sinapsis-review-feed").innerHTML = (
+      sinapsis || "Sinopsis de la película"
+    ).replace(/\n/g, "<br>");
+    document.getElementById("sinapsisInputReviewFeed").value = sinapsis;
+
+    const certificationMap = {
+      AA: "ATP",
+      A: "ATP",
+      ATP: "ATP",
+      Atp: "ATP",
+      12: "+13",
+      13: "+13",
+      14: "+13",
+      15: "+16",
+      16: "+16",
+      18: "+18",
+      SAM13: "SAM 13",
+      SAM16: "SAM 16",
+      SAM18: "SAM 18",
+      "MA15+": "+16",
+      M: "+13",
+      G: "ATP",
+      PG: "+13",
+      "PG-13": "+13",
+      R: "+16",
+      "NC-17": "+18",
+      NR: "",
+    };
+
+    const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
+
+    if (mappedCertification) {
+      if (edadSugerida) {
+        document.getElementById("edadSugeridaInput").value =
+          mappedCertification;
+        document.getElementById("edad-sugerida").textContent =
+          mappedCertification;
+        document.getElementById("edad-sugerida-feed").textContent =
+          mappedCertification;
+        document.getElementById("edad-sugerida-review").textContent =
+          mappedCertification;
+        document.getElementById("edad-sugerida-review-feed").textContent =
+          mappedCertification;
+        document.getElementById("edadSugeridaInputFeed").value =
+          mappedCertification;
+        document.getElementById("edadSugeridaInputReview").value =
+          mappedCertification;
+        document.getElementById("edadSugeridaInputReviewFeed").value =
+          mappedCertification;
+      } else {
+        edadSugeridaElement.style.display = "none";
+      }
+
+      const edadElements = [
+        document.getElementById("edad-sugerida"),
+        document.getElementById("edad-sugerida-feed"),
+        document.getElementById("edad-sugerida-review"),
+        document.getElementById("edad-sugerida-review-feed"),
+      ];
+
+      edadElements.forEach((el) => {
+        if (el) {
+          el.textContent = mappedCertification;
+          el.style.display = "inline-block";
+          if (mappedCertification === "ATP") {
+            el.style.backgroundColor = "#4CAF50"; // Verde para ATP
+            el.style.color = "white";
+          } else if (
+            mappedCertification === "+13" ||
+            mappedCertification === "SAM 13"
+          ) {
+            el.style.backgroundColor = "#2196F3"; // Azul para +13
+            el.style.color = "white";
+          } else if (
+            mappedCertification === "+16" ||
+            mappedCertification === "SAM 16"
+          ) {
+            el.style.backgroundColor = "#FF9800"; // Naranja para +16
+            el.style.color = "white";
+          } else if (
+            mappedCertification === "+18" ||
+            mappedCertification === "SAM 18"
+          ) {
+            el.style.backgroundColor = "#f44336"; // Rojo para +18
+            el.style.color = "white";
+          } else {
+            el.style.backgroundColor = "#777"; // Gris para otros
+            el.style.color = "white";
+          }
+        }
+      });
     }
   }
 });
@@ -2185,24 +2463,123 @@ document
       .getElementById("edadSugeridaInputReviewFeed")
       .value.trim();
 
+    document.getElementById("title").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+    document.getElementById("title-feed").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+    document.getElementById("title-review").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+    document.getElementById("title-review-feed").innerHTML = (
+      titulo || "Título de la película"
+    ).replace(/\n/g, "<br>");
+    document.getElementById("titleInputReview").value = titulo;
+    document.getElementById("titleInput").value = titulo;
+    document.getElementById("titleInputFeed").value = titulo;
+    document.getElementById("titleInputReviewFeed").value = titulo;
+
     const flyerReview = document.getElementById("flyer-feed-review");
     if (flyerReview) {
-      flyerReview.querySelector("#title-review-feed").innerHTML = (
-        titulo || "Título de la película"
-      ).replace(/\n/g, "<br>");
-
       flyerReview.querySelector("#sinapsis-review-feed").innerHTML = (
         sinapsis || "Sinopsis de la película"
       ).replace(/\n/g, "<br>");
 
-      const edadSugeridaElement = flyerReview.querySelector(
-        "#edad-sugerida-review-feed"
-      );
-      if (edadSugerida) {
-        edadSugeridaElement.textContent = edadSugerida;
-        edadSugeridaElement.style.display = "inline-block";
-      } else {
-        edadSugeridaElement.style.display = "none";
+      document.getElementById("sinapsisInputReview").value = sinapsis;
+
+      document.getElementById("sinapsis-review").innerHTML = (
+        sinapsis || "Sinopsis de la película"
+      ).replace(/\n/g, "<br>");
+      document.getElementById("sinapsisInputReviewFeed").value = sinapsis;
+
+      const certificationMap = {
+        AA: "ATP",
+        A: "ATP",
+        ATP: "ATP",
+        Atp: "ATP",
+        12: "+13",
+        13: "+13",
+        14: "+13",
+        15: "+16",
+        16: "+16",
+        18: "+18",
+        SAM13: "SAM 13",
+        SAM16: "SAM 16",
+        SAM18: "SAM 18",
+        "MA15+": "+16",
+        M: "+13",
+        G: "ATP",
+        PG: "+13",
+        "PG-13": "+13",
+        R: "+16",
+        "NC-17": "+18",
+        NR: "",
+      };
+
+      const mappedCertification =
+        certificationMap[edadSugerida] || edadSugerida;
+
+      if (mappedCertification) {
+        if (edadSugerida) {
+          document.getElementById("edadSugeridaInput").value =
+            mappedCertification;
+          document.getElementById("edad-sugerida").textContent =
+            mappedCertification;
+          document.getElementById("edad-sugerida-feed").textContent =
+            mappedCertification;
+          document.getElementById("edad-sugerida-review").textContent =
+            mappedCertification;
+          document.getElementById("edad-sugerida-review-feed").textContent =
+            mappedCertification;
+          document.getElementById("edadSugeridaInputFeed").value =
+            mappedCertification;
+          document.getElementById("edadSugeridaInputReview").value =
+            mappedCertification;
+          document.getElementById("edadSugeridaInputReviewFeed").value =
+            mappedCertification;
+        } else {
+          edadSugeridaElement.style.display = "none";
+        }
+
+        const edadElements = [
+          document.getElementById("edad-sugerida"),
+          document.getElementById("edad-sugerida-feed"),
+          document.getElementById("edad-sugerida-review"),
+          document.getElementById("edad-sugerida-review-feed"),
+        ];
+
+        edadElements.forEach((el) => {
+          if (el) {
+            el.textContent = mappedCertification;
+            el.style.display = "inline-block";
+            if (mappedCertification === "ATP") {
+              el.style.backgroundColor = "#4CAF50"; // Verde para ATP
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+13" ||
+              mappedCertification === "SAM 13"
+            ) {
+              el.style.backgroundColor = "#2196F3"; // Azul para +13
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+16" ||
+              mappedCertification === "SAM 16"
+            ) {
+              el.style.backgroundColor = "#FF9800"; // Naranja para +16
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+18" ||
+              mappedCertification === "SAM 18"
+            ) {
+              el.style.backgroundColor = "#f44336"; // Rojo para +18
+              el.style.color = "white";
+            } else {
+              el.style.backgroundColor = "#777"; // Gris para otros
+              el.style.color = "white";
+            }
+          }
+        });
       }
     }
   });
