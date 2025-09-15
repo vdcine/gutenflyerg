@@ -348,7 +348,27 @@ form {
   text-align: center;
   word-break: break-word;
   white-space: normal;
-  left: 108px;
+  left: 109px;
+}
+
+.subheader-feed-ciclos {
+  width: 522px;
+  max-height: 80px;
+  top: 37px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  position: relative;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  box-sizing: border-box;
+  font-family: "Gilroy", sans-serif;
+  text-align: center;
+  word-break: break-word;
+  white-space: normal;
+  left: 278px;
 }
 
 .subheader h2 {
