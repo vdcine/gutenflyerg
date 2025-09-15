@@ -1252,6 +1252,7 @@ floatingColorPicker.addEventListener("blur", () => {
   document.querySelector(".rect2-review"),
   document.querySelector(".rect2-review-feed"),
   document.getElementById("ciclo"),
+  document.getElementById("ciclo-feed"),
   document.getElementById("flyer-feed"),
   document.getElementById("flyer-story"),
   document.getElementById("flyer-story-review"),
@@ -1287,12 +1288,34 @@ document.addEventListener("click", (e) => {
   }
 });
 
+document.addEventListener("click", (e) => {
+  if (
+    e.target !== floatingColorPicker &&
+    e.target.id !== "floating-eyedropper-btn"
+  ) {
+    floatingColorPicker.style.display = "none";
+    const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
+    if (eyedropperBtn) eyedropperBtn.style.display = "none";
+    colorTargets = [];
+
+    if (eyedropperActive) {
+      eyedropperActive = false;
+      eyedropperCallback = null;
+      posterFeed.style.cursor = "";
+      document.body.style.cursor = "";
+      const message = document.getElementById("eyedropper-message");
+      if (message) message.remove();
+    }
+  }
+});
+
 const comicBalloon = document.querySelector(".dialogo-comic");
 const comicColorPanel = document.getElementById("comicColorPickerPanel");
 const comicBgPicker = document.getElementById("comicBgColorPicker");
 const comicBorderPicker = document.getElementById("comicBorderColorPicker");
 const comicTextPicker = document.getElementById("comicTextColorPicker");
 const posterImg = document.getElementById("poster");
+const posterFeed = document.getElementById("poster-feed");
 
 let comicEyedropperActive = false;
 let comicEyedropperTarget = null;
@@ -1352,6 +1375,56 @@ function comicEyedropperMoveHandler(e) {
     );
     const y = Math.round(
       (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+    comicColorPreview.style.background = hex;
+  }
+}
+
+function comicEyedropperMoveHandler(e) {
+  if (!comicEyedropperActive) return;
+  let comicColorPreview = document.getElementById("comic-color-preview");
+  if (!comicColorPreview) {
+    comicColorPreview = document.createElement("div");
+    comicColorPreview.id = "comic-color-preview";
+    comicColorPreview.style.cssText = `
+      position: absolute;
+      z-index: 99999;
+      left: 0px;
+      top: 0px;
+      width: 48px;
+      height: 48px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      display: block;
+      pointer-events: none;
+    `;
+    document.body.appendChild(comicColorPreview);
+  }
+  comicColorPreview.style.display = "block";
+  comicColorPreview.style.left = e.pageX + 20 + "px";
+  comicColorPreview.style.top = e.pageY - 24 + "px";
+
+  if (posterFeed.naturalWidth && posterFeed.naturalHeight) {
+    const canvas = document.createElement("canvas");
+    canvas.width = posterFeed.naturalWidth;
+    canvas.height = posterFeed.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterFeed,
+      0,
+      0,
+      posterFeed.naturalWidth,
+      posterFeed.naturalHeight
+    );
+    const rect = posterFeed.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
     );
     const pixel = ctx.getImageData(x, y, 1, 1).data;
     const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
@@ -1476,9 +1549,12 @@ document
   .addEventListener("click", (e) => {
     comicEyedropperActive = true;
     comicEyedropperTarget = comicBgPicker;
+
     posterImg.style.cursor = "crosshair";
+    posterFeed.style.cursor = "crosshair";
 
     posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
+    posterFeed.addEventListener("mousemove", comicEyedropperMoveHandler);
 
     e.stopPropagation();
   });
@@ -1488,8 +1564,10 @@ document
     comicEyedropperActive = true;
     comicEyedropperTarget = comicBorderPicker;
     posterImg.style.cursor = "crosshair";
+    posterFeed.style.cursor = "crosshair";
 
     posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
+    posterFeed.addEventListener("mousemove", comicEyedropperMoveHandler);
 
     e.stopPropagation();
   });
@@ -1499,8 +1577,10 @@ document
     comicEyedropperActive = true;
     comicEyedropperTarget = comicTextPicker;
     posterImg.style.cursor = "crosshair";
+    posterFeed.style.cursor = "crosshair";
 
     posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
+    posterFeed.addEventListener("mousemove", comicEyedropperMoveHandler);
 
     e.stopPropagation();
   });
@@ -1543,6 +1623,51 @@ posterImg.addEventListener("click", (e) => {
     comicEyedropperTarget.dispatchEvent(new Event("input"));
 
     posterImg.style.cursor = "";
+    document.body.style.cursor = "";
+    comicEyedropperActive = false;
+    comicEyedropperTarget = null;
+    return;
+  }
+});
+
+posterFeed.addEventListener("click", (e) => {
+  if (comicEyedropperActive && comicEyedropperTarget && posterFeed.src) {
+    e.stopPropagation();
+    var comicColorPreview = document.getElementById("comic-color-preview");
+    if (comicColorPreview) {
+      comicColorPreview.style.display = "none";
+    }
+    posterFeed.removeEventListener("mousemove", comicEyedropperMoveHandler);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = posterFeed.naturalWidth;
+    canvas.height = posterFeed.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterFeed,
+      0,
+      0,
+      posterFeed.naturalWidth,
+      posterFeed.naturalHeight
+    );
+
+    const rect = posterFeed.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+
+    lastComicEyedropperColor = hex;
+    updateComicLastColorSquare();
+
+    comicEyedropperTarget.value = hex;
+    comicEyedropperTarget.dispatchEvent(new Event("input"));
+
+    posterFeed.style.cursor = "";
     document.body.style.cursor = "";
     comicEyedropperActive = false;
     comicEyedropperTarget = null;
@@ -1605,12 +1730,45 @@ function eyedropperMoveHandler(e) {
   }
 }
 
+function eyedropperMoveHandlerFeed(e) {
+  if (!eyedropperActive) return;
+  const colorPreview = document.getElementById("floating-color-preview");
+  if (!colorPreview) return;
+  colorPreview.style.left = e.pageX + 20 + "px";
+  colorPreview.style.top = e.pageY - 24 + "px";
+
+  if (posterFeed.naturalWidth && posterFeed.naturalHeight) {
+    const canvas = document.createElement("canvas");
+    canvas.width = posterFeed.naturalWidth;
+    canvas.height = posterFeed.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterFeed,
+      0,
+      0,
+      posterFeed.naturalWidth,
+      posterFeed.naturalHeight
+    );
+    const rect = posterFeed.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+    colorPreview.style.background = hex;
+  }
+}
+
 const activateEyedropperBtn = document.getElementById("activateEyedropper");
 
 function activateEyedropper(callback = null) {
   eyedropperActive = true;
   eyedropperCallback = callback;
   posterImg.style.cursor = "crosshair";
+  posterFeed.style.cursor = "crosshair";
 
   let colorPreview = document.getElementById("floating-color-preview");
   if (!colorPreview) {
@@ -1635,6 +1793,7 @@ function activateEyedropper(callback = null) {
   colorPreview.style.background = "#fff";
 
   posterImg.addEventListener("mousemove", eyedropperMoveHandler);
+  posterFeed.addEventListener("mousemove", eyedropperMoveHandlerFeed);
 }
 
 activateEyedropperBtn.addEventListener("click", () => {
@@ -1698,6 +1857,63 @@ posterImg.addEventListener("click", (e) => {
   eyedropperCallback = null;
 });
 
+posterFeed.addEventListener("click", (e) => {
+  if (!eyedropperActive || !posterFeed.src) return;
+
+  e.stopPropagation();
+  e.preventDefault();
+
+  const canvas = document.createElement("canvas");
+  canvas.width = posterFeed.naturalWidth;
+  canvas.height = posterFeed.naturalHeight;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(
+    posterFeed,
+    0,
+    0,
+    posterFeed.naturalWidth,
+    posterFeed.naturalHeight
+  );
+
+  const rect = posterFeed.getBoundingClientRect();
+  const x = Math.round(
+    (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
+  );
+  const y = Math.round(
+    (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
+  );
+  const pixel = ctx.getImageData(x, y, 1, 1).data;
+  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+  eyedropperColor = hex;
+
+  window.lastEyedropperColor = hex;
+
+  let colorPreview = document.getElementById("floating-color-preview");
+  if (colorPreview) {
+    colorPreview.style.background = hex;
+    colorPreview.style.display = "block";
+    colorPreview.style.left = e.pageX + 20 + "px";
+    colorPreview.style.top = e.pageY - 24 + "px";
+  }
+
+  if (eyedropperCallback) {
+    eyedropperCallback(hex);
+  } else {
+    floatingColorPicker.value = hex;
+    floatingColorPicker.dispatchEvent(new Event("input"));
+  }
+
+  posterFeed.removeEventListener("mousemove", eyedropperMoveHandler);
+  setTimeout(() => {
+    if (colorPreview) colorPreview.style.display = "none";
+  }, 400);
+
+  posterFeed.style.cursor = "";
+  document.body.style.cursor = "";
+  eyedropperActive = false;
+  eyedropperCallback = null;
+});
+
 document
   .getElementById("load-backdrop-direct")
   .addEventListener("click", () => {
@@ -1710,7 +1926,7 @@ document
 
     if (!input.startsWith("http")) {
       alert(
-        "Por favor, ingresa una URL completa que comience con http:// o https://"
+        "Por favor, ingresa una URL completa que comience con http:// o htt://"
       );
       return;
     }
