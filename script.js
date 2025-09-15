@@ -2241,6 +2241,13 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const dateRaw = document.getElementById("dateInput").value.trim();
   const hourRaw = document.getElementById("hourInput").value.trim();
   const titulo = document.getElementById("titleInput").value.trim();
+
+  document.getElementById("dateInputFeed").value = dateRaw;
+  document.getElementById("dateInput").value = dateRaw;
+
+  document.getElementById("hourInputFeed").value = hourRaw;
+  document.getElementById("hourInput").value = hourRaw;
+
   const edadSugerida = document
     .getElementById("edadSugeridaInput")
     .value.trim();
@@ -2401,6 +2408,12 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
   const edadSugerida = document
     .getElementById("edadSugeridaInputFeed")
     .value.trim();
+
+  document.getElementById("dateInputFeed").value = dateRaw;
+  document.getElementById("dateInput").value = dateRaw;
+
+  document.getElementById("hourInputFeed").value = hourRaw;
+  document.getElementById("hourInput").value = hourRaw;
 
   const certificationMap = {
     AA: "ATP",
