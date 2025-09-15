@@ -36,6 +36,12 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       )
     ).json();
 
+    const movieDetailsSinapsis = await (
+      await fetch(
+        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`
+      )
+    ).json();
+
     const result = document.createElement("div");
     result.style.cursor = "pointer";
     result.style.padding = "8px";
@@ -223,9 +229,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         movie.release_date
       ).getFullYear();
       document.getElementById("sinapsis-review").textContent =
-        movieDetails.overview;
+        movieDetailsSinapsis.overview;
       document.getElementById("sinapsisInputReview").value =
-        movieDetails.overview;
+        movieDetailsSinapsis.overview;
       document.getElementById("director-review").textContent = director
         ? director.name
         : "Director no disponible";
@@ -248,9 +254,9 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         movie.release_date
       ).getFullYear();
       document.getElementById("sinapsis-review-feed").textContent =
-        movieDetails.overview;
+        movieDetailsSinapsis.overview;
       document.getElementById("sinapsisInputReviewFeed").value =
-        movieDetails.overview;
+        movieDetailsSinapsis.overview;
       document.getElementById("director-review-feed").textContent = director
         ? director.name
         : "Director no disponible";
@@ -260,7 +266,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       ).textContent = `Origen: ${flag} ${countryName}`;
 
       const imagesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}&language`
+        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
       );
       const imagesData = await imagesRes.json();
 
