@@ -888,11 +888,18 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const cycleDescTextFeed = document.getElementById(
     "cycle-description-text-feed"
   );
-  if (cycleDescText) {
-    cycleDescText.textContent = cycleDescription || "Nombre del Ciclo";
-  }
-  if (cycleDescTextFeed) {
-    cycleDescTextFeed.textContent = cycleDescription || "Nombre del Ciclo";
+  if (cycleDescription === "") {
+    if (cycleDescText) cycleDescText.style.display = "none";
+    if (cycleDescTextFeed) cycleDescTextFeed.style.display = "none";
+  } else {
+    if (cycleDescText) {
+      cycleDescText.style.display = "block";
+      cycleDescText.textContent = cycleDescription;
+    }
+    if (cycleDescTextFeed) {
+      cycleDescTextFeed.style.display = "block";
+      cycleDescTextFeed.textContent = cycleDescription;
+    }
   }
 
   const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
@@ -922,6 +929,17 @@ document
     document.querySelector(".flyer-hour-ciclos").style.fontSize = size;
     const flyerHourFeed = document.querySelector(".flyer-hour-feed");
     if (flyerHourFeed) flyerHourFeed.style.fontSize = size;
+  });
+
+document
+  .getElementById("cycleDescriptionFontSizeInput")
+  .addEventListener("input", (e) => {
+    const size = e.target.value + "px";
+    document.getElementById("cycle-description-text").style.fontSize = size;
+    const cycleDescFeed = document.getElementById(
+      "cycle-description-text-feed"
+    );
+    if (cycleDescFeed) cycleDescFeed.style.fontSize = size;
   });
 
 document.getElementById("rectWidthInput").addEventListener("input", (e) => {
@@ -1068,11 +1086,18 @@ document
     const cycleDescTextFeed = document.getElementById(
       "cycle-description-text-feed"
     );
-    if (cycleDescText) {
-      cycleDescText.textContent = cycleDescription || "Nombre del ciclo";
-    }
-    if (cycleDescTextFeed) {
-      cycleDescTextFeed.textContent = cycleDescription || "Nombre del ciclo";
+    if (cycleDescription === "") {
+      if (cycleDescText) cycleDescText.style.display = "none";
+      if (cycleDescTextFeed) cycleDescTextFeed.style.display = "none";
+    } else {
+      if (cycleDescText) {
+        cycleDescText.style.display = "block";
+        cycleDescText.textContent = cycleDescription;
+      }
+      if (cycleDescTextFeed) {
+        cycleDescTextFeed.style.display = "block";
+        cycleDescTextFeed.textContent = cycleDescription;
+      }
     }
   });
 

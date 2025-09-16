@@ -234,7 +234,6 @@
                     left: 340px;
                     text-align: center;
                     width: 400px;
-                    height: 130px;
                     max-height: 150px;
                     min-height: 50px;
                     z-index: 10;
@@ -257,12 +256,11 @@
                       justify-content: center;
                       align-items: center;
                       text-align: center;
-                      min-height: 120px;
-                      min-width: fit-content;
-                      max-height: 120px;
+                      max-width: 100%;
+                      overflow-wrap: break-word;
                     "
                   >
-                    Nombre del Ciclo
+                    Descripción del Ciclo
                   </div>
                 </div>
 
@@ -350,7 +348,6 @@
                     left: 340px;
                     text-align: center;
                     width: 400px;
-                    height: 130px;
                     max-height: 150px;
                     min-height: 50px;
                     z-index: 10;
@@ -370,9 +367,11 @@
                       background: rgba(255, 255, 255, 0.1);
                       border-radius: 10px;
                       backdrop-filter: blur(5px);
+                      max-width: 100%;
+                      overflow-wrap: break-word;
                     "
                   >
-                    Nombre del Ciclo
+                    Descripción del Ciclo
                   </div>
                 </div>
 
@@ -429,11 +428,11 @@
               </div>
 
               <div class="full">
-                <label>Ciclo</label>
+                <label>Descripción del Ciclo(opcional)</label>
                 <input
                   id="cycleDescriptionInput"
                   type="text"
-                  value="Nombre del Ciclo"
+                  value="Descripción del Ciclo"
                 />
               </div>
 
@@ -466,11 +465,10 @@
               <label>Borde textos</label>
               <select id="strokeTargetSelect" multiple size="5">
                 <option value="header">Encabezado</option>
-                <option value="ciclo">Nombre del ciclo</option>
+                <option value="subheader">Nombre del ciclo</option>
                 <option value="cycle-description-text">
                   Descripción del ciclo
                 </option>
-                <option value="subheader">Subheader</option>
                 <option value="flyer-hour">Hora</option>
                 <option value="flyer-biblioteca">Ubicación</option>
                 <option value="movie-title">Títulos de películas</option>
@@ -499,6 +497,18 @@
                   min="10"
                   max="100"
                   value="50"
+                  style="width: 80px"
+                />
+                px
+              </div>
+              <div>
+                <label>Tamaño descripción</label>
+                <input
+                  id="cycleDescriptionFontSizeInput"
+                  type="number"
+                  min="10"
+                  max="100"
+                  value="40"
                   style="width: 80px"
                 />
                 px
