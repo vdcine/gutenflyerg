@@ -2920,18 +2920,41 @@ document.getElementById("tab-feed").addEventListener("click", () => {
 });
 
 document.getElementById("applyStrokeBtn").addEventListener("click", () => {
+  const strokeIdMap = {
+    header: ["header", "header-feed", "header-review", "header-review-feed"],
+    title: ["title", "title-feed", "title-review", "title-review-feed"],
+    year: ["year", "year-feed", "year-review", "year-review-feed"],
+    director: [
+      "director",
+      "director-feed",
+      "director-review",
+      "director-review-feed",
+    ],
+    duracion: [
+      "duracion",
+      "duracion-feed",
+      "duracion-review",
+      "duracion-review-feed",
+    ],
+    "flyer-date": ["flyer-date", "flyer-date-feed"],
+    "flyer-hour": ["flyer-hour", "flyer-hour-feed"],
+    "flyer-biblioteca": ["flyer-biblioteca", "flyer-biblioteca-feed"],
+  };
   const select = document.getElementById("strokeTargetSelect");
   const color = document.getElementById("strokeColorInput").value;
   Array.from(select.selectedOptions).forEach((option) => {
-    const target = document.getElementById(option.value);
-    if (target) {
-      target.style.textShadow = `
-        -1px -1px 0 ${color},
-        1px -1px 0 ${color},
-        -1px 1px 0 ${color},
-        1px 1px 0 ${color}
-      `;
-    }
+    const ids = strokeIdMap[option.value] || [option.value];
+    ids.forEach((id) => {
+      const target = document.getElementById(id);
+      if (target) {
+        target.style.textShadow = `
+          -1px -1px 0 ${color},
+          1px -1px 0 ${color},
+          -1px 1px 0 ${color},
+          1px 1px 0 ${color}
+        `;
+      }
+    });
   });
 });
 
@@ -2974,18 +2997,26 @@ document.getElementById("removeStrokeBtnFeed").addEventListener("click", () => {
 document
   .getElementById("applyStrokeBtnReview")
   .addEventListener("click", () => {
+    const strokeIdMapReview = {
+      "origen-review": ["origen-review", "origen-review-feed"],
+      "sinapsis-review": ["sinapsis-review", "sinapsis-review-feed"],
+    };
+
     const select = document.getElementById("strokeTargetSelectReview");
     const color = document.getElementById("strokeColorInputReview").value;
     Array.from(select.selectedOptions).forEach((option) => {
-      const target = document.getElementById(option.value);
-      if (target) {
-        target.style.textShadow = `
-        -1px -1px 0 ${color},
-        1px -1px 0 ${color},
-        -1px 1px 0 ${color},
-        1px 1px 0 ${color}
-      `;
-      }
+      const ids = strokeIdMapReview[option.value] || [option.value];
+      ids.forEach((id) => {
+        const target = document.getElementById(id);
+        if (target) {
+          target.style.textShadow = `
+          -1px -1px 0 ${color},
+          1px -1px 0 ${color},
+          -1px 1px 0 ${color},
+          1px 1px 0 ${color}
+        `;
+        }
+      });
     });
   });
 
