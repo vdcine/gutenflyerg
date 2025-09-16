@@ -11,6 +11,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
 
   const query = document.getElementById("movieSearch").value;
   const language = document.getElementById("movieLanguage").value || "en";
+  window.lastMovieLanguage = language;
 
   try {
     const searchRes = await fetch(
@@ -23,14 +24,14 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       return;
     }
 
-    displaySearchResults(searchData.results.slice(0, 10));
+    displaySearchResults(searchData.results.slice(0, 10), language);
   } catch (error) {
     console.error("Error al buscar películas:", error);
     alert("Error al buscar películas. Por favor intenta de nuevo.");
   }
 });
 
-async function displaySearchResults(movies) {
+async function displaySearchResults(movies, language) {
   const resultsDiv = document.getElementById("movie-results");
   resultsDiv.innerHTML = "";
 
@@ -44,8 +45,12 @@ async function displaySearchResults(movies) {
   for (const movie of movies) {
     try {
       const [creditsRes, detailsRes] = await Promise.all([
-        fetch(`${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`),
-        fetch(`${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}`),
+        fetch(
+          `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}&language=${language}`
+        ),
+        fetch(
+          `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`
+        ),
       ]);
 
       const creditsData = await creditsRes.json();
@@ -101,7 +106,7 @@ async function displaySearchResults(movies) {
       const addButton = result.querySelector(".add-movie-btn");
       if (addButton) {
         addButton.addEventListener("click", () => {
-          addMovieToCycle(movie.id);
+          addMovieToCycle(movie.id, language);
         });
       }
 
@@ -120,7 +125,7 @@ async function displaySearchResults(movies) {
   }
 }
 
-async function addMovieToCycle(movieId) {
+async function addMovieToCycle(movieId, language) {
   if (selectedMovies.length >= 4) {
     alert("Máximo 4 películas por ciclo.");
     return;
@@ -132,9 +137,12 @@ async function addMovieToCycle(movieId) {
   }
 
   try {
+    const lang = language || window.lastMovieLanguage || "en";
     const [detailsRes, creditsRes, imagesRes] = await Promise.all([
-      fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`),
-      fetch(`${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`),
+      fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=${lang}`),
+      fetch(
+        `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}&language=${lang}`
+      ),
       fetch(
         `${BASE_URL}/movie/${movieId}/images?api_key=${API_KEY}&include_image_language=null`
       ),
@@ -169,6 +177,7 @@ async function addMovieToCycle(movieId) {
       poster_path: movieDetails.poster_path || "",
       overview: movieDetails.overview || "",
       backdrops: imagesData && imagesData.backdrops ? imagesData.backdrops : [],
+      language: lang,
     };
 
     selectedMovies.push(movieData);
@@ -346,19 +355,21 @@ function updateIndividualDatesSection() {
     }
 
     dateInput.innerHTML = `
-      <label style="min-width: 200px; text-align: left; font-size: 11px;">${
-        movie.title
-      }:</label>
+      <input type="text" id="movie-title-${
+        movie.id
+      }" value="${movie.title.replace(/"/g, "&quot;")}" 
+        style="min-width: 180px; font-size: 13px; padding: 6px; border-radius: 6px; border: 1px solid #444; background: #fff; color: #222; margin-right: 8px;">
       <input type="date" id="movie-date-${movie.id}" value="${
       individualDates[movie.id]
     }" 
-             style="padding: 6px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;">
+        style="padding: 6px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;">
     `;
 
     container.appendChild(dateInput);
   });
 
   addIndividualDateListeners();
+  addIndividualTitleListeners();
 }
 
 function updateSearchButtons() {
@@ -538,7 +549,7 @@ function updateStoryFlyer() {
               <div>${movie.runtime} minutos</div>
             </div>
           </div>
-          <div class="movie-date-individual" style="
+          <div class="movie-date" style="
             background: rgba(4, 63, 97, 0.9);
             color: white;
             padding: 8px 12px;
@@ -557,7 +568,7 @@ function updateStoryFlyer() {
           </div>
         `
             : `
-          <div class="movie-date-individual" style="
+          <div class="movie-date" style="
             background: rgba(4, 63, 97, 0.9);
             color: white;
             padding: 8px 12px;
@@ -621,7 +632,7 @@ function updateStoryFlyer() {
 
   container
     .querySelectorAll(
-      ".movie-title, .movie-info, .movie-date-individual, .movie-item-alternating"
+      ".movie-title, .movie-info, .movie-date, .movie-item-alternating"
     )
     .forEach((el) => {
       el.addEventListener("click", (event) => {
@@ -988,7 +999,7 @@ document.getElementById("applyStrokeBtn").addEventListener("click", () => {
 
   selectedOptions.forEach((option) => {
     const elements = document.querySelectorAll(
-      `#${option.value}, .${option.value}, .${option.value}-ciclos`
+      `#${option.value}, .${option.value}, .${option.value}-ciclos, .${option.value}-feed, .${option.value}-feed-ciclos`
     );
     elements.forEach((element) => {
       element.style.textShadow = `2px 2px 0 ${color}, -2px -2px 0 ${color}, 2px -2px 0 ${color}, -2px 2px 0 ${color}`;
@@ -1003,7 +1014,7 @@ document.getElementById("removeStrokeBtn").addEventListener("click", () => {
 
   selectedOptions.forEach((option) => {
     const elements = document.querySelectorAll(
-      `#${option.value}, .${option.value}, .${option.value}-ciclos`
+      `#${option.value}, .${option.value}, .${option.value}-ciclos, .${option.value}-feed, .${option.value}-feed-ciclos`
     );
     elements.forEach((element) => {
       element.style.textShadow = "";
@@ -1027,7 +1038,6 @@ document
     });
 
     updateFlyerDisplay();
-    alert("Fechas individuales aplicadas correctamente");
   });
 
 document.getElementById("hourInput").addEventListener("input", (e) => {
@@ -1076,6 +1086,28 @@ function addIndividualDateListeners() {
   });
 }
 
+function addIndividualTitleListeners() {
+  selectedMovies.forEach((movie) => {
+    const titleInput = document.getElementById(`movie-title-${movie.id}`);
+    if (titleInput) {
+      titleInput.removeEventListener("change", handleIndividualTitleChange);
+      titleInput.addEventListener("change", handleIndividualTitleChange);
+    }
+  });
+}
+
+function handleIndividualTitleChange(e) {
+  const inputId = e.target.id;
+  const movieId = inputId.replace("movie-title-", "");
+  const newTitle = e.target.value;
+  const movie = selectedMovies.find((m) => String(m.id) === String(movieId));
+  if (movie && newTitle) {
+    movie.title = newTitle;
+    updateSelectedMoviesList();
+    updateFlyerDisplay();
+  }
+}
+
 function handleIndividualDateChange(e) {
   const inputId = e.target.id;
   const movieId = inputId.replace("movie-date-", "");
@@ -1107,10 +1139,8 @@ floatingColorPicker.addEventListener("input", (e) => {
       target.classList.contains("movie-item-feed") ||
       target.id === "flyer-story" ||
       target.id === "flyer-feed" ||
-      (target.classList.contains("movie-date-individual") &&
-        isBackgroundMode) ||
+      (target.classList.contains("movie-date") && isBackgroundMode) ||
       (target.classList.contains("movie-date-feed") && isBackgroundMode);
-
     if (isBackground) {
       target.style.backgroundColor = selectedColor;
     } else {
@@ -1216,8 +1246,8 @@ function getColorTargets(el) {
     return document.querySelectorAll(".movie-info, .movie-info-feed");
   }
 
-  if (el.classList.contains("movie-date-individual")) {
-    return document.querySelectorAll(".movie-date-individual");
+  if (el.classList.contains("movie-date")) {
+    return document.querySelectorAll(".movie-date, .movie-date-feed");
   }
 
   if (el.classList.contains("movie-date-feed")) {
@@ -1253,8 +1283,7 @@ function getCurrentColorForTargets(targets) {
     targets[0].classList.contains("movie-item-feed") ||
     targets[0].id === "flyer-story" ||
     targets[0].id === "flyer-feed" ||
-    (targets[0].classList.contains("movie-date-individual") &&
-      isBackgroundMode) ||
+    (targets[0].classList.contains("movie-date") && isBackgroundMode) ||
     (targets[0].classList.contains("movie-date-feed") && isBackgroundMode);
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
@@ -1264,7 +1293,7 @@ function showColorPickerForElement(element, event) {
   colorTargets = getColorTargets(element);
 
   if (
-    element.classList.contains("movie-date-individual") ||
+    element.classList.contains("movie-date") ||
     element.classList.contains("movie-date-feed")
   ) {
     const rect = element.getBoundingClientRect();
@@ -1336,7 +1365,7 @@ function showColorPickerForElement(element, event) {
   eyedropperBtn.style.display = "block";
 
   if (
-    element.classList.contains("movie-date-individual") ||
+    element.classList.contains("movie-date") ||
     element.classList.contains("movie-date-feed")
   ) {
     eyedropperBtn.textContent = isBackgroundMode
@@ -1443,7 +1472,7 @@ document.addEventListener("click", (e) => {
     e.target.classList.contains("movie-title-feed") ||
     e.target.classList.contains("movie-info") ||
     e.target.classList.contains("movie-info-feed") ||
-    e.target.classList.contains("movie-date-individual") ||
+    e.target.classList.contains("movie-date") ||
     e.target.classList.contains("movie-date-feed") ||
     e.target.classList.contains("movie-item-alternating") ||
     e.target.classList.contains("movie-item-feed")
