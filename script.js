@@ -1039,14 +1039,7 @@ function rgbToHex(rgb) {
 }
 
 function getColorTargets(el) {
-  if (
-    el.classList.contains("rect") ||
-    el.classList.contains("rect2") ||
-    el.classList.contains("rect-feed") ||
-    el.classList.contains("rect2-feed") ||
-    el.classList.contains("rect2-review") ||
-    el.classList.contains("rect2-review-feed")
-  ) {
+  if (el.classList.contains("rect") || el.classList.contains("rect2")) {
     return [
       document.querySelector(".rect"),
       document.querySelector(".rect2"),
@@ -1057,17 +1050,94 @@ function getColorTargets(el) {
     ];
   }
 
-  if (
-    el.id === "flyer-hour" ||
-    el.id === "flyer-biblioteca" ||
-    el.id === "flyer-hour-feed" ||
-    el.id === "flyer-biblioteca-feed"
-  ) {
+  if (el.id === "flyer-hour" || el.id === "flyer-biblioteca") {
     return [
       document.getElementById("flyer-hour"),
       document.getElementById("flyer-biblioteca"),
       document.getElementById("flyer-hour-feed"),
       document.getElementById("flyer-biblioteca-feed"),
+    ];
+  }
+
+  if (el.id === "ciclo") {
+    return [
+      document.getElementById("ciclo"),
+      document.getElementById("ciclo-feed"),
+    ];
+  }
+
+  if (el.id === "title") {
+    return [
+      document.getElementById("title"),
+      document.getElementById("title-feed"),
+      document.getElementById("title-review-feed"),
+      document.getElementById("title-review"),
+    ];
+  }
+
+  if (el.id === "year") {
+    return [
+      document.getElementById("year"),
+      document.getElementById("year-feed"),
+      document.getElementById("year-review"),
+      document.getElementById("year-review-feed"),
+    ];
+  }
+
+  if (el.id === "flyer-date") {
+    return [
+      document.getElementById("flyer-date"),
+      document.getElementById("flyer-date-feed"),
+    ];
+  }
+
+  if (el.id === "director") {
+    return [
+      document.getElementById("director"),
+      document.getElementById("director-feed"),
+      document.getElementById("director-review"),
+      document.getElementById("director-review-feed"),
+    ];
+  }
+
+  if (el.id === "duracion") {
+    return [
+      document.getElementById("duracion"),
+      document.getElementById("duracion-feed"),
+      document.getElementById("duracion-review"),
+      document.getElementById("duracion-review-feed"),
+    ];
+  }
+
+  if (el.id === "header") {
+    return [
+      document.getElementById("header"),
+      document.getElementById("header-feed"),
+      document.getElementById("header-review"),
+      document.getElementById("header-review-feed"),
+    ];
+  }
+
+  if (el.id === "org") {
+    return [
+      document.getElementById("org"),
+      document.getElementById("org-feed"),
+      document.getElementById("org-review"),
+      document.getElementById("org-review-feed"),
+    ];
+  }
+
+  if (el.id === "origen-review") {
+    return [
+      document.getElementById("origen-review"),
+      document.getElementById("origen-review-feed"),
+    ];
+  }
+
+  if (el.id === "sinapsis-review") {
+    return [
+      document.getElementById("sinapsis-review"),
+      document.getElementById("sinapsis-review-feed"),
     ];
   }
 
