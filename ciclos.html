@@ -452,16 +452,14 @@
               >
                 <hr style="margin: 15px 0; border-top: 1px solid #444" />
                 <label style="margin-bottom: 10px; display: block"
-                  >Fechas individuales por película</label
+                  >Fechas individuales y títulos de películas</label
                 >
                 <div
                   id="individual-dates-container"
                   style="display: flex; flex-direction: column; gap: 8px"
                 ></div>
                 <div class="full" style="margin-top: 10px">
-                  <button id="applyIndividualDatesBtn">
-                    Aplicar fechas individuales
-                  </button>
+                  <button id="applyIndividualDatesBtn">Aplicar cambios</button>
                 </div>
               </div>
 
@@ -469,10 +467,15 @@
               <select id="strokeTargetSelect" multiple size="5">
                 <option value="header">Encabezado</option>
                 <option value="ciclo">Nombre del ciclo</option>
+                <option value="cycle-description-text">
+                  Descripción del ciclo
+                </option>
+                <option value="subheader">Subheader</option>
                 <option value="flyer-hour">Hora</option>
                 <option value="flyer-biblioteca">Ubicación</option>
                 <option value="movie-title">Títulos de películas</option>
                 <option value="movie-info">Info de películas</option>
+                <option value="movie-date">Fechas de películas</option>
               </select>
               <input
                 type="color"

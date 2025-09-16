@@ -549,7 +549,7 @@ function updateStoryFlyer() {
               <div>${movie.runtime} minutos</div>
             </div>
           </div>
-          <div class="movie-date-individual" style="
+          <div class="movie-date" style="
             background: rgba(4, 63, 97, 0.9);
             color: white;
             padding: 8px 12px;
@@ -568,7 +568,7 @@ function updateStoryFlyer() {
           </div>
         `
             : `
-          <div class="movie-date-individual" style="
+          <div class="movie-date" style="
             background: rgba(4, 63, 97, 0.9);
             color: white;
             padding: 8px 12px;
@@ -632,7 +632,7 @@ function updateStoryFlyer() {
 
   container
     .querySelectorAll(
-      ".movie-title, .movie-info, .movie-date-individual, .movie-item-alternating"
+      ".movie-title, .movie-info, .movie-date, .movie-item-alternating"
     )
     .forEach((el) => {
       el.addEventListener("click", (event) => {
@@ -999,7 +999,7 @@ document.getElementById("applyStrokeBtn").addEventListener("click", () => {
 
   selectedOptions.forEach((option) => {
     const elements = document.querySelectorAll(
-      `#${option.value}, .${option.value}, .${option.value}-ciclos`
+      `#${option.value}, .${option.value}, .${option.value}-ciclos, .${option.value}-feed, .${option.value}-feed-ciclos`
     );
     elements.forEach((element) => {
       element.style.textShadow = `2px 2px 0 ${color}, -2px -2px 0 ${color}, 2px -2px 0 ${color}, -2px 2px 0 ${color}`;
@@ -1014,7 +1014,7 @@ document.getElementById("removeStrokeBtn").addEventListener("click", () => {
 
   selectedOptions.forEach((option) => {
     const elements = document.querySelectorAll(
-      `#${option.value}, .${option.value}, .${option.value}-ciclos`
+      `#${option.value}, .${option.value}, .${option.value}-ciclos, .${option.value}-feed, .${option.value}-feed-ciclos`
     );
     elements.forEach((element) => {
       element.style.textShadow = "";
@@ -1139,10 +1139,8 @@ floatingColorPicker.addEventListener("input", (e) => {
       target.classList.contains("movie-item-feed") ||
       target.id === "flyer-story" ||
       target.id === "flyer-feed" ||
-      (target.classList.contains("movie-date-individual") &&
-        isBackgroundMode) ||
+      (target.classList.contains("movie-date") && isBackgroundMode) ||
       (target.classList.contains("movie-date-feed") && isBackgroundMode);
-
     if (isBackground) {
       target.style.backgroundColor = selectedColor;
     } else {
@@ -1248,8 +1246,8 @@ function getColorTargets(el) {
     return document.querySelectorAll(".movie-info, .movie-info-feed");
   }
 
-  if (el.classList.contains("movie-date-individual")) {
-    return document.querySelectorAll(".movie-date-individual");
+  if (el.classList.contains("movie-date")) {
+    return document.querySelectorAll(".movie-date, .movie-date-feed");
   }
 
   if (el.classList.contains("movie-date-feed")) {
@@ -1285,8 +1283,7 @@ function getCurrentColorForTargets(targets) {
     targets[0].classList.contains("movie-item-feed") ||
     targets[0].id === "flyer-story" ||
     targets[0].id === "flyer-feed" ||
-    (targets[0].classList.contains("movie-date-individual") &&
-      isBackgroundMode) ||
+    (targets[0].classList.contains("movie-date") && isBackgroundMode) ||
     (targets[0].classList.contains("movie-date-feed") && isBackgroundMode);
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
@@ -1296,7 +1293,7 @@ function showColorPickerForElement(element, event) {
   colorTargets = getColorTargets(element);
 
   if (
-    element.classList.contains("movie-date-individual") ||
+    element.classList.contains("movie-date") ||
     element.classList.contains("movie-date-feed")
   ) {
     const rect = element.getBoundingClientRect();
@@ -1368,7 +1365,7 @@ function showColorPickerForElement(element, event) {
   eyedropperBtn.style.display = "block";
 
   if (
-    element.classList.contains("movie-date-individual") ||
+    element.classList.contains("movie-date") ||
     element.classList.contains("movie-date-feed")
   ) {
     eyedropperBtn.textContent = isBackgroundMode
@@ -1475,7 +1472,7 @@ document.addEventListener("click", (e) => {
     e.target.classList.contains("movie-title-feed") ||
     e.target.classList.contains("movie-info") ||
     e.target.classList.contains("movie-info-feed") ||
-    e.target.classList.contains("movie-date-individual") ||
+    e.target.classList.contains("movie-date") ||
     e.target.classList.contains("movie-date-feed") ||
     e.target.classList.contains("movie-item-alternating") ||
     e.target.classList.contains("movie-item-feed")
