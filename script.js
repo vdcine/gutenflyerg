@@ -1,3 +1,7 @@
+function getSimpleCorsProxiedUrl(imageUrl) {
+  return `https://corsproxy.io/?${imageUrl}`;
+}
+
 document.getElementById("movieForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -185,9 +189,10 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       document.getElementById("year").textContent = new Date(
         movie.release_date
       ).getFullYear();
-      document.getElementById(
-        "poster"
-      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      const posterUrl = getSimpleCorsProxiedUrl(
+        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      );
+      document.getElementById("poster").src = posterUrl;
       document.getElementById("director").textContent = director
         ? director.name
         : "Director no disponible";
@@ -197,21 +202,23 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "duracion"
       ).textContent = `${movieDetails.runtime} minutos`;
 
-      const url = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
-
-      setBackdropAsBackground(url);
-      setBackdropAsBackgroundFeed(url);
-      setBackdropAsBackgroundReview(url);
-      setBackdropAsBackgroundReviewFeed(url);
+      const backdropUrl = getSimpleCorsProxiedUrl(
+        `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+      );
+      setBackdropAsBackground(backdropUrl);
+      setBackdropAsBackgroundFeed(backdropUrl);
+      setBackdropAsBackgroundReview(backdropUrl);
+      setBackdropAsBackgroundReviewFeed(backdropUrl);
 
       const flyerFeed = document.getElementById("flyer-feed");
       flyerFeed.querySelector("#title-feed").textContent = movie.title;
       flyerFeed.querySelector("#year-feed").textContent = new Date(
         movie.release_date
       ).getFullYear();
-      flyerFeed.querySelector(
-        "#poster-feed"
-      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      const posterUrlFeed = getSimpleCorsProxiedUrl(
+        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      );
+      flyerFeed.querySelector("#poster-feed").src = posterUrlFeed;
       flyerFeed.querySelector("#director-feed").textContent = director
         ? director.name
         : "Director no disponible";
@@ -219,9 +226,10 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "#duracion-feed"
       ).textContent = `${movieDetails.runtime} minutos`;
 
-      document.getElementById(
-        "poster-review"
-      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      const posterUrlReview = getSimpleCorsProxiedUrl(
+        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      );
+      document.getElementById("poster-review").src = posterUrlReview;
       document.getElementById(
         "duracion-review"
       ).textContent = `${movieDetails.runtime} minutos`;
@@ -244,9 +252,10 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "origen-review"
       ).textContent = `Origen: ${flag} ${countryName}`;
 
-      document.getElementById(
-        "poster-review-feed"
-      ).src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      const posterUrlReviewFeed = getSimpleCorsProxiedUrl(
+        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      );
+      document.getElementById("poster-review-feed").src = posterUrlReviewFeed;
       document.getElementById(
         "duracion-review-feed"
       ).textContent = `${movieDetails.runtime} minutos`;
@@ -400,11 +409,11 @@ document.getElementById("poster-prev").addEventListener("click", () => {
   showPoster(currentPoster);
   if (!posters.length) return;
   const filePath = posters[currentPoster].file_path;
-  const url = filePath.startsWith("http")
-    ? filePath
-    : `https://image.tmdb.org/t/p/original${filePath}`;
+  const posterUrlPrev = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/original${filePath}`
+  );
 
-  setPoster(url);
+  setPoster(posterUrlPrev);
 });
 document.getElementById("poster-next").addEventListener("click", () => {
   if (!posters.length) return;
@@ -412,11 +421,11 @@ document.getElementById("poster-next").addEventListener("click", () => {
   showPoster(currentPoster);
   if (!posters.length) return;
   const filePath = posters[currentPoster].file_path;
-  const url = filePath.startsWith("http")
-    ? filePath
-    : `https://image.tmdb.org/t/p/original${filePath}`;
+  const posterUrlNext = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/original${filePath}`
+  );
 
-  setPoster(url);
+  setPoster(posterUrlNext);
 });
 
 function setPoster(url) {
@@ -432,19 +441,19 @@ document.getElementById("backdrop-prev").addEventListener("click", () => {
   showBackdrop(currentBackdrop);
   if (!backdrops.length) return;
   const filePath = backdrops[currentBackdrop].file_path;
-  const url = filePath.startsWith("http")
-    ? filePath
-    : `https://image.tmdb.org/t/p/original${filePath}`;
+  const backdropUrlPrev = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/original${filePath}`
+  );
   const rect = document.querySelector(".rect");
   const rectFeed = document.querySelector(".rect-feed");
   const rectReview = document.querySelector(".rect-review");
   rect.style.display = "none";
   rectFeed.style.display = "none";
   rectReview.style.display = "none";
-  setBackdropAsBackground(url);
-  setBackdropAsBackgroundFeed(url);
-  setBackdropAsBackgroundReview(url);
-  setBackdropAsBackgroundReviewFeed(url);
+  setBackdropAsBackground(backdropUrlPrev);
+  setBackdropAsBackgroundFeed(backdropUrlPrev);
+  setBackdropAsBackgroundReview(backdropUrlPrev);
+  setBackdropAsBackgroundReviewFeed(backdropUrlPrev);
 });
 
 document.getElementById("backdrop-next").addEventListener("click", () => {
@@ -453,19 +462,20 @@ document.getElementById("backdrop-next").addEventListener("click", () => {
   showBackdrop(currentBackdrop);
   if (!backdrops.length) return;
   const filePath = backdrops[currentBackdrop].file_path;
-  const url = filePath.startsWith("http")
-    ? filePath
-    : `https://image.tmdb.org/t/p/original${filePath}`;
+  const backdropUrlNext = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/original${filePath}`
+  );
+
   const rect = document.querySelector(".rect");
   const rectFeed = document.querySelector(".rect-feed");
   const rectReview = document.querySelector(".rect-review");
   rect.style.display = "none";
   rectFeed.style.display = "none";
   rectReview.style.display = "none";
-  setBackdropAsBackground(url);
-  setBackdropAsBackgroundFeed(url);
-  setBackdropAsBackgroundReview(url);
-  setBackdropAsBackgroundReviewFeed(url);
+  setBackdropAsBackground(backdropUrlNext);
+  setBackdropAsBackgroundFeed(backdropUrlNext);
+  setBackdropAsBackgroundReview(backdropUrlNext);
+  setBackdropAsBackgroundReviewFeed(backdropUrlNext);
 });
 
 function setBackdropAsBackground(url) {
