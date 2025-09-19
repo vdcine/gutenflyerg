@@ -5,6 +5,7 @@ let selectedMovies = [];
 let allBackdrops = [];
 let currentBackdrop = 0;
 let individualDates = {};
+let elementColors = {};
 
 document.getElementById("movieForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -392,6 +393,7 @@ function updateFlyerDisplay() {
   setTimeout(() => {
     addEyedropperToMoviePosters();
     addComicEyedropperToImages();
+    syncColorsBetweenModes();
   }, 100);
 }
 
@@ -430,6 +432,69 @@ function calculateMovieItemSize(movieCount) {
   }
 
   return { width: posterWidth, spacing: itemSpacing, padding: itemPadding };
+}
+
+function applySavedColors(mode) {
+  const selectors = {
+    movieTitle: mode === "story" ? [".movie-title"] : [".movie-title-feed"],
+    movieInfo: mode === "story" ? [".movie-info"] : [".movie-info-feed"],
+    movieDate: mode === "story" ? [".movie-date"] : [".movie-date-feed"],
+    movieItem:
+      mode === "story" ? [".movie-item-alternating"] : [".movie-item-feed"],
+  };
+
+  for (const [key, selectorArray] of Object.entries(selectors)) {
+    if (elementColors[key]) {
+      selectorArray.forEach((selector) => {
+        document.querySelectorAll(selector).forEach((el) => {
+          if (elementColors[key].color)
+            el.style.color = elementColors[key].color;
+          if (elementColors[key].background)
+            el.style.backgroundColor = elementColors[key].background;
+        });
+      });
+    }
+  }
+  syncColorsBetweenModes();
+}
+
+function syncColorsBetweenModes() {
+  const selectorMap = {
+    ".movie-title": ".movie-title-feed",
+    ".movie-info": ".movie-info-feed",
+    ".movie-date": ".movie-date-feed",
+    ".movie-item-alternating": ".movie-item-feed",
+  };
+
+  Object.entries(selectorMap).forEach(([storySelector, feedSelector]) => {
+    const storyElements = document.querySelectorAll(storySelector);
+    const feedElements = document.querySelectorAll(feedSelector);
+
+    storyElements.forEach((storyEl, index) => {
+      const feedEl = feedElements[index];
+      if (feedEl) {
+        if (storyEl.style.color) {
+          feedEl.style.color = storyEl.style.color;
+        }
+        if (storyEl.style.backgroundColor) {
+          feedEl.style.backgroundColor = storyEl.style.backgroundColor;
+        }
+      }
+    });
+  });
+
+  const storyFlyer = document.getElementById("flyer-story");
+  const feedFlyer = document.getElementById("flyer-feed");
+  if (storyFlyer && feedFlyer) {
+    if (storyFlyer.style.backgroundImage) {
+      feedFlyer.style.backgroundImage = storyFlyer.style.backgroundImage;
+      feedFlyer.style.backgroundSize = storyFlyer.style.backgroundSize;
+      feedFlyer.style.backgroundPosition = storyFlyer.style.backgroundPosition;
+    }
+    if (storyFlyer.style.backgroundColor) {
+      feedFlyer.style.backgroundColor = storyFlyer.style.backgroundColor;
+    }
+  }
 }
 
 function updateStoryFlyer() {
@@ -630,6 +695,8 @@ function updateStoryFlyer() {
   html += "</div>";
   container.innerHTML = html;
 
+  applySavedColors("story");
+
   container
     .querySelectorAll(
       ".movie-title, .movie-info, .movie-date, .movie-item-alternating"
@@ -770,6 +837,8 @@ function updateFeedFlyer() {
   html += "</div>";
   container.innerHTML = html;
 
+  applySavedColors("feed");
+
   container
     .querySelectorAll(
       ".movie-title-feed, .movie-info-feed, .movie-date-feed, .movie-item-feed"
@@ -822,23 +891,28 @@ document.getElementById("set-backdrop-as-bg").addEventListener("click", () => {
       ? backdrop.file_path
       : `https://image.tmdb.org/t/p/original${backdrop.file_path}`;
 
-    document.getElementById(
-      "flyer-story"
-    ).style.backgroundImage = `url(${fullUrl})`;
-    document.getElementById("flyer-story").style.backgroundSize = "cover";
-    document.getElementById("flyer-story").style.backgroundPosition = "center";
+    const storyFlyer = document.getElementById("flyer-story");
+    const feedFlyer = document.getElementById("flyer-feed");
 
-    document.getElementById(
-      "flyer-feed"
-    ).style.backgroundImage = `url(${fullUrl})`;
-    document.getElementById("flyer-feed").style.backgroundSize = "cover";
-    document.getElementById("flyer-feed").style.backgroundPosition = "center";
+    [storyFlyer, feedFlyer].forEach((flyer) => {
+      if (flyer) {
+        flyer.style.backgroundImage = `url(${fullUrl})`;
+        flyer.style.backgroundSize = "cover";
+        flyer.style.backgroundPosition = "center";
+      }
+    });
   }
 });
 
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
-  document.getElementById("flyer-story").style.backgroundImage = "";
-  document.getElementById("flyer-feed").style.backgroundImage = "";
+  const storyFlyer = document.getElementById("flyer-story");
+  const feedFlyer = document.getElementById("flyer-feed");
+
+  [storyFlyer, feedFlyer].forEach((flyer) => {
+    if (flyer) {
+      flyer.style.backgroundImage = "";
+    }
+  });
 });
 
 document
@@ -1173,6 +1247,18 @@ floatingColorPicker.addEventListener("input", (e) => {
     }
   });
 
+  const key = getColorKey(colorTargets[0]);
+  if (key) {
+    if (!elementColors[key]) elementColors[key] = {};
+    if (isBackground) {
+      elementColors[key].background = selectedColor;
+    } else {
+      elementColors[key].color = selectedColor;
+    }
+  }
+
+  syncColorsBetweenModes();
+
   const colorPreview = document.getElementById("floating-color-preview");
   if (colorPreview) colorPreview.style.display = "none";
 });
@@ -1205,7 +1291,7 @@ function getColorTargets(el) {
       document.querySelector(".rect2"),
       document.querySelector(".rect-feed"),
       document.querySelector(".rect2-feed"),
-    ];
+    ].filter(Boolean);
   }
 
   if (
@@ -1219,32 +1305,35 @@ function getColorTargets(el) {
       document.getElementById("flyer-biblioteca"),
       document.getElementById("flyer-hour-feed"),
       document.getElementById("flyer-biblioteca-feed"),
-    ];
+    ].filter(Boolean);
   }
 
   if (el.id === "flyer-story" || el.id === "flyer-feed") {
-    return [el];
+    return [
+      document.getElementById("flyer-story"),
+      document.getElementById("flyer-feed"),
+    ].filter(Boolean);
   }
 
   if (el.classList.contains("header") || el.classList.contains("header-feed")) {
     return [
       document.querySelector(".header"),
       document.querySelector(".header-feed"),
-    ];
+    ].filter(Boolean);
   }
 
   if (el.id === "ciclo" || el.id === "ciclo-feed") {
     return [
       document.getElementById("ciclo"),
       document.getElementById("ciclo-feed"),
-    ];
+    ].filter(Boolean);
   }
 
   if (el.id === "org" || el.id === "org-feed") {
     return [
       document.getElementById("org"),
       document.getElementById("org-feed"),
-    ];
+    ].filter(Boolean);
   }
 
   if (
@@ -1254,37 +1343,45 @@ function getColorTargets(el) {
     return [
       document.getElementById("cycle-description-text"),
       document.getElementById("cycle-description-text-feed"),
-    ];
+    ].filter(Boolean);
   }
 
   if (
     el.classList.contains("movie-title") ||
     el.classList.contains("movie-title-feed")
   ) {
-    return document.querySelectorAll(".movie-title, .movie-title-feed");
+    return Array.from(
+      document.querySelectorAll(".movie-title, .movie-title-feed")
+    );
   }
 
   if (
     el.classList.contains("movie-info") ||
     el.classList.contains("movie-info-feed")
   ) {
-    return document.querySelectorAll(".movie-info, .movie-info-feed");
+    return Array.from(
+      document.querySelectorAll(".movie-info, .movie-info-feed")
+    );
   }
 
   if (el.classList.contains("movie-date")) {
-    return document.querySelectorAll(".movie-date, .movie-date-feed");
+    return Array.from(
+      document.querySelectorAll(".movie-date, .movie-date-feed")
+    );
   }
 
   if (el.classList.contains("movie-date-feed")) {
-    return document.querySelectorAll(".movie-date-feed");
+    return Array.from(
+      document.querySelectorAll(".movie-date, .movie-date-feed")
+    );
   }
 
   if (
     el.classList.contains("movie-item-alternating") ||
     el.classList.contains("movie-item-feed")
   ) {
-    return document.querySelectorAll(
-      ".movie-item-alternating, .movie-item-feed"
+    return Array.from(
+      document.querySelectorAll(".movie-item-alternating, .movie-item-feed")
     );
   }
 
@@ -1312,6 +1409,30 @@ function getCurrentColorForTargets(targets) {
     (targets[0].classList.contains("movie-date-feed") && isBackgroundMode);
   const style = window.getComputedStyle(targets[0]);
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
+}
+
+function getColorKey(target) {
+  if (
+    target.classList.contains("movie-title") ||
+    target.classList.contains("movie-title-feed")
+  )
+    return "movieTitle";
+  if (
+    target.classList.contains("movie-info") ||
+    target.classList.contains("movie-info-feed")
+  )
+    return "movieInfo";
+  if (
+    target.classList.contains("movie-date") ||
+    target.classList.contains("movie-date-feed")
+  )
+    return "movieDate";
+  if (
+    target.classList.contains("movie-item-alternating") ||
+    target.classList.contains("movie-item-feed")
+  )
+    return "movieItem";
+  return null;
 }
 
 function showColorPickerForElement(element, event) {
