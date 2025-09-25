@@ -1401,6 +1401,22 @@ let comicEyedropperActive = false;
 let comicEyedropperTarget = null;
 let lastComicEyedropperColor = null;
 
+function cleanupComicEyedropperEvents() {
+  posterImg.removeEventListener("mousemove", comicEyedropperMoveHandler);
+  posterFeed.removeEventListener("mousemove", comicEyedropperMoveHandler);
+  posterImg.style.cursor = "";
+  posterFeed.style.cursor = "";
+  document.body.style.cursor = "";
+
+  const comicColorPreview = document.getElementById("comic-color-preview");
+  if (comicColorPreview) {
+    comicColorPreview.style.display = "none";
+  }
+
+  comicEyedropperActive = false;
+  comicEyedropperTarget = null;
+}
+
 function updateComicLastColorSquare() {
   const lastColorSquare = document.getElementById("comicLastColorSquare");
   if (lastComicEyedropperColor) {
@@ -1414,6 +1430,7 @@ function updateComicLastColorSquare() {
 
 function comicEyedropperMoveHandler(e) {
   if (!comicEyedropperActive) return;
+
   let comicColorPreview = document.getElementById("comic-color-preview");
   if (!comicColorPreview) {
     comicColorPreview = document.createElement("div");
@@ -1433,82 +1450,88 @@ function comicEyedropperMoveHandler(e) {
     `;
     document.body.appendChild(comicColorPreview);
   }
+
   comicColorPreview.style.display = "block";
   comicColorPreview.style.left = e.pageX + 20 + "px";
   comicColorPreview.style.top = e.pageY - 24 + "px";
 
-  if (posterImg.naturalWidth && posterImg.naturalHeight) {
-    const canvas = document.createElement("canvas");
-    canvas.width = posterImg.naturalWidth;
-    canvas.height = posterImg.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(
-      posterImg,
-      0,
-      0,
-      posterImg.naturalWidth,
-      posterImg.naturalHeight
-    );
-    const rect = posterImg.getBoundingClientRect();
-    const x = Math.round(
-      (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
-    );
-    const y = Math.round(
-      (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
-    );
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-    comicColorPreview.style.background = hex;
+  let targetImg = null;
+  if (e.target === posterImg || e.currentTarget === posterImg) {
+    targetImg = posterImg;
+  } else if (e.target === posterFeed || e.currentTarget === posterFeed) {
+    targetImg = posterFeed;
   }
-}
 
-function comicEyedropperMoveHandler(e) {
-  if (!comicEyedropperActive) return;
-  let comicColorPreview = document.getElementById("comic-color-preview");
-  if (!comicColorPreview) {
-    comicColorPreview = document.createElement("div");
-    comicColorPreview.id = "comic-color-preview";
-    comicColorPreview.style.cssText = `
-      position: absolute;
-      z-index: 99999;
-      left: 0px;
-      top: 0px;
-      width: 48px;
-      height: 48px;
-      border: 2px solid #333;
-      border-radius: 8px;
-      background: #fff;
-      display: block;
-      pointer-events: none;
-    `;
-    document.body.appendChild(comicColorPreview);
+  if (!targetImg) {
+    const posterImgRect = posterImg.getBoundingClientRect();
+    const posterFeedRect = posterFeed.getBoundingClientRect();
+
+    if (
+      e.clientX >= posterImgRect.left &&
+      e.clientX <= posterImgRect.right &&
+      e.clientY >= posterImgRect.top &&
+      e.clientY <= posterImgRect.bottom
+    ) {
+      targetImg = posterImg;
+    } else if (
+      e.clientX >= posterFeedRect.left &&
+      e.clientX <= posterFeedRect.right &&
+      e.clientY >= posterFeedRect.top &&
+      e.clientY <= posterFeedRect.bottom
+    ) {
+      targetImg = posterFeed;
+    }
   }
-  comicColorPreview.style.display = "block";
-  comicColorPreview.style.left = e.pageX + 20 + "px";
-  comicColorPreview.style.top = e.pageY - 24 + "px";
 
-  if (posterFeed.naturalWidth && posterFeed.naturalHeight) {
-    const canvas = document.createElement("canvas");
-    canvas.width = posterFeed.naturalWidth;
-    canvas.height = posterFeed.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(
-      posterFeed,
-      0,
-      0,
-      posterFeed.naturalWidth,
-      posterFeed.naturalHeight
-    );
-    const rect = posterFeed.getBoundingClientRect();
-    const x = Math.round(
-      (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
-    );
-    const y = Math.round(
-      (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
-    );
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-    comicColorPreview.style.background = hex;
+  if (
+    targetImg &&
+    targetImg.naturalWidth &&
+    targetImg.naturalHeight &&
+    targetImg.src
+  ) {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = targetImg.naturalWidth;
+      canvas.height = targetImg.naturalHeight;
+      const ctx = canvas.getContext("2d");
+
+      ctx.drawImage(
+        targetImg,
+        0,
+        0,
+        targetImg.naturalWidth,
+        targetImg.naturalHeight
+      );
+
+      const rect = targetImg.getBoundingClientRect();
+      const x = Math.max(
+        0,
+        Math.min(
+          Math.round(
+            (e.clientX - rect.left) * (targetImg.naturalWidth / rect.width)
+          ),
+          targetImg.naturalWidth - 1
+        )
+      );
+      const y = Math.max(
+        0,
+        Math.min(
+          Math.round(
+            (e.clientY - rect.top) * (targetImg.naturalHeight / rect.height)
+          ),
+          targetImg.naturalHeight - 1
+        )
+      );
+
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+      comicColorPreview.style.background = hex;
+    } catch (error) {
+      console.warn("Error al obtener color del pixel:", error);
+      comicColorPreview.style.background = "#ffffff";
+    }
+  } else {
+    comicColorPreview.style.background = "#ffffff";
   }
 }
 
@@ -1627,6 +1650,8 @@ comicTextPicker.addEventListener("input", (e) => {
 document
   .getElementById("activateEyedropperBg")
   .addEventListener("click", (e) => {
+    cleanupComicEyedropperEvents();
+
     comicEyedropperActive = true;
     comicEyedropperTarget = comicBgPicker;
 
@@ -1641,6 +1666,8 @@ document
 document
   .getElementById("activateEyedropperBorder")
   .addEventListener("click", (e) => {
+    cleanupComicEyedropperEvents();
+
     comicEyedropperActive = true;
     comicEyedropperTarget = comicBorderPicker;
     posterImg.style.cursor = "crosshair";
@@ -1654,6 +1681,8 @@ document
 document
   .getElementById("activateEyedropperText")
   .addEventListener("click", (e) => {
+    cleanupComicEyedropperEvents();
+
     comicEyedropperActive = true;
     comicEyedropperTarget = comicTextPicker;
     posterImg.style.cursor = "crosshair";
@@ -1668,44 +1697,52 @@ document
 posterImg.addEventListener("click", (e) => {
   if (comicEyedropperActive && comicEyedropperTarget && posterImg.src) {
     e.stopPropagation();
-    var comicColorPreview = document.getElementById("comic-color-preview");
-    if (comicColorPreview) {
-      comicColorPreview.style.display = "none";
+
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = posterImg.naturalWidth;
+      canvas.height = posterImg.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(
+        posterImg,
+        0,
+        0,
+        posterImg.naturalWidth,
+        posterImg.naturalHeight
+      );
+
+      const rect = posterImg.getBoundingClientRect();
+      const x = Math.max(
+        0,
+        Math.min(
+          Math.round(
+            (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
+          ),
+          posterImg.naturalWidth - 1
+        )
+      );
+      const y = Math.max(
+        0,
+        Math.min(
+          Math.round(
+            (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+          ),
+          posterImg.naturalHeight - 1
+        )
+      );
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+
+      lastComicEyedropperColor = hex;
+      updateComicLastColorSquare();
+
+      comicEyedropperTarget.value = hex;
+      comicEyedropperTarget.dispatchEvent(new Event("input"));
+    } catch (error) {
+      console.warn("Error al obtener color del pixel:", error);
     }
-    posterImg.removeEventListener("mousemove", comicEyedropperMoveHandler);
 
-    const canvas = document.createElement("canvas");
-    canvas.width = posterImg.naturalWidth;
-    canvas.height = posterImg.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(
-      posterImg,
-      0,
-      0,
-      posterImg.naturalWidth,
-      posterImg.naturalHeight
-    );
-
-    const rect = posterImg.getBoundingClientRect();
-    const x = Math.round(
-      (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
-    );
-    const y = Math.round(
-      (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
-    );
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-
-    lastComicEyedropperColor = hex;
-    updateComicLastColorSquare();
-
-    comicEyedropperTarget.value = hex;
-    comicEyedropperTarget.dispatchEvent(new Event("input"));
-
-    posterImg.style.cursor = "";
-    document.body.style.cursor = "";
-    comicEyedropperActive = false;
-    comicEyedropperTarget = null;
+    cleanupComicEyedropperEvents();
     return;
   }
 });
@@ -1713,44 +1750,52 @@ posterImg.addEventListener("click", (e) => {
 posterFeed.addEventListener("click", (e) => {
   if (comicEyedropperActive && comicEyedropperTarget && posterFeed.src) {
     e.stopPropagation();
-    var comicColorPreview = document.getElementById("comic-color-preview");
-    if (comicColorPreview) {
-      comicColorPreview.style.display = "none";
+
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = posterFeed.naturalWidth;
+      canvas.height = posterFeed.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(
+        posterFeed,
+        0,
+        0,
+        posterFeed.naturalWidth,
+        posterFeed.naturalHeight
+      );
+
+      const rect = posterFeed.getBoundingClientRect();
+      const x = Math.max(
+        0,
+        Math.min(
+          Math.round(
+            (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
+          ),
+          posterFeed.naturalWidth - 1
+        )
+      );
+      const y = Math.max(
+        0,
+        Math.min(
+          Math.round(
+            (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
+          ),
+          posterFeed.naturalHeight - 1
+        )
+      );
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+
+      lastComicEyedropperColor = hex;
+      updateComicLastColorSquare();
+
+      comicEyedropperTarget.value = hex;
+      comicEyedropperTarget.dispatchEvent(new Event("input"));
+    } catch (error) {
+      console.warn("Error al obtener color del pixel:", error);
     }
-    posterFeed.removeEventListener("mousemove", comicEyedropperMoveHandler);
 
-    const canvas = document.createElement("canvas");
-    canvas.width = posterFeed.naturalWidth;
-    canvas.height = posterFeed.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(
-      posterFeed,
-      0,
-      0,
-      posterFeed.naturalWidth,
-      posterFeed.naturalHeight
-    );
-
-    const rect = posterFeed.getBoundingClientRect();
-    const x = Math.round(
-      (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
-    );
-    const y = Math.round(
-      (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
-    );
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-
-    lastComicEyedropperColor = hex;
-    updateComicLastColorSquare();
-
-    comicEyedropperTarget.value = hex;
-    comicEyedropperTarget.dispatchEvent(new Event("input"));
-
-    posterFeed.style.cursor = "";
-    document.body.style.cursor = "";
-    comicEyedropperActive = false;
-    comicEyedropperTarget = null;
+    cleanupComicEyedropperEvents();
     return;
   }
 });
@@ -1771,6 +1816,17 @@ document.addEventListener("mousedown", (e) => {
     !contextMenu.contains(e.target)
   ) {
     contextMenu.style.display = "none";
+  }
+
+  if (
+    comicEyedropperActive &&
+    e.target !== posterImg &&
+    e.target !== posterFeed &&
+    !posterImg.contains(e.target) &&
+    !posterFeed.contains(e.target) &&
+    !e.target.closest("#comicColorPickerPanel")
+  ) {
+    cleanupComicEyedropperEvents();
   }
 });
 
@@ -2238,6 +2294,7 @@ document
   .addEventListener("input", (e) => {
     document.getElementById("flyer-date").style.fontSize =
       e.target.value + "px";
+    console.log("Aplicado tamaño fecha Story:", e.target.value + "px");
   });
 
 document
@@ -2245,6 +2302,7 @@ document
   .addEventListener("input", (e) => {
     document.getElementById("flyer-hour").style.fontSize =
       e.target.value + "px";
+    console.log("Aplicado tamaño hora Story:", e.target.value + "px");
   });
 
 document
@@ -2272,6 +2330,7 @@ document
   .addEventListener("input", (e) => {
     document.getElementById("flyer-date-feed").style.fontSize =
       e.target.value + "px";
+    console.log("Aplicado tamaño fecha Feed:", e.target.value + "px");
   });
 
 document
@@ -2306,6 +2365,7 @@ document
   .addEventListener("input", (e) => {
     document.getElementById("flyer-hour-feed").style.fontSize =
       e.target.value + "px";
+    console.log("Aplicado tamaño hora Feed:", e.target.value + "px");
   });
 
 document.getElementById("rectWidthInputFeed").addEventListener("input", (e) => {
@@ -3071,3 +3131,1088 @@ document
       }
     });
   });
+
+function exportUserData() {
+  const userData = {
+    selectedMovie: {
+      id: window.selectedMovieId || null,
+      title: document.getElementById("title").textContent,
+      year: document.getElementById("year").textContent,
+      director: document.getElementById("director").textContent,
+      duration: document.getElementById("duracion").textContent,
+      synopsis: {
+        story: document.getElementById("sinapsis-review").textContent,
+        feed: document.getElementById("sinapsis-review-feed").textContent,
+      },
+      origin: {
+        story: document.getElementById("origen-review").textContent,
+        feed: document.getElementById("origen-review-feed").textContent,
+      },
+      posterUrl: document.getElementById("poster").src,
+      ageRating: document.getElementById("edad-sugerida").textContent,
+    },
+
+    formData: {
+      ciclo: document.getElementById("cicloInput").value,
+      date: document.getElementById("dateInput").value,
+      hour: document.getElementById("hourInput").value,
+      title: document.getElementById("titleInput").value,
+      ageRating: document.getElementById("edadSugeridaInput").value,
+
+      cicloFeed: document.getElementById("cicloInputFeed").value,
+      dateFeed: document.getElementById("dateInputFeed").value,
+      hourFeed: document.getElementById("hourInputFeed").value,
+      titleFeed: document.getElementById("titleInputFeed").value,
+      ageRatingFeed: document.getElementById("edadSugeridaInputFeed").value,
+      titleReview: document.getElementById("titleInputReview").value,
+      synopsisReview: document.getElementById("sinapsisInputReview").value,
+      ageRatingReview: document.getElementById("edadSugeridaInputReview").value,
+      titleReviewFeed: document.getElementById("titleInputReviewFeed").value,
+      synopsisReviewFeed: document.getElementById("sinapsisInputReviewFeed")
+        .value,
+      ageRatingReviewFeed: document.getElementById(
+        "edadSugeridaInputReviewFeed"
+      ).value,
+    },
+
+    designSettings: {
+      colors: extractElementColors(),
+
+      fontSizes: {
+        flyerDate: document.getElementById("flyerDateFontSizeInput").value,
+        flyerHour: document.getElementById("flyerHourFontSizeInput").value,
+        flyerTitle: document.getElementById("flyerTitleFontSizeInput").value,
+        flyerTitleMarginTop: document.getElementById("flyerTitleMarginTopInput")
+          .value,
+        flyerTitleFeed: document.getElementById("flyerTitleFontSizeInputFeed")
+          .value,
+        flyerYearFeed: document.getElementById("flyerYearFontSizeInputFeed")
+          .value,
+        flyerDateFeed: document.getElementById("flyerDateFontSizeInputFeed")
+          .value,
+        flyerHourFeed: document.getElementById("flyerHourFontSizeInputFeed")
+          .value,
+        flyerTitleReview: document.getElementById(
+          "flyerTitleFontSizeInputReview"
+        ).value,
+        flyerSynopsisStory: document.getElementById(
+          "flyerSynopsisFontSizeInputStory"
+        ).value,
+        flyerSynopsisFeed: document.getElementById("flyerSynopsisFontSizeInput")
+          .value,
+      },
+
+      dimensions: {
+        rectWidth: document.getElementById("rectWidthInput").value,
+        rectWidthFeed: document.getElementById("rectWidthInputFeed").value,
+      },
+
+      rectHidden: rectHidden,
+      textStrokes: extractTextStrokes(),
+    },
+
+    images: {
+      currentBackdrop: currentBackdrop,
+      currentPoster: currentPoster,
+      backdrops: backdrops.slice(0, 10),
+      posters: posters.slice(0, 10),
+
+      backgroundImages: {
+        story: extractBackgroundImage("flyer-blur-bg-story"),
+        feed: extractBackgroundImage("flyer-blur-bg-feed"),
+        review: extractBackgroundImage("flyer-blur-bg-review"),
+        reviewFeed: extractBackgroundImage("flyer-blur-bg-review-feed"),
+      },
+    },
+
+    comicBalloon: {
+      backgroundColor:
+        document.querySelector(".dialogo-comic").style.backgroundColor || "",
+      borderColor:
+        document.querySelector(".dialogo-comic").style.borderColor || "",
+      color: document.querySelector(".dialogo-comic").style.color || "",
+      tailBackgroundColor: extractComicTailColor("comic-tail-bg-style"),
+      tailBorderColor: extractComicTailColor("comic-tail-border-style"),
+    },
+
+    exportDate: new Date().toISOString(),
+    version: "1.0",
+  };
+
+  const dataStr = JSON.stringify(userData, null, 2);
+  const dataBlob = new Blob([dataStr], { type: "application/json" });
+
+  const link = document.createElement("a");
+  const movieTitle =
+    userData.selectedMovie.title
+      .replace(/[^\w\s]/gi, "")
+      .replace(/\s+/g, "_") || "flyer";
+  const filename = `${movieTitle}_datos_${new Date()
+    .toISOString()
+    .slice(0, 10)}.json`;
+
+  link.href = URL.createObjectURL(dataBlob);
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  console.log("Datos exportados exitosamente:", filename);
+}
+
+function extractElementColors() {
+  const elements = [
+    "header",
+    "header-feed",
+    "header-review",
+    "header-review-feed",
+    "title",
+    "title-feed",
+    "title-review",
+    "title-review-feed",
+    "year",
+    "year-feed",
+    "year-review",
+    "year-review-feed",
+    "director",
+    "director-feed",
+    "director-review",
+    "director-review-feed",
+    "duracion",
+    "duracion-feed",
+    "duracion-review",
+    "duracion-review-feed",
+    "flyer-date",
+    "flyer-date-feed",
+    "flyer-hour",
+    "flyer-hour-feed",
+    "flyer-biblioteca",
+    "flyer-biblioteca-feed",
+    "org",
+    "org-feed",
+    "org-review",
+    "org-review-feed",
+    "ciclo",
+    "ciclo-feed",
+    "sinapsis-review",
+    "sinapsis-review-feed",
+    "origen-review",
+    "origen-review-feed",
+  ];
+
+  const colors = {};
+  elements.forEach((id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      colors[id] = {
+        color: element.style.color || "",
+        backgroundColor: element.style.backgroundColor || "",
+      };
+    }
+  });
+
+  const classElements = [
+    { selector: ".rect", name: "rect" },
+    { selector: ".rect-feed", name: "rect-feed" },
+    { selector: ".rect2", name: "rect2" },
+    { selector: ".rect2-feed", name: "rect2-feed" },
+    { selector: ".rect2-review", name: "rect2-review" },
+    { selector: ".rect2-review-feed", name: "rect2-review-feed" },
+    { selector: ".tape", name: "tape" },
+  ];
+
+  classElements.forEach(({ selector, name }) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      colors[name] = {
+        color: element.style.color || "",
+        backgroundColor: element.style.backgroundColor || "",
+      };
+    }
+  });
+
+  return colors;
+}
+
+function extractTextStrokes() {
+  const elements = [
+    "header",
+    "header-feed",
+    "header-review",
+    "header-review-feed",
+    "title",
+    "title-feed",
+    "title-review",
+    "title-review-feed",
+    "year",
+    "year-feed",
+    "year-review",
+    "year-review-feed",
+    "director",
+    "director-feed",
+    "director-review",
+    "director-review-feed",
+    "duracion",
+    "duracion-feed",
+    "duracion-review",
+    "duracion-review-feed",
+    "flyer-date",
+    "flyer-date-feed",
+    "flyer-hour",
+    "flyer-hour-feed",
+    "flyer-biblioteca",
+    "flyer-biblioteca-feed",
+    "sinapsis-review",
+    "sinapsis-review-feed",
+    "origen-review",
+    "origen-review-feed",
+  ];
+
+  const strokes = {};
+  elements.forEach((id) => {
+    const element = document.getElementById(id);
+    if (element && element.style.textShadow) {
+      strokes[id] = element.style.textShadow;
+    }
+  });
+
+  return strokes;
+}
+
+function extractBackgroundImage(elementId) {
+  const element = document.getElementById(elementId);
+  if (element && element.style.backgroundImage) {
+    const bgImage = element.style.backgroundImage;
+    const match = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+    return match ? match[1] : "";
+  }
+  return "";
+}
+
+function extractComicTailColor(styleElementId) {
+  const styleElement = document.getElementById(styleElementId);
+  if (styleElement && styleElement.textContent) {
+    const colorMatch = styleElement.textContent.match(
+      /border-top-color:\s*([^;\s]+)/
+    );
+    return colorMatch ? colorMatch[1].trim() : "";
+  }
+  return "";
+}
+
+function importUserData(file) {
+  if (file.size > 10 * 1024 * 1024) {
+    alert("El archivo es demasiado grande. El tamaño max: 10MB");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    try {
+      let userData;
+
+      try {
+        userData = JSON.parse(e.target.result);
+      } catch (parseError) {
+        throw new Error("El archivo no contiene JSON válido.");
+      }
+      const backupData = createCurrentStateBackup();
+      const validatedData = validateUserData(userData);
+
+      console.log("Importando datos de usuario:", validatedData);
+
+      try {
+        restoreMovieData(validatedData.selectedMovie);
+        restoreFormData(validatedData.formData);
+        restoreDesignSettings(validatedData.designSettings);
+        restoreImages(validatedData.images);
+        restoreComicBalloon(validatedData.comicBalloon);
+      } catch (restoreError) {
+        console.error("Error durante la restauración:", restoreError);
+
+        try {
+          restoreFromBackup(backupData);
+          alert(
+            "Error durante la importación: " +
+              restoreError.message +
+              "\n\nSe ha restaurado la configuración anterior."
+          );
+        } catch (backupError) {
+          console.error("Error al restaurar respaldo:", backupError);
+          alert("Error crítico durante la importación, recargar la página.");
+        }
+      }
+    } catch (error) {
+      console.error("Error al importar datos:", error);
+    }
+  };
+
+  reader.onerror = function () {
+    alert("Error al leer el archivo. Por favor intenta de nuevo.");
+  };
+
+  reader.readAsText(file);
+}
+
+function createCurrentStateBackup() {
+  try {
+    return {
+      selectedMovieId: window.selectedMovieId,
+      backdrops: [...(backdrops || [])],
+      posters: [...(posters || [])],
+      currentBackdrop: currentBackdrop,
+      currentPoster: currentPoster,
+      rectHidden: rectHidden,
+    };
+  } catch (error) {
+    console.warn("No se pudo crear respaldo del estado actual:", error);
+    return null;
+  }
+}
+
+function restoreFromBackup(backupData) {
+  if (!backupData) return;
+
+  try {
+    window.selectedMovieId = backupData.selectedMovieId;
+    backdrops = backupData.backdrops || [];
+    posters = backupData.posters || [];
+    currentBackdrop = backupData.currentBackdrop || 0;
+    currentPoster = backupData.currentPoster || 0;
+    rectHidden = backupData.rectHidden || false;
+  } catch (error) {
+    console.error("Error al restaurar respaldo:", error);
+    throw error;
+  }
+}
+
+function validateUserData(userData) {
+  try {
+    if (!userData || typeof userData !== "object") {
+      throw new Error("El archivo no contiene un objeto JSON válido");
+    }
+
+    if (!userData.version) {
+      throw new Error(
+        "El archivo no tiene información de versión. Puede ser un archivo incompatible"
+      );
+    }
+
+    if (!userData.selectedMovie || typeof userData.selectedMovie !== "object") {
+      throw new Error("Faltan datos de la película seleccionada");
+    }
+
+    if (!userData.formData || typeof userData.formData !== "object") {
+      throw new Error("Faltan datos de formularios");
+    }
+
+    if (
+      !userData.designSettings ||
+      typeof userData.designSettings !== "object"
+    ) {
+      throw new Error("Faltan configuraciones de diseño");
+    }
+
+    if (!userData.images || typeof userData.images !== "object") {
+      throw new Error("Faltan datos de imágenes");
+    }
+
+    if (
+      userData.selectedMovie.posterUrl &&
+      userData.selectedMovie.posterUrl !== ""
+    ) {
+      if (!isValidUrl(userData.selectedMovie.posterUrl)) {
+        console.warn("URL de poster no válida, se omitirá");
+        userData.selectedMovie.posterUrl = "";
+      }
+    }
+
+    if (userData.images.backgroundImages) {
+      Object.keys(userData.images.backgroundImages).forEach((key) => {
+        const url = userData.images.backgroundImages[key];
+        if (url && !isValidUrl(url)) {
+          console.warn(
+            `URL de imagen de fondo no válida para ${key}, se omitirá`
+          );
+          userData.images.backgroundImages[key] = "";
+        }
+      });
+    }
+
+    if (
+      userData.images.backdrops &&
+      !Array.isArray(userData.images.backdrops)
+    ) {
+      console.warn("Array de backdrops no válido, se inicializará vacío");
+      userData.images.backdrops = [];
+    }
+
+    if (userData.images.posters && !Array.isArray(userData.images.posters)) {
+      console.warn("Array de posters no válido, se inicializará vacío");
+      userData.images.posters = [];
+    }
+
+    userData = sanitizeUserData(userData);
+
+    return userData;
+  } catch (error) {
+    throw new Error("Validación falló: " + error.message);
+  }
+}
+
+function isValidUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.protocol === "http:" || urlObj.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function sanitizeUserData(userData) {
+  function sanitizeString(str) {
+    if (typeof str !== "string") return str;
+    return str
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      .replace(/javascript:/gi, "")
+      .replace(/on\w+\s*=/gi, "");
+  }
+
+  if (userData.selectedMovie) {
+    ["title", "director", "duration"].forEach((field) => {
+      if (userData.selectedMovie[field]) {
+        userData.selectedMovie[field] = sanitizeString(
+          userData.selectedMovie[field]
+        );
+      }
+    });
+
+    if (userData.selectedMovie.synopsis) {
+      ["story", "feed"].forEach((field) => {
+        if (userData.selectedMovie.synopsis[field]) {
+          userData.selectedMovie.synopsis[field] = sanitizeString(
+            userData.selectedMovie.synopsis[field]
+          );
+        }
+      });
+    }
+
+    if (userData.selectedMovie.origin) {
+      ["story", "feed"].forEach((field) => {
+        if (userData.selectedMovie.origin[field]) {
+          userData.selectedMovie.origin[field] = sanitizeString(
+            userData.selectedMovie.origin[field]
+          );
+        }
+      });
+    }
+  }
+
+  if (userData.formData) {
+    Object.keys(userData.formData).forEach((key) => {
+      if (typeof userData.formData[key] === "string") {
+        userData.formData[key] = sanitizeString(userData.formData[key]);
+      }
+    });
+  }
+
+  return userData;
+}
+
+function restoreMovieData(movieData) {
+  if (!movieData) return;
+
+  if (movieData.id) {
+    window.selectedMovieId = movieData.id;
+  }
+
+  if (movieData.title) {
+    document.getElementById("title").innerHTML = movieData.title.replace(
+      /\n/g,
+      "<br>"
+    );
+    document.getElementById("title-feed").innerHTML = movieData.title.replace(
+      /\n/g,
+      "<br>"
+    );
+    document.getElementById("title-review").innerHTML = movieData.title.replace(
+      /\n/g,
+      "<br>"
+    );
+    document.getElementById("title-review-feed").innerHTML =
+      movieData.title.replace(/\n/g, "<br>");
+  }
+
+  if (movieData.year) {
+    document.getElementById("year").textContent = movieData.year;
+    document.getElementById("year-feed").textContent = movieData.year;
+    document.getElementById("year-review").textContent = movieData.year;
+    document.getElementById("year-review-feed").textContent = movieData.year;
+  }
+
+  if (movieData.director) {
+    document.getElementById("director").textContent = movieData.director;
+    document.getElementById("director-feed").textContent = movieData.director;
+    document.getElementById("director-review").textContent = movieData.director;
+    document.getElementById("director-review-feed").textContent =
+      movieData.director;
+  }
+
+  if (movieData.duration) {
+    document.getElementById("duracion").textContent = movieData.duration;
+    document.getElementById("duracion-feed").textContent = movieData.duration;
+    document.getElementById("duracion-review").textContent = movieData.duration;
+    document.getElementById("duracion-review-feed").textContent =
+      movieData.duration;
+  }
+
+  if (movieData.synopsis) {
+    if (movieData.synopsis.story) {
+      document.getElementById("sinapsis-review").innerHTML =
+        movieData.synopsis.story.replace(/\n/g, "<br>");
+    }
+    if (movieData.synopsis.feed) {
+      document.getElementById("sinapsis-review-feed").innerHTML =
+        movieData.synopsis.feed.replace(/\n/g, "<br>");
+    }
+  }
+
+  if (movieData.origin) {
+    if (movieData.origin.story) {
+      document.getElementById("origen-review").textContent =
+        movieData.origin.story;
+    }
+    if (movieData.origin.feed) {
+      document.getElementById("origen-review-feed").textContent =
+        movieData.origin.feed;
+    }
+  }
+
+  if (movieData.posterUrl && movieData.posterUrl !== "") {
+    setPoster(movieData.posterUrl);
+  }
+
+  if (movieData.ageRating) {
+    const edadElements = [
+      document.getElementById("edad-sugerida"),
+      document.getElementById("edad-sugerida-feed"),
+      document.getElementById("edad-sugerida-review"),
+      document.getElementById("edad-sugerida-review-feed"),
+    ];
+
+    edadElements.forEach((el) => {
+      if (el) {
+        el.textContent = movieData.ageRating;
+        el.style.display = "inline-block";
+
+        if (movieData.ageRating === "ATP") {
+          el.style.backgroundColor = "#4CAF50";
+          el.style.color = "white";
+        } else if (
+          movieData.ageRating === "+13" ||
+          movieData.ageRating === "SAM 13"
+        ) {
+          el.style.backgroundColor = "#2196F3";
+          el.style.color = "white";
+        } else if (
+          movieData.ageRating === "+16" ||
+          movieData.ageRating === "SAM 16"
+        ) {
+          el.style.backgroundColor = "#FF9800";
+          el.style.color = "white";
+        } else if (
+          movieData.ageRating === "+18" ||
+          movieData.ageRating === "SAM 18"
+        ) {
+          el.style.backgroundColor = "#f44336";
+          el.style.color = "white";
+        } else {
+          el.style.backgroundColor = "#777";
+          el.style.color = "white";
+        }
+      }
+    });
+  }
+}
+
+function restoreFormData(formData) {
+  if (!formData) return;
+
+  const formFields = [
+    { id: "cicloInput", value: formData.ciclo },
+    { id: "dateInput", value: formData.date },
+    { id: "hourInput", value: formData.hour },
+    { id: "titleInput", value: formData.title },
+    { id: "edadSugeridaInput", value: formData.ageRating },
+    { id: "cicloInputFeed", value: formData.cicloFeed },
+    { id: "dateInputFeed", value: formData.dateFeed },
+    { id: "hourInputFeed", value: formData.hourFeed },
+    { id: "titleInputFeed", value: formData.titleFeed },
+    { id: "edadSugeridaInputFeed", value: formData.ageRatingFeed },
+    { id: "titleInputReview", value: formData.titleReview },
+    { id: "sinapsisInputReview", value: formData.synopsisReview },
+    { id: "edadSugeridaInputReview", value: formData.ageRatingReview },
+    { id: "titleInputReviewFeed", value: formData.titleReviewFeed },
+    { id: "sinapsisInputReviewFeed", value: formData.synopsisReviewFeed },
+    { id: "edadSugeridaInputReviewFeed", value: formData.ageRatingReviewFeed },
+  ];
+
+  formFields.forEach((field) => {
+    if (field.value !== undefined && field.value !== null) {
+      const element = document.getElementById(field.id);
+      if (element) {
+        element.value = field.value;
+      }
+    }
+  });
+
+  if (formData.ciclo) {
+    document.getElementById("ciclo").textContent = formData.ciclo;
+    document.getElementById("ciclo-feed").textContent = formData.ciclo;
+  }
+
+  if (formData.date) {
+    const formattedDate = formatDateToSpanish(formData.date);
+    document.getElementById("flyer-date").innerHTML = formattedDate;
+    document.getElementById("flyer-date-feed").innerHTML = formattedDate;
+  }
+
+  if (formData.hour) {
+    const formattedHour = `${formData.hour} HS`;
+    document.getElementById("flyer-hour").textContent = formattedHour;
+    document.getElementById("flyer-hour-feed").textContent = formattedHour;
+  }
+}
+
+function formatDateToSpanish(dateStr) {
+  if (!dateStr) return "";
+  const dias = [
+    "DOMINGO",
+    "LUNES",
+    "MARTES",
+    "MIÉRCOLES",
+    "JUEVES",
+    "VIERNES",
+    "SÁBADO",
+  ];
+  const meses = [
+    "ENERO",
+    "FEBRERO",
+    "MARZO",
+    "ABRIL",
+    "MAYO",
+    "JUNIO",
+    "JULIO",
+    "AGOSTO",
+    "SEPTIEMBRE",
+    "OCTUBRE",
+    "NOVIEMBRE",
+    "DICIEMBRE",
+  ];
+
+  const [year, month, day] = dateStr.split("-");
+  const d = new Date(year, month - 1, day);
+  if (isNaN(d)) return dateStr;
+  return `${dias[d.getDay()]} ${d.getDate()} DE ${meses[d.getMonth()]}`;
+}
+
+function restoreDesignSettings(designSettings) {
+  if (!designSettings) return;
+
+  if (designSettings.colors) {
+    Object.keys(designSettings.colors).forEach((elementKey) => {
+      const colorData = designSettings.colors[elementKey];
+      let element;
+
+      if (
+        elementKey.startsWith(".") ||
+        [
+          "rect",
+          "rect-feed",
+          "rect2",
+          "rect2-feed",
+          "rect2-review",
+          "rect2-review-feed",
+          "tape",
+        ].includes(elementKey)
+      ) {
+        const selector = elementKey.startsWith(".")
+          ? elementKey
+          : `.${elementKey}`;
+        element = document.querySelector(selector);
+      } else {
+        element = document.getElementById(elementKey);
+      }
+
+      if (element && colorData) {
+        if (colorData.color) element.style.color = colorData.color;
+        if (colorData.backgroundColor)
+          element.style.backgroundColor = colorData.backgroundColor;
+      }
+    });
+  }
+
+  if (designSettings.fontSizes) {
+    const fontSizeFields = [
+      {
+        id: "flyerDateFontSizeInput",
+        value: designSettings.fontSizes.flyerDate,
+      },
+      {
+        id: "flyerHourFontSizeInput",
+        value: designSettings.fontSizes.flyerHour,
+      },
+      {
+        id: "flyerTitleFontSizeInput",
+        value: designSettings.fontSizes.flyerTitle,
+      },
+      {
+        id: "flyerTitleMarginTopInput",
+        value: designSettings.fontSizes.flyerTitleMarginTop,
+      },
+      {
+        id: "flyerTitleFontSizeInputFeed",
+        value: designSettings.fontSizes.flyerTitleFeed,
+      },
+      {
+        id: "flyerYearFontSizeInputFeed",
+        value: designSettings.fontSizes.flyerYearFeed,
+      },
+      {
+        id: "flyerDateFontSizeInputFeed",
+        value: designSettings.fontSizes.flyerDateFeed,
+      },
+      {
+        id: "flyerHourFontSizeInputFeed",
+        value: designSettings.fontSizes.flyerHourFeed,
+      },
+      {
+        id: "flyerTitleFontSizeInputReview",
+        value: designSettings.fontSizes.flyerTitleReview,
+      },
+      {
+        id: "flyerSynopsisFontSizeInputStory",
+        value: designSettings.fontSizes.flyerSynopsisStory,
+      },
+      {
+        id: "flyerSynopsisFontSizeInput",
+        value: designSettings.fontSizes.flyerSynopsisFeed,
+      },
+    ];
+
+    fontSizeFields.forEach((field) => {
+      if (
+        field.value !== undefined &&
+        field.value !== null &&
+        field.value !== ""
+      ) {
+        const element = document.getElementById(field.id);
+        if (element) {
+          console.log(`Restaurando ${field.id}: ${field.value}px`);
+          element.value = field.value;
+          element.dispatchEvent(new Event("input"));
+
+          setTimeout(() => {
+            console.log(
+              `Verificación ${field.id}: valor=${element.value}, aplicado=${element.value}px`
+            );
+          }, 50);
+        } else {
+          console.warn(`No se encontró el elemento: ${field.id}`);
+        }
+      }
+    });
+  }
+
+  if (designSettings.dimensions) {
+    if (designSettings.dimensions.rectWidth) {
+      const rectWidthInput = document.getElementById("rectWidthInput");
+      if (rectWidthInput) {
+        rectWidthInput.value = designSettings.dimensions.rectWidth;
+        rectWidthInput.dispatchEvent(new Event("input"));
+      }
+    }
+    if (designSettings.dimensions.rectWidthFeed) {
+      const rectWidthFeedInput = document.getElementById("rectWidthInputFeed");
+      if (rectWidthFeedInput) {
+        rectWidthFeedInput.value = designSettings.dimensions.rectWidthFeed;
+        rectWidthFeedInput.dispatchEvent(new Event("input"));
+      }
+    }
+  }
+
+  if (designSettings.rectHidden !== undefined) {
+    rectHidden = designSettings.rectHidden;
+    const rect = document.querySelector(".rect");
+    const rectFeed = document.querySelector(".rect-feed");
+    const toggleBtn = document.getElementById("toggle-rect");
+
+    if (rect && rectFeed && toggleBtn) {
+      rect.style.display = rectHidden ? "none" : "block";
+      rectFeed.style.display = rectHidden ? "none" : "block";
+      toggleBtn.textContent = rectHidden
+        ? "Mostrar rectángulo vertical"
+        : "Ocultar rectángulo vertical";
+    }
+  }
+
+  if (designSettings.textStrokes) {
+    Object.keys(designSettings.textStrokes).forEach((elementId) => {
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.style.textShadow = designSettings.textStrokes[elementId];
+      }
+    });
+  }
+}
+
+function restoreImages(imagesData) {
+  if (!imagesData) return;
+
+  if (imagesData.backdrops && Array.isArray(imagesData.backdrops)) {
+    backdrops = [...imagesData.backdrops];
+    if (typeof imagesData.currentBackdrop === "number") {
+      currentBackdrop = Math.min(
+        imagesData.currentBackdrop,
+        backdrops.length - 1
+      );
+    }
+    if (backdrops.length > 0) {
+      showBackdrop(currentBackdrop);
+    }
+  }
+
+  if (imagesData.posters && Array.isArray(imagesData.posters)) {
+    posters = [...imagesData.posters];
+    if (typeof imagesData.currentPoster === "number") {
+      currentPoster = Math.min(imagesData.currentPoster, posters.length - 1);
+    }
+    if (posters.length > 0) {
+      showPoster(currentPoster);
+    }
+  }
+
+  if (imagesData.backgroundImages) {
+    Object.keys(imagesData.backgroundImages).forEach((key) => {
+      const imageUrl = imagesData.backgroundImages[key];
+      if (imageUrl) {
+        switch (key) {
+          case "story":
+            if (imageUrl) setBackdropAsBackground(imageUrl);
+            break;
+          case "feed":
+            if (imageUrl) setBackdropAsBackgroundFeed(imageUrl);
+            break;
+          case "review":
+            if (imageUrl) setBackdropAsBackgroundReview(imageUrl);
+            break;
+          case "reviewFeed":
+            if (imageUrl) setBackdropAsBackgroundReviewFeed(imageUrl);
+            break;
+        }
+      }
+    });
+  }
+}
+
+function restoreComicBalloon(comicData) {
+  if (!comicData) return;
+
+  const comicBalloon = document.querySelector(".dialogo-comic");
+  if (comicBalloon) {
+    if (comicData.backgroundColor) {
+      comicBalloon.style.backgroundColor = comicData.backgroundColor;
+      const bgPicker = document.getElementById("comicBgColorPicker");
+      if (bgPicker) bgPicker.value = comicData.backgroundColor;
+    }
+
+    if (comicData.borderColor) {
+      comicBalloon.style.borderColor = comicData.borderColor;
+      const borderPicker = document.getElementById("comicBorderColorPicker");
+      if (borderPicker) borderPicker.value = comicData.borderColor;
+    }
+
+    if (comicData.color) {
+      comicBalloon.style.color = comicData.color;
+      const textPicker = document.getElementById("comicTextColorPicker");
+      if (textPicker) textPicker.value = comicData.color;
+    }
+
+    if (comicData.tailBackgroundColor) {
+      restoreComicTailColor(
+        "comic-tail-bg-style",
+        comicData.tailBackgroundColor,
+        "background"
+      );
+    }
+
+    if (comicData.tailBorderColor) {
+      restoreComicTailColor(
+        "comic-tail-border-style",
+        comicData.tailBorderColor,
+        "border"
+      );
+    }
+  }
+}
+
+function restoreComicTailColor(styleElementId, color, type) {
+  let styleElement = document.getElementById(styleElementId);
+
+  if (!styleElement) {
+    styleElement = document.createElement("style");
+    styleElement.id = styleElementId;
+    document.head.appendChild(styleElement);
+  }
+
+  if (type === "background") {
+    styleElement.textContent = `.dialogo-comic::after { border-top-color: ${color} !important; }`;
+  } else if (type === "border") {
+    styleElement.textContent = `.comic-tail-border { border-top-color: ${color} !important; }`;
+  }
+}
+
+function handleFileImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (file.type !== "application/json" && !file.name.endsWith(".json")) {
+    alert(
+      "❌ El archivo no es un JSON válido. Por favor selecciona un archivo con extensión .json"
+    );
+    event.target.value = "";
+    return;
+  }
+
+  const fileInfo = `Datos del archivo cargado:
+• Nombre: ${file.name}
+• Tamaño: ${(file.size / 1024).toFixed(2)} KB
+• Última modificación: ${new Date(file.lastModified).toLocaleString()}`;
+
+  if (confirm(fileInfo)) {
+    const loadingIndicator = showLoadingIndicator("Importando datos...");
+
+    setTimeout(() => {
+      importUserData(file);
+      hideLoadingIndicator(loadingIndicator);
+    }, 100);
+  }
+
+  event.target.value = "";
+}
+
+function showLoadingIndicator(message) {
+  const indicator = document.createElement("div");
+  indicator.id = "loading-indicator";
+  indicator.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    z-index: 10001;
+    text-align: center;
+    font-size: 16px;
+  `;
+  indicator.innerHTML = `
+    <div style="margin-bottom: 10px;">Cargando</div>
+    <div>${message}</div>
+  `;
+  document.body.appendChild(indicator);
+  return indicator;
+}
+
+function hideLoadingIndicator(indicator) {
+  if (indicator && indicator.parentNode) {
+    indicator.parentNode.removeChild(indicator);
+  }
+}
+
+// Función auxiliar para obtener el fontsize
+function initializeControlValues() {
+  function getFontSizeInPx(element) {
+    if (!element) return null;
+    const computedStyle = window.getComputedStyle(element);
+    const fontSize = computedStyle.fontSize;
+    return parseInt(fontSize.replace("px", ""));
+  }
+
+  const flyerDate = document.getElementById("flyer-date");
+  const flyerHour = document.getElementById("flyer-hour");
+
+  if (flyerDate) {
+    const currentSize = getFontSizeInPx(flyerDate);
+    if (currentSize) {
+      const control = document.getElementById("flyerDateFontSizeInput");
+      if (control && control.value == "40") {
+        control.value = currentSize;
+      }
+    }
+  }
+
+  if (flyerHour) {
+    const currentSize = getFontSizeInPx(flyerHour);
+    if (currentSize) {
+      const control = document.getElementById("flyerHourFontSizeInput");
+      if (control && control.value == "45") {
+        control.value = currentSize;
+      }
+    }
+  }
+
+  const flyerDateFeed = document.getElementById("flyer-date-feed");
+  const flyerHourFeed = document.getElementById("flyer-hour-feed");
+
+  if (flyerDateFeed) {
+    const currentSize = getFontSizeInPx(flyerDateFeed);
+    if (currentSize) {
+      const control = document.getElementById("flyerDateFontSizeInputFeed");
+      if (control && control.value == "50") {
+        control.value = currentSize;
+      }
+    }
+  }
+
+  if (flyerHourFeed) {
+    const currentSize = getFontSizeInPx(flyerHourFeed);
+    if (currentSize) {
+      const control = document.getElementById("flyerHourFontSizeInputFeed");
+      if (control && control.value == "50") {
+        control.value = currentSize;
+      }
+    }
+  }
+
+  console.log("Valores de controles inicializados con CSS por defecto");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  initializeControlValues();
+
+  const exportBtn = document.getElementById("exportDataBtn");
+  if (exportBtn) {
+    exportBtn.addEventListener("click", function () {
+      try {
+        exportUserData();
+      } catch (error) {
+        console.error("Error al exportar datos:", error);
+        alert("Error al exportar los datos. Por favor intenta de nuevo.");
+      }
+    });
+  }
+
+  const importBtn = document.getElementById("importDataBtn");
+  const fileInput = document.getElementById("importFileInput");
+
+  if (importBtn && fileInput) {
+    importBtn.addEventListener("click", function () {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener("change", handleFileImport);
+  }
+});

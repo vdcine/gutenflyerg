@@ -24,12 +24,14 @@
         >
           Gutenflyerg de Veladas de Cine
         </h1>
-        <button
-          onclick="window.open('ciclos.html', '_blank')"
-          style="padding: 8px 16px"
-        >
-          Crear Ciclos
-        </button>
+        <div style="display: flex; gap: 10px">
+          <button
+            onclick="window.open('ciclos.html', '_blank')"
+            style="padding: 8px 16px"
+          >
+            Crear Ciclos
+          </button>
+        </div>
       </div>
       <div class="browsers-container">
         <div class="browser">
@@ -408,7 +410,7 @@
                   type="number"
                   min="10"
                   max="100"
-                  value="50"
+                  value="40"
                   style="width: 80px"
                 />
                 px
@@ -420,7 +422,7 @@
                   type="number"
                   min="10"
                   max="100"
-                  value="50"
+                  value="45"
                   style="width: 80px"
                 />
                 px
@@ -460,6 +462,28 @@
                   style="width: 80px"
                 />
                 px
+              </div>
+              <div class="import-export-buttons">
+                <button
+                  id="exportDataBtn"
+                  class="export-btn"
+                  title="Exportar toda la configuración actual como archivo JSON"
+                >
+                  📤 Exportar Datos
+                </button>
+                <button
+                  id="importDataBtn"
+                  class="import-btn"
+                  title="Importar configuración desde archivo JSON"
+                >
+                  📥 Importar Datos
+                </button>
+                <input
+                  type="file"
+                  id="importFileInput"
+                  accept=".json"
+                  style="display: none"
+                />
               </div>
             </div>
           </div>
