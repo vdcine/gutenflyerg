@@ -1327,6 +1327,7 @@ floatingColorPicker.addEventListener("blur", () => {
   document.getElementById("org-review"),
   document.getElementById("org-review-feed"),
   document.querySelector(".rect"),
+  document.querySelector(".rect2"),
   document.querySelector(".rect-feed"),
   document.querySelector(".rect2-feed"),
   document.querySelector(".rect2-review"),
@@ -2314,7 +2315,7 @@ document
 document
   .getElementById("flyerTitleMarginTopInput")
   .addEventListener("input", (e) => {
-    document.getElementById("flyer-main-group").style.marginTop =
+    document.querySelector(".flyer-main-group").style.marginTop =
       e.target.value + "px";
   });
 
@@ -2499,38 +2500,6 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
     });
   }
 
-  function formatDateToSpanish(dateStr) {
-    if (!dateStr) return "";
-    const dias = [
-      "DOMINGO",
-      "LUNES",
-      "MARTES",
-      "MIÉRCOLES",
-      "JUEVES",
-      "VIERNES",
-      "SÁBADO",
-    ];
-    const meses = [
-      "ENERO",
-      "FEBRERO",
-      "MARZO",
-      "ABRIL",
-      "MAYO",
-      "JUNIO",
-      "JULIO",
-      "AGOSTO",
-      "SEPTIEMBRE",
-      "OCTUBRE",
-      "NOVIEMBRE",
-      "DICIEMBRE",
-    ];
-
-    const [year, month, day] = dateStr.split("-");
-    const d = new Date(year, month - 1, day);
-    if (isNaN(d)) return dateStr;
-    return `${dias[d.getDay()]} ${d.getDate()} DE ${meses[d.getMonth()]}`;
-  }
-
   const formattedDate = formatDateToSpanish(dateRaw);
   document.getElementById("flyer-date").innerHTML = formattedDate;
   document.getElementById("flyer-date-feed").innerHTML = formattedDate;
@@ -2640,38 +2609,6 @@ document.getElementById("applyTxtBtnFeed").addEventListener("click", () => {
         }
       }
     });
-  }
-
-  function formatDateToSpanish(dateStr) {
-    if (!dateStr) return "";
-    const dias = [
-      "DOMINGO",
-      "LUNES",
-      "MARTES",
-      "MIÉRCOLES",
-      "JUEVES",
-      "VIERNES",
-      "SÁBADO",
-    ];
-    const meses = [
-      "ENERO",
-      "FEBRERO",
-      "MARZO",
-      "ABRIL",
-      "MAYO",
-      "JUNIO",
-      "JULIO",
-      "AGOSTO",
-      "SEPTIEMBRE",
-      "OCTUBRE",
-      "NOVIEMBRE",
-      "DICIEMBRE",
-    ];
-
-    const [year, month, day] = dateStr.split("-");
-    const d = new Date(year, month - 1, day);
-    if (isNaN(d)) return dateStr;
-    return `${dias[d.getDay()]} ${d.getDate()} DE ${meses[d.getMonth()]}`;
   }
 
   const formattedDate = formatDateToSpanish(dateRaw);
@@ -3133,6 +3070,7 @@ document
   });
 
 function exportUserData() {
+  const { colors, strokes } = extractElementColors();
   const userData = {
     selectedMovie: {
       id: window.selectedMovieId || null,
@@ -3176,8 +3114,6 @@ function exportUserData() {
     },
 
     designSettings: {
-      colors: extractElementColors(),
-
       fontSizes: {
         flyerDate: document.getElementById("flyerDateFontSizeInput").value,
         flyerHour: document.getElementById("flyerHourFontSizeInput").value,
@@ -3208,7 +3144,8 @@ function exportUserData() {
       },
 
       rectHidden: rectHidden,
-      textStrokes: extractTextStrokes(),
+      colors: colors,
+      textStrokes: strokes,
     },
 
     images: {
@@ -3311,6 +3248,14 @@ function extractElementColors() {
     }
   });
 
+  const strokes = {};
+  elements.forEach((id) => {
+    const element = document.getElementById(id);
+    if (element && element.style.textShadow) {
+      strokes[id] = element.style.textShadow;
+    }
+  });
+
   const classElements = [
     { selector: ".rect", name: "rect" },
     { selector: ".rect-feed", name: "rect-feed" },
@@ -3331,52 +3276,7 @@ function extractElementColors() {
     }
   });
 
-  return colors;
-}
-
-function extractTextStrokes() {
-  const elements = [
-    "header",
-    "header-feed",
-    "header-review",
-    "header-review-feed",
-    "title",
-    "title-feed",
-    "title-review",
-    "title-review-feed",
-    "year",
-    "year-feed",
-    "year-review",
-    "year-review-feed",
-    "director",
-    "director-feed",
-    "director-review",
-    "director-review-feed",
-    "duracion",
-    "duracion-feed",
-    "duracion-review",
-    "duracion-review-feed",
-    "flyer-date",
-    "flyer-date-feed",
-    "flyer-hour",
-    "flyer-hour-feed",
-    "flyer-biblioteca",
-    "flyer-biblioteca-feed",
-    "sinapsis-review",
-    "sinapsis-review-feed",
-    "origen-review",
-    "origen-review-feed",
-  ];
-
-  const strokes = {};
-  elements.forEach((id) => {
-    const element = document.getElementById(id);
-    if (element && element.style.textShadow) {
-      strokes[id] = element.style.textShadow;
-    }
-  });
-
-  return strokes;
+  return { colors, strokes };
 }
 
 function extractBackgroundImage(elementId) {
@@ -3417,7 +3317,6 @@ function importUserData(file) {
       } catch (parseError) {
         throw new Error("El archivo no contiene JSON válido.");
       }
-      const backupData = createCurrentStateBackup();
       const validatedData = validateUserData(userData);
 
       console.log("Importando datos de usuario:", validatedData);
@@ -3430,18 +3329,6 @@ function importUserData(file) {
         restoreComicBalloon(validatedData.comicBalloon);
       } catch (restoreError) {
         console.error("Error durante la restauración:", restoreError);
-
-        try {
-          restoreFromBackup(backupData);
-          alert(
-            "Error durante la importación: " +
-              restoreError.message +
-              "\n\nSe ha restaurado la configuración anterior."
-          );
-        } catch (backupError) {
-          console.error("Error al restaurar respaldo:", backupError);
-          alert("Error crítico durante la importación, recargar la página.");
-        }
       }
     } catch (error) {
       console.error("Error al importar datos:", error);
@@ -3453,38 +3340,6 @@ function importUserData(file) {
   };
 
   reader.readAsText(file);
-}
-
-function createCurrentStateBackup() {
-  try {
-    return {
-      selectedMovieId: window.selectedMovieId,
-      backdrops: [...(backdrops || [])],
-      posters: [...(posters || [])],
-      currentBackdrop: currentBackdrop,
-      currentPoster: currentPoster,
-      rectHidden: rectHidden,
-    };
-  } catch (error) {
-    console.warn("No se pudo crear respaldo del estado actual:", error);
-    return null;
-  }
-}
-
-function restoreFromBackup(backupData) {
-  if (!backupData) return;
-
-  try {
-    window.selectedMovieId = backupData.selectedMovieId;
-    backdrops = backupData.backdrops || [];
-    posters = backupData.posters || [];
-    currentBackdrop = backupData.currentBackdrop || 0;
-    currentPoster = backupData.currentPoster || 0;
-    rectHidden = backupData.rectHidden || false;
-  } catch (error) {
-    console.error("Error al restaurar respaldo:", error);
-    throw error;
-  }
 }
 
 function validateUserData(userData) {
@@ -3505,17 +3360,6 @@ function validateUserData(userData) {
 
     if (!userData.formData || typeof userData.formData !== "object") {
       throw new Error("Faltan datos de formularios");
-    }
-
-    if (
-      !userData.designSettings ||
-      typeof userData.designSettings !== "object"
-    ) {
-      throw new Error("Faltan configuraciones de diseño");
-    }
-
-    if (!userData.images || typeof userData.images !== "object") {
-      throw new Error("Faltan datos de imágenes");
     }
 
     if (
@@ -4079,7 +3923,7 @@ function handleFileImport(event) {
 
   if (file.type !== "application/json" && !file.name.endsWith(".json")) {
     alert(
-      "❌ El archivo no es un JSON válido. Por favor selecciona un archivo con extensión .json"
+      "El archivo no es un JSON válido. Por favor selecciona un archivo con extensión .json"
     );
     event.target.value = "";
     return;
