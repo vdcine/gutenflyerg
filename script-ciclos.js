@@ -186,7 +186,7 @@ async function addMovieToCycle(movieId, language) {
 
     allBackdrops = [...allBackdrops, ...movieData.backdrops];
 
-    updateSelectedMoviesList();
+    updateSelectedMoviesList(lang);
     updateFlyerDisplay();
     updateSearchButtons();
 
@@ -202,7 +202,7 @@ async function addMovieToCycle(movieId, language) {
   }
 }
 
-function updateSelectedMoviesList() {
+function updateSelectedMoviesList(lang) {
   const listContainer = document.getElementById("selected-movies-list");
 
   if (!listContainer) {
@@ -245,6 +245,12 @@ function updateSelectedMoviesList() {
       movie.director
     } • ${movie.runtime} min</div>
       </div>
+
+      <div style="display: flex; gap: 8px; margin-right: 10px;">
+        <button class="edit-movie-flyer-btn""
+                style="padding:4px 8px;background:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;">Generar poster individual</button>
+      </div>
+
       <div style="display: flex; gap: 8px;">
         <button class="move-up-btn" data-index="${index}" ${
       index === 0 ? "disabled" : ""
@@ -262,6 +268,11 @@ function updateSelectedMoviesList() {
     const moveUpBtn = movieItem.querySelector(".move-up-btn");
     const moveDownBtn = movieItem.querySelector(".move-down-btn");
     const removeBtn = movieItem.querySelector(".remove-movie-btn");
+    const editBtn = movieItem.querySelector(".edit-movie-flyer-btn");
+
+    if (editBtn) {
+      editBtn.addEventListener("click", () => editMovieFlyer(movie, lang));
+    }
 
     if (moveUpBtn && !moveUpBtn.disabled) {
       moveUpBtn.addEventListener("click", () => moveMovie(index, -1));
@@ -2176,4 +2187,17 @@ if (document.getElementById("comicLastColorSquare")) {
         floatingColorPicker.dispatchEvent(new Event("input"));
       }
     });
+}
+
+function editMovieFlyer(movie, lang) {
+  const fecha = document.getElementById(`movie-date-${movie.id}`).value;
+  window.open(
+    "gutenflyerg.html?movieId=" +
+      movie.id +
+      "&language=" +
+      lang +
+      "&date=" +
+      fecha,
+    "_blank"
+  );
 }
