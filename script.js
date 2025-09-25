@@ -1,12 +1,38 @@
+const API_KEY = "c733c18f5b61209aa7ea217bd007b156";
+const BASE_URL = "https://api.themoviedb.org/3";
+
 function getSimpleCorsProxiedUrl(imageUrl) {
   return `https://corsproxy.io/?${imageUrl}`;
 }
 
+function getCountryFlagEmoji(countryCode) {
+  if (!countryCode || countryCode.length !== 2) return "";
+
+  const code = countryCode.toUpperCase();
+
+  return String.fromCodePoint(...[...code].map((c) => 127397 + c.charCodeAt()));
+}
+
+const countryNamesES = {
+  AR: "Argentina",
+  US: "Estados Unidos",
+  FR: "Francia",
+  IT: "Italia",
+  ES: "España",
+  GB: "Reino Unido",
+  DE: "Alemania",
+  JP: "Japón",
+  CN: "China",
+  BR: "Brasil",
+  MX: "México",
+  CA: "Canadá",
+  RU: "Rusia",
+  IN: "India",
+  KR: "Corea del Sur",
+};
+
 document.getElementById("movieForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  const API_KEY = "c733c18f5b61209aa7ea217bd007b156";
-  const BASE_URL = "https://api.themoviedb.org/3";
 
   const query = document.getElementById("movieSearch").value;
   const language = document.getElementById("movieLanguage").value || "en";
@@ -296,34 +322,6 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       resultsDiv.style.display = "none";
       showResultsBtn.style.display = "block";
     });
-
-    function getCountryFlagEmoji(countryCode) {
-      if (!countryCode || countryCode.length !== 2) return "";
-
-      const code = countryCode.toUpperCase();
-
-      return String.fromCodePoint(
-        ...[...code].map((c) => 127397 + c.charCodeAt())
-      );
-    }
-
-    const countryNamesES = {
-      AR: "Argentina",
-      US: "Estados Unidos",
-      FR: "Francia",
-      IT: "Italia",
-      ES: "España",
-      GB: "Reino Unido",
-      DE: "Alemania",
-      JP: "Japón",
-      CN: "China",
-      BR: "Brasil",
-      MX: "México",
-      CA: "Canadá",
-      RU: "Rusia",
-      IN: "India",
-      KR: "Corea del Sur",
-    };
 
     resultsDiv.appendChild(result);
 
@@ -4034,7 +4032,257 @@ function initializeControlValues() {
   console.log("Valores de controles inicializados con CSS por defecto");
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
+  const res = await fetch(
+    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=es-ES`
+  );
+  const movie = await res.json();
+  const releaseDatesRes = await fetch(
+    `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
+  );
+  const creditsRes = await fetch(
+    `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
+  );
+  const creditsData = await creditsRes.json();
+  const director = creditsData.crew.find((c) => c.job === "Director");
+
+  const movieDetails = await (
+    await fetch(
+      `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`
+    )
+  ).json();
+
+  const movieDetailsSinapsis = await (
+    await fetch(
+      `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`
+    )
+  ).json();
+  const releaseDatesData = await releaseDatesRes.json();
+  console.log(releaseDatesData);
+
+  // Mapeo de certificaciones para normalizar los valores de arg https://calificaciones.incaa.gob.ar/
+  const certificationMap = {
+    AA: "ATP",
+    A: "ATP",
+    ATP: "ATP",
+    Atp: "ATP",
+    12: "+13",
+    13: "+13",
+    14: "+13",
+    15: "+16",
+    16: "+16",
+    18: "+18",
+    SAM13: "SAM 13",
+    SAM16: "SAM 16",
+    SAM18: "SAM 18",
+    "MA15+": "+16",
+    M: "+13",
+    G: "ATP",
+    PG: "+13",
+    "PG-13": "+13",
+    R: "+16",
+    "NC-17": "+18",
+    NR: "",
+  };
+
+  let certification = "";
+  const countriesOrder = ["AR"]; // Se pueden agregar otros codigos de paises
+
+  for (const country of countriesOrder) {
+    const countryData = releaseDatesData.results.find(
+      (r) => r.iso_3166_1 === country
+    );
+    if (countryData && countryData.release_dates.length > 0) {
+      const certData = countryData.release_dates.find(
+        (rd) => rd.certification !== ""
+      );
+      if (certData && certData.certification) {
+        certification = certData.certification;
+        break;
+      }
+    }
+  }
+
+  if (!certification) {
+    for (const result of releaseDatesData.results) {
+      const certData = result.release_dates.find(
+        (rd) => rd.certification !== ""
+      );
+      if (certData && certData.certification) {
+        certification = certData.certification;
+        break;
+      }
+    }
+  }
+
+  const mappedCertification = certificationMap[certification] || certification;
+
+  document.getElementById("title").textContent = movie.title;
+  document.getElementById("titleInput").value = movie.title;
+  document.getElementById("titleInputFeed").value = movie.title;
+  document.getElementById("titleInputReview").value = movie.title;
+  document.getElementById("titleInputReviewFeed").value = movie.title;
+
+  if (mappedCertification) {
+    document.getElementById("edadSugeridaInput").value = mappedCertification;
+    document.getElementById("edadSugeridaInputFeed").value =
+      mappedCertification;
+    document.getElementById("edadSugeridaInputReview").value =
+      mappedCertification;
+    document.getElementById("edadSugeridaInputReviewFeed").value =
+      mappedCertification;
+
+    const edadElements = [
+      document.getElementById("edad-sugerida"),
+      document.getElementById("edad-sugerida-feed"),
+      document.getElementById("edad-sugerida-review"),
+      document.getElementById("edad-sugerida-review-feed"),
+    ];
+
+    edadElements.forEach((el) => {
+      if (el) {
+        el.textContent = mappedCertification;
+        el.style.display = "inline-block";
+        if (mappedCertification === "ATP") {
+          el.style.backgroundColor = "#4CAF50"; // Verde para ATP
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+13" ||
+          mappedCertification === "SAM 13"
+        ) {
+          el.style.backgroundColor = "#2196F3"; // Azul para +13
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+16" ||
+          mappedCertification === "SAM 16"
+        ) {
+          el.style.backgroundColor = "#FF9800"; // Naranja para +16
+          el.style.color = "white";
+        } else if (
+          mappedCertification === "+18" ||
+          mappedCertification === "SAM 18"
+        ) {
+          el.style.backgroundColor = "#f44336"; // Rojo para +18
+          el.style.color = "white";
+        } else {
+          el.style.backgroundColor = "#777"; // Gris para otros
+          el.style.color = "white";
+        }
+      }
+    });
+  }
+  document.getElementById("year").textContent = new Date(
+    movie.release_date
+  ).getFullYear();
+  const posterUrl = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+  );
+  document.getElementById("poster").src = posterUrl;
+  document.getElementById("director").textContent = director
+    ? director.name
+    : "Director no disponible";
+
+  console.log(movieDetails);
+  document.getElementById(
+    "duracion"
+  ).textContent = `${movieDetails.runtime} minutos`;
+
+  const backdropUrl = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+  );
+  setBackdropAsBackground(backdropUrl);
+  setBackdropAsBackgroundFeed(backdropUrl);
+  setBackdropAsBackgroundReview(backdropUrl);
+  setBackdropAsBackgroundReviewFeed(backdropUrl);
+
+  const flyerFeed = document.getElementById("flyer-feed");
+  flyerFeed.querySelector("#title-feed").textContent = movie.title;
+  flyerFeed.querySelector("#year-feed").textContent = new Date(
+    movie.release_date
+  ).getFullYear();
+  const posterUrlFeed = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+  );
+  flyerFeed.querySelector("#poster-feed").src = posterUrlFeed;
+  flyerFeed.querySelector("#director-feed").textContent = director
+    ? director.name
+    : "Director no disponible";
+  flyerFeed.querySelector(
+    "#duracion-feed"
+  ).textContent = `${movieDetails.runtime} minutos`;
+
+  const posterUrlReview = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+  );
+  document.getElementById("poster-review").src = posterUrlReview;
+  document.getElementById(
+    "duracion-review"
+  ).textContent = `${movieDetails.runtime} minutos`;
+  document.getElementById("title-review").textContent = movie.title;
+  document.getElementById("year-review").textContent = new Date(
+    movie.release_date
+  ).getFullYear();
+  document.getElementById("sinapsis-review").textContent =
+    movieDetailsSinapsis.overview;
+  document.getElementById("sinapsisInputReview").value =
+    movieDetailsSinapsis.overview;
+  document.getElementById("director-review").textContent = director
+    ? director.name
+    : "Director no disponible";
+
+  const countryCode = movieDetails.origin_country[0];
+  const flag = getCountryFlagEmoji(countryCode);
+  const countryName = countryNamesES[countryCode] || countryCode;
+  document.getElementById(
+    "origen-review"
+  ).textContent = `Origen: ${flag} ${countryName}`;
+
+  const posterUrlReviewFeed = getSimpleCorsProxiedUrl(
+    `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+  );
+  document.getElementById("poster-review-feed").src = posterUrlReviewFeed;
+  document.getElementById(
+    "duracion-review-feed"
+  ).textContent = `${movieDetails.runtime} minutos`;
+  document.getElementById("title-review-feed").textContent = movie.title;
+  document.getElementById("year-review-feed").textContent = new Date(
+    movie.release_date
+  ).getFullYear();
+  document.getElementById("sinapsis-review-feed").textContent =
+    movieDetailsSinapsis.overview;
+  document.getElementById("sinapsisInputReviewFeed").value =
+    movieDetailsSinapsis.overview;
+  document.getElementById("director-review-feed").textContent = director
+    ? director.name
+    : "Director no disponible";
+
+  document.getElementById(
+    "origen-review-feed"
+  ).textContent = `Origen: ${flag} ${countryName}`;
+
+  const imagesRes = await fetch(
+    `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
+  );
+  const imagesData = await imagesRes.json();
+
+  backdrops = imagesData.backdrops || [];
+  currentBackdrop = 0;
+  showBackdrop(currentBackdrop);
+
+  posters = imagesData.posters || [];
+  currentPoster = 0;
+  showPoster(currentPoster);
+
+  if (fecha) {
+    document.getElementById("dateInput").value = fecha;
+    document.getElementById("dateInputFeed").value = fecha;
+    const formattedDate = formatDateToSpanish(fecha);
+    document.getElementById("flyer-date").innerHTML = formattedDate;
+    document.getElementById("flyer-date-feed").innerHTML = formattedDate;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async function () {
   initializeControlValues();
 
   const exportBtn = document.getElementById("exportDataBtn");
@@ -4058,5 +4306,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     fileInput.addEventListener("change", handleFileImport);
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const movieId = params.get("movieId");
+  const language = params.get("lang") || "es-ES";
+  const fecha = params.get("date");
+  if (movieId) {
+    fetchMovieByIdAndCompleteFlyer(movieId, language, fecha);
   }
 });
