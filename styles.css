@@ -1165,7 +1165,7 @@ button {
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
-  max-height: 830px;
+  max-height: 940px;
   font-family: "Gilroy", sans-serif;
 }
 
@@ -1227,6 +1227,40 @@ button {
   border: 1px solid #29303a;
   background: #101419;
   color: #e8f1ff;
+}
+
+.panel select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #29303a;
+  background: #e8f1ff;
+  color: #101419;
+  font-family: "Gilroy", sans-serif;
+  font-size: 16px;
+}
+
+.panel select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.panel input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.panel input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 8px;
+}
+
+.panel input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 8px;
 }
 
 .panel button {

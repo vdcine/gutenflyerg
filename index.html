@@ -463,30 +463,65 @@
               </div>
 
               <label>Borde textos</label>
-              <select id="strokeTargetSelect" multiple size="5">
-                <option value="header">Encabezado</option>
-                <option value="subheader">Nombre del ciclo</option>
-                <option value="cycle-description-text">
-                  Descripción del ciclo
-                </option>
-                <option value="flyer-hour">Hora</option>
-                <option value="flyer-biblioteca">Ubicación</option>
-                <option value="movie-title">Títulos de películas</option>
-                <option value="movie-info">Info de películas</option>
-                <option value="movie-date">Fechas de películas</option>
-              </select>
-              <input
-                type="color"
-                name="strokeColor"
-                id="strokeColorInput"
-                value="#000000"
-              />
+              <div style="display: flex; gap: 10px; align-items: flex-start">
+                <div style="flex: 1">
+                  <select
+                    id="strokeTargetSelect"
+                    multiple
+                    size="5"
+                    style="width: 100%"
+                  >
+                    <option value="header">Encabezado</option>
+                    <option value="subheader">Nombre del ciclo</option>
+                    <option value="cycle-description-text">
+                      Descripción del ciclo
+                    </option>
+                    <option value="flyer-hour">Hora</option>
+                    <option value="flyer-biblioteca">Ubicación</option>
+                    <option value="movie-title">Títulos de películas</option>
+                    <option value="movie-info">Info de películas</option>
+                    <option value="movie-date">Fechas de películas</option>
+                  </select>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 8px;
+                  "
+                >
+                  <input
+                    type="color"
+                    name="strokeColor"
+                    id="strokeColorInput"
+                    value="#000000"
+                    style="
+                      width: 50px;
+                      height: 50px;
+                      border: none;
+                      border-radius: 8px;
+                      cursor: pointer;
+                    "
+                  />
+                  <span style="font-size: 10px; opacity: 0.7">Color</span>
+                </div>
+              </div>
 
-              <div style="display: flex; flex-direction: row">
-                <button id="applyStrokeBtn" style="margin-right: 5px">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: row;
+                  gap: 5px;
+                  margin-top: 8px;
+                "
+              >
+                <button id="applyStrokeBtn" style="flex: 1">
                   Aplicar borde
                 </button>
-                <button id="removeStrokeBtn">Quitar borde</button>
+                <button id="removeStrokeBtn" style="flex: 1">
+                  Quitar borde
+                </button>
               </div>
 
               <div>
