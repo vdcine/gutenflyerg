@@ -295,7 +295,238 @@ function updateSelectedMoviesList(lang) {
   updateIndividualDatesSection();
 }
 
+function preserveCurrentColors() {
+  const colors = {};
+  const textShadows = {};
+
+  selectedMovies.forEach((movie, index) => {
+    const movieId = movie.id;
+    const storyTitle = document.querySelectorAll(".movie-title")[index];
+    const feedTitle = document.querySelectorAll(".movie-title-feed")[index];
+    if (
+      storyTitle &&
+      (storyTitle.style.color ||
+        storyTitle.style.backgroundColor ||
+        storyTitle.style.textShadow)
+    ) {
+      colors[`movieTitle-${movieId}`] = {
+        color: storyTitle.style.color,
+        background: storyTitle.style.backgroundColor,
+      };
+      if (storyTitle.style.textShadow) {
+        textShadows[`movieTitle-${movieId}`] = storyTitle.style.textShadow;
+      }
+    }
+
+    const storyInfo = document.querySelectorAll(".movie-info")[index];
+    const feedInfo = document.querySelectorAll(".movie-info-feed")[index];
+    if (
+      storyInfo &&
+      (storyInfo.style.color ||
+        storyInfo.style.backgroundColor ||
+        storyInfo.style.textShadow)
+    ) {
+      colors[`movieInfo-${movieId}`] = {
+        color: storyInfo.style.color,
+        background: storyInfo.style.backgroundColor,
+      };
+      if (storyInfo.style.textShadow) {
+        textShadows[`movieInfo-${movieId}`] = storyInfo.style.textShadow;
+      }
+    }
+
+    const storyDate = document.querySelectorAll(".movie-date")[index];
+    const feedDate = document.querySelectorAll(".movie-date-feed")[index];
+    if (
+      storyDate &&
+      (storyDate.style.color ||
+        storyDate.style.backgroundColor ||
+        storyDate.style.textShadow)
+    ) {
+      colors[`movieDate-${movieId}`] = {
+        color: storyDate.style.color,
+        background: storyDate.style.backgroundColor,
+      };
+      if (storyDate.style.textShadow) {
+        textShadows[`movieDate-${movieId}`] = storyDate.style.textShadow;
+      }
+    }
+
+    const storyDetails = document.querySelectorAll(".movie-details")[index];
+    if (
+      storyDetails &&
+      (storyDetails.style.color ||
+        storyDetails.style.backgroundColor ||
+        storyDetails.style.textShadow)
+    ) {
+      colors[`movieDetails-${movieId}`] = {
+        color: storyDetails.style.color,
+        background: storyDetails.style.backgroundColor,
+      };
+      if (storyDetails.style.textShadow) {
+        textShadows[`movieDetails-${movieId}`] = storyDetails.style.textShadow;
+      }
+    }
+
+    const storyItem = document.querySelectorAll(".movie-item-alternating")[
+      index
+    ];
+    const feedItem = document.querySelectorAll(".movie-item-feed")[index];
+    if (
+      storyItem &&
+      (storyItem.style.color ||
+        storyItem.style.backgroundColor ||
+        storyItem.style.textShadow)
+    ) {
+      colors[`movie-item-${movieId}`] = {
+        color: storyItem.style.color,
+        background: storyItem.style.backgroundColor,
+      };
+      if (storyItem.style.textShadow) {
+        textShadows[`movie-item-${movieId}`] = storyItem.style.textShadow;
+      }
+    }
+    if (
+      feedItem &&
+      (feedItem.style.color ||
+        feedItem.style.backgroundColor ||
+        feedItem.style.textShadow)
+    ) {
+      colors[`movie-item-feed-${movieId}`] = {
+        color: feedItem.style.color,
+        background: feedItem.style.backgroundColor,
+      };
+      if (feedItem.style.textShadow) {
+        textShadows[`movie-item-feed-${movieId}`] = feedItem.style.textShadow;
+      }
+    }
+  });
+
+  const globalElements = [
+    { id: "ciclo", selector: "#ciclo" },
+    { id: "ciclo-feed", selector: "#ciclo-feed" },
+    { id: "flyer-hour", selector: "#flyer-hour" },
+    { id: "flyer-hour-feed", selector: "#flyer-hour-feed" },
+    { id: "flyer-biblioteca", selector: "#flyer-biblioteca" },
+    { id: "flyer-biblioteca-feed", selector: "#flyer-biblioteca-feed" },
+    { id: "org", selector: "#org" },
+    { id: "org-feed", selector: "#org-feed" },
+    { id: "cycle-description-text", selector: "#cycle-description-text" },
+    {
+      id: "cycle-description-text-feed",
+      selector: "#cycle-description-text-feed",
+    },
+    { id: "header", selector: ".header" },
+    { id: "header-feed", selector: ".header-feed" },
+  ];
+
+  globalElements.forEach(({ id, selector }) => {
+    const element = document.querySelector(selector);
+    if (element && element.style.textShadow) {
+      textShadows[id] = element.style.textShadow;
+    }
+  });
+
+  return { colors, textShadows };
+}
+
+function restoreTextShadows(textShadows) {
+  selectedMovies.forEach((movie, index) => {
+    const movieId = movie.id;
+
+    const titleKey = `movieTitle-${movieId}`;
+    if (textShadows[titleKey]) {
+      const storyTitle = document.querySelectorAll(".movie-title")[index];
+      const feedTitle = document.querySelectorAll(".movie-title-feed")[index];
+      if (storyTitle) storyTitle.style.textShadow = textShadows[titleKey];
+      if (feedTitle) feedTitle.style.textShadow = textShadows[titleKey];
+    }
+
+    const infoKey = `movieInfo-${movieId}`;
+    if (textShadows[infoKey]) {
+      const storyInfo = document.querySelectorAll(".movie-info")[index];
+      const feedInfo = document.querySelectorAll(".movie-info-feed")[index];
+      if (storyInfo) storyInfo.style.textShadow = textShadows[infoKey];
+      if (feedInfo) feedInfo.style.textShadow = textShadows[infoKey];
+    }
+
+    const dateKey = `movieDate-${movieId}`;
+    if (textShadows[dateKey]) {
+      const storyDate = document.querySelectorAll(".movie-date")[index];
+      const feedDate = document.querySelectorAll(".movie-date-feed")[index];
+      if (storyDate) storyDate.style.textShadow = textShadows[dateKey];
+      if (feedDate) feedDate.style.textShadow = textShadows[dateKey];
+    }
+
+    const detailsKey = `movieDetails-${movieId}`;
+    if (textShadows[detailsKey]) {
+      const storyDetails = document.querySelectorAll(".movie-details")[index];
+      if (storyDetails) storyDetails.style.textShadow = textShadows[detailsKey];
+    }
+
+    const itemKey = `movie-item-${movieId}`;
+    if (textShadows[itemKey]) {
+      const storyItem = document.querySelectorAll(".movie-item-alternating")[
+        index
+      ];
+      if (storyItem) storyItem.style.textShadow = textShadows[itemKey];
+    }
+
+    const itemFeedKey = `movie-item-feed-${movieId}`;
+    if (textShadows[itemFeedKey]) {
+      const feedItem = document.querySelectorAll(".movie-item-feed")[index];
+      if (feedItem) feedItem.style.textShadow = textShadows[itemFeedKey];
+    }
+  });
+
+  const globalElementsMap = {
+    ciclo: "#ciclo",
+    "ciclo-feed": "#ciclo-feed",
+    "flyer-hour": "#flyer-hour",
+    "flyer-hour-feed": "#flyer-hour-feed",
+    "flyer-biblioteca": "#flyer-biblioteca",
+    "flyer-biblioteca-feed": "#flyer-biblioteca-feed",
+    org: "#org",
+    "org-feed": "#org-feed",
+    "cycle-description-text": "#cycle-description-text",
+    "cycle-description-text-feed": "#cycle-description-text-feed",
+    header: ".header",
+    "header-feed": ".header-feed",
+  };
+
+  Object.keys(globalElementsMap).forEach((key) => {
+    if (textShadows[key]) {
+      const element = document.querySelector(globalElementsMap[key]);
+      if (element) {
+        element.style.textShadow = textShadows[key];
+      }
+    }
+  });
+}
+
+function restorePreservedColors(preservedData) {
+  const { colors, textShadows } = preservedData;
+
+  if (colors) {
+    Object.keys(colors).forEach((key) => {
+      if (!elementColors[key]) elementColors[key] = {};
+      elementColors[key] = { ...elementColors[key], ...colors[key] };
+    });
+  }
+
+  setTimeout(() => {
+    applySavedColors("story");
+    applySavedColors("feed");
+
+    if (textShadows) {
+      restoreTextShadows(textShadows);
+    }
+  }, 50);
+}
+
 function moveMovie(index, direction) {
+  const currentColors = preserveCurrentColors();
+
   if (direction === -1 && index > 0) {
     [selectedMovies[index], selectedMovies[index - 1]] = [
       selectedMovies[index - 1],
@@ -310,6 +541,7 @@ function moveMovie(index, direction) {
 
   updateSelectedMoviesList();
   updateFlyerDisplay();
+  restorePreservedColors(currentColors);
 }
 
 function removeMovie(index) {
@@ -441,55 +673,239 @@ function calculateMovieItemSize(movieCount) {
   return { width: posterWidth, spacing: itemSpacing, padding: itemPadding };
 }
 
-function applySavedColors(mode) {
-  const selectors = {
-    movieTitle: mode === "story" ? [".movie-title"] : [".movie-title-feed"],
-    movieInfo: mode === "story" ? [".movie-info"] : [".movie-info-feed"],
-    movieDate: mode === "story" ? [".movie-date"] : [".movie-date-feed"],
-    movieDetails: mode === "story" ? [".movie-details"] : [],
-    movieItem:
-      mode === "story" ? [".movie-item-alternating"] : [".movie-item-feed"],
-  };
+function getElementsForColorKey(key, mode) {
+  const elements = [];
 
-  for (const [key, selectorArray] of Object.entries(selectors)) {
-    if (elementColors[key]) {
-      selectorArray.forEach((selector) => {
-        document.querySelectorAll(selector).forEach((el) => {
-          if (elementColors[key].color)
-            el.style.color = elementColors[key].color;
-          if (elementColors[key].background)
-            el.style.backgroundColor = elementColors[key].background;
-        });
+  switch (key) {
+    case "ciclo":
+      elements.push(document.getElementById("ciclo"));
+      if (mode === "feed") elements.push(document.getElementById("ciclo-feed"));
+      break;
+    case "flyer-hour":
+      elements.push(document.getElementById("flyer-hour"));
+      if (mode === "feed")
+        elements.push(document.getElementById("flyer-hour-feed"));
+      break;
+    case "flyer-biblioteca":
+      elements.push(document.getElementById("flyer-biblioteca"));
+      if (mode === "feed")
+        elements.push(document.getElementById("flyer-biblioteca-feed"));
+      break;
+    case "org":
+      elements.push(document.getElementById("org"));
+      if (mode === "feed") elements.push(document.getElementById("org-feed"));
+      break;
+    case "cycle-description-text":
+      elements.push(document.getElementById("cycle-description-text"));
+      if (mode === "feed")
+        elements.push(document.getElementById("cycle-description-text-feed"));
+      break;
+    case "header":
+      elements.push(document.querySelector(".header"));
+      if (mode === "feed")
+        elements.push(document.querySelector(".header-feed"));
+      break;
+    case "rect":
+      elements.push(document.querySelector(".rect"));
+      if (mode === "feed") elements.push(document.querySelector(".rect-feed"));
+      break;
+    case "rect2":
+      elements.push(document.querySelector(".rect2"));
+      if (mode === "feed") elements.push(document.querySelector(".rect2-feed"));
+      break;
+    case "tape":
+      elements.push(document.querySelector(".tape"));
+      break;
+    case "flyer-story":
+      elements.push(document.getElementById("flyer-story"));
+      break;
+    case "flyer-feed":
+      elements.push(document.getElementById("flyer-feed"));
+      break;
+  }
+
+  return elements.filter((el) => el !== null);
+}
+
+function applySavedColors(mode) {
+  selectedMovies.forEach((movie, index) => {
+    const movieId = movie.id;
+
+    const titleKey = `movieTitle-${movieId}`;
+    if (elementColors[titleKey]) {
+      const titleElements =
+        mode === "story"
+          ? [document.querySelectorAll(".movie-title")[index]]
+          : [document.querySelectorAll(".movie-title-feed")[index]];
+
+      titleElements.forEach((el) => {
+        if (el) {
+          if (elementColors[titleKey].color)
+            el.style.color = elementColors[titleKey].color;
+          if (elementColors[titleKey].background)
+            el.style.backgroundColor = elementColors[titleKey].background;
+        }
       });
     }
-  }
+
+    const infoKey = `movieInfo-${movieId}`;
+    if (elementColors[infoKey]) {
+      const infoElements =
+        mode === "story"
+          ? [document.querySelectorAll(".movie-info")[index]]
+          : [document.querySelectorAll(".movie-info-feed")[index]];
+
+      infoElements.forEach((el) => {
+        if (el) {
+          if (elementColors[infoKey].color)
+            el.style.color = elementColors[infoKey].color;
+          if (elementColors[infoKey].background)
+            el.style.backgroundColor = elementColors[infoKey].background;
+        }
+      });
+    }
+
+    const dateKey = `movieDate-${movieId}`;
+    if (elementColors[dateKey]) {
+      const dateElements =
+        mode === "story"
+          ? [document.querySelectorAll(".movie-date")[index]]
+          : [document.querySelectorAll(".movie-date-feed")[index]];
+
+      dateElements.forEach((el) => {
+        if (el) {
+          if (elementColors[dateKey].color)
+            el.style.color = elementColors[dateKey].color;
+          if (elementColors[dateKey].background)
+            el.style.backgroundColor = elementColors[dateKey].background;
+        }
+      });
+    }
+
+    if (mode === "story") {
+      const detailsKey = `movieDetails-${movieId}`;
+      if (elementColors[detailsKey]) {
+        const detailsElement =
+          document.querySelectorAll(".movie-details")[index];
+        if (detailsElement) {
+          if (elementColors[detailsKey].color)
+            detailsElement.style.color = elementColors[detailsKey].color;
+          if (elementColors[detailsKey].background)
+            detailsElement.style.backgroundColor =
+              elementColors[detailsKey].background;
+        }
+      }
+    }
+
+    const itemKey =
+      mode === "story" ? `movie-item-${movieId}` : `movie-item-feed-${movieId}`;
+    if (elementColors[itemKey]) {
+      const itemElement =
+        mode === "story"
+          ? document.querySelectorAll(".movie-item-alternating")[index]
+          : document.querySelectorAll(".movie-item-feed")[index];
+
+      if (itemElement) {
+        if (elementColors[itemKey].color)
+          itemElement.style.color = elementColors[itemKey].color;
+        if (elementColors[itemKey].background)
+          itemElement.style.backgroundColor = elementColors[itemKey].background;
+      }
+    }
+  });
+
+  Object.keys(elementColors).forEach((key) => {
+    if (!key.includes("-") || !key.match(/-(\d+)$/)) {
+      const elements = getElementsForColorKey(key, mode);
+      elements.forEach((el) => {
+        if (elementColors[key].color) el.style.color = elementColors[key].color;
+        if (elementColors[key].background)
+          el.style.backgroundColor = elementColors[key].background;
+      });
+    }
+  });
+
   syncColorsBetweenModes();
 }
 
 function syncColorsBetweenModes() {
-  const selectorMap = {
-    ".movie-title": ".movie-title-feed",
-    ".movie-info": ".movie-info-feed",
-    ".movie-date": ".movie-date-feed",
-    ".movie-details": ".movie-details",
-    ".movie-item-alternating": ".movie-item-feed",
-  };
+  selectedMovies.forEach((movie, index) => {
+    const movieId = movie.id;
+    const storyTitle = document.querySelectorAll(".movie-title")[index];
+    const feedTitle = document.querySelectorAll(".movie-title-feed")[index];
+    if (storyTitle && feedTitle) {
+      if (storyTitle.style.color)
+        feedTitle.style.color = storyTitle.style.color;
+      if (storyTitle.style.backgroundColor)
+        feedTitle.style.backgroundColor = storyTitle.style.backgroundColor;
+      if (feedTitle.style.color) storyTitle.style.color = feedTitle.style.color;
+      if (feedTitle.style.backgroundColor)
+        storyTitle.style.backgroundColor = feedTitle.style.backgroundColor;
+    }
 
-  Object.entries(selectorMap).forEach(([storySelector, feedSelector]) => {
-    const storyElements = document.querySelectorAll(storySelector);
-    const feedElements = document.querySelectorAll(feedSelector);
+    const storyInfo = document.querySelectorAll(".movie-info")[index];
+    const feedInfo = document.querySelectorAll(".movie-info-feed")[index];
+    if (storyInfo && feedInfo) {
+      if (storyInfo.style.color) feedInfo.style.color = storyInfo.style.color;
+      if (storyInfo.style.backgroundColor)
+        feedInfo.style.backgroundColor = storyInfo.style.backgroundColor;
+      if (feedInfo.style.color) storyInfo.style.color = feedInfo.style.color;
+      if (feedInfo.style.backgroundColor)
+        storyInfo.style.backgroundColor = feedInfo.style.backgroundColor;
+    }
 
-    storyElements.forEach((storyEl, index) => {
-      const feedEl = feedElements[index];
-      if (feedEl) {
-        if (storyEl.style.color) {
-          feedEl.style.color = storyEl.style.color;
-        }
-        if (storyEl.style.backgroundColor) {
-          feedEl.style.backgroundColor = storyEl.style.backgroundColor;
-        }
-      }
-    });
+    const storyDate = document.querySelectorAll(".movie-date")[index];
+    const feedDate = document.querySelectorAll(".movie-date-feed")[index];
+    if (storyDate && feedDate) {
+      if (storyDate.style.color) feedDate.style.color = storyDate.style.color;
+      if (storyDate.style.backgroundColor)
+        feedDate.style.backgroundColor = storyDate.style.backgroundColor;
+      if (feedDate.style.color) storyDate.style.color = feedDate.style.color;
+      if (feedDate.style.backgroundColor)
+        storyDate.style.backgroundColor = feedDate.style.backgroundColor;
+    }
+
+    const storyItem = document.querySelectorAll(".movie-item-alternating")[
+      index
+    ];
+    const feedItem = document.querySelectorAll(".movie-item-feed")[index];
+    if (storyItem && feedItem) {
+      if (storyItem.style.color) feedItem.style.color = storyItem.style.color;
+      if (storyItem.style.backgroundColor)
+        feedItem.style.backgroundColor = storyItem.style.backgroundColor;
+      if (feedItem.style.color) storyItem.style.color = feedItem.style.color;
+      if (feedItem.style.backgroundColor)
+        storyItem.style.backgroundColor = feedItem.style.backgroundColor;
+    }
+  });
+
+  const globalSyncPairs = [
+    ["ciclo", "ciclo-feed"],
+    ["flyer-hour", "flyer-hour-feed"],
+    ["flyer-biblioteca", "flyer-biblioteca-feed"],
+    ["org", "org-feed"],
+    ["cycle-description-text", "cycle-description-text-feed"],
+    [".header", ".header-feed"],
+    [".rect", ".rect-feed"],
+    [".rect2", ".rect2-feed"],
+  ];
+
+  globalSyncPairs.forEach(([storySelector, feedSelector]) => {
+    const storyEl = storySelector.startsWith(".")
+      ? document.querySelector(storySelector)
+      : document.getElementById(storySelector);
+    const feedEl = feedSelector.startsWith(".")
+      ? document.querySelector(feedSelector)
+      : document.getElementById(feedSelector);
+
+    if (storyEl && feedEl) {
+      if (storyEl.style.color) feedEl.style.color = storyEl.style.color;
+      if (storyEl.style.backgroundColor)
+        feedEl.style.backgroundColor = storyEl.style.backgroundColor;
+      if (feedEl.style.color) storyEl.style.color = feedEl.style.color;
+      if (feedEl.style.backgroundColor)
+        storyEl.style.backgroundColor = feedEl.style.backgroundColor;
+    }
   });
 
   const storyFlyer = document.getElementById("flyer-story");
@@ -502,6 +918,14 @@ function syncColorsBetweenModes() {
     }
     if (storyFlyer.style.backgroundColor) {
       feedFlyer.style.backgroundColor = storyFlyer.style.backgroundColor;
+    }
+    if (feedFlyer.style.backgroundImage && !storyFlyer.style.backgroundImage) {
+      storyFlyer.style.backgroundImage = feedFlyer.style.backgroundImage;
+      storyFlyer.style.backgroundSize = feedFlyer.style.backgroundSize;
+      storyFlyer.style.backgroundPosition = feedFlyer.style.backgroundPosition;
+    }
+    if (feedFlyer.style.backgroundColor && !storyFlyer.style.backgroundColor) {
+      storyFlyer.style.backgroundColor = feedFlyer.style.backgroundColor;
     }
   }
 }
@@ -1148,6 +1572,8 @@ document.addEventListener("DOMContentLoaded", () => {
 document
   .getElementById("applyIndividualDatesBtn")
   .addEventListener("click", () => {
+    const currentColors = preserveCurrentColors();
+
     selectedMovies.forEach((movie) => {
       const dateInput = document.getElementById(`movie-date-${movie.id}`);
       if (dateInput && dateInput.value) {
@@ -1156,6 +1582,7 @@ document
     });
 
     updateFlyerDisplay();
+    restorePreservedColors(currentColors);
   });
 
 document.getElementById("hourInput").addEventListener("input", (e) => {
@@ -1227,9 +1654,12 @@ function handleIndividualTitleChange(e) {
   const newTitle = e.target.value;
   const movie = selectedMovies.find((m) => String(m.id) === String(movieId));
   if (movie && newTitle) {
+    const currentColors = preserveCurrentColors();
+
     movie.title = newTitle;
     updateSelectedMoviesList();
     updateFlyerDisplay();
+    restorePreservedColors(currentColors);
   }
 }
 
@@ -1239,8 +1669,11 @@ function handleIndividualDateChange(e) {
   const newDate = e.target.value;
 
   if (movieId && newDate) {
+    const currentColors = preserveCurrentColors();
+
     individualDates[movieId] = newDate;
     updateFlyerDisplay();
+    restorePreservedColors(currentColors);
   }
 }
 
@@ -1455,23 +1888,58 @@ function getCurrentColorForTargets(targets) {
   return rgbToHex(isBackground ? style.backgroundColor : style.color);
 }
 
+function getMovieElementIndex(target, selector) {
+  const elements = document.querySelectorAll(selector);
+  let index = Array.from(elements).indexOf(target);
+
+  if (index >= selectedMovies.length) {
+    index = index - selectedMovies.length;
+  }
+
+  return index;
+}
+
 function getColorKey(target) {
   if (
     target.classList.contains("movie-title") ||
     target.classList.contains("movie-title-feed")
-  )
+  ) {
+    const index = getMovieElementIndex(
+      target,
+      ".movie-title, .movie-title-feed"
+    );
+    if (index >= 0 && index < selectedMovies.length) {
+      return `movieTitle-${selectedMovies[index].id}`;
+    }
     return "movieTitle";
+  }
   if (
     target.classList.contains("movie-info") ||
     target.classList.contains("movie-info-feed")
-  )
+  ) {
+    const index = getMovieElementIndex(target, ".movie-info, .movie-info-feed");
+    if (index >= 0 && index < selectedMovies.length) {
+      return `movieInfo-${selectedMovies[index].id}`;
+    }
     return "movieInfo";
+  }
   if (
     target.classList.contains("movie-date") ||
     target.classList.contains("movie-date-feed")
-  )
+  ) {
+    const index = getMovieElementIndex(target, ".movie-date, .movie-date-feed");
+    if (index >= 0 && index < selectedMovies.length) {
+      return `movieDate-${selectedMovies[index].id}`;
+    }
     return "movieDate";
-  if (target.classList.contains("movie-details")) return "movieDetails";
+  }
+  if (target.classList.contains("movie-details")) {
+    const index = getMovieElementIndex(target, ".movie-details");
+    if (index >= 0 && index < selectedMovies.length) {
+      return `movieDetails-${selectedMovies[index].id}`;
+    }
+    return "movieDetails";
+  }
   if (
     target.classList.contains("movie-item-alternating") ||
     target.classList.contains("movie-item-feed")
