@@ -1761,10 +1761,3 @@ button {
   display: flex;
   align-items: center;
 }
-
-.browser-logo {
-  width: 28px;
-  height: 28px;
-  vertical-align: middle;
-  margin-right: 8px;
-}
