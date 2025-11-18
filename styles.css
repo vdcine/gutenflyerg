@@ -404,14 +404,17 @@ form {
 }
 
 #title {
-  font-size: 50px;
-  font-weight: lighter;
+  font-size: 42px;
+  width: 490px;
+  font-weight: 700;
   margin-top: 5px;
   margin-bottom: 0px;
-  z-index: 5;
+  z-index: 10;
   position: relative;
   font-family: "Gilroy", sans-serif;
-  font-weight: 700;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
 }
 
 #director {
@@ -462,13 +465,15 @@ form {
 #title-feed {
   font-size: 50px;
   max-width: 258px;
-  font-weight: lighter;
+  font-weight: 700;
   margin-top: 5px;
   margin-bottom: 5px;
   z-index: 5;
   position: relative;
   font-family: "Gilroy", sans-serif;
-  font-weight: 700;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
 }
 
 #director-feed {
@@ -729,10 +734,7 @@ form {
 #title,
 #year,
 #director,
-#org {
-  color: inherit;
-}
-
+#org,
 #title-feed,
 #year-feed,
 #director-feed {
@@ -918,43 +920,11 @@ form {
 
 #title,
 #year,
-#director {
-  text-align: center;
-}
-
-#title {
-  font-size: 42px;
-  width: 490px;
-  font-weight: lighter;
-  margin-top: 5px;
-  margin-bottom: 0px;
-  z-index: 10;
-  position: relative;
-  font-family: "Gilroy", sans-serif;
-  font-weight: 700;
-  text-align: center;
-  white-space: normal;
-  word-break: break-word;
-}
-
+#director,
 #title-feed,
 #year-feed,
 #director-feed {
   text-align: center;
-}
-
-#title-feed {
-  font-size: 50px;
-  font-weight: lighter;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  z-index: 5;
-  position: relative;
-  font-family: "Gilroy", sans-serif;
-  font-weight: 700;
-  text-align: center;
-  white-space: normal;
-  word-break: break-word;
 }
 
 #tmdbToken {
