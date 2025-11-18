@@ -1025,7 +1025,10 @@ button {
   background: #444;
 }
 
-.panel {
+.panel,
+.panel-feed,
+.panel-review,
+.panel-review-feed {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1035,53 +1038,18 @@ button {
   border-radius: 12px;
   background: #14181e;
   color: #dbe5ee;
-  max-height: 940px;
   font-family: "Gilroy", sans-serif;
 }
 
-.panel-feed {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-left: 10px;
-  align-items: start;
-  padding: 14px;
-  border-radius: 12px;
-  background: #14181e;
-  color: #dbe5ee;
-  max-height: 810px;
-  font-family: "Gilroy", sans-serif;
-}
+.panel { max-height: 940px; }
+.panel-feed { max-height: 810px; }
+.panel-review { max-height: 650px; }
+.panel-review-feed { max-height: 620px; }
 
-.panel-feed label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
-  margin-right: 10px;
-  justify-self: left;
-}
-
-.panel-feed input[type="text"],
-.panel-feed input[type="number"] {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #29303a;
-  background: #101419;
-  color: #e8f1ff;
-}
-
-.panel-feed button {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #283241;
-  background: #1a2430;
-  color: #e8f1ff;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.panel label {
+.panel label,
+.panel-feed label,
+.panel-review label,
+.panel-review-feed label {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -1091,28 +1059,18 @@ button {
 }
 
 .panel input[type="text"],
-.panel input[type="number"] {
+.panel input[type="number"],
+.panel-feed input[type="text"],
+.panel-feed input[type="number"],
+.panel-review input[type="text"],
+.panel-review input[type="number"],
+.panel-review-feed input[type="text"],
+.panel-review-feed input[type="number"] {
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #29303a;
   background: #101419;
   color: #e8f1ff;
-}
-
-.panel select {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #29303a;
-  background: #e8f1ff;
-  color: #101419;
-  font-family: "Gilroy", sans-serif;
-  font-size: 16px;
-}
-
-.panel select:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 .panel input[type="color"] {
@@ -1133,90 +1091,9 @@ button {
   border-radius: 8px;
 }
 
-.panel button {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #283241;
-  background: #1a2430;
-  color: #e8f1ff;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.panel-review {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-left: 10px;
-  align-items: start;
-  padding: 14px;
-  border-radius: 12px;
-  background: #14181e;
-  color: #dbe5ee;
-  max-height: 650px;
-  font-family: "Gilroy", sans-serif;
-}
-
-.panel-review label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
-  margin-right: 10px;
-  justify-self: left;
-}
-
-.panel-review input[type="text"],
-.panel-review input[type="number"] {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #29303a;
-  background: #101419;
-  color: #e8f1ff;
-}
-
-.panel-review button {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #283241;
-  background: #1a2430;
-  color: #e8f1ff;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.panel-review-feed {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-left: 10px;
-  align-items: start;
-  padding: 14px;
-  border-radius: 12px;
-  background: #14181e;
-  color: #dbe5ee;
-  max-height: 620px;
-  font-family: "Gilroy", sans-serif;
-}
-
-.panel-review-feed label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
-  margin-right: 10px;
-  justify-self: left;
-}
-
-.panel-review-feed input[type="text"],
-.panel-review-feed input[type="number"] {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #29303a;
-  background: #101419;
-  color: #e8f1ff;
-}
-
+.panel button,
+.panel-feed button,
+.panel-review button,
 .panel-review-feed button {
   padding: 10px 14px;
   border-radius: 10px;
@@ -1225,6 +1102,22 @@ button {
   color: #e8f1ff;
   cursor: pointer;
   font-weight: 700;
+}
+
+.panel select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #29303a;
+  background: #e8f1ff;
+  color: #101419;
+  font-family: "Gilroy", sans-serif;
+  font-size: 16px;
+}
+
+.panel select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 .flyer-tab.active {
