@@ -1,0 +1,88 @@
+@startmindmap
+
+<style>
+
+mindmapDiagram {
+    BackgroundColor: #000000;
+    arrow {
+        LineColor: cyan;
+    }
+
+    node {
+        LineColor: #ffb000;
+        FontColor: #ffb000;
+        BackgroundColor: #000000;
+    }
+    .pro {
+        Fontcolor: #00ff00;
+    }
+    .contra {
+        Fontcolor: #ff0000;
+    }
+}
+
+
+</style>
+
+
+* alternativa "sin ciclos":\n 1 por película
+** flyer peli A
+*** Veladas de Cine
+*** Ciclo ABC
+**** Descripción del ciclo
+*** A
+**** Datos Peli A
+***** Título
+***** Director
+***** Año
+***** Origen
+***** Reseña
+**** Póster Peli A
+*** Backdrop
+**** podría ser el mismo para todas
+** flyer peli B
+*** ídem A
+** flyer peli C
+*** ídem A
+
+**_ pros <<pro>>
+***_ póster grandes <<pro>>
+***_ backdrop específicos <<pro>>
+***_ se puede distribuir cada semana la que corresponde y reducir confusión <<pro>>
+**_ contras <<contra>>
+***_ hay que distribuir muchos archivos <<contra>>
+
+* alternativa "solo ciclo":\n 1 con todas las pelis
+** ciclo de 1
+*** Veladas de Cine
+*** Pseudo Ciclo (no va)
+*** A
+**** Datos Peli A
+**** Póster Peli A
+** ciclo de 2
+*** Veladas de Cine
+*** Ciclo
+**** Descripción del ciclo
+*** A
+**** Datos Peli A
+**** Póster Peli A
+*** B
+**** Datos Peli B
+**** Póster B
+** ciclo de 3
+** ciclo de 4
+
+**_ pros <<pro>>
+***_ se distribuye un único archivo <<pro>>
+**_ contras <<contra>>
+***_ backdrop único <<contra>>
+***_ muy difícil hacer entrar las reseñas <<contra>>
+***_ pósters muy chiquitos <<contra>>
+***_ Hay que re-distribuir el mismo flyer cada semana, pudiendo generar confusión <<contra>>
+
+* cosas sueltas
+** datos de la peli ADENTRO o AFUERA del póster
+** un solo aspect:ratio
+** prestar atención a costos de EDICIÓN vs de DISTRIBUCIÓN
+
+@endmindmap
