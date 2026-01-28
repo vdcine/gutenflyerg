@@ -263,98 +263,97 @@
             remover, seleccionar todos los deseados y clickear en remover borde
           </h3>
 
-<div style="text-align: center; margin-bottom: 20px;">
-        <button id="toggle-rect">Ocultar rectángulo vertical</button>
-    </div>
+          <div style="text-align: center; margin-bottom: 20px;">
+            <button id="toggle-rect">Ocultar rectángulo vertical</button>
+          </div>
 
-    <div class="flyer-container">
-        
-        <div id="flyer-story-review" class="flyer-version" style="display: block;">
-            <div class="tape"></div>
-            <div class="rect-review"></div>
-            <h1 class="header-review" id="header-review">VELADAS DE CINE</h1>
+          <div class="flyer-container">
+            <div id="flyer-story-review" class="flyer-version" style="display: block;">
+              <div class="tape"></div>
+              <div class="rect-review"></div>
+              <h1 class="header-review" id="header-review">VELADAS DE CINE</h1>
 
-            <div class="feed-flex-row-review">
+              <div class="feed-flex-row-review">
                 <div class="story-poster-col-review" style="display: flex; flex-direction: column; align-items: center;">
-                    <img id="poster-review" src="" alt="Poster" crossorigin="anonymous" />
+                  <img id="poster-review" src="" alt="Poster" crossorigin="anonymous" />
                 </div>
                 <div class="story-info-col-review">
-                    <div class="flyer-main-group-feed">
-                        <h3 id="title-review">Título</h3>
-                        <p id="origen-review">Origen:</p>
-                        <p id="duracion-review">100 minutos</p>
-                        <p id="edad-sugerida-review" class="edad-sugerida-review" style="display: none"></p>
-                        <p id="director-review">Director</p>
-                        <p id="year-review">Año</p>
-                    </div>
+                  <div class="flyer-main-group-feed">
+                    <h3 id="title-review">Título</h3>
+                    <p id="origen-review">Origen:</p>
+                    <p id="duracion-review">100 minutos</p>
+                    <p id="edad-sugerida-review" class="edad-sugerida-review" style="display: none"></p>
+                    <p id="director-review">Director</p>
+                    <p id="year-review">Año</p>
+                  </div>
                 </div>
-            </div>
+              </div>
 
-            <div class="flyer-date-group-review">
+              <div class="flyer-date-group-review">
                 <div id="sinapsis-review" class="fancy-text" style="font-size: 36px">
-                    SINAPSIS
+                  SINAPSIS
                 </div>
-            </div>
+              </div>
 
-            <div class="event-data">
+              <div class="event-data">
                 <div class="rect2-review"></div>
                 <span id="org-review">
-                    Organizan Matías Corona y Francisco Albani con apoyo de la
-                    Comisión Directiva de la Biblioteca Menéndez.
+                  Organizan Matías Corona y Francisco Albani con apoyo de la
+                  Comisión Directiva de la Biblioteca Menéndez.
                 </span>
+              </div>
             </div>
-        </div>
 
-        <div class="panel-review" style="display: flex;">
-            <div>
+            <div class="panel-review" style="display: flex;">
+              <div>
                 <label>Título</label>
                 <textarea id="titleInputReview" rows="2"></textarea>
-            </div>
+              </div>
 
-            <div class="edad-sugerida-input">
+              <div class="edad-sugerida-input">
                 <label>Edad sugerida (opcional)</label>
                 <input id="edadSugeridaInputReview" type="text" placeholder="Ej: +13, Apta todo público, etc." />
-            </div>
+              </div>
 
-            <div>
+              <div>
                 <label>Sinapsis</label>
                 <textarea id="sinapsisInputReview" rows="6"></textarea>
-            </div>
+              </div>
 
-            <div class="full">
+              <div class="full">
                 <button id="applyTxtBtnReview">Aplicar cambios</button>
-            </div>
+              </div>
 
-            <label>Borde textos</label>
-            <div class="bordes" style="display: flex">
+              <label>Borde textos</label>
+              <div class="bordes" style="display: flex">
                 <select id="strokeTargetSelectReview" multiple size="7">
-                    <option value="header-review">Encabezado</option>
-                    <option value="title-review">Título</option>
-                    <option value="year-review">Año</option>
-                    <option value="director-review">Director</option>
-                    <option value="duracion-review">Duración</option>
-                    <option value="origen-review">Origen</option>
-                    <option value="sinapsis-review">Sinapsis</option>
+                  <option value="header-review">Encabezado</option>
+                  <option value="title-review">Título</option>
+                  <option value="year-review">Año</option>
+                  <option value="director-review">Director</option>
+                  <option value="duracion-review">Duración</option>
+                  <option value="origen-review">Origen</option>
+                  <option value="sinapsis-review">Sinapsis</option>
                 </select>
                 <input type="color" name="strokeColor" id="strokeColorInputReview" value="#000000" />
-            </div>
+              </div>
 
-            <div style="display: flex; flex-direction: row">
+              <div style="display: flex; flex-direction: row">
                 <button id="applyStrokeBtnReview" style="margin-right: 5px">Aplicar borde</button>
                 <button id="removeStrokeBtnReview">Quitar borde</button>
-            </div>
-            
-            <div>
+              </div>
+
+              <div>
                 <label>Tamaño titulo pelicula</label>
                 <input id="flyerTitleFontSizeInputReview" type="number" min="10" max="100" value="50" style="width: 80px" /> px
-            </div>
-            
-            <div>
+              </div>
+
+              <div>
                 <label>Tamaño sinapsis</label>
                 <input id="flyerSynopsisFontSizeInputStory" type="number" min="10" max="100" value="40" style="width: 80px" /> px
-            </div>
+              </div>
 
-            <div class="import-export-buttons" style="margin-top: 20px; width: 100%; border-top: 1px solid #ccc; padding-top: 15px;">
+              <div class="import-export-buttons" style="margin-top: 20px; width: 100%; border-top: 1px solid #ccc; padding-top: 15px;">
                 <button id="exportDataBtn" class="export-btn" title="Exportar toda la configuración actual como archivo JSON">
                   📤 Exportar Datos
                 </button>
@@ -362,107 +361,107 @@
                   📥 Importar Datos
                 </button>
                 <input type="file" id="importFileInput" accept=".json" style="display: none" />
+              </div>
             </div>
+          </div>
+
+          <h2 id="instrucciones">
+            <br />
+            5°: Guardar imagen del flyer
+            <br />
+          </h2>
+
+          <button type="button" id="saveFlyerReview" style="
+              margin-bottom: 20px;
+              margin-top: 20px;
+              padding: 10px 20px;
+              font-size: 16px;
+              cursor: pointer;
+              margin-left: auto;
+              margin-right: auto;
+              display: block;
+            ">
+            Descargar review
+          </button>
         </div>
-    </div>
 
-    <h2 id="instrucciones">
-        <br />
-        5°: Guardar imagen del flyer
-        <br />
-    </h2>
-
-    <button type="button" id="saveFlyerReview" style="
-          margin-bottom: 20px;
-          margin-top: 20px;
-          padding: 10px 20px;
-          font-size: 16px;
-          cursor: pointer;
-          margin-left: auto;
-          margin-right: auto;
-          display: block;
-        ">
-        Descargar review
-    </button>
-    </div>
-
-    <input
-      type="color"
-      id="floatingColorPicker"
-      style="position: absolute; display: none; z-index: 9999"
-    />
-    <button
-      id="activateEyedropper"
-      type="button"
-      style="margin-left: 10px; display: none"
-    ></button>
-    <div
-      id="comicColorPickerPanel"
-      style="
-        position: absolute;
-        display: none;
-        z-index: 9999;
-        background: #fff;
-        padding: 12px 16px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      "
-    >
-      <div
-        style="
-          display: flex;
-          align-items: center;
-          margin-bottom: 12px;
-          gap: 8px;
-        "
-      >
-        <span style="font-weight: bold">Último color:</span>
+        <input
+          type="color"
+          id="floatingColorPicker"
+          style="position: absolute; display: none; z-index: 9999"
+        />
+        <button
+          id="activateEyedropper"
+          type="button"
+          style="margin-left: 10px; display: none"
+        ></button>
         <div
-          id="comicLastColorSquare"
+          id="comicColorPickerPanel"
           style="
-            width: 24px;
-            height: 24px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            background: #fff;
-            cursor: pointer;
+            position: absolute;
             display: none;
+            z-index: 9999;
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
           "
-          title="Click para seleccionar el último color seleccionado"
-        ></div>
+        >
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              margin-bottom: 12px;
+              gap: 8px;
+            "
+          >
+            <span style="font-weight: bold">Último color:</span>
+            <div
+              id="comicLastColorSquare"
+              style="
+                width: 24px;
+                height: 24px;
+                border: 2px solid #333;
+                border-radius: 4px;
+                background: #fff;
+                cursor: pointer;
+                display: none;
+              "
+              title="Click para seleccionar el último color seleccionado"
+            ></div>
+          </div>
+          <label style="display: block; margin-bottom: 8px">
+            Fondo <input type="color" id="comicBgColorPicker" />
+            <button
+              id="activateEyedropperBg"
+              type="button"
+              style="margin-left: 10px"
+            >
+              Seleccionar color
+            </button>
+          </label>
+          <label style="display: block; margin-bottom: 8px">
+            Borde <input type="color" id="comicBorderColorPicker" />
+            <button
+              id="activateEyedropperBorder"
+              type="button"
+              style="margin-left: 10px"
+            >
+              Seleccionar color
+            </button>
+          </label>
+          <label style="display: block">
+            Texto <input type="color" id="comicTextColorPicker" />
+            <button
+              id="activateEyedropperText"
+              type="button"
+              style="margin-left: 10px"
+            >
+              Seleccionar color
+            </button>
+          </label>
+        </div>
       </div>
-      <label style="display: block; margin-bottom: 8px">
-        Fondo <input type="color" id="comicBgColorPicker" />
-        <button
-          id="activateEyedropperBg"
-          type="button"
-          style="margin-left: 10px"
-        >
-          Seleccionar color
-        </button>
-      </label>
-      <label style="display: block; margin-bottom: 8px">
-        Borde <input type="color" id="comicBorderColorPicker" />
-
-        <button
-          id="activateEyedropperBorder"
-          type="button"
-          style="margin-left: 10px"
-        >
-          Seleccionar color
-        </button>
-      </label>
-      <label style="display: block">
-        Texto <input type="color" id="comicTextColorPicker" />
-
-        <button
-          id="activateEyedropperText"
-          type="button"
-          style="margin-left: 10px"
-        >
-          Seleccionar color
-        </button>
-      </label>
     </div>
   </body>
   <script src="script.js"></script>
