@@ -1342,19 +1342,22 @@ function comicEyedropperMoveHandler(e) {
   }
 }
 
-comicBalloon.addEventListener("click", (event) => {
-  const style = window.getComputedStyle(comicBalloon);
-  comicBgPicker.value = rgbToHex(style.backgroundColor);
-  comicBorderPicker.value = rgbToHex(style.borderColor);
-  comicTextPicker.value = rgbToHex(style.color);
+// TODO: se mantiene con if() temporalmente para evitar crash en carga inicial. Relacionado al cuenta gotas
+if ( comicBalloon ) {
+  comicBalloon.addEventListener("click", (event) => {
+    const style = window.getComputedStyle(comicBalloon);
+    comicBgPicker.value = rgbToHex(style.backgroundColor);
+    comicBorderPicker.value = rgbToHex(style.borderColor);
+    comicTextPicker.value = rgbToHex(style.color);
 
-  updateComicLastColorSquare();
+    updateComicLastColorSquare();
 
-  comicColorPanel.style.left = event.pageX + "px";
-  comicColorPanel.style.top = event.pageY + "px";
-  comicColorPanel.style.display = "block";
-  event.stopPropagation();
-});
+    comicColorPanel.style.left = event.pageX + "px";
+    comicColorPanel.style.top = event.pageY + "px";
+    comicColorPanel.style.display = "block";
+    event.stopPropagation();
+  });
+}
 
 document
   .getElementById("comicLastColorSquare")
@@ -1501,111 +1504,116 @@ document
     e.stopPropagation();
   });
 
-posterImg.addEventListener("click", (e) => {
-  if (comicEyedropperActive && comicEyedropperTarget && posterImg.src) {
-    e.stopPropagation();
+// TODO: se mantiene con if() temporalmente para evitar crash en carga inicial. Relacionado al cuenta gotas
+if ( posterImg ) {
+  posterImg.addEventListener("click", (e) => {
+    if (comicEyedropperActive && comicEyedropperTarget && posterImg.src) {
+      e.stopPropagation();
 
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = posterImg.naturalWidth;
-      canvas.height = posterImg.naturalHeight;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(
-        posterImg,
-        0,
-        0,
-        posterImg.naturalWidth,
-        posterImg.naturalHeight
-      );
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = posterImg.naturalWidth;
+        canvas.height = posterImg.naturalHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(
+          posterImg,
+          0,
+          0,
+          posterImg.naturalWidth,
+          posterImg.naturalHeight
+        );
 
-      const rect = posterImg.getBoundingClientRect();
-      const x = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
-          ),
-          posterImg.naturalWidth - 1
-        )
-      );
-      const y = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
-          ),
-          posterImg.naturalHeight - 1
-        )
-      );
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+        const rect = posterImg.getBoundingClientRect();
+        const x = Math.max(
+          0,
+          Math.min(
+            Math.round(
+              (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
+            ),
+            posterImg.naturalWidth - 1
+          )
+        );
+        const y = Math.max(
+          0,
+          Math.min(
+            Math.round(
+              (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+            ),
+            posterImg.naturalHeight - 1
+          )
+        );
+        const pixel = ctx.getImageData(x, y, 1, 1).data;
+        const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
 
-      lastComicEyedropperColor = hex;
-      updateComicLastColorSquare();
+        lastComicEyedropperColor = hex;
+        updateComicLastColorSquare();
 
-      comicEyedropperTarget.value = hex;
-      comicEyedropperTarget.dispatchEvent(new Event("input"));
-    } catch (error) {
-      console.warn("Error al obtener color del pixel:", error);
+        comicEyedropperTarget.value = hex;
+        comicEyedropperTarget.dispatchEvent(new Event("input"));
+      } catch (error) {
+        console.warn("Error al obtener color del pixel:", error);
+      }
+
+      cleanupComicEyedropperEvents();
+      return;
     }
+  });
+}
 
-    cleanupComicEyedropperEvents();
-    return;
-  }
-});
+if ( posterFeed ) {
+  posterFeed.addEventListener("click", (e) => {
+    if (comicEyedropperActive && comicEyedropperTarget && posterFeed.src) {
+      e.stopPropagation();
 
-posterFeed.addEventListener("click", (e) => {
-  if (comicEyedropperActive && comicEyedropperTarget && posterFeed.src) {
-    e.stopPropagation();
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = posterFeed.naturalWidth;
+        canvas.height = posterFeed.naturalHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(
+          posterFeed,
+          0,
+          0,
+          posterFeed.naturalWidth,
+          posterFeed.naturalHeight
+        );
 
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = posterFeed.naturalWidth;
-      canvas.height = posterFeed.naturalHeight;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(
-        posterFeed,
-        0,
-        0,
-        posterFeed.naturalWidth,
-        posterFeed.naturalHeight
-      );
+        const rect = posterFeed.getBoundingClientRect();
+        const x = Math.max(
+          0,
+          Math.min(
+            Math.round(
+              (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
+            ),
+            posterFeed.naturalWidth - 1
+          )
+        );
+        const y = Math.max(
+          0,
+          Math.min(
+            Math.round(
+              (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
+            ),
+            posterFeed.naturalHeight - 1
+          )
+        );
+        const pixel = ctx.getImageData(x, y, 1, 1).data;
+        const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
 
-      const rect = posterFeed.getBoundingClientRect();
-      const x = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
-          ),
-          posterFeed.naturalWidth - 1
-        )
-      );
-      const y = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
-          ),
-          posterFeed.naturalHeight - 1
-        )
-      );
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+        lastComicEyedropperColor = hex;
+        updateComicLastColorSquare();
 
-      lastComicEyedropperColor = hex;
-      updateComicLastColorSquare();
+        comicEyedropperTarget.value = hex;
+        comicEyedropperTarget.dispatchEvent(new Event("input"));
+      } catch (error) {
+        console.warn("Error al obtener color del pixel:", error);
+      }
 
-      comicEyedropperTarget.value = hex;
-      comicEyedropperTarget.dispatchEvent(new Event("input"));
-    } catch (error) {
-      console.warn("Error al obtener color del pixel:", error);
+      cleanupComicEyedropperEvents();
+      return;
     }
-
-    cleanupComicEyedropperEvents();
-    return;
-  }
-});
+  });
+}
 
 document.addEventListener("mousedown", (e) => {
   if (
@@ -1743,119 +1751,124 @@ activateEyedropperBtn.addEventListener("click", () => {
   activateEyedropper();
 });
 
-posterImg.addEventListener("click", (e) => {
-  if (!eyedropperActive || !posterImg.src) return;
+// TODO: se mantiene con if() temporalmente para evitar crash en carga inicial. Relacionado al cuenta gotas
+if ( posterImg ) {
+  posterImg.addEventListener("click", (e) => {
+    if (!eyedropperActive || !posterImg.src) return;
 
-  e.stopPropagation();
-  e.preventDefault();
+    e.stopPropagation();
+    e.preventDefault();
 
-  const canvas = document.createElement("canvas");
-  canvas.width = posterImg.naturalWidth;
-  canvas.height = posterImg.naturalHeight;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(
-    posterImg,
-    0,
-    0,
-    posterImg.naturalWidth,
-    posterImg.naturalHeight
-  );
+    const canvas = document.createElement("canvas");
+    canvas.width = posterImg.naturalWidth;
+    canvas.height = posterImg.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterImg,
+      0,
+      0,
+      posterImg.naturalWidth,
+      posterImg.naturalHeight
+    );
 
-  const rect = posterImg.getBoundingClientRect();
-  const x = Math.round(
-    (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
-  );
-  const y = Math.round(
-    (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
-  );
-  const pixel = ctx.getImageData(x, y, 1, 1).data;
-  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-  eyedropperColor = hex;
+    const rect = posterImg.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+    eyedropperColor = hex;
 
-  window.lastEyedropperColor = hex;
+    window.lastEyedropperColor = hex;
 
-  let colorPreview = document.getElementById("floating-color-preview");
-  if (colorPreview) {
-    colorPreview.style.background = hex;
-    colorPreview.style.display = "block";
-    colorPreview.style.left = e.pageX + 20 + "px";
-    colorPreview.style.top = e.pageY - 24 + "px";
-  }
+    let colorPreview = document.getElementById("floating-color-preview");
+    if (colorPreview) {
+      colorPreview.style.background = hex;
+      colorPreview.style.display = "block";
+      colorPreview.style.left = e.pageX + 20 + "px";
+      colorPreview.style.top = e.pageY - 24 + "px";
+    }
 
-  if (eyedropperCallback) {
-    eyedropperCallback(hex);
-  } else {
-    floatingColorPicker.value = hex;
-    floatingColorPicker.dispatchEvent(new Event("input"));
-  }
+    if (eyedropperCallback) {
+      eyedropperCallback(hex);
+    } else {
+      floatingColorPicker.value = hex;
+      floatingColorPicker.dispatchEvent(new Event("input"));
+    }
 
-  posterImg.removeEventListener("mousemove", eyedropperMoveHandler);
-  setTimeout(() => {
-    if (colorPreview) colorPreview.style.display = "none";
-  }, 400);
+    posterImg.removeEventListener("mousemove", eyedropperMoveHandler);
+    setTimeout(() => {
+      if (colorPreview) colorPreview.style.display = "none";
+    }, 400);
 
-  posterImg.style.cursor = "";
-  document.body.style.cursor = "";
-  eyedropperActive = false;
-  eyedropperCallback = null;
-});
+    posterImg.style.cursor = "";
+    document.body.style.cursor = "";
+    eyedropperActive = false;
+    eyedropperCallback = null;
+  });
+}
 
-posterFeed.addEventListener("click", (e) => {
-  if (!eyedropperActive || !posterFeed.src) return;
+if ( posterFeed ) {
+  posterFeed.addEventListener("click", (e) => {
+    if (!eyedropperActive || !posterFeed.src) return;
 
-  e.stopPropagation();
-  e.preventDefault();
+    e.stopPropagation();
+    e.preventDefault();
 
-  const canvas = document.createElement("canvas");
-  canvas.width = posterFeed.naturalWidth;
-  canvas.height = posterFeed.naturalHeight;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(
-    posterFeed,
-    0,
-    0,
-    posterFeed.naturalWidth,
-    posterFeed.naturalHeight
-  );
+    const canvas = document.createElement("canvas");
+    canvas.width = posterFeed.naturalWidth;
+    canvas.height = posterFeed.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterFeed,
+      0,
+      0,
+      posterFeed.naturalWidth,
+      posterFeed.naturalHeight
+    );
 
-  const rect = posterFeed.getBoundingClientRect();
-  const x = Math.round(
-    (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
-  );
-  const y = Math.round(
-    (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
-  );
-  const pixel = ctx.getImageData(x, y, 1, 1).data;
-  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-  eyedropperColor = hex;
+    const rect = posterFeed.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+    eyedropperColor = hex;
 
-  window.lastEyedropperColor = hex;
+    window.lastEyedropperColor = hex;
 
-  let colorPreview = document.getElementById("floating-color-preview");
-  if (colorPreview) {
-    colorPreview.style.background = hex;
-    colorPreview.style.display = "block";
-    colorPreview.style.left = e.pageX + 20 + "px";
-    colorPreview.style.top = e.pageY - 24 + "px";
-  }
+    let colorPreview = document.getElementById("floating-color-preview");
+    if (colorPreview) {
+      colorPreview.style.background = hex;
+      colorPreview.style.display = "block";
+      colorPreview.style.left = e.pageX + 20 + "px";
+      colorPreview.style.top = e.pageY - 24 + "px";
+    }
 
-  if (eyedropperCallback) {
-    eyedropperCallback(hex);
-  } else {
-    floatingColorPicker.value = hex;
-    floatingColorPicker.dispatchEvent(new Event("input"));
-  }
+    if (eyedropperCallback) {
+      eyedropperCallback(hex);
+    } else {
+      floatingColorPicker.value = hex;
+      floatingColorPicker.dispatchEvent(new Event("input"));
+    }
 
-  posterFeed.removeEventListener("mousemove", eyedropperMoveHandler);
-  setTimeout(() => {
-    if (colorPreview) colorPreview.style.display = "none";
-  }, 400);
+    posterFeed.removeEventListener("mousemove", eyedropperMoveHandler);
+    setTimeout(() => {
+      if (colorPreview) colorPreview.style.display = "none";
+    }, 400);
 
-  posterFeed.style.cursor = "";
-  document.body.style.cursor = "";
-  eyedropperActive = false;
-  eyedropperCallback = null;
-});
+    posterFeed.style.cursor = "";
+    document.body.style.cursor = "";
+    eyedropperActive = false;
+    eyedropperCallback = null;
+  });
+}
 
 document
   .getElementById("load-backdrop-direct")
