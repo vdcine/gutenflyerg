@@ -2249,50 +2249,6 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
   }
 });
 
-// TABS
-
-
-
-// ============================================
-// 8. TABS DE NAVEGACIÓN ENTRE FLYERS
-// ============================================
-
-document.getElementById("tab-story").addEventListener("click", () => {
-  document.getElementById("flyer-story").style.display = "block";
-  document.getElementById("flyer-story-review").style.display = "flex";
-  document.getElementById("flyer-feed").style.display = "none";
-  document.getElementById("flyer-feed-review").style.display = "none";
-  document.getElementById("tab-story").classList.add("active");
-  document.getElementById("tab-feed").classList.remove("active");
-  document.getElementById("saveFlyer").style.display = "block";
-  document.getElementById("saveFlyerFeed").style.display = "none";
-  document.getElementById("saveFlyerReview").style.display = "block";
-  document.getElementById("saveFlyerReviewFeed").style.display = "none";
-  document.querySelector(".panel-feed").style.display = "none";
-  document.querySelector(".panel-review").style.display = "flex";
-  document.querySelector(".panel-review-feed").style.display = "none";
-  document.querySelector(".panel").style.display = "flex";
-});
-
-document.getElementById("tab-feed").addEventListener("click", () => {
-  document.getElementById("flyer-story").style.display = "none";
-  document.getElementById("flyer-feed").style.display = "block";
-  document.getElementById("flyer-story-review").style.display = "none";
-  document.getElementById("flyer-feed-review").style.display = "flex";
-  document.getElementById("tab-feed").classList.add("active");
-  document.getElementById("tab-story").classList.remove("active");
-  document.getElementById("saveFlyerFeed").style.display = "block";
-  document.getElementById("saveFlyer").style.display = "none";
-  document.getElementById("saveFlyerReview").style.display = "none";
-  document.getElementById("saveFlyerReviewFeed").style.display = "block";
-  document.querySelector(".panel-feed").style.display = "flex";
-  document.querySelector(".panel-review").style.display = "none";
-  document.querySelector(".panel-review-feed").style.display = "flex";
-  document.querySelector(".panel").style.display = "none";
-});
-
-
-
 // ============================================
 // 7. APLICACIÓN DE BORDES (TEXT STROKE)
 // ============================================
