@@ -2253,81 +2253,6 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
 // 7. APLICACIÓN DE BORDES (TEXT STROKE)
 // ============================================
 
-document.getElementById("applyStrokeBtn").addEventListener("click", () => {
-  const strokeIdMap = {
-    header: ["header", "header-feed", "header-review", "header-review-feed"],
-    title: ["title", "title-feed", "title-review", "title-review-feed"],
-    year: ["year", "year-feed", "year-review", "year-review-feed"],
-    director: [
-      "director",
-      "director-feed",
-      "director-review",
-      "director-review-feed",
-    ],
-    duracion: [
-      "duracion",
-      "duracion-feed",
-      "duracion-review",
-      "duracion-review-feed",
-    ],
-    "flyer-date": ["flyer-date", "flyer-date-feed"],
-    "flyer-hour": ["flyer-hour", "flyer-hour-feed"],
-    "flyer-biblioteca": ["flyer-biblioteca", "flyer-biblioteca-feed"],
-  };
-  const select = document.getElementById("strokeTargetSelect");
-  const color = document.getElementById("strokeColorInput").value;
-  Array.from(select.selectedOptions).forEach((option) => {
-    const ids = strokeIdMap[option.value] || [option.value];
-    ids.forEach((id) => {
-      const target = document.getElementById(id);
-      if (target) {
-        target.style.textShadow = `
-          -1px -1px 0 ${color},
-          1px -1px 0 ${color},
-          -1px 1px 0 ${color},
-          1px 1px 0 ${color}
-        `;
-      }
-    });
-  });
-});
-
-document.getElementById("removeStrokeBtn").addEventListener("click", () => {
-  const select = document.getElementById("strokeTargetSelect");
-  Array.from(select.selectedOptions).forEach((option) => {
-    const target = document.getElementById(option.value);
-    if (target) {
-      target.style.textShadow = "";
-    }
-  });
-});
-
-document.getElementById("applyStrokeBtnFeed").addEventListener("click", () => {
-  const select = document.getElementById("strokeTargetSelectFeed");
-  const color = document.getElementById("strokeColorInputFeed").value;
-  Array.from(select.selectedOptions).forEach((option) => {
-    const target = document.getElementById(option.value);
-    if (target) {
-      target.style.textShadow = `
-        -1px -1px 0 ${color},
-        1px -1px 0 ${color},
-        -1px 1px 0 ${color},
-        1px 1px 0 ${color}
-      `;
-    }
-  });
-});
-
-document.getElementById("removeStrokeBtnFeed").addEventListener("click", () => {
-  const select = document.getElementById("strokeTargetSelectFeed");
-  Array.from(select.selectedOptions).forEach((option) => {
-    const target = document.getElementById(option.value);
-    if (target) {
-      target.style.textShadow = "";
-    }
-  });
-});
-
 document
   .getElementById("applyStrokeBtnReview")
   .addEventListener("click", () => {
@@ -2365,38 +2290,6 @@ document
       }
     });
   });
-
-document
-  .getElementById("applyStrokeBtnReviewFeed")
-  .addEventListener("click", () => {
-    const select = document.getElementById("strokeTargetSelectReviewFeed");
-    const color = document.getElementById("strokeColorInputReviewFeed").value;
-    Array.from(select.selectedOptions).forEach((option) => {
-      const target = document.getElementById(option.value);
-      if (target) {
-        target.style.textShadow = `
-        -1px -1px 0 ${color},
-        1px -1px 0 ${color},
-        -1px 1px 0 ${color},
-        1px 1px 0 ${color}
-      `;
-      }
-    });
-  });
-
-document
-  .getElementById("removeStrokeBtnReviewFeed")
-  .addEventListener("click", () => {
-    const select = document.getElementById("strokeTargetSelectReviewFeed");
-    Array.from(select.selectedOptions).forEach((option) => {
-      const target = document.getElementById(option.value);
-      if (target) {
-        target.style.textShadow = "";
-      }
-    });
-  });
-
-
 
 // ============================================
 // 10. IMPORTAR/EXPORTAR DATOS
