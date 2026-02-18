@@ -403,12 +403,7 @@ document.getElementById("poster-next").addEventListener("click", () => {
   setPoster(posterUrlNext);
 });
 
-function setPoster(url) {
-  document.getElementById("poster").src = url;
-  document.getElementById("poster-feed").src = url;
-  document.getElementById("poster-review").src = url;
-  document.getElementById("poster-review-feed").src = url;
-}
+function setPoster(url) {document.getElementById("poster-review").src = url}
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {
   if (!backdrops.length) return;
@@ -419,16 +414,9 @@ document.getElementById("backdrop-prev").addEventListener("click", () => {
   const backdropUrlPrev = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/original${filePath}`
   );
-  const rect = document.querySelector(".rect");
-  const rectFeed = document.querySelector(".rect-feed");
   const rectReview = document.querySelector(".rect-review");
-  rect.style.display = "none";
-  rectFeed.style.display = "none";
   rectReview.style.display = "none";
-  setBackdropAsBackground(backdropUrlPrev);
-  setBackdropAsBackgroundFeed(backdropUrlPrev);
   setBackdropAsBackgroundReview(backdropUrlPrev);
-  setBackdropAsBackgroundReviewFeed(backdropUrlPrev);
 });
 
 document.getElementById("backdrop-next").addEventListener("click", () => {
@@ -441,65 +429,10 @@ document.getElementById("backdrop-next").addEventListener("click", () => {
     `https://image.tmdb.org/t/p/original${filePath}`
   );
 
-  const rect = document.querySelector(".rect");
-  const rectFeed = document.querySelector(".rect-feed");
   const rectReview = document.querySelector(".rect-review");
-  rect.style.display = "none";
-  rectFeed.style.display = "none";
   rectReview.style.display = "none";
-  setBackdropAsBackground(backdropUrlNext);
-  setBackdropAsBackgroundFeed(backdropUrlNext);
   setBackdropAsBackgroundReview(backdropUrlNext);
-  setBackdropAsBackgroundReviewFeed(backdropUrlNext);
 });
-
-function setBackdropAsBackground(url) {
-  const flyerStory = document.getElementById("flyer-story");
-  let blurBg = document.getElementById("flyer-blur-bg-story");
-  if (blurBg) blurBg.remove();
-
-  blurBg = document.createElement("div");
-  blurBg.id = "flyer-blur-bg-story";
-  blurBg.style.position = "absolute";
-  blurBg.style.top = "0";
-  blurBg.style.left = "0";
-  blurBg.style.width = "100%";
-  blurBg.style.height = "100%";
-  blurBg.style.zIndex = "0";
-  blurBg.style.pointerEvents = "none";
-  blurBg.style.backgroundPosition = "center";
-  blurBg.style.backgroundSize = "cover";
-  blurBg.style.backgroundRepeat = "no-repeat";
-  blurBg.style.filter = "blur(4px) brightness(0.9)";
-  blurBg.style.backgroundImage = `url('${url}')`;
-  flyerStory.prepend(blurBg);
-
-  flyerStory.style.backgroundImage = "";
-}
-
-function setBackdropAsBackgroundFeed(url) {
-  const flyerFeed = document.getElementById("flyer-feed");
-  let blurBg = document.getElementById("flyer-blur-bg-feed");
-  if (blurBg) blurBg.remove();
-
-  blurBg = document.createElement("div");
-  blurBg.id = "flyer-blur-bg-feed";
-  blurBg.style.position = "absolute";
-  blurBg.style.top = "0";
-  blurBg.style.left = "0";
-  blurBg.style.width = "100%";
-  blurBg.style.height = "100%";
-  blurBg.style.zIndex = "0";
-  blurBg.style.pointerEvents = "none";
-  blurBg.style.backgroundPosition = "center";
-  blurBg.style.backgroundSize = "cover";
-  blurBg.style.backgroundRepeat = "no-repeat";
-  blurBg.style.filter = "blur(4px) brightness(0.9)";
-  blurBg.style.backgroundImage = `url('${url}')`;
-  flyerFeed.prepend(blurBg);
-
-  flyerFeed.style.backgroundImage = "";
-}
 
 function setBackdropAsBackgroundReview(url) {
   const flyerReview = document.getElementById("flyer-story-review");
@@ -508,30 +441,6 @@ function setBackdropAsBackgroundReview(url) {
 
   blurBg = document.createElement("div");
   blurBg.id = "flyer-blur-bg-review";
-  blurBg.style.position = "absolute";
-  blurBg.style.top = "0";
-  blurBg.style.left = "0";
-  blurBg.style.width = "100%";
-  blurBg.style.height = "100%";
-  blurBg.style.zIndex = "0";
-  blurBg.style.pointerEvents = "none";
-  blurBg.style.backgroundPosition = "center";
-  blurBg.style.backgroundSize = "cover";
-  blurBg.style.backgroundRepeat = "no-repeat";
-  blurBg.style.filter = "blur(4px) brightness(0.9)";
-  blurBg.style.backgroundImage = `url('${url}')`;
-  flyerReview.prepend(blurBg);
-
-  flyerReview.style.backgroundImage = "";
-}
-
-function setBackdropAsBackgroundReviewFeed(url) {
-  const flyerReview = document.getElementById("flyer-feed-review");
-  let blurBg = document.getElementById("flyer-blur-bg-review-feed");
-  if (blurBg) blurBg.remove();
-
-  blurBg = document.createElement("div");
-  blurBg.id = "flyer-blur-bg-review-feed";
   blurBg.style.position = "absolute";
   blurBg.style.top = "0";
   blurBg.style.left = "0";
