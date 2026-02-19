@@ -1966,22 +1966,10 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
     .getElementById("edadSugeridaInputReview")
     .value.trim();
 
-  document.getElementById("title").innerHTML = (
-    titulo || "Título de la película"
-  ).replace(/\n/g, "<br>");
-  document.getElementById("title-feed").innerHTML = (
-    titulo || "Título de la película"
-  ).replace(/\n/g, "<br>");
   document.getElementById("title-review").innerHTML = (
     titulo || "Título de la película"
   ).replace(/\n/g, "<br>");
-  document.getElementById("title-review-feed").innerHTML = (
-    titulo || "Título de la película"
-  ).replace(/\n/g, "<br>");
   document.getElementById("titleInputReview").value = titulo;
-  document.getElementById("titleInput").value = titulo;
-  document.getElementById("titleInputFeed").value = titulo;
-  document.getElementById("titleInputReviewFeed").value = titulo;
 
   const flyerReview = document.getElementById("flyer-story-review");
   if (flyerReview) {
@@ -1989,11 +1977,6 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
       sinapsis || "Sinopsis de la película"
     ).replace(/\n/g, "<br>");
     document.getElementById("sinapsisInputReview").value = sinapsis;
-
-    document.getElementById("sinapsis-review-feed").innerHTML = (
-      sinapsis || "Sinopsis de la película"
-    ).replace(/\n/g, "<br>");
-    document.getElementById("sinapsisInputReviewFeed").value = sinapsis;
 
     const certificationMap = {
       AA: "ATP",
@@ -2023,64 +2006,33 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
 
     if (mappedCertification) {
       if (edadSugerida) {
-        document.getElementById("edadSugeridaInput").value =
-          mappedCertification;
-        document.getElementById("edad-sugerida").textContent =
-          mappedCertification;
-        document.getElementById("edad-sugerida-feed").textContent =
-          mappedCertification;
-        document.getElementById("edad-sugerida-review").textContent =
-          mappedCertification;
-        document.getElementById("edad-sugerida-review-feed").textContent =
-          mappedCertification;
-        document.getElementById("edadSugeridaInputFeed").value =
-          mappedCertification;
-        document.getElementById("edadSugeridaInputReview").value =
-          mappedCertification;
-        document.getElementById("edadSugeridaInputReviewFeed").value =
-          mappedCertification;
+        document.getElementById("edadSugeridaInputReview").value = mappedCertification;
       } else {
         edadSugeridaElement.style.display = "none";
       }
 
-      const edadElements = [
-        document.getElementById("edad-sugerida"),
-        document.getElementById("edad-sugerida-feed"),
-        document.getElementById("edad-sugerida-review"),
-        document.getElementById("edad-sugerida-review-feed"),
-      ];
-
-      edadElements.forEach((el) => {
-        if (el) {
+      const el = document.getElementById("edad-sugerida-review");
+      if (el) {
           el.textContent = mappedCertification;
           el.style.display = "inline-block";
+
           if (mappedCertification === "ATP") {
             el.style.backgroundColor = "#4CAF50"; // Verde para ATP
             el.style.color = "white";
-          } else if (
-            mappedCertification === "+13" ||
-            mappedCertification === "SAM 13"
-          ) {
+          } else if (mappedCertification === "+13" || mappedCertification === "SAM 13") {
             el.style.backgroundColor = "#2196F3"; // Azul para +13
             el.style.color = "white";
-          } else if (
-            mappedCertification === "+16" ||
-            mappedCertification === "SAM 16"
-          ) {
+          } else if (mappedCertification === "+16" || mappedCertification === "SAM 16") {
             el.style.backgroundColor = "#FF9800"; // Naranja para +16
             el.style.color = "white";
-          } else if (
-            mappedCertification === "+18" ||
-            mappedCertification === "SAM 18"
-          ) {
+          } else if (mappedCertification === "+18" || mappedCertification === "SAM 18") {
             el.style.backgroundColor = "#f44336"; // Rojo para +18
             el.style.color = "white";
           } else {
             el.style.backgroundColor = "#777"; // Gris para otros
             el.style.color = "white";
           }
-        }
-      });
+      }
     }
   }
 });
