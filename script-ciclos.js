@@ -271,7 +271,7 @@ function updateSelectedMoviesList(lang) {
     const editBtn = movieItem.querySelector(".edit-movie-flyer-btn");
 
     if (editBtn) {
-      editBtn.addEventListener("click", () => editMovieFlyer(movie, lang));
+      editBtn.addEventListener("click", () => editMovieFlyer(movie, movie.language));
     }
 
     if (moveUpBtn && !moveUpBtn.disabled) {
@@ -1478,7 +1478,7 @@ document.getElementById("tab-feed").addEventListener("click", () => {
 document.getElementById("saveFlyer").addEventListener("click", () => {
   const flyerElement = document.getElementById("flyer-story");
   html2canvas(flyerElement, {
-    allowTaint: true,
+    allowTaint: false,
     useCORS: true,
     scale: 2,
   }).then((canvas) => {
@@ -1492,7 +1492,7 @@ document.getElementById("saveFlyer").addEventListener("click", () => {
 document.getElementById("saveFlyerFeed").addEventListener("click", () => {
   const flyerElement = document.getElementById("flyer-feed");
   html2canvas(flyerElement, {
-    allowTaint: true,
+    allowTaint: false,
     useCORS: true,
     scale: 2,
   }).then((canvas) => {
