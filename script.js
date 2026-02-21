@@ -427,10 +427,14 @@ document.getElementById("poster-next").addEventListener("click", () => {
 });
 
 function setPoster(url) {
-  document.getElementById("poster").src = url;
-  document.getElementById("poster-feed").src = url;
-  document.getElementById("poster-review").src = url;
-  document.getElementById("poster-review-feed").src = url;
+  const ids = ["poster", "poster-feed", "poster-review", "poster-review-feed"];
+  ids.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.setAttribute("crossOrigin", "anonymous");
+      el.src = url;
+    }
+  });
 }
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {
@@ -728,7 +732,7 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
           height: 1920,
           scale: 2,
           useCORS: true,
-          allowTaint: true,
+          allowTaint: false,
           backgroundColor: "#ffffff",
           scrollX: 0,
           scrollY: 0,
@@ -794,7 +798,7 @@ document.getElementById("saveFlyerFeed").addEventListener("click", async () => {
           height: 1080,
           scale: 2,
           useCORS: true,
-          allowTaint: true,
+          allowTaint: false,
           backgroundColor: "#ffffff",
           scrollX: 0,
           scrollY: 0,
@@ -862,7 +866,7 @@ document
             height: 1920,
             scale: 2,
             useCORS: true,
-            allowTaint: true,
+            allowTaint: false,
             backgroundColor: "#ffffff",
             scrollX: 0,
             scrollY: 0,
@@ -930,7 +934,7 @@ document
             height: 1080,
             scale: 2,
             useCORS: true,
-            allowTaint: true,
+            allowTaint: false,
             backgroundColor: "#ffffff",
             scrollX: 0,
             scrollY: 0,
@@ -978,7 +982,7 @@ async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
     height: dimensions.height,
     scale: 2,
     useCORS: true,
-    allowTaint: true,
+    allowTaint: false,
     backgroundColor: "#ffffff",
     scrollX: 0,
     scrollY: 0,
@@ -1047,110 +1051,177 @@ function rgbToHex(rgb) {
 }
 
 function getColorTargets(el) {
-  if (el.classList.contains("rect") || el.classList.contains("rect2")) {
+  if (
+    el.classList.contains("rect") ||
+    el.classList.contains("rect2") ||
+    el.classList.contains("rect-feed") ||
+    el.classList.contains("rect2-feed")
+  ) {
     return [
       document.querySelector(".rect"),
       document.querySelector(".rect2"),
       document.querySelector(".rect-feed"),
       document.querySelector(".rect2-feed"),
-      document.querySelector(".rect2-review"),
-      document.querySelector(".rect2-review-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "flyer-hour" || el.id === "flyer-biblioteca") {
+  if (
+    el.classList.contains("rect2-review") ||
+    el.classList.contains("rect2-review-feed")
+  ) {
+    return [
+      document.querySelector(".rect2-review"),
+      document.querySelector(".rect2-review-feed"),
+    ].filter(Boolean);
+  }
+
+  if (
+    el.id === "flyer-hour" ||
+    el.id === "flyer-biblioteca" ||
+    el.id === "flyer-hour-feed" ||
+    el.id === "flyer-biblioteca-feed"
+  ) {
     return [
       document.getElementById("flyer-hour"),
       document.getElementById("flyer-biblioteca"),
       document.getElementById("flyer-hour-feed"),
       document.getElementById("flyer-biblioteca-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "ciclo") {
+  if (el.id === "ciclo" || el.id === "ciclo-feed") {
     return [
       document.getElementById("ciclo"),
       document.getElementById("ciclo-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "title") {
+  if (el.id === "title" || el.id === "title-feed") {
     return [
       document.getElementById("title"),
       document.getElementById("title-feed"),
-      document.getElementById("title-review-feed"),
+    ].filter(Boolean);
+  }
+  if (el.id === "title-review" || el.id === "title-review-feed") {
+    return [
       document.getElementById("title-review"),
-    ];
+      document.getElementById("title-review-feed"),
+    ].filter(Boolean);
   }
 
-  if (el.id === "year") {
+  if (el.id === "year" || el.id === "year-feed") {
     return [
       document.getElementById("year"),
       document.getElementById("year-feed"),
+    ].filter(Boolean);
+  }
+  if (el.id === "year-review" || el.id === "year-review-feed") {
+    return [
       document.getElementById("year-review"),
       document.getElementById("year-review-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "flyer-date") {
+  if (el.id === "flyer-date" || el.id === "flyer-date-feed") {
     return [
       document.getElementById("flyer-date"),
       document.getElementById("flyer-date-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "director") {
+  if (el.id === "director" || el.id === "director-feed") {
     return [
       document.getElementById("director"),
       document.getElementById("director-feed"),
+    ].filter(Boolean);
+  }
+  if (el.id === "director-review" || el.id === "director-review-feed") {
+    return [
       document.getElementById("director-review"),
       document.getElementById("director-review-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "duracion") {
+  if (el.id === "duracion" || el.id === "duracion-feed") {
     return [
       document.getElementById("duracion"),
       document.getElementById("duracion-feed"),
+    ].filter(Boolean);
+  }
+  if (el.id === "duracion-review" || el.id === "duracion-review-feed") {
+    return [
       document.getElementById("duracion-review"),
       document.getElementById("duracion-review-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "header") {
+  if (el.id === "header" || el.id === "header-feed") {
     return [
       document.getElementById("header"),
       document.getElementById("header-feed"),
+    ].filter(Boolean);
+  }
+  if (el.id === "header-review" || el.id === "header-review-feed") {
+    return [
       document.getElementById("header-review"),
       document.getElementById("header-review-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "org") {
+  if (el.id === "org" || el.id === "org-feed") {
     return [
       document.getElementById("org"),
       document.getElementById("org-feed"),
+    ].filter(Boolean);
+  }
+  if (el.id === "org-review" || el.id === "org-review-feed") {
+    return [
       document.getElementById("org-review"),
       document.getElementById("org-review-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "origen-review") {
+  if (el.id === "origen-review" || el.id === "origen-review-feed") {
     return [
       document.getElementById("origen-review"),
       document.getElementById("origen-review-feed"),
-    ];
+    ].filter(Boolean);
   }
 
-  if (el.id === "sinapsis-review") {
+  if (el.id === "sinapsis-review" || el.id === "sinapsis-review-feed") {
     return [
       document.getElementById("sinapsis-review"),
       document.getElementById("sinapsis-review-feed"),
-    ];
+    ].filter(Boolean);
   }
 
   if (el.id === "flyer-story" || el.id === "flyer-feed") {
-    return [el];
+    return [
+      document.getElementById("flyer-story"),
+      document.getElementById("flyer-feed"),
+    ].filter(Boolean);
+  }
+  if (el.id === "flyer-story-review" || el.id === "flyer-feed-review") {
+    return [
+      document.getElementById("flyer-story-review"),
+      document.getElementById("flyer-feed-review"),
+    ].filter(Boolean);
+  }
+
+  if (el.id === "edad-sugerida" || el.id === "edad-sugerida-feed") {
+    return [
+      document.getElementById("edad-sugerida"),
+      document.getElementById("edad-sugerida-feed"),
+    ].filter(Boolean);
+  }
+  if (
+    el.id === "edad-sugerida-review" ||
+    el.id === "edad-sugerida-review-feed"
+  ) {
+    return [
+      document.getElementById("edad-sugerida-review"),
+      document.getElementById("edad-sugerida-review-feed"),
+    ].filter(Boolean);
   }
 
   return [el];
@@ -1363,6 +1434,7 @@ document.addEventListener("click", (e) => {
       document.body.style.cursor = "";
       const message = document.getElementById("eyedropper-message");
       if (message) message.remove();
+      resetEyedropper();
     }
   }
 });
@@ -1395,6 +1467,8 @@ const comicBorderPicker = document.getElementById("comicBorderColorPicker");
 const comicTextPicker = document.getElementById("comicTextColorPicker");
 const posterImg = document.getElementById("poster");
 const posterFeed = document.getElementById("poster-feed");
+const posterReview = document.getElementById("poster-review");
+const posterReviewFeed = document.getElementById("poster-review-feed");
 
 let comicEyedropperActive = false;
 let comicEyedropperTarget = null;
@@ -1897,6 +1971,86 @@ function eyedropperMoveHandlerFeed(e) {
   }
 }
 
+function eyedropperMoveHandlerReview(e) {
+  if (!eyedropperActive) return;
+  const colorPreview = document.getElementById("floating-color-preview");
+  if (!colorPreview) return;
+  colorPreview.style.left = e.pageX + 20 + "px";
+  colorPreview.style.top = e.pageY - 24 + "px";
+
+  if (posterReview.naturalWidth && posterReview.naturalHeight) {
+    const canvas = document.createElement("canvas");
+    canvas.width = posterReview.naturalWidth;
+    canvas.height = posterReview.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterReview,
+      0,
+      0,
+      posterReview.naturalWidth,
+      posterReview.naturalHeight
+    );
+    const rect = posterReview.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterReview.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterReview.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+    colorPreview.style.background = hex;
+  }
+}
+
+function eyedropperMoveHandlerReviewFeed(e) {
+  if (!eyedropperActive) return;
+  const colorPreview = document.getElementById("floating-color-preview");
+  if (!colorPreview) return;
+  colorPreview.style.left = e.pageX + 20 + "px";
+  colorPreview.style.top = e.pageY - 24 + "px";
+
+  if (posterReviewFeed.naturalWidth && posterReviewFeed.naturalHeight) {
+    const canvas = document.createElement("canvas");
+    canvas.width = posterReviewFeed.naturalWidth;
+    canvas.height = posterReviewFeed.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      posterReviewFeed,
+      0,
+      0,
+      posterReviewFeed.naturalWidth,
+      posterReviewFeed.naturalHeight
+    );
+    const rect = posterReviewFeed.getBoundingClientRect();
+    const x = Math.round(
+      (e.clientX - rect.left) * (posterReviewFeed.naturalWidth / rect.width)
+    );
+    const y = Math.round(
+      (e.clientY - rect.top) * (posterReviewFeed.naturalHeight / rect.height)
+    );
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+    colorPreview.style.background = hex;
+  }
+}
+
+function resetEyedropper() {
+  eyedropperActive = false;
+  eyedropperCallback = null;
+  posterImg.style.cursor = "";
+  posterFeed.style.cursor = "";
+  if (posterReview) posterReview.style.cursor = "";
+  if (posterReviewFeed) posterReviewFeed.style.cursor = "";
+  document.body.style.cursor = "";
+  posterImg.removeEventListener("mousemove", eyedropperMoveHandler);
+  posterFeed.removeEventListener("mousemove", eyedropperMoveHandlerFeed);
+  if (posterReview) posterReview.removeEventListener("mousemove", eyedropperMoveHandlerReview);
+  if (posterReviewFeed) posterReviewFeed.removeEventListener("mousemove", eyedropperMoveHandlerReviewFeed);
+  const message = document.getElementById("eyedropper-message");
+  if (message) message.remove();
+}
+
 const activateEyedropperBtn = document.getElementById("activateEyedropper");
 
 function activateEyedropper(callback = null) {
@@ -1904,6 +2058,8 @@ function activateEyedropper(callback = null) {
   eyedropperCallback = callback;
   posterImg.style.cursor = "crosshair";
   posterFeed.style.cursor = "crosshair";
+  if (posterReview) posterReview.style.cursor = "crosshair";
+  if (posterReviewFeed) posterReviewFeed.style.cursor = "crosshair";
 
   let colorPreview = document.getElementById("floating-color-preview");
   if (!colorPreview) {
@@ -1929,6 +2085,8 @@ function activateEyedropper(callback = null) {
 
   posterImg.addEventListener("mousemove", eyedropperMoveHandler);
   posterFeed.addEventListener("mousemove", eyedropperMoveHandlerFeed);
+  if (posterReview) posterReview.addEventListener("mousemove", eyedropperMoveHandlerReview);
+  if (posterReviewFeed) posterReviewFeed.addEventListener("mousemove", eyedropperMoveHandlerReviewFeed);
 }
 
 activateEyedropperBtn.addEventListener("click", () => {
@@ -1982,6 +2140,7 @@ posterImg.addEventListener("click", (e) => {
   }
 
   posterImg.removeEventListener("mousemove", eyedropperMoveHandler);
+  resetEyedropper();
   setTimeout(() => {
     if (colorPreview) colorPreview.style.display = "none";
   }, 400);
@@ -2039,14 +2198,114 @@ posterFeed.addEventListener("click", (e) => {
   }
 
   posterFeed.removeEventListener("mousemove", eyedropperMoveHandler);
+  resetEyedropper();
   setTimeout(() => {
     if (colorPreview) colorPreview.style.display = "none";
   }, 400);
+});
 
-  posterFeed.style.cursor = "";
-  document.body.style.cursor = "";
-  eyedropperActive = false;
-  eyedropperCallback = null;
+posterReview.addEventListener("click", (e) => {
+  if (!eyedropperActive || !posterReview.src) return;
+
+  e.stopPropagation();
+  e.preventDefault();
+
+  const canvas = document.createElement("canvas");
+  canvas.width = posterReview.naturalWidth;
+  canvas.height = posterReview.naturalHeight;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(
+    posterReview,
+    0,
+    0,
+    posterReview.naturalWidth,
+    posterReview.naturalHeight
+  );
+
+  const rect = posterReview.getBoundingClientRect();
+  const x = Math.round(
+    (e.clientX - rect.left) * (posterReview.naturalWidth / rect.width)
+  );
+  const y = Math.round(
+    (e.clientY - rect.top) * (posterReview.naturalHeight / rect.height)
+  );
+  const pixel = ctx.getImageData(x, y, 1, 1).data;
+  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+  eyedropperColor = hex;
+
+  window.lastEyedropperColor = hex;
+
+  let colorPreview = document.getElementById("floating-color-preview");
+  if (colorPreview) {
+    colorPreview.style.background = hex;
+    colorPreview.style.display = "block";
+    colorPreview.style.left = e.pageX + 20 + "px";
+    colorPreview.style.top = e.pageY - 24 + "px";
+  }
+
+  if (eyedropperCallback) {
+    eyedropperCallback(hex);
+  } else {
+    floatingColorPicker.value = hex;
+    floatingColorPicker.dispatchEvent(new Event("input"));
+  }
+
+  resetEyedropper();
+  setTimeout(() => {
+    if (colorPreview) colorPreview.style.display = "none";
+  }, 400);
+});
+
+posterReviewFeed.addEventListener("click", (e) => {
+  if (!eyedropperActive || !posterReviewFeed.src) return;
+
+  e.stopPropagation();
+  e.preventDefault();
+
+  const canvas = document.createElement("canvas");
+  canvas.width = posterReviewFeed.naturalWidth;
+  canvas.height = posterReviewFeed.naturalHeight;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(
+    posterReviewFeed,
+    0,
+    0,
+    posterReviewFeed.naturalWidth,
+    posterReviewFeed.naturalHeight
+  );
+
+  const rect = posterReviewFeed.getBoundingClientRect();
+  const x = Math.round(
+    (e.clientX - rect.left) * (posterReviewFeed.naturalWidth / rect.width)
+  );
+  const y = Math.round(
+    (e.clientY - rect.top) * (posterReviewFeed.naturalHeight / rect.height)
+  );
+  const pixel = ctx.getImageData(x, y, 1, 1).data;
+  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
+  eyedropperColor = hex;
+
+  window.lastEyedropperColor = hex;
+
+  let colorPreview = document.getElementById("floating-color-preview");
+  if (colorPreview) {
+    colorPreview.style.background = hex;
+    colorPreview.style.display = "block";
+    colorPreview.style.left = e.pageX + 20 + "px";
+    colorPreview.style.top = e.pageY - 24 + "px";
+  }
+
+  if (eyedropperCallback) {
+    eyedropperCallback(hex);
+  } else {
+    floatingColorPicker.value = hex;
+    floatingColorPicker.dispatchEvent(new Event("input"));
+  }
+
+  resetEyedropper();
+  setTimeout(() => {
+    if (colorPreview) colorPreview.style.display = "none";
+  }, 400);
 });
 
 document
@@ -4177,7 +4436,9 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   const posterUrl = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/w500${movie.poster_path}`
   );
-  document.getElementById("poster").src = posterUrl;
+  const posterImg = document.getElementById("poster");
+  posterImg.setAttribute("crossOrigin", "anonymous");
+  posterImg.src = posterUrl;
   document.getElementById("director").textContent = director
     ? director.name
     : "Director no disponible";
@@ -4187,13 +4448,16 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
     "duracion"
   ).textContent = `${movieDetails.runtime} minutos`;
 
-  const backdropUrl = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-  );
-  setBackdropAsBackground(backdropUrl);
-  setBackdropAsBackgroundFeed(backdropUrl);
-  setBackdropAsBackgroundReview(backdropUrl);
-  setBackdropAsBackgroundReviewFeed(backdropUrl);
+  if (movie.backdrop_path) {
+    const backdropUrl = getSimpleCorsProxiedUrl(
+      `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+    );
+
+    setBackdropAsBackground(backdropUrl);
+    setBackdropAsBackgroundFeed(backdropUrl);
+    setBackdropAsBackgroundReview(backdropUrl);
+    setBackdropAsBackgroundReviewFeed(backdropUrl);
+  }
 
   const flyerFeed = document.getElementById("flyer-feed");
   flyerFeed.querySelector("#title-feed").textContent = movie.title;
@@ -4203,7 +4467,9 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   const posterUrlFeed = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/w500${movie.poster_path}`
   );
-  flyerFeed.querySelector("#poster-feed").src = posterUrlFeed;
+  const posterFeedImg = flyerFeed.querySelector("#poster-feed");
+  posterFeedImg.setAttribute("crossOrigin", "anonymous");
+  posterFeedImg.src = posterUrlFeed;
   flyerFeed.querySelector("#director-feed").textContent = director
     ? director.name
     : "Director no disponible";
@@ -4214,7 +4480,9 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   const posterUrlReview = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/w500${movie.poster_path}`
   );
-  document.getElementById("poster-review").src = posterUrlReview;
+  const posterReviewImg = document.getElementById("poster-review");
+  posterReviewImg.setAttribute("crossOrigin", "anonymous");
+  posterReviewImg.src = posterUrlReview;
   document.getElementById(
     "duracion-review"
   ).textContent = `${movieDetails.runtime} minutos`;
@@ -4240,7 +4508,9 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   const posterUrlReviewFeed = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/w500${movie.poster_path}`
   );
-  document.getElementById("poster-review-feed").src = posterUrlReviewFeed;
+  const posterReviewFeedImg = document.getElementById("poster-review-feed");
+  posterReviewFeedImg.setAttribute("crossOrigin", "anonymous");
+  posterReviewFeedImg.src = posterUrlReviewFeed;
   document.getElementById(
     "duracion-review-feed"
   ).textContent = `${movieDetails.runtime} minutos`;
@@ -4310,7 +4580,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   const params = new URLSearchParams(window.location.search);
   const movieId = params.get("movieId");
-  const language = params.get("lang") || "es-ES";
+  const language = params.get("lang") || params.get("language") || "es-ES";
   const fecha = params.get("date");
   if (movieId) {
     fetchMovieByIdAndCompleteFlyer(movieId, language, fecha);
