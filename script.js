@@ -157,11 +157,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       const mappedCertification =
         certificationMap[certification] || certification;
 
-      document.getElementById("title").textContent = movie.title;
-      document.getElementById("titleInput").value = movie.title;
-      document.getElementById("titleInputFeed").value = movie.title;
       document.getElementById("titleInputReview").value = movie.title;
-      document.getElementById("titleInputReviewFeed").value = movie.title;
 
       if (mappedCertification) {
         document.getElementById("edadSugeridaInput").value =
