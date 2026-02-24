@@ -998,8 +998,12 @@ addInlineLastColorBtn(comicTextPicker, (color) => {
   comicBalloon.style.color = color;
 });
 
-// panel del color picker del globo estilo comic
-comicBalloon.addEventListener("click", (event) => {
+// TODO: Se agregaron "?." (Optional Chaining) a los eventos de esta sección
+// para evitar que el script se rompa al no encontrar elementos HTML eliminados.
+// Se optó por esto en lugar de encerrar codigo en if's para facilitar posterior merge con otra branch.
+
+// Codigo modificado desde aca: --------------------------------------------------------------------
+comicBalloon?.addEventListener("click", (event) => {
   const style = window.getComputedStyle(comicBalloon);
   comicBgPicker.value = rgbToHex(style.backgroundColor);
   comicBorderPicker.value = rgbToHex(style.borderColor);
@@ -1025,16 +1029,15 @@ if (!comicTailBorderStyle) {
   document.head.appendChild(comicTailBorderStyle);
 }
 
-// Event listeners cuando se cambia el color de fondo del globo
-comicBgPicker.addEventListener("input", (e) => {
+comicBgPicker?.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
   updateGlobalLastColor(selectedColor);
   comicBalloon.style.backgroundColor = selectedColor;
   comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${selectedColor} !important; }`;
 });
 
-// Event listeners cuando se cambia el color del borde del globo
-comicBorderPicker.addEventListener("input", (e) => {
+
+comicBorderPicker?.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
   updateGlobalLastColor(selectedColor);
   comicBalloon.style.borderColor = selectedColor;
@@ -1051,8 +1054,8 @@ comicTextPicker.addEventListener("input", (e) => {
 // cierra el panel del color picker del globo
 document.addEventListener("mousedown", (e) => {
   if (
-    comicColorPanel.style.display === "block" &&
-    !comicColorPanel.contains(e.target) &&
+    comicColorPanel?.style.display === "block" &&
+    !comicColorPanel?.contains(e.target) &&
     !e.target.classList.contains("dialogo-comic")
   ) {
     comicColorPanel.style.display = "none";
@@ -1067,6 +1070,8 @@ document.addEventListener("mousedown", (e) => {
     contextMenu.style.display = "none";
   }
 });
+
+// Hasta aca: --------------------------------------------------------------------------------------
 
 document
   .getElementById("load-backdrop-direct")
