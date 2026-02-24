@@ -652,104 +652,70 @@ async function applyBlurToImage(imageUrl) {
   });
 }
 
-document
-  .getElementById("saveFlyerReview")
-  .addEventListener("click", async () => {
-    const flyerElement = document.getElementById("flyer-story-review");
-    const blurBg = document.getElementById("flyer-blur-bg-review");
+document.getElementById("saveFlyerReview").addEventListener("click", async () => {
+  const flyerElement = document.getElementById("flyer-story-review");
+  const blurBg = document.getElementById("flyer-blur-bg-review");
 
-    if (blurBg && blurBg.style.backgroundImage) {
-      const bgImageMatch = blurBg.style.backgroundImage.match(
-        /url\(['"]?([^'"]+)['"]?\)/
-      );
+  const downloadCanvas = async () => {
+    const canvas = await html2canvas(flyerElement, {
+      width: 1080,
+      height: 1920,
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      backgroundColor: "#ffffff",
+      scrollX: 0,
+      scrollY: 0,
+    });
 
-      if (bgImageMatch) {
-        const imageUrl = bgImageMatch[1];
+    const link = document.createElement("a");
+    const titleElement = document.getElementById("title-review");
+    const flyerTitle = titleElement 
+        ? titleElement.textContent.trim().replace(/\s+/g, "_").replace(/[^\w\-]/g, "") 
+        : "flyer";
+    const date = new Date().toISOString().slice(0, 10);
+    
+    link.download = `${date}_${flyerTitle}_review.png`;
+    link.href = canvas.toDataURL("image/png");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-        try {
-          const blurredDataUrl = await applyBlurToImage(imageUrl);
+  if (blurBg && blurBg.style.backgroundImage) {
+    const bgImageMatch = blurBg.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
 
-          const originalFilter = blurBg.style.filter;
-          const originalBgImage = blurBg.style.backgroundImage;
+    if (bgImageMatch) {
+      const imageUrl = bgImageMatch[1];
+      let originalFilter, originalBgImage;
 
-          blurBg.style.filter = "none";
-          blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
+      try {
+        const blurredDataUrl = await applyBlurToImage(imageUrl);
 
-          await new Promise((resolve) => setTimeout(resolve, 100));
+        originalFilter = blurBg.style.filter;
+        originalBgImage = blurBg.style.backgroundImage;
 
-          const canvas = await html2canvas(flyerElement, {
-            width: 1080,
-            height: 1920,
-            scale: 2,
-            useCORS: true,
-            allowTaint: false,
-            backgroundColor: "#ffffff",
-            scrollX: 0,
-            scrollY: 0,
-          });
+        blurBg.style.filter = "none";
+        blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
 
-          blurBg.style.filter = originalFilter;
-          blurBg.style.backgroundImage = originalBgImage;
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-          // Descargar
-          const link = document.createElement("a");
-          const flyerTitle = document
-            .getElementById("title")
-            .textContent.trim()
-            .replace(/\s+/g, "_")
-            .replace(/[^\w\-]/g, "");
-          const date = new Date().toISOString().slice(0, 10);
-          link.download = `${date}_${flyerTitle}_review.png`;
-          link.href = canvas.toDataURL("image/png");
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        } catch (blurError) {
-          console.warn(
-            "Error al aplicar blur, usando método alternativo:",
-            blurError
-          );
+        await downloadCanvas();
 
-          await generateWithoutBlur(flyerElement, true);
-        }
-      } else {
-        await generateWithoutBlur(flyerElement, true);
+        blurBg.style.filter = originalFilter;
+        blurBg.style.backgroundImage = originalBgImage;
+        return;
+        
+      } catch (blurError) {
+        console.warn("Error al aplicar blur, usando método alternativo:", blurError);
+        if (originalFilter !== undefined) blurBg.style.filter = originalFilter;
+        if (originalBgImage !== undefined) blurBg.style.backgroundImage = originalBgImage;
       }
-    } else {
-      await generateWithoutBlur(flyerElement, true);
     }
-  });
+  }
 
-async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
-  const dimensions = isStoryFormat
-    ? { width: 1080, height: 1920 }
-    : { width: 1080, height: 1080 };
-
-  const canvas = await html2canvas(flyerElement, {
-    width: dimensions.width,
-    height: dimensions.height,
-    scale: 2,
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: "#ffffff",
-    scrollX: 0,
-    scrollY: 0,
-  });
-
-  const link = document.createElement("a");
-  const flyerTitle = document
-    .getElementById("title")
-    .textContent.trim()
-    .replace(/\s+/g, "_")
-    .replace(/[^\w\-]/g, "");
-  const date = new Date().toISOString().slice(0, 10);
-  const formatType = isStoryFormat ? "story" : "feed";
-  link.download = `${date}_${flyerTitle}_${formatType}.png`;
-  link.href = canvas.toDataURL("image/png");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+  await downloadCanvas();
+});
 
 // color picker flotante
 const floatingColorPicker = document.getElementById("floatingColorPicker");
