@@ -472,21 +472,6 @@ const flyerHour = document.getElementById("flyer-hour");
 
 const dateInput = document.getElementById("dateInput");
 const hourInput = document.getElementById("hourInput");
-const rect = document.querySelector(".rect");
-const rectFeed = document.querySelector(".rect-feed");
-
-const rectToggle = document.getElementById("toggle-rect");
-
-let rectHidden = false;
-
-rectToggle.addEventListener("click", () => {
-  rectHidden = !rectHidden;
-  rect.style.display = rectHidden ? "none" : "block";
-  rectFeed.style.display = rectHidden ? "none" : "block";
-  rectToggle.textContent = rectHidden
-    ? "Mostrar rectángulo vertical"
-    : "Ocultar rectángulo vertical";
-});
 
 async function applyBlurToImage(imageUrl) {
   return new Promise((resolve) => {
