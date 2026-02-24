@@ -228,10 +228,6 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "origen-review"
       ).textContent = `Origen: ${flag} ${countryName}`;
 
-      document.getElementById(
-        "origen-review-feed"
-      ).textContent = `Origen: ${flag} ${countryName}`;
-
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
       );
