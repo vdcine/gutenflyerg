@@ -228,25 +228,6 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
         "origen-review"
       ).textContent = `Origen: ${flag} ${countryName}`;
 
-      const posterUrlReviewFeed = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      );
-      document.getElementById("poster-review-feed").src = posterUrlReviewFeed;
-      document.getElementById(
-        "duracion-review-feed"
-      ).textContent = `${movieDetails.runtime} minutos`;
-      document.getElementById("title-review-feed").textContent = movie.title;
-      document.getElementById("year-review-feed").textContent = new Date(
-        movie.release_date
-      ).getFullYear();
-      document.getElementById("sinapsis-review-feed").textContent =
-        movieDetailsSinapsis.overview;
-      document.getElementById("sinapsisInputReviewFeed").value =
-        movieDetailsSinapsis.overview;
-      document.getElementById("director-review-feed").textContent = director
-        ? director.name
-        : "Director no disponible";
-
       document.getElementById(
         "origen-review-feed"
       ).textContent = `Origen: ${flag} ${countryName}`;
