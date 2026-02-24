@@ -160,54 +160,42 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       document.getElementById("titleInputReview").value = movie.title;
 
       if (mappedCertification) {
-        document.getElementById("edadSugeridaInput").value =
-          mappedCertification;
-        document.getElementById("edadSugeridaInputFeed").value =
-          mappedCertification;
-        document.getElementById("edadSugeridaInputReview").value =
-          mappedCertification;
-        document.getElementById("edadSugeridaInputReviewFeed").value =
-          mappedCertification;
+        document.getElementById("edadSugeridaInputReview").value = mappedCertification;
 
-        const edadElements = [
-          document.getElementById("edad-sugerida"),
-          document.getElementById("edad-sugerida-feed"),
-          document.getElementById("edad-sugerida-review"),
-          document.getElementById("edad-sugerida-review-feed"),
-        ];
+        const edadLabel = document.getElementById("edad-sugerida-review");
 
-        edadElements.forEach((el) => {
-          if (el) {
-            el.textContent = mappedCertification;
-            el.style.display = "inline-block";
-            if (mappedCertification === "ATP") {
-              el.style.backgroundColor = "#4CAF50"; // Verde para ATP
-              el.style.color = "white";
-            } else if (
-              mappedCertification === "+13" ||
-              mappedCertification === "SAM 13"
-            ) {
-              el.style.backgroundColor = "#2196F3"; // Azul para +13
-              el.style.color = "white";
-            } else if (
-              mappedCertification === "+16" ||
-              mappedCertification === "SAM 16"
-            ) {
-              el.style.backgroundColor = "#FF9800"; // Naranja para +16
-              el.style.color = "white";
-            } else if (
-              mappedCertification === "+18" ||
-              mappedCertification === "SAM 18"
-            ) {
-              el.style.backgroundColor = "#f44336"; // Rojo para +18
-              el.style.color = "white";
-            } else {
-              el.style.backgroundColor = "#777"; // Gris para otros
-              el.style.color = "white";
-            }
+        if (edadLabel) {
+          edadLabel.textContent = mappedCertification;
+          edadLabel.style.display = "inline-block";
+
+          if (mappedCertification === "ATP") {
+            edadLabel.style.backgroundColor = "#4CAF50"; // Verde para ATP
+            edadLabel.style.color = "white";
+          } else if (
+            mappedCertification === "+13" ||
+            mappedCertification === "SAM 13"
+          ) {
+            edadLabel.style.backgroundColor = "#2196F3"; // Azul para +13
+            edadLabel.style.color = "white";
+          } else if (
+            mappedCertification === "+16" ||
+            mappedCertification === "SAM 16"
+          ) {
+            edadLabel.style.backgroundColor = "#FF9800"; // Naranja para +16
+            edadLabel.style.color = "white";
+          } else if (
+            mappedCertification === "+18" ||
+            mappedCertification === "SAM 18"
+          ) {
+            edadLabel.style.backgroundColor = "#f44336"; // Rojo para +18
+            edadLabel.style.color = "white";
+          } else {
+            edadLabel.style.backgroundColor = "#777"; // Gris para otros
+            edadLabel.style.color = "white";
           }
-        });
+        }
       }
+      
       document.getElementById("year").textContent = new Date(
         movie.release_date
       ).getFullYear();
