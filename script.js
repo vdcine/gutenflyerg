@@ -202,22 +202,6 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
 
       setBackdropAsBackgroundReview(backdropUrl);
 
-      const flyerFeed = document.getElementById("flyer-feed");
-      flyerFeed.querySelector("#title-feed").textContent = movie.title;
-      flyerFeed.querySelector("#year-feed").textContent = new Date(
-        movie.release_date
-      ).getFullYear();
-      const posterUrlFeed = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      );
-      flyerFeed.querySelector("#poster-feed").src = posterUrlFeed;
-      flyerFeed.querySelector("#director-feed").textContent = director
-        ? director.name
-        : "Director no disponible";
-      flyerFeed.querySelector(
-        "#duracion-feed"
-      ).textContent = `${movieDetails.runtime} minutos`;
-
       const posterUrlReview = getSimpleCorsProxiedUrl(
         `https://image.tmdb.org/t/p/w500${movie.poster_path}`
       );
