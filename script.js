@@ -195,30 +195,12 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
           }
         }
       }
-      
-      document.getElementById("year").textContent = new Date(
-        movie.release_date
-      ).getFullYear();
-      const posterUrl = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      );
-      document.getElementById("poster").src = posterUrl;
-      document.getElementById("director").textContent = director
-        ? director.name
-        : "Director no disponible";
-
-      console.log(movieDetails);
-      document.getElementById(
-        "duracion"
-      ).textContent = `${movieDetails.runtime} minutos`;
 
       const backdropUrl = getSimpleCorsProxiedUrl(
         `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
       );
-      setBackdropAsBackground(backdropUrl);
-      setBackdropAsBackgroundFeed(backdropUrl);
+
       setBackdropAsBackgroundReview(backdropUrl);
-      setBackdropAsBackgroundReviewFeed(backdropUrl);
 
       const flyerFeed = document.getElementById("flyer-feed");
       flyerFeed.querySelector("#title-feed").textContent = movie.title;
