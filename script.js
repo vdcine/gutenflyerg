@@ -1765,159 +1765,58 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
 
   const mappedCertification = certificationMap[certification] || certification;
 
-  document.getElementById("title").textContent = movie.title;
-  document.getElementById("titleInput").value = movie.title;
-  document.getElementById("titleInputFeed").value = movie.title;
   document.getElementById("titleInputReview").value = movie.title;
-  document.getElementById("titleInputReviewFeed").value = movie.title;
 
   if (mappedCertification) {
-    document.getElementById("edadSugeridaInput").value = mappedCertification;
-    document.getElementById("edadSugeridaInputFeed").value =
-      mappedCertification;
-    document.getElementById("edadSugeridaInputReview").value =
-      mappedCertification;
-    document.getElementById("edadSugeridaInputReviewFeed").value =
-      mappedCertification;
+    document.getElementById("edadSugeridaInputReview").value = mappedCertification;
 
-    const edadElements = [
-      document.getElementById("edad-sugerida"),
-      document.getElementById("edad-sugerida-feed"),
-      document.getElementById("edad-sugerida-review"),
-      document.getElementById("edad-sugerida-review-feed"),
-    ];
-
-    edadElements.forEach((el) => {
-      if (el) {
-        el.textContent = mappedCertification;
-        el.style.display = "inline-block";
-        if (mappedCertification === "ATP") {
-          el.style.backgroundColor = "#4CAF50"; // Verde para ATP
-          el.style.color = "white";
-        } else if (
-          mappedCertification === "+13" ||
-          mappedCertification === "SAM 13"
-        ) {
-          el.style.backgroundColor = "#2196F3"; // Azul para +13
-          el.style.color = "white";
-        } else if (
-          mappedCertification === "+16" ||
-          mappedCertification === "SAM 16"
-        ) {
-          el.style.backgroundColor = "#FF9800"; // Naranja para +16
-          el.style.color = "white";
-        } else if (
-          mappedCertification === "+18" ||
-          mappedCertification === "SAM 18"
-        ) {
-          el.style.backgroundColor = "#f44336"; // Rojo para +18
-          el.style.color = "white";
-        } else {
-          el.style.backgroundColor = "#777"; // Gris para otros
-          el.style.color = "white";
-        }
+    const el = document.getElementById("edad-sugerida-review");
+    if (el) {
+      el.textContent = mappedCertification;
+      el.style.display = "inline-block";
+      if (mappedCertification === "ATP") {
+        el.style.backgroundColor = "#4CAF50"; el.style.color = "white";
+      } else if (mappedCertification === "+13" || mappedCertification === "SAM 13") {
+        el.style.backgroundColor = "#2196F3"; el.style.color = "white";
+      } else if (mappedCertification === "+16" || mappedCertification === "SAM 16") {
+        el.style.backgroundColor = "#FF9800"; el.style.color = "white";
+      } else if (mappedCertification === "+18" || mappedCertification === "SAM 18") {
+        el.style.backgroundColor = "#f44336"; el.style.color = "white";
+      } else {
+        el.style.backgroundColor = "#777"; el.style.color = "white";
       }
-    });
+    }
   }
-  document.getElementById("year").textContent = new Date(
-    movie.release_date
-  ).getFullYear();
-  const posterUrl = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-  );
-  const posterImg = document.getElementById("poster");
-  posterImg.setAttribute("crossOrigin", "anonymous");
-  posterImg.src = posterUrl;
-  document.getElementById("director").textContent = director
-    ? director.name
-    : "Director no disponible";
 
   console.log(movieDetails);
-  document.getElementById(
-    "duracion"
-  ).textContent = `${movieDetails.runtime} minutos`;
-
-  if (movie.backdrop_path) {
-    const backdropUrl = getSimpleCorsProxiedUrl(
-      `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-    );
-
-    setBackdropAsBackground(backdropUrl);
-    setBackdropAsBackgroundFeed(backdropUrl);
-    setBackdropAsBackgroundReview(backdropUrl);
-    setBackdropAsBackgroundReviewFeed(backdropUrl);
-  }
-
-  const flyerFeed = document.getElementById("flyer-feed");
-  flyerFeed.querySelector("#title-feed").textContent = movie.title;
-  flyerFeed.querySelector("#year-feed").textContent = new Date(
-    movie.release_date
-  ).getFullYear();
-  const posterUrlFeed = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-  );
-  const posterFeedImg = flyerFeed.querySelector("#poster-feed");
-  posterFeedImg.setAttribute("crossOrigin", "anonymous");
-  posterFeedImg.src = posterUrlFeed;
-  flyerFeed.querySelector("#director-feed").textContent = director
-    ? director.name
-    : "Director no disponible";
-  flyerFeed.querySelector(
-    "#duracion-feed"
-  ).textContent = `${movieDetails.runtime} minutos`;
 
   const posterUrlReview = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/w500${movie.poster_path}`
   );
   const posterReviewImg = document.getElementById("poster-review");
-  posterReviewImg.setAttribute("crossOrigin", "anonymous");
-  posterReviewImg.src = posterUrlReview;
-  document.getElementById(
-    "duracion-review"
-  ).textContent = `${movieDetails.runtime} minutos`;
+  if (posterReviewImg) {
+    posterReviewImg.setAttribute("crossOrigin", "anonymous");
+    posterReviewImg.src = posterUrlReview;
+  }
+
+  document.getElementById("duracion-review").textContent = `${movieDetails.runtime} minutos`;
   document.getElementById("title-review").textContent = movie.title;
-  document.getElementById("year-review").textContent = new Date(
-    movie.release_date
-  ).getFullYear();
-  document.getElementById("sinapsis-review").textContent =
-    movieDetailsSinapsis.overview;
-  document.getElementById("sinapsisInputReview").value =
-    movieDetailsSinapsis.overview;
-  document.getElementById("director-review").textContent = director
-    ? director.name
-    : "Director no disponible";
+  document.getElementById("year-review").textContent = new Date(movie.release_date).getFullYear();
+  document.getElementById("sinapsis-review").textContent = movieDetailsSinapsis.overview;
+  document.getElementById("sinapsisInputReview").value = movieDetailsSinapsis.overview;
+  document.getElementById("director-review").textContent = director ? director.name : "Director no disponible";
 
   const countryCode = movieDetails.origin_country[0];
   const flag = getCountryFlagEmoji(countryCode);
   const countryName = countryNamesES[countryCode] || countryCode;
-  document.getElementById(
-    "origen-review"
-  ).textContent = `Origen: ${flag} ${countryName}`;
+  document.getElementById("origen-review").textContent = `Origen: ${flag} ${countryName}`;
 
-  const posterUrlReviewFeed = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-  );
-  const posterReviewFeedImg = document.getElementById("poster-review-feed");
-  posterReviewFeedImg.setAttribute("crossOrigin", "anonymous");
-  posterReviewFeedImg.src = posterUrlReviewFeed;
-  document.getElementById(
-    "duracion-review-feed"
-  ).textContent = `${movieDetails.runtime} minutos`;
-  document.getElementById("title-review-feed").textContent = movie.title;
-  document.getElementById("year-review-feed").textContent = new Date(
-    movie.release_date
-  ).getFullYear();
-  document.getElementById("sinapsis-review-feed").textContent =
-    movieDetailsSinapsis.overview;
-  document.getElementById("sinapsisInputReviewFeed").value =
-    movieDetailsSinapsis.overview;
-  document.getElementById("director-review-feed").textContent = director
-    ? director.name
-    : "Director no disponible";
-
-  document.getElementById(
-    "origen-review-feed"
-  ).textContent = `Origen: ${flag} ${countryName}`;
+  if (movie.backdrop_path) {
+    const backdropUrl = getSimpleCorsProxiedUrl(
+      `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+    );
+    setBackdropAsBackgroundReview(backdropUrl);
+  }
 
   const imagesRes = await fetch(
     `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
@@ -1932,13 +1831,12 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   currentPoster = 0;
   showPoster(currentPoster);
 
+  /* TODO: Lógica de Fecha (Pendiente de implementar en flyer)
   if (fecha) {
-    document.getElementById("dateInput").value = fecha;
-    document.getElementById("dateInputFeed").value = fecha;
-    const formattedDate = formatDateToSpanish(fecha);
-    document.getElementById("flyer-date").innerHTML = formattedDate;
-    document.getElementById("flyer-date-feed").innerHTML = formattedDate;
+    document.getElementById("dateInputReview").value = fecha;
+    document.getElementById("flyer-date-review").innerHTML = formatDateToSpanish(fecha);
   }
+  */
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
