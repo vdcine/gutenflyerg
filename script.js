@@ -1,3 +1,7 @@
+// --------------------------------------------------
+// DESCARGA DE IMAGEN
+// --------------------------------------------------
+
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
   const flyerReview = document.getElementById("flyer-story-review");
   if (flyerReview) {
@@ -101,7 +105,11 @@ document.getElementById("saveFlyerReview").addEventListener("click", async () =>
   await downloadCanvas();
 });
 
-// color picker flotante
+
+// --------------------------------------------------
+// COLORPICKER / EYEDROPPER
+// --------------------------------------------------
+
 const floatingColorPicker = document.getElementById("floatingColorPicker");
 let colorTargets = [];
 let lastUsedColor = "#ffffff";
@@ -337,6 +345,11 @@ document.addEventListener("click", (e) => {
   }
 });
 
+
+// --------------------------------------------------
+// COLORPICKER / EYEDROPPER de comic balloon (a borrar)
+// --------------------------------------------------
+
 const comicBalloon = document.querySelector(".dialogo-comic");
 const comicColorPanel = document.getElementById("comicColorPickerPanel");
 const comicBgPicker = document.getElementById("comicBgColorPicker");
@@ -456,6 +469,11 @@ document.addEventListener("mousedown", (e) => {
 });
 
 // Hasta aca: --------------------------------------------------------------------------------------
+
+
+// --------------------------------------------------
+// EDITOR DE TEXTOS DE FLYER
+// --------------------------------------------------
 
 document
   .getElementById("flyerTitleFontSizeInputReview")
@@ -599,12 +617,10 @@ document
     });
   });
 
-/* 
-=========================================================================
-  TODO: Toda la lógica de Importación y Exportación de datos JSON
-  ha sido movida al archivo: /importExport.js
-=========================================================================
-*/
+
+// --------------------------------------------------
+// BOOTSTRAPPER
+// --------------------------------------------------
 
 // Función auxiliar para obtener el fontsize
 function initializeControlValues() {
