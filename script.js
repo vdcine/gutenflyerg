@@ -1003,225 +1003,127 @@ async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
   document.body.removeChild(link);
 }
 
+// color picker flotante
 const floatingColorPicker = document.getElementById("floatingColorPicker");
 let colorTargets = [];
+let lastUsedColor = "#ffffff";
+
+const lastColorIndicators = [];
+
+function updateGlobalLastColor(color) {
+  lastUsedColor = color;
+  if (lastColorSquare) lastColorSquare.style.backgroundColor = color;
+  lastColorIndicators.forEach(ind => ind.style.backgroundColor = color);
+}
+
+const lastColorSquare = document.createElement("div");
+lastColorSquare.id = "lastColorSquare";
+lastColorSquare.style.position = "absolute";
+lastColorSquare.style.width = "48px";
+lastColorSquare.style.height = "48px";
+lastColorSquare.style.border = "2px solid #333";
+lastColorSquare.style.borderRadius = "8px";
+lastColorSquare.style.backgroundColor = lastUsedColor;
+lastColorSquare.style.cursor = "pointer";
+lastColorSquare.style.display = "none";
+lastColorSquare.style.zIndex = "10000";
+lastColorSquare.title = "Usar último color seleccionado";
+lastColorSquare.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+document.body.appendChild(lastColorSquare);
+
+function isBackgroundElement(target) {
+  return (
+    target.classList.contains("rect") ||
+    target.classList.contains("rect-feed") ||
+    target.classList.contains("rect2") ||
+    target.classList.contains("rect2-feed") ||
+    target.classList.contains("rect2-review") ||
+    target.classList.contains("rect2-review-feed") ||
+    target.classList.contains("tape") ||
+    target.id === "flyer-story" ||
+    target.id === "flyer-feed" ||
+    target.id === "flyer-story-review" ||
+    target.id === "flyer-feed-review"
+  );
+}
 
 floatingColorPicker.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
 
-  colorTargets.forEach((target) => {
-    const isBackground =
-      target.classList.contains("rect") ||
-      target.classList.contains("rect-feed") ||
-      target.classList.contains("rect2") ||
-      target.classList.contains("rect2-feed") ||
-      target.classList.contains("rect2-review") ||
-      target.classList.contains("rect2-review-feed") ||
-      target.classList.contains("tape") ||
-      target.id === "flyer-story" ||
-      target.id === "flyer-feed" ||
-      target.id === "flyer-story-review" ||
-      target.id === "flyer-feed-review";
+  updateGlobalLastColor(selectedColor);
 
-    if (isBackground) {
+  colorTargets.forEach((target) => {
+    if (isBackgroundElement(target)) {
       target.style.backgroundColor = selectedColor;
     } else {
       target.style.color = selectedColor;
     }
   });
-
-  const colorPreview = document.getElementById("floating-color-preview");
-  if (colorPreview) colorPreview.style.display = "none";
 });
 
+lastColorSquare.addEventListener("click", (e) => {
+  e.stopPropagation();
+  floatingColorPicker.value = lastUsedColor;
+
+  colorTargets.forEach((target) => {
+    if (isBackgroundElement(target)) {
+      target.style.backgroundColor = lastUsedColor;
+    } else {
+      target.style.color = lastUsedColor;
+    }
+  });
+});
+
+// funcion aux para convertir rgb a hexa
+// el navegador devuelve estilos en RGB, pero el input type="color" requiere Hex
 function rgbToHex(rgb) {
   const result = rgb.match(/\d+/g);
   if (!result || result.length < 3) return "#ffffff";
-  return (
-    "#" +
-    (
-      (1 << 24) +
-      (parseInt(result[0]) << 16) +
-      (parseInt(result[1]) << 8) +
-      parseInt(result[2])
-    )
-      .toString(16)
-      .slice(1)
-  );
+  const r = parseInt(result[0]).toString(16).padStart(2, '0');
+  const g = parseInt(result[1]).toString(16).padStart(2, '0');
+  const b = parseInt(result[2]).toString(16).padStart(2, '0');
+
+  return `#${r}${g}${b}`;
 }
 
+// sincroniza colores entre version story y feed(posiblemente se vaya)
 function getColorTargets(el) {
-  if (
-    el.classList.contains("rect") ||
-    el.classList.contains("rect2") ||
-    el.classList.contains("rect-feed") ||
-    el.classList.contains("rect2-feed")
-  ) {
-    return [
-      document.querySelector(".rect"),
-      document.querySelector(".rect2"),
-      document.querySelector(".rect-feed"),
-      document.querySelector(".rect2-feed"),
-    ].filter(Boolean);
+  if (el.classList.contains("rect") || el.classList.contains("rect2") || el.classList.contains("rect-feed") || el.classList.contains("rect2-feed")) {
+    return [".rect", ".rect2", ".rect-feed", ".rect2-feed"].map(s => document.querySelector(s)).filter(Boolean);
   }
 
-  if (
-    el.classList.contains("rect2-review") ||
-    el.classList.contains("rect2-review-feed")
-  ) {
-    return [
-      document.querySelector(".rect2-review"),
-      document.querySelector(".rect2-review-feed"),
-    ].filter(Boolean);
+  if (el.classList.contains("rect2-review") || el.classList.contains("rect2-review-feed")) {
+    return [".rect2-review", ".rect2-review-feed"].map(s => document.querySelector(s)).filter(Boolean);
   }
 
-  if (
-    el.id === "flyer-hour" ||
-    el.id === "flyer-biblioteca" ||
-    el.id === "flyer-hour-feed" ||
-    el.id === "flyer-biblioteca-feed"
-  ) {
-    return [
-      document.getElementById("flyer-hour"),
-      document.getElementById("flyer-biblioteca"),
-      document.getElementById("flyer-hour-feed"),
-      document.getElementById("flyer-biblioteca-feed"),
-    ].filter(Boolean);
-  }
+  const idGroups = [
+    ["flyer-hour", "flyer-biblioteca", "flyer-hour-feed", "flyer-biblioteca-feed"],
+    ["ciclo", "ciclo-feed"],
+    ["title", "title-feed"],
+    ["title-review", "title-review-feed"],
+    ["year", "year-feed"],
+    ["year-review", "year-review-feed"],
+    ["flyer-date", "flyer-date-feed"],
+    ["director", "director-feed"],
+    ["director-review", "director-review-feed"],
+    ["duracion", "duracion-feed"],
+    ["duracion-review", "duracion-review-feed"],
+    ["header", "header-feed"],
+    ["header-review", "header-review-feed"],
+    ["org", "org-feed"],
+    ["org-review", "org-review-feed"],
+    ["origen-review", "origen-review-feed"],
+    ["sinapsis-review", "sinapsis-review-feed"],
+    ["flyer-story", "flyer-feed"],
+    ["flyer-story-review", "flyer-feed-review"],
+    ["edad-sugerida", "edad-sugerida-feed"],
+    ["edad-sugerida-review", "edad-sugerida-review-feed"]
+  ];
 
-  if (el.id === "ciclo" || el.id === "ciclo-feed") {
-    return [
-      document.getElementById("ciclo"),
-      document.getElementById("ciclo-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "title" || el.id === "title-feed") {
-    return [
-      document.getElementById("title"),
-      document.getElementById("title-feed"),
-    ].filter(Boolean);
-  }
-  if (el.id === "title-review" || el.id === "title-review-feed") {
-    return [
-      document.getElementById("title-review"),
-      document.getElementById("title-review-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "year" || el.id === "year-feed") {
-    return [
-      document.getElementById("year"),
-      document.getElementById("year-feed"),
-    ].filter(Boolean);
-  }
-  if (el.id === "year-review" || el.id === "year-review-feed") {
-    return [
-      document.getElementById("year-review"),
-      document.getElementById("year-review-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "flyer-date" || el.id === "flyer-date-feed") {
-    return [
-      document.getElementById("flyer-date"),
-      document.getElementById("flyer-date-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "director" || el.id === "director-feed") {
-    return [
-      document.getElementById("director"),
-      document.getElementById("director-feed"),
-    ].filter(Boolean);
-  }
-  if (el.id === "director-review" || el.id === "director-review-feed") {
-    return [
-      document.getElementById("director-review"),
-      document.getElementById("director-review-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "duracion" || el.id === "duracion-feed") {
-    return [
-      document.getElementById("duracion"),
-      document.getElementById("duracion-feed"),
-    ].filter(Boolean);
-  }
-  if (el.id === "duracion-review" || el.id === "duracion-review-feed") {
-    return [
-      document.getElementById("duracion-review"),
-      document.getElementById("duracion-review-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "header" || el.id === "header-feed") {
-    return [
-      document.getElementById("header"),
-      document.getElementById("header-feed"),
-    ].filter(Boolean);
-  }
-  if (el.id === "header-review" || el.id === "header-review-feed") {
-    return [
-      document.getElementById("header-review"),
-      document.getElementById("header-review-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "org" || el.id === "org-feed") {
-    return [
-      document.getElementById("org"),
-      document.getElementById("org-feed"),
-    ].filter(Boolean);
-  }
-  if (el.id === "org-review" || el.id === "org-review-feed") {
-    return [
-      document.getElementById("org-review"),
-      document.getElementById("org-review-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "origen-review" || el.id === "origen-review-feed") {
-    return [
-      document.getElementById("origen-review"),
-      document.getElementById("origen-review-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "sinapsis-review" || el.id === "sinapsis-review-feed") {
-    return [
-      document.getElementById("sinapsis-review"),
-      document.getElementById("sinapsis-review-feed"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "flyer-story" || el.id === "flyer-feed") {
-    return [
-      document.getElementById("flyer-story"),
-      document.getElementById("flyer-feed"),
-    ].filter(Boolean);
-  }
-  if (el.id === "flyer-story-review" || el.id === "flyer-feed-review") {
-    return [
-      document.getElementById("flyer-story-review"),
-      document.getElementById("flyer-feed-review"),
-    ].filter(Boolean);
-  }
-
-  if (el.id === "edad-sugerida" || el.id === "edad-sugerida-feed") {
-    return [
-      document.getElementById("edad-sugerida"),
-      document.getElementById("edad-sugerida-feed"),
-    ].filter(Boolean);
-  }
-  if (
-    el.id === "edad-sugerida-review" ||
-    el.id === "edad-sugerida-review-feed"
-  ) {
-    return [
-      document.getElementById("edad-sugerida-review"),
-      document.getElementById("edad-sugerida-review-feed"),
-    ].filter(Boolean);
+  for (const group of idGroups) {
+    if (group.includes(el.id)) {
+      return group.map(id => document.getElementById(id)).filter(Boolean);
+    }
   }
 
   return [el];
@@ -1235,21 +1137,11 @@ function getCurrentColorForTargets(targets) {
     }
   }
 
-  const isBackground =
-    targets[0].classList.contains("rect") ||
-    targets[0].classList.contains("rect-feed") ||
-    targets[0].classList.contains("rect2") ||
-    targets[0].classList.contains("rect2-feed") ||
-    targets[0].classList.contains("rect2-review") ||
-    targets[0].classList.contains("rect2-review-feed") ||
-    targets[0].id === "flyer-story" ||
-    targets[0].id === "flyer-feed" ||
-    targets[0].id === "flyer-story-review" ||
-    targets[0].id === "flyer-feed-review";
   const style = window.getComputedStyle(targets[0]);
-  return rgbToHex(isBackground ? style.backgroundColor : style.color);
+  return rgbToHex(isBackgroundElement(targets[0]) ? style.backgroundColor : style.color);
 }
 
+// muestra el color picker flotante cuando clickeas en el flyer
 function showColorPickerForElement(element, event) {
   colorTargets = getColorTargets(element);
 
@@ -1263,96 +1155,17 @@ function showColorPickerForElement(element, event) {
   floatingColorPicker.style.height = "48px";
   floatingColorPicker.style.border = "2px solid #333";
   floatingColorPicker.style.borderRadius = "8px";
-
-  let eyedropperBtn = document.getElementById("floating-eyedropper-btn");
-  if (!eyedropperBtn) {
-    eyedropperBtn = document.createElement("button");
-    eyedropperBtn.id = "floating-eyedropper-btn";
-    eyedropperBtn.textContent = "CuentaGotas";
-    eyedropperBtn.title = "Seleccionar color del poster";
-    eyedropperBtn.style.cssText = `
-      position: absolute;
-      z-index: 99999;
-      left: 52px;
-      top: 0px;
-      width: 150px;
-      height: 70px;
-      border: 2px solid #333;
-      border-radius: 8px;
-      background: white;
-      cursor: pointer;
-      font-size: 20px;
-      display: none;
-    `;
-    document.body.appendChild(eyedropperBtn);
-
-    eyedropperBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      activateEyedropper((selectedColor) => {
-        floatingColorPicker.value = selectedColor;
-        floatingColorPicker.dispatchEvent(new Event("input"));
-      });
-    });
-  }
-
-  eyedropperBtn.style.left = event.pageX + 52 + "px";
-  eyedropperBtn.style.top = event.pageY + "px";
-  eyedropperBtn.style.display = "block";
-
-  let applyLastColorBtn = document.getElementById(
-    "apply-last-eyedropper-color-btn"
-  );
-  if (!applyLastColorBtn) {
-    applyLastColorBtn = document.createElement("button");
-    applyLastColorBtn.id = "apply-last-eyedropper-color-btn";
-    applyLastColorBtn.textContent = "Último color";
-    applyLastColorBtn.style.cssText = `
-      position: absolute;
-      z-index: 99999;
-      left: 52px;
-      top: 80px;
-      width: 140px;
-      height: 40px;
-      border: 2px solid #333;
-      border-radius: 8px;
-      background: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      display: none;
-    `;
-    document.body.appendChild(applyLastColorBtn);
-    applyLastColorBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (window.lastEyedropperColor) {
-        floatingColorPicker.value = window.lastEyedropperColor;
-        floatingColorPicker.dispatchEvent(new Event("input"));
-      }
-    });
-  }
-
-  if (window.lastEyedropperColor) {
-    applyLastColorBtn.style.left = event.pageX + 52 + "px";
-    applyLastColorBtn.style.top = event.pageY + 80 + "px";
-    applyLastColorBtn.style.display = "block";
-    applyLastColorBtn.style.background = window.lastEyedropperColor;
-    applyLastColorBtn.style.color = "#222";
-    applyLastColorBtn.title = window.lastEyedropperColor;
-  } else {
-    applyLastColorBtn.style.display = "none";
-  }
-
   floatingColorPicker.focus();
+
+  lastColorSquare.style.left = (event.pageX + 55) + "px";
+  lastColorSquare.style.top = event.pageY + "px";
+  lastColorSquare.style.display = "block";
 }
 
 floatingColorPicker.addEventListener("blur", () => {
   setTimeout(() => {
     floatingColorPicker.style.display = "none";
-    const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
-    if (eyedropperBtn) eyedropperBtn.style.display = "none";
-    const applyLastColorBtn = document.getElementById(
-      "apply-last-eyedropper-color-btn"
-    );
-    if (applyLastColorBtn) applyLastColorBtn.style.display = "none";
+    lastColorSquare.style.display = "none";
   }, 200);
 });
 
@@ -1417,46 +1230,12 @@ floatingColorPicker.addEventListener("blur", () => {
   }
 });
 
+// cierra el picker flotante
 document.addEventListener("click", (e) => {
-  if (
-    e.target !== floatingColorPicker &&
-    e.target.id !== "floating-eyedropper-btn"
-  ) {
+  if (e.target !== floatingColorPicker && e.target !== lastColorSquare) {
     floatingColorPicker.style.display = "none";
-    const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
-    if (eyedropperBtn) eyedropperBtn.style.display = "none";
+    lastColorSquare.style.display = "none";
     colorTargets = [];
-
-    if (eyedropperActive) {
-      eyedropperActive = false;
-      eyedropperCallback = null;
-      posterImg.style.cursor = "";
-      document.body.style.cursor = "";
-      const message = document.getElementById("eyedropper-message");
-      if (message) message.remove();
-      resetEyedropper();
-    }
-  }
-});
-
-document.addEventListener("click", (e) => {
-  if (
-    e.target !== floatingColorPicker &&
-    e.target.id !== "floating-eyedropper-btn"
-  ) {
-    floatingColorPicker.style.display = "none";
-    const eyedropperBtn = document.getElementById("floating-eyedropper-btn");
-    if (eyedropperBtn) eyedropperBtn.style.display = "none";
-    colorTargets = [];
-
-    if (eyedropperActive) {
-      eyedropperActive = false;
-      eyedropperCallback = null;
-      posterFeed.style.cursor = "";
-      document.body.style.cursor = "";
-      const message = document.getElementById("eyedropper-message");
-      if (message) message.remove();
-    }
   }
 });
 
@@ -1466,229 +1245,57 @@ const comicBgPicker = document.getElementById("comicBgColorPicker");
 const comicBorderPicker = document.getElementById("comicBorderColorPicker");
 const comicTextPicker = document.getElementById("comicTextColorPicker");
 const posterImg = document.getElementById("poster");
-const posterFeed = document.getElementById("poster-feed");
-const posterReview = document.getElementById("poster-review");
-const posterReviewFeed = document.getElementById("poster-review-feed");
 
-let comicEyedropperActive = false;
-let comicEyedropperTarget = null;
-let lastComicEyedropperColor = null;
+// agrega el lastUsedColor en el panel del globo
+function addInlineLastColorBtn(pickerInput, applyCallback) {
+  const btn = document.createElement("div");
+  btn.style.width = "24px";
+  btn.style.height = "24px";
+  btn.style.marginLeft = "10px";
+  btn.style.display = "inline-block";
+  btn.style.border = "1px solid #999";
+  btn.style.borderRadius = "4px";
+  btn.style.cursor = "pointer";
+  btn.style.backgroundColor = lastUsedColor;
+  btn.title = "Aplicar último color usado";
 
-function cleanupComicEyedropperEvents() {
-  posterImg.removeEventListener("mousemove", comicEyedropperMoveHandler);
-  posterFeed.removeEventListener("mousemove", comicEyedropperMoveHandler);
-  posterImg.style.cursor = "";
-  posterFeed.style.cursor = "";
-  document.body.style.cursor = "";
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    applyCallback(lastUsedColor);
+    pickerInput.value = lastUsedColor;
+  });
 
-  const comicColorPreview = document.getElementById("comic-color-preview");
-  if (comicColorPreview) {
-    comicColorPreview.style.display = "none";
-  }
-
-  comicEyedropperActive = false;
-  comicEyedropperTarget = null;
+  pickerInput.parentNode.appendChild(btn);
+  
+  lastColorIndicators.push(btn);
 }
 
-function updateComicLastColorSquare() {
-  const lastColorSquare = document.getElementById("comicLastColorSquare");
-  if (lastComicEyedropperColor) {
-    lastColorSquare.style.background = lastComicEyedropperColor;
-    lastColorSquare.style.display = "block";
-    lastColorSquare.title = `Último color: ${lastComicEyedropperColor}`;
-  } else {
-    lastColorSquare.style.display = "none";
-  }
-}
+addInlineLastColorBtn(comicBgPicker, (color) => {
+  comicBalloon.style.backgroundColor = color;
+  comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${color} !important; }`;
+});
 
-function comicEyedropperMoveHandler(e) {
-  if (!comicEyedropperActive) return;
+addInlineLastColorBtn(comicBorderPicker, (color) => {
+  comicBalloon.style.borderColor = color;
+  comicTailBorderStyle.textContent = `.comic-tail-border { border-top-color: ${color} !important; }`;
+});
 
-  let comicColorPreview = document.getElementById("comic-color-preview");
-  if (!comicColorPreview) {
-    comicColorPreview = document.createElement("div");
-    comicColorPreview.id = "comic-color-preview";
-    comicColorPreview.style.cssText = `
-      position: absolute;
-      z-index: 99999;
-      left: 0px;
-      top: 0px;
-      width: 48px;
-      height: 48px;
-      border: 2px solid #333;
-      border-radius: 8px;
-      background: #fff;
-      display: block;
-      pointer-events: none;
-    `;
-    document.body.appendChild(comicColorPreview);
-  }
+addInlineLastColorBtn(comicTextPicker, (color) => {
+  comicBalloon.style.color = color;
+});
 
-  comicColorPreview.style.display = "block";
-  comicColorPreview.style.left = e.pageX + 20 + "px";
-  comicColorPreview.style.top = e.pageY - 24 + "px";
-
-  let targetImg = null;
-  if (e.target === posterImg || e.currentTarget === posterImg) {
-    targetImg = posterImg;
-  } else if (e.target === posterFeed || e.currentTarget === posterFeed) {
-    targetImg = posterFeed;
-  }
-
-  if (!targetImg) {
-    const posterImgRect = posterImg.getBoundingClientRect();
-    const posterFeedRect = posterFeed.getBoundingClientRect();
-
-    if (
-      e.clientX >= posterImgRect.left &&
-      e.clientX <= posterImgRect.right &&
-      e.clientY >= posterImgRect.top &&
-      e.clientY <= posterImgRect.bottom
-    ) {
-      targetImg = posterImg;
-    } else if (
-      e.clientX >= posterFeedRect.left &&
-      e.clientX <= posterFeedRect.right &&
-      e.clientY >= posterFeedRect.top &&
-      e.clientY <= posterFeedRect.bottom
-    ) {
-      targetImg = posterFeed;
-    }
-  }
-
-  if (
-    targetImg &&
-    targetImg.naturalWidth &&
-    targetImg.naturalHeight &&
-    targetImg.src
-  ) {
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = targetImg.naturalWidth;
-      canvas.height = targetImg.naturalHeight;
-      const ctx = canvas.getContext("2d");
-
-      ctx.drawImage(
-        targetImg,
-        0,
-        0,
-        targetImg.naturalWidth,
-        targetImg.naturalHeight
-      );
-
-      const rect = targetImg.getBoundingClientRect();
-      const x = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientX - rect.left) * (targetImg.naturalWidth / rect.width)
-          ),
-          targetImg.naturalWidth - 1
-        )
-      );
-      const y = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientY - rect.top) * (targetImg.naturalHeight / rect.height)
-          ),
-          targetImg.naturalHeight - 1
-        )
-      );
-
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-      comicColorPreview.style.background = hex;
-    } catch (error) {
-      console.warn("Error al obtener color del pixel:", error);
-      comicColorPreview.style.background = "#ffffff";
-    }
-  } else {
-    comicColorPreview.style.background = "#ffffff";
-  }
-}
-
+// panel del color picker del globo estilo comic
 comicBalloon.addEventListener("click", (event) => {
   const style = window.getComputedStyle(comicBalloon);
   comicBgPicker.value = rgbToHex(style.backgroundColor);
   comicBorderPicker.value = rgbToHex(style.borderColor);
   comicTextPicker.value = rgbToHex(style.color);
 
-  updateComicLastColorSquare();
-
   comicColorPanel.style.left = event.pageX + "px";
   comicColorPanel.style.top = event.pageY + "px";
   comicColorPanel.style.display = "block";
   event.stopPropagation();
 });
-
-document
-  .getElementById("comicLastColorSquare")
-  .addEventListener("click", (e) => {
-    e.stopPropagation();
-    if (lastComicEyedropperColor) {
-      let contextMenu = document.getElementById("comicColorContextMenu");
-      if (!contextMenu) {
-        contextMenu = document.createElement("div");
-        contextMenu.id = "comicColorContextMenu";
-        contextMenu.style.cssText = `
-        position: absolute;
-        z-index: 10000;
-        background: #fff;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 8px 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        display: none;
-      `;
-
-        const options = [
-          { text: "Aplicar al fondo", target: comicBgPicker },
-          { text: "Aplicar al borde", target: comicBorderPicker },
-          { text: "Aplicar al texto", target: comicTextPicker },
-        ];
-
-        options.forEach((option) => {
-          const menuItem = document.createElement("div");
-          menuItem.textContent = option.text;
-          menuItem.style.cssText = `
-          padding: 6px 12px;
-          cursor: pointer;
-          font-size: 14px;
-        `;
-          menuItem.addEventListener("mouseover", () => {
-            menuItem.style.background = "#f0f0f0";
-          });
-          menuItem.addEventListener("mouseout", () => {
-            menuItem.style.background = "";
-          });
-          menuItem.addEventListener("click", (e) => {
-            e.stopPropagation();
-            option.target.value = lastComicEyedropperColor;
-            option.target.dispatchEvent(new Event("input"));
-            contextMenu.style.display = "none";
-          });
-          contextMenu.appendChild(menuItem);
-        });
-
-        document.body.appendChild(contextMenu);
-      }
-
-      contextMenu.style.left = e.pageX + 5 + "px";
-      contextMenu.style.top = e.pageY + 5 + "px";
-      contextMenu.style.display = "block";
-
-      setTimeout(() => {
-        const closeContextMenu = (e) => {
-          if (!contextMenu.contains(e.target)) {
-            contextMenu.style.display = "none";
-            document.removeEventListener("click", closeContextMenu);
-          }
-        };
-        document.addEventListener("click", closeContextMenu);
-      }, 10);
-    }
-  });
 
 let comicTailBgStyle = document.getElementById("comic-tail-bg-style");
 if (!comicTailBgStyle) {
@@ -1704,175 +1311,30 @@ if (!comicTailBorderStyle) {
   document.head.appendChild(comicTailBorderStyle);
 }
 
+// Event listeners cuando se cambia el color de fondo del globo
 comicBgPicker.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
+  updateGlobalLastColor(selectedColor);
   comicBalloon.style.backgroundColor = selectedColor;
   comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${selectedColor} !important; }`;
 });
 
+// Event listeners cuando se cambia el color del borde del globo
 comicBorderPicker.addEventListener("input", (e) => {
   const selectedColor = e.target.value;
+  updateGlobalLastColor(selectedColor);
   comicBalloon.style.borderColor = selectedColor;
   comicTailBorderStyle.textContent = `.comic-tail-border { border-top-color: ${selectedColor} !important; }`;
 });
 
+// Event listeners cuando se cambia el color del texto del globo
 comicTextPicker.addEventListener("input", (e) => {
-  comicBalloon.style.color = e.target.value;
+  const selectedColor = e.target.value;
+  updateGlobalLastColor(selectedColor);
+  comicBalloon.style.color = selectedColor;
 });
 
-document
-  .getElementById("activateEyedropperBg")
-  .addEventListener("click", (e) => {
-    cleanupComicEyedropperEvents();
-
-    comicEyedropperActive = true;
-    comicEyedropperTarget = comicBgPicker;
-
-    posterImg.style.cursor = "crosshair";
-    posterFeed.style.cursor = "crosshair";
-
-    posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
-    posterFeed.addEventListener("mousemove", comicEyedropperMoveHandler);
-
-    e.stopPropagation();
-  });
-document
-  .getElementById("activateEyedropperBorder")
-  .addEventListener("click", (e) => {
-    cleanupComicEyedropperEvents();
-
-    comicEyedropperActive = true;
-    comicEyedropperTarget = comicBorderPicker;
-    posterImg.style.cursor = "crosshair";
-    posterFeed.style.cursor = "crosshair";
-
-    posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
-    posterFeed.addEventListener("mousemove", comicEyedropperMoveHandler);
-
-    e.stopPropagation();
-  });
-document
-  .getElementById("activateEyedropperText")
-  .addEventListener("click", (e) => {
-    cleanupComicEyedropperEvents();
-
-    comicEyedropperActive = true;
-    comicEyedropperTarget = comicTextPicker;
-    posterImg.style.cursor = "crosshair";
-    posterFeed.style.cursor = "crosshair";
-
-    posterImg.addEventListener("mousemove", comicEyedropperMoveHandler);
-    posterFeed.addEventListener("mousemove", comicEyedropperMoveHandler);
-
-    e.stopPropagation();
-  });
-
-posterImg.addEventListener("click", (e) => {
-  if (comicEyedropperActive && comicEyedropperTarget && posterImg.src) {
-    e.stopPropagation();
-
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = posterImg.naturalWidth;
-      canvas.height = posterImg.naturalHeight;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(
-        posterImg,
-        0,
-        0,
-        posterImg.naturalWidth,
-        posterImg.naturalHeight
-      );
-
-      const rect = posterImg.getBoundingClientRect();
-      const x = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
-          ),
-          posterImg.naturalWidth - 1
-        )
-      );
-      const y = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
-          ),
-          posterImg.naturalHeight - 1
-        )
-      );
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-
-      lastComicEyedropperColor = hex;
-      updateComicLastColorSquare();
-
-      comicEyedropperTarget.value = hex;
-      comicEyedropperTarget.dispatchEvent(new Event("input"));
-    } catch (error) {
-      console.warn("Error al obtener color del pixel:", error);
-    }
-
-    cleanupComicEyedropperEvents();
-    return;
-  }
-});
-
-posterFeed.addEventListener("click", (e) => {
-  if (comicEyedropperActive && comicEyedropperTarget && posterFeed.src) {
-    e.stopPropagation();
-
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = posterFeed.naturalWidth;
-      canvas.height = posterFeed.naturalHeight;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(
-        posterFeed,
-        0,
-        0,
-        posterFeed.naturalWidth,
-        posterFeed.naturalHeight
-      );
-
-      const rect = posterFeed.getBoundingClientRect();
-      const x = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
-          ),
-          posterFeed.naturalWidth - 1
-        )
-      );
-      const y = Math.max(
-        0,
-        Math.min(
-          Math.round(
-            (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
-          ),
-          posterFeed.naturalHeight - 1
-        )
-      );
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-
-      lastComicEyedropperColor = hex;
-      updateComicLastColorSquare();
-
-      comicEyedropperTarget.value = hex;
-      comicEyedropperTarget.dispatchEvent(new Event("input"));
-    } catch (error) {
-      console.warn("Error al obtener color del pixel:", error);
-    }
-
-    cleanupComicEyedropperEvents();
-    return;
-  }
-});
-
+// cierra el panel del color picker del globo
 document.addEventListener("mousedown", (e) => {
   if (
     comicColorPanel.style.display === "block" &&
@@ -1890,422 +1352,6 @@ document.addEventListener("mousedown", (e) => {
   ) {
     contextMenu.style.display = "none";
   }
-
-  if (
-    comicEyedropperActive &&
-    e.target !== posterImg &&
-    e.target !== posterFeed &&
-    !posterImg.contains(e.target) &&
-    !posterFeed.contains(e.target) &&
-    !e.target.closest("#comicColorPickerPanel")
-  ) {
-    cleanupComicEyedropperEvents();
-  }
-});
-
-let eyedropperActive = false;
-let eyedropperColor = null;
-let eyedropperCallback = null;
-
-function eyedropperMoveHandler(e) {
-  if (!eyedropperActive) return;
-  const colorPreview = document.getElementById("floating-color-preview");
-  if (!colorPreview) return;
-  colorPreview.style.left = e.pageX + 20 + "px";
-  colorPreview.style.top = e.pageY - 24 + "px";
-
-  if (posterImg.naturalWidth && posterImg.naturalHeight) {
-    const canvas = document.createElement("canvas");
-    canvas.width = posterImg.naturalWidth;
-    canvas.height = posterImg.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(
-      posterImg,
-      0,
-      0,
-      posterImg.naturalWidth,
-      posterImg.naturalHeight
-    );
-    const rect = posterImg.getBoundingClientRect();
-    const x = Math.round(
-      (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
-    );
-    const y = Math.round(
-      (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
-    );
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-    colorPreview.style.background = hex;
-  }
-}
-
-function eyedropperMoveHandlerFeed(e) {
-  if (!eyedropperActive) return;
-  const colorPreview = document.getElementById("floating-color-preview");
-  if (!colorPreview) return;
-  colorPreview.style.left = e.pageX + 20 + "px";
-  colorPreview.style.top = e.pageY - 24 + "px";
-
-  if (posterFeed.naturalWidth && posterFeed.naturalHeight) {
-    const canvas = document.createElement("canvas");
-    canvas.width = posterFeed.naturalWidth;
-    canvas.height = posterFeed.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(
-      posterFeed,
-      0,
-      0,
-      posterFeed.naturalWidth,
-      posterFeed.naturalHeight
-    );
-    const rect = posterFeed.getBoundingClientRect();
-    const x = Math.round(
-      (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
-    );
-    const y = Math.round(
-      (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
-    );
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-    colorPreview.style.background = hex;
-  }
-}
-
-function eyedropperMoveHandlerReview(e) {
-  if (!eyedropperActive) return;
-  const colorPreview = document.getElementById("floating-color-preview");
-  if (!colorPreview) return;
-  colorPreview.style.left = e.pageX + 20 + "px";
-  colorPreview.style.top = e.pageY - 24 + "px";
-
-  if (posterReview.naturalWidth && posterReview.naturalHeight) {
-    const canvas = document.createElement("canvas");
-    canvas.width = posterReview.naturalWidth;
-    canvas.height = posterReview.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(
-      posterReview,
-      0,
-      0,
-      posterReview.naturalWidth,
-      posterReview.naturalHeight
-    );
-    const rect = posterReview.getBoundingClientRect();
-    const x = Math.round(
-      (e.clientX - rect.left) * (posterReview.naturalWidth / rect.width)
-    );
-    const y = Math.round(
-      (e.clientY - rect.top) * (posterReview.naturalHeight / rect.height)
-    );
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-    colorPreview.style.background = hex;
-  }
-}
-
-function eyedropperMoveHandlerReviewFeed(e) {
-  if (!eyedropperActive) return;
-  const colorPreview = document.getElementById("floating-color-preview");
-  if (!colorPreview) return;
-  colorPreview.style.left = e.pageX + 20 + "px";
-  colorPreview.style.top = e.pageY - 24 + "px";
-
-  if (posterReviewFeed.naturalWidth && posterReviewFeed.naturalHeight) {
-    const canvas = document.createElement("canvas");
-    canvas.width = posterReviewFeed.naturalWidth;
-    canvas.height = posterReviewFeed.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(
-      posterReviewFeed,
-      0,
-      0,
-      posterReviewFeed.naturalWidth,
-      posterReviewFeed.naturalHeight
-    );
-    const rect = posterReviewFeed.getBoundingClientRect();
-    const x = Math.round(
-      (e.clientX - rect.left) * (posterReviewFeed.naturalWidth / rect.width)
-    );
-    const y = Math.round(
-      (e.clientY - rect.top) * (posterReviewFeed.naturalHeight / rect.height)
-    );
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
-    const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-    colorPreview.style.background = hex;
-  }
-}
-
-function resetEyedropper() {
-  eyedropperActive = false;
-  eyedropperCallback = null;
-  posterImg.style.cursor = "";
-  posterFeed.style.cursor = "";
-  if (posterReview) posterReview.style.cursor = "";
-  if (posterReviewFeed) posterReviewFeed.style.cursor = "";
-  document.body.style.cursor = "";
-  posterImg.removeEventListener("mousemove", eyedropperMoveHandler);
-  posterFeed.removeEventListener("mousemove", eyedropperMoveHandlerFeed);
-  if (posterReview) posterReview.removeEventListener("mousemove", eyedropperMoveHandlerReview);
-  if (posterReviewFeed) posterReviewFeed.removeEventListener("mousemove", eyedropperMoveHandlerReviewFeed);
-  const message = document.getElementById("eyedropper-message");
-  if (message) message.remove();
-}
-
-const activateEyedropperBtn = document.getElementById("activateEyedropper");
-
-function activateEyedropper(callback = null) {
-  eyedropperActive = true;
-  eyedropperCallback = callback;
-  posterImg.style.cursor = "crosshair";
-  posterFeed.style.cursor = "crosshair";
-  if (posterReview) posterReview.style.cursor = "crosshair";
-  if (posterReviewFeed) posterReviewFeed.style.cursor = "crosshair";
-
-  let colorPreview = document.getElementById("floating-color-preview");
-  if (!colorPreview) {
-    colorPreview = document.createElement("div");
-    colorPreview.id = "floating-color-preview";
-    colorPreview.style.cssText = `
-      position: absolute;
-      z-index: 99999;
-      left: 0px;
-      top: 0px;
-      width: 48px;
-      height: 48px;
-      border: 2px solid #333;
-      border-radius: 8px;
-      background: #fff;
-      display: block;
-      pointer-events: none;
-    `;
-    document.body.appendChild(colorPreview);
-  }
-  colorPreview.style.display = "block";
-  colorPreview.style.background = "#fff";
-
-  posterImg.addEventListener("mousemove", eyedropperMoveHandler);
-  posterFeed.addEventListener("mousemove", eyedropperMoveHandlerFeed);
-  if (posterReview) posterReview.addEventListener("mousemove", eyedropperMoveHandlerReview);
-  if (posterReviewFeed) posterReviewFeed.addEventListener("mousemove", eyedropperMoveHandlerReviewFeed);
-}
-
-activateEyedropperBtn.addEventListener("click", () => {
-  activateEyedropper();
-});
-
-posterImg.addEventListener("click", (e) => {
-  if (!eyedropperActive || !posterImg.src) return;
-
-  e.stopPropagation();
-  e.preventDefault();
-
-  const canvas = document.createElement("canvas");
-  canvas.width = posterImg.naturalWidth;
-  canvas.height = posterImg.naturalHeight;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(
-    posterImg,
-    0,
-    0,
-    posterImg.naturalWidth,
-    posterImg.naturalHeight
-  );
-
-  const rect = posterImg.getBoundingClientRect();
-  const x = Math.round(
-    (e.clientX - rect.left) * (posterImg.naturalWidth / rect.width)
-  );
-  const y = Math.round(
-    (e.clientY - rect.top) * (posterImg.naturalHeight / rect.height)
-  );
-  const pixel = ctx.getImageData(x, y, 1, 1).data;
-  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-  eyedropperColor = hex;
-
-  window.lastEyedropperColor = hex;
-
-  let colorPreview = document.getElementById("floating-color-preview");
-  if (colorPreview) {
-    colorPreview.style.background = hex;
-    colorPreview.style.display = "block";
-    colorPreview.style.left = e.pageX + 20 + "px";
-    colorPreview.style.top = e.pageY - 24 + "px";
-  }
-
-  if (eyedropperCallback) {
-    eyedropperCallback(hex);
-  } else {
-    floatingColorPicker.value = hex;
-    floatingColorPicker.dispatchEvent(new Event("input"));
-  }
-
-  posterImg.removeEventListener("mousemove", eyedropperMoveHandler);
-  resetEyedropper();
-  setTimeout(() => {
-    if (colorPreview) colorPreview.style.display = "none";
-  }, 400);
-
-  posterImg.style.cursor = "";
-  document.body.style.cursor = "";
-  eyedropperActive = false;
-  eyedropperCallback = null;
-});
-
-posterFeed.addEventListener("click", (e) => {
-  if (!eyedropperActive || !posterFeed.src) return;
-
-  e.stopPropagation();
-  e.preventDefault();
-
-  const canvas = document.createElement("canvas");
-  canvas.width = posterFeed.naturalWidth;
-  canvas.height = posterFeed.naturalHeight;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(
-    posterFeed,
-    0,
-    0,
-    posterFeed.naturalWidth,
-    posterFeed.naturalHeight
-  );
-
-  const rect = posterFeed.getBoundingClientRect();
-  const x = Math.round(
-    (e.clientX - rect.left) * (posterFeed.naturalWidth / rect.width)
-  );
-  const y = Math.round(
-    (e.clientY - rect.top) * (posterFeed.naturalHeight / rect.height)
-  );
-  const pixel = ctx.getImageData(x, y, 1, 1).data;
-  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-  eyedropperColor = hex;
-
-  window.lastEyedropperColor = hex;
-
-  let colorPreview = document.getElementById("floating-color-preview");
-  if (colorPreview) {
-    colorPreview.style.background = hex;
-    colorPreview.style.display = "block";
-    colorPreview.style.left = e.pageX + 20 + "px";
-    colorPreview.style.top = e.pageY - 24 + "px";
-  }
-
-  if (eyedropperCallback) {
-    eyedropperCallback(hex);
-  } else {
-    floatingColorPicker.value = hex;
-    floatingColorPicker.dispatchEvent(new Event("input"));
-  }
-
-  posterFeed.removeEventListener("mousemove", eyedropperMoveHandler);
-  resetEyedropper();
-  setTimeout(() => {
-    if (colorPreview) colorPreview.style.display = "none";
-  }, 400);
-});
-
-posterReview.addEventListener("click", (e) => {
-  if (!eyedropperActive || !posterReview.src) return;
-
-  e.stopPropagation();
-  e.preventDefault();
-
-  const canvas = document.createElement("canvas");
-  canvas.width = posterReview.naturalWidth;
-  canvas.height = posterReview.naturalHeight;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(
-    posterReview,
-    0,
-    0,
-    posterReview.naturalWidth,
-    posterReview.naturalHeight
-  );
-
-  const rect = posterReview.getBoundingClientRect();
-  const x = Math.round(
-    (e.clientX - rect.left) * (posterReview.naturalWidth / rect.width)
-  );
-  const y = Math.round(
-    (e.clientY - rect.top) * (posterReview.naturalHeight / rect.height)
-  );
-  const pixel = ctx.getImageData(x, y, 1, 1).data;
-  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-  eyedropperColor = hex;
-
-  window.lastEyedropperColor = hex;
-
-  let colorPreview = document.getElementById("floating-color-preview");
-  if (colorPreview) {
-    colorPreview.style.background = hex;
-    colorPreview.style.display = "block";
-    colorPreview.style.left = e.pageX + 20 + "px";
-    colorPreview.style.top = e.pageY - 24 + "px";
-  }
-
-  if (eyedropperCallback) {
-    eyedropperCallback(hex);
-  } else {
-    floatingColorPicker.value = hex;
-    floatingColorPicker.dispatchEvent(new Event("input"));
-  }
-
-  resetEyedropper();
-  setTimeout(() => {
-    if (colorPreview) colorPreview.style.display = "none";
-  }, 400);
-});
-
-posterReviewFeed.addEventListener("click", (e) => {
-  if (!eyedropperActive || !posterReviewFeed.src) return;
-
-  e.stopPropagation();
-  e.preventDefault();
-
-  const canvas = document.createElement("canvas");
-  canvas.width = posterReviewFeed.naturalWidth;
-  canvas.height = posterReviewFeed.naturalHeight;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(
-    posterReviewFeed,
-    0,
-    0,
-    posterReviewFeed.naturalWidth,
-    posterReviewFeed.naturalHeight
-  );
-
-  const rect = posterReviewFeed.getBoundingClientRect();
-  const x = Math.round(
-    (e.clientX - rect.left) * (posterReviewFeed.naturalWidth / rect.width)
-  );
-  const y = Math.round(
-    (e.clientY - rect.top) * (posterReviewFeed.naturalHeight / rect.height)
-  );
-  const pixel = ctx.getImageData(x, y, 1, 1).data;
-  const hex = rgbToHex(`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`);
-  eyedropperColor = hex;
-
-  window.lastEyedropperColor = hex;
-
-  let colorPreview = document.getElementById("floating-color-preview");
-  if (colorPreview) {
-    colorPreview.style.background = hex;
-    colorPreview.style.display = "block";
-    colorPreview.style.left = e.pageX + 20 + "px";
-    colorPreview.style.top = e.pageY - 24 + "px";
-  }
-
-  if (eyedropperCallback) {
-    eyedropperCallback(hex);
-  } else {
-    floatingColorPicker.value = hex;
-    floatingColorPicker.dispatchEvent(new Event("input"));
-  }
-
-  resetEyedropper();
-  setTimeout(() => {
-    if (colorPreview) colorPreview.style.display = "none";
-  }, 400);
 });
 
 document
