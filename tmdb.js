@@ -166,12 +166,12 @@ async function searchMovies (e) {
       const mappedCertification =
         certificationMap[certification] || certification;
 
-      document.getElementById("titleInputReview").value = movie.title;
+      document.getElementById("titleInput").value = movie.title;
 
       if (mappedCertification) {
-        document.getElementById("edadSugeridaInputReview").value = mappedCertification;
+        document.getElementById("edadSugeridaInput").value = mappedCertification;
 
-        const edadLabel = document.getElementById("edad-sugerida-review");
+        const edadLabel = document.getElementById("edad-sugerida");
 
         if (edadLabel) {
           edadLabel.textContent = mappedCertification;
@@ -214,28 +214,10 @@ async function searchMovies (e) {
       const posterUrlReview = getSimpleCorsProxiedUrl(
         `https://image.tmdb.org/t/p/w500${movie.poster_path}`
       );
-      document.getElementById("poster-review").src = posterUrlReview;
-      document.getElementById(
-        "duracion-review"
-      ).textContent = `${movieDetails.runtime} minutos`;
-      document.getElementById("title-review").textContent = movie.title;
-      document.getElementById("year-review").textContent = new Date(
-        movie.release_date
-      ).getFullYear();
-      document.getElementById("sinapsis-review").textContent =
-        movieDetailsSinapsis.overview;
-      document.getElementById("sinapsisInputReview").value =
-        movieDetailsSinapsis.overview;
-      document.getElementById("director-review").textContent = director
-        ? director.name
-        : "Director no disponible";
 
       const countryCode = movieDetails.origin_country[0];
       const flag = getCountryFlagEmoji(countryCode);
       const countryName = countryNamesES[countryCode] || countryCode;
-      document.getElementById(
-        "origen-review"
-      ).textContent = `Origen: ${flag} ${countryName}`;
 
       const imagesRes = await fetch(
         `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
