@@ -1078,7 +1078,7 @@ button {
   height: 0;
   border-left: 9px solid transparent;
   border-right: 13px solid transparent;
-  border-top: 17px solid #000000;
+  border-top: 17px solid #000000 !important;
   transform: rotate(11deg);
   z-index: 1;
 }
