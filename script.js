@@ -113,161 +113,357 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
   await downloadCanvas();
 });
 
-// --------------------------------------------------
-// COLORPICKER / EYEDROPPER
-// --------------------------------------------------
+document.getElementById("saveFlyer").addEventListener("click", async () => {
+  const flyerElement = document.getElementById("flyer-story");
+  const blurBg = document.getElementById("flyer-blur-bg");
 
-const floatingColorPicker = document.getElementById("floatingColorPicker");
-let colorTargets = [];
-let lastUsedColor = "#ffffff";
+  if (blurBg && blurBg.style.backgroundImage) {
+    const bgImageMatch = blurBg.style.backgroundImage.match(
+      /url\(['"]?([^'"]+)['"]?\)/,
+    );
 
-const lastColorIndicators = [];
+    if (bgImageMatch) {
+      const imageUrl = bgImageMatch[1];
 
-function updateGlobalLastColor(color) {
-  lastUsedColor = color;
-  if (lastColorSquare) lastColorSquare.style.backgroundColor = color;
-  lastColorIndicators.forEach((ind) => (ind.style.backgroundColor = color));
-}
+      try {
+        const blurredDataUrl = await applyBlurToImage(imageUrl);
 
-const lastColorSquare = document.createElement("div");
-lastColorSquare.id = "lastColorSquare";
-lastColorSquare.style.position = "absolute";
-lastColorSquare.style.width = "48px";
-lastColorSquare.style.height = "48px";
-lastColorSquare.style.border = "2px solid #333";
-lastColorSquare.style.borderRadius = "8px";
-lastColorSquare.style.backgroundColor = lastUsedColor;
-lastColorSquare.style.cursor = "pointer";
-lastColorSquare.style.display = "none";
-lastColorSquare.style.zIndex = "10000";
-lastColorSquare.title = "Usar último color seleccionado";
-lastColorSquare.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-document.body.appendChild(lastColorSquare);
+        const originalFilter = blurBg.style.filter;
+        const originalBgImage = blurBg.style.backgroundImage;
 
-function isBackgroundElement(target) {
-  return (
-    target.classList.contains("rect") ||
-    target.classList.contains("rect2") ||
-    target.classList.contains("rect2") ||
-    target.classList.contains("tape") ||
-    target.id === "flyer-story"
-  );
-}
+        blurBg.style.filter = "none";
+        blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
 
-// funcion aux para convertir rgb a hexa
-// el navegador devuelve estilos en RGB, pero el input type="color" requiere Hex
-function rgbToHex(rgb) {
-  const result = rgb.match(/\d+/g);
-  if (!result || result.length < 3) return "#ffffff";
-  const r = parseInt(result[0]).toString(16).padStart(2, "0");
-  const g = parseInt(result[1]).toString(16).padStart(2, "0");
-  const b = parseInt(result[2]).toString(16).padStart(2, "0");
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-  return `#${r}${g}${b}`;
-}
+        const canvas = await html2canvas(flyerElement, {
+          width: 1080,
+          height: 1920,
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: "#ffffff",
+          scrollX: 0,
+          scrollY: 0,
+        });
 
-// sincroniza colores entre version story y feed(posiblemente se vaya)
-function getColorTargets(el) {
-  if (
-    el.classList.contains("rect") ||
-    el.classList.contains("rect2") ||
-    el.classList.contains("rect-feed") ||
-    el.classList.contains("rect2-feed")
-  ) {
-    return [".rect", ".rect2", ".rect-feed", ".rect2-feed"]
-      .map((s) => document.querySelector(s))
-      .filter(Boolean);
-  }
+        blurBg.style.filter = originalFilter;
+        blurBg.style.backgroundImage = originalBgImage;
 
-  if (
-    el.classList.contains("rect2-review") ||
-    el.classList.contains("rect2-review-feed")
-  ) {
-    return [".rect2-review", ".rect2-review-feed"]
-      .map((s) => document.querySelector(s))
-      .filter(Boolean);
-  }
+        // Descargar
+        const link = document.createElement("a");
+        const flyerTitle = document
+          .getElementById("title")
+          .textContent.trim()
+          .replace(/\s+/g, "_")
+          .replace(/[^\w\-]/g, "");
+        const date = new Date().toISOString().slice(0, 10);
+        link.download = `${date}_${flyerTitle}.png`;
+        link.href = canvas.toDataURL("image/png");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (blurError) {
+        console.warn(
+          "Error al aplicar blur, usando método alternativo:",
+          blurError,
+        );
 
-  const idGroups = [
-    [
-      "flyer-hour",
-      "flyer-biblioteca",
-      "flyer-hour-feed",
-      "flyer-biblioteca-feed",
-    ],
-    ["ciclo", "ciclo-feed"],
-    ["title", "title-feed"],
-    ["title-review", "title-review-feed"],
-    ["year", "year-feed"],
-    ["year-review", "year-review-feed"],
-    ["flyer-date", "flyer-date-feed"],
-    ["director", "director-feed"],
-    ["director-review", "director-review-feed"],
-    ["duracion", "duracion-feed"],
-    ["duracion-review", "duracion-review-feed"],
-    ["header", "header-feed"],
-    ["header-review", "header-review-feed"],
-    ["org", "org-feed"],
-    ["org-review", "org-review-feed"],
-    ["origen-review", "origen-review-feed"],
-    ["sinapsis-review", "sinapsis-review-feed"],
-    ["flyer-story", "flyer-feed"],
-    ["flyer-story-review", "flyer-feed-review"],
-    ["edad-sugerida", "edad-sugerida-feed"],
-    ["edad-sugerida-review", "edad-sugerida-review-feed"],
-  ];
-
-  for (const group of idGroups) {
-    if (group.includes(el.id)) {
-      return group.map((id) => document.getElementById(id)).filter(Boolean);
+        await generateWithoutBlur(flyerElement, true);
+      }
+    } else {
+      await generateWithoutBlur(flyerElement, true);
     }
-  }
-
-  return [el];
-}
-
-function getCurrentColorForTargets(targets) {
-  for (const target of targets) {
-    const inlineColor = target.style.backgroundColor || target.style.color;
-    if (inlineColor && inlineColor !== "") {
-      return rgbToHex(inlineColor);
-    }
-  }
-
-  const style = window.getComputedStyle(targets[0]);
-  return rgbToHex(
-    isBackgroundElement(targets[0]) ? style.backgroundColor : style.color,
-  );
-}
-
-[
-  document.querySelector(".header"),
-  document.getElementById("title"),
-  document.getElementById("year"),
-  document.getElementById("director"),
-  document.getElementById("duracion"),
-  document.getElementById("edad-sugerida"),
-  document.getElementById("flyer-date"),
-  document.getElementById("flyer-hour"),
-  document.getElementById("flyer-biblioteca"),
-  document.getElementById("org"),
-  document.querySelector(".rect"),
-  document.querySelector(".rect2"),
-  document.getElementById("ciclo"),
-  document.getElementById("flyer-story"),
-  document.querySelector(".tape"),
-].forEach((el) => {
-  if (el) {
-    el.addEventListener("click", (event) => {
-      showColorPickerForElement(el, event);
-      event.stopPropagation();
-    });
+  } else {
+    await generateWithoutBlur(flyerElement, true);
   }
 });
 
-// --------------------------------------------------
-// EDITOR DE TEXTOS DE FLYER
-// --------------------------------------------------
+async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
+  const dimensions = isStoryFormat
+    ? { width: 1080, height: 1920 }
+    : { width: 1080, height: 1080 };
+
+  const canvas = await html2canvas(flyerElement, {
+    width: dimensions.width,
+    height: dimensions.height,
+    scale: 2,
+    useCORS: true,
+    allowTaint: false,
+    backgroundColor: "#ffffff",
+    scrollX: 0,
+    scrollY: 0,
+  });
+
+  const link = document.createElement("a");
+  const flyerTitle = document
+    .getElementById("title")
+    .textContent.trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^\w\-]/g, "");
+  const date = new Date().toISOString().slice(0, 10);
+  const formatType = isStoryFormat ? "story" : "feed";
+  link.download = `${date}_${flyerTitle}_${formatType}.png`;
+  link.href = canvas.toDataURL("image/png");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+document
+  .getElementById("load-backdrop-direct")
+  .addEventListener("click", () => {
+    const input = document.getElementById("backdrop-direct-input").value.trim();
+
+    if (!input) {
+      alert("Por favor, ingresa una URL del backdrop");
+      return;
+    }
+
+    if (!input.startsWith("http")) {
+      alert(
+        "Por favor, ingresa una URL completa que comience con http:// o htt://",
+      );
+      return;
+    }
+
+    let filePath = "";
+    if (input.includes("image.tmdb.org/t/p/original")) {
+      filePath = input.replace("https://image.tmdb.org/t/p/original", "");
+    } else {
+      filePath = input;
+    }
+
+    const newBackdrop = {
+      file_path: filePath,
+      aspect_ratio: 1.778,
+    };
+
+    backdrops.unshift(newBackdrop);
+    currentBackdrop = 0;
+
+    showBackdrop(currentBackdrop);
+
+    // Aplicar automáticamente como fondo del flyer
+    const fullUrl = filePath.startsWith("http")
+      ? filePath
+      : `https://image.tmdb.org/t/p/original${filePath}`;
+    const rect = document.querySelector(".rect");
+    const rectFeed = document.querySelector(".rect-feed");
+    const rectReview = document.querySelector(".rect-review");
+    rect.style.display = "none";
+    rectFeed.style.display = "none";
+    rectReview.style.display = "none";
+    setBackdropAsBackground(fullUrl);
+    setBackdropAsBackgroundFeed(fullUrl);
+    setBackdropAsBackgroundReview(fullUrl);
+    setBackdropAsBackgroundReviewFeed(fullUrl);
+
+    document.getElementById("backdrop-direct-input").value = "";
+  });
+
+document.getElementById("load-poster-direct").addEventListener("click", () => {
+  const input = document.getElementById("poster-direct-input").value.trim();
+
+  if (!input) {
+    alert("Por favor, ingresa una URL del poster");
+    return;
+  }
+
+  if (!input.startsWith("http")) {
+    alert(
+      "Por favor, ingresa una URL completa que comience con http:// o https://",
+    );
+    return;
+  }
+
+  let filePath = "";
+  if (input.includes("image.tmdb.org/t/p/original")) {
+    filePath = input.replace("https://image.tmdb.org/t/p/original", "");
+  } else {
+    filePath = input;
+  }
+
+  const newPoster = {
+    file_path: filePath,
+    aspect_ratio: 0.667,
+  };
+
+  posters.unshift(newPoster);
+  currentPoster = 0;
+
+  showPoster(currentPoster);
+  const fullUrl = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
+  setPoster(fullUrl);
+
+  document.getElementById("poster-direct-input").value = "";
+});
+
+function applyBackdropDirect(url) {
+  if (!url || !url.startsWith("http")) return;
+
+  let filePath = "";
+  if (url.includes("image.tmdb.org/t/p/original")) {
+    filePath = url.replace("https://image.tmdb.org/t/p/original", "");
+  } else {
+    filePath = url;
+  }
+
+  const newBackdrop = {
+    file_path: filePath,
+    aspect_ratio: 1.778,
+  };
+
+  backdrops.unshift(newBackdrop);
+  currentBackdrop = 0;
+  showBackdrop(currentBackdrop);
+
+  const fullUrl = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
+  const rect = document.querySelector(".rect");
+  const rectFeed = document.querySelector(".rect-feed");
+  const rectReview = document.querySelector(".rect-review");
+  rect.style.display = "none";
+  rectFeed.style.display = "none";
+  rectReview.style.display = "none";
+  setBackdropAsBackground(fullUrl);
+  setBackdropAsBackgroundFeed(fullUrl);
+  setBackdropAsBackgroundReview(fullUrl);
+  setBackdropAsBackgroundReviewFeed(fullUrl);
+}
+
+function applyPosterDirect(url) {
+  if (!url || !url.startsWith("http")) return;
+
+  let filePath = "";
+  if (url.includes("image.tmdb.org/t/p/original")) {
+    filePath = url.replace("https://image.tmdb.org/t/p/original", "");
+  } else {
+    filePath = url;
+  }
+
+  const newPoster = {
+    file_path: filePath,
+    aspect_ratio: 0.667,
+  };
+
+  posters.unshift(newPoster);
+  currentPoster = 0;
+  showPoster(currentPoster);
+
+  const fullUrl = filePath.startsWith("http")
+    ? filePath
+    : `https://image.tmdb.org/t/p/original${filePath}`;
+  setPoster(fullUrl);
+}
+
+document
+  .getElementById("backdrop-carousel-img")
+  .addEventListener("click", () => {
+    if (backdrops.length > 0) {
+      const currentBackdropData = backdrops[currentBackdrop];
+      const filePath = currentBackdropData.file_path;
+
+      const fullUrl = filePath.startsWith("http")
+        ? filePath
+        : `https://image.tmdb.org/t/p/original${filePath}`;
+
+      showImageInfo("Backdrop", filePath, fullUrl);
+    }
+  });
+
+document.getElementById("poster-carousel-img").addEventListener("click", () => {
+  if (posters.length > 0) {
+    const currentPosterData = posters[currentPoster];
+    const filePath = currentPosterData.file_path;
+
+    const fullUrl = filePath.startsWith("http")
+      ? filePath
+      : `https://image.tmdb.org/t/p/original${filePath}`;
+
+    showImageInfo("Poster", filePath, fullUrl);
+  }
+});
+
+function showImageInfo(type, filePath, fullUrl) {
+  const existingModal = document.getElementById("image-info-modal");
+  if (existingModal) {
+    existingModal.remove();
+  }
+
+  const modal = document.createElement("div");
+  modal.id = "image-info-modal";
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+
+  const modalContent = document.createElement("div");
+  modalContent.style.cssText = `
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+  `;
+
+  modalContent.innerHTML = `
+    <h3>Información del ${type}</h3>
+    <p><strong>URL de la imagen:</strong></p>
+    <input type="text" readonly value="${fullUrl}" style="width: 100%; padding: 5px; margin-bottom: 20px; font-family: monospace;">
+    <div style="display: flex; gap: 10px; justify-content: center;">
+      <button id="copy-url" style="padding: 8px 16px;">Copiar URL</button>
+      <button id="close-modal" style="padding: 8px 16px; background: #ccc;">Cerrar</button>
+    </div>
+  `;
+
+  modal.appendChild(modalContent);
+  document.body.appendChild(modal);
+
+  document.getElementById("copy-url").addEventListener("click", () => {
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      alert("URL copiada al portapapeles");
+    });
+  });
+
+  document.getElementById("close-modal").addEventListener("click", () => {
+    modal.remove();
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+}
+
+document
+  .getElementById("flyerDateFontSizeInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-date").style.fontSize =
+      e.target.value + "px";
+    console.log("Aplicado tamaño fecha Story:", e.target.value + "px");
+  });
+
+document
+  .getElementById("flyerHourFontSizeInput")
+  .addEventListener("input", (e) => {
+    document.getElementById("flyer-hour").style.fontSize =
+      e.target.value + "px";
+    console.log("Aplicado tamaño hora Story:", e.target.value + "px");
+  });
 
 document
   .getElementById("flyerTitleFontSizeInput")
