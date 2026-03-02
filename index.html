@@ -2,14 +2,14 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Gutenflyerg Ciclos</title>
+    <title>Gutenflyerg</title>
     <link rel="stylesheet" href="styles.css" />
     <!-- html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <meta property="og:title" content="Gutenflyerg Ciclos" />
+    <meta property="og:title" content="Gutenflyerg" />
     <meta
       property="og:description"
-      content="Crear flyers personalizados para Ciclos de Cine con múltiples películas."
+      content="Crear flyers personalizados para las Veladas de Cine."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://vdcine.github.io/gutenflyerg/" />
@@ -20,71 +20,55 @@
       <div style="display: flex; align-items: center; margin-bottom: 20px">
         <h1
           id="instrucciones"
-          style="flex: 1; text-align: center; padding-left: 190px"
+          style="flex: 1; text-align: center; padding-left: 100px"
         >
-          Gutenflyerg Ciclos de Cine
+          Gutenflyerg de Veladas de Cine
         </h1>
-        <button
-          class="back-button"
-          onclick="location.href='gutenflyerg.html'"
-          style="padding: 8px 16px"
-        >
-          Hacer flyer individual →
-        </button>
+      </div>
+      <div class="browsers-container">
+        <div class="browser">
+          <img src="images/firefox.svg" alt="Firefox" class="browser-logo" />
+          <span>Firefox</span>
+        </div>
+        <div class="browser-ok">
+          <span> ✔</span>
+        </div>
+        <div class="browser">
+          <img src="images/chrome.png" alt="Chrome" class="browser-logo" />
+          <span>Chrome</span>
+        </div>
+        <div class="browser-ok">✔</div>
+        <div class="browser">
+          <img src="images/edge.png" alt="Edge" class="browser-logo" />
+          <span>Edge</span>
+        </div>
+        <div class="browser-ok">✔</div>
+        <div class="browser">
+          <img src="images/brave.png" alt="Brave" class="browser-logo" />
+          <span>Brave</span>
+        </div>
+        <div class="browser-ok">✔</div>
       </div>
       <hr />
-
+      <!-- FORMULARIO -->
       <form id="movieForm">
-        <h2 id="instrucciones">1°: Buscar y agregar películas al ciclo</h2>
-        <div
-          style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap"
+        <h2 id="instrucciones">1°: Buscar película</h2>
+        <span id="instrucciones">Título:</span>
+        <input type="text" id="movieSearch" placeholder="Terminator" required />
+        <br />
+        <span id="instrucciones">Idioma:</span>
+        <input type="text" id="movieLanguage" placeholder="es" />
+        <br />
+        <span id="instrucciones"
+          >No es obligatorio. 'en' para ingles, 'es' para español</span
         >
-          <span id="instrucciones">Título:</span>
-          <input
-            type="text"
-            id="movieSearch"
-            placeholder="Terminator"
-            required
-            style="flex: 1; min-width: 200px"
-          />
-          <span id="instrucciones">Idioma:</span>
-          <input
-            type="text"
-            id="movieLanguage"
-            placeholder="es"
-            style="width: 60px"
-          />
-          <button id="searchButton" type="submit">Buscar</button>
-        </div>
-        <small id="instrucciones" style="display: block; margin-top: 5px">
-          Idioma no es obligatorio. 'en' para inglés, 'es' para español
-        </small>
+        <br />
+        <button id="searchButton" type="submit">Buscar</button>
+        <hr />
+        <h2 id="instrucciones">2°: Seleccionar pelicula de los resultados</h2>
         <div id="movie-results" style="margin-top: 20px"></div>
         <hr />
       </form>
-
-      <!-- PELICULAS SELECCIONADAS -->
-      <div id="selected-movies-section">
-        <h2 id="instrucciones">2°: Películas del ciclo</h2>
-        <div
-          id="selected-movies-list"
-          style="
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-          "
-        >
-          <p
-            id="instrucciones"
-            style="text-align: center; color: #666; font-style: italic"
-          >
-            No hay películas agregadas. Busca y selecciona hasta 4 películas
-            para el ciclo.
-          </p>
-        </div>
-        <hr />
-      </div>
 
       <div
         class="flyer-flex-row"
@@ -105,12 +89,16 @@
             gap: 24px;
           "
         >
-          <h2 id="instrucciones">3°: Configurar fondo del flyer</h2>
+          <h2 id="instrucciones">
+            3°: Seleccionar backdrop o poster como fondo.
+          </h2>
           <h3 id="instrucciones" style="margin-top: 0px">
-            Selecciona un backdrop de cualquier película del ciclo o usa el
-            fondo por defecto.
+            Puede dejarse el fondo por defecto de no querer usar backdrop o
+            poster. <br />
+            Al tocar alguna de las flechas para ver más imágenes, se cambiará el
+            fondo y/o el poster automáticamente.
           </h3>
-
+          <!-- CAROUSELS ARRIBA -->
           <div
             style="
               width: 100%;
@@ -121,6 +109,7 @@
               flex-wrap: wrap;
             "
           >
+            <!-- Backdrop Carousel -->
             <div
               id="backdrop-carousel-container"
               style="
@@ -130,6 +119,19 @@
                 align-items: center;
               "
             >
+              <a
+                id="backdrops"
+                href="#"
+                style="
+                  margin-bottom: 10px;
+                  display: inline-block;
+                  text-decoration: underline;
+                  color: #1976d2;
+                  cursor: pointer;
+                "
+              >
+                Ver todos los backdrops
+              </a>
               <div style="margin-bottom: 10px">
                 <input
                   type="text"
@@ -142,7 +144,7 @@
                 </button>
               </div>
               <div style="font-weight: bold; margin-bottom: 10px">
-                Backdrops disponibles
+                Backdrops
               </div>
               <div
                 id="backdrop-carousel"
@@ -170,360 +172,231 @@
                 id="backdrop-counter"
                 style="margin-top: 8px; font-size: 1rem; color: #555"
               ></div>
-              <button
-                id="set-backdrop-as-bg"
-                style="margin-top: 15px; font-size: 1rem"
-              >
-                Usar este backdrop como fondo del flyer
-              </button>
+
               <button
                 id="remove-backdrop-bg"
                 style="margin-top: 5px; font-size: 1rem"
               >
-                Quitar fondo de backdrop
+                Quitar imagen de fondo
               </button>
+            </div>
+
+            <!-- Poster Carousel -->
+            <div
+              id="poster-carousel-container"
+              style="
+                width: 350px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+              "
+            >
+              <a
+                id="posters"
+                style="
+                  margin-bottom: 10px;
+                  display: inline-block;
+                  text-decoration: underline;
+                  color: #1976d2;
+                  cursor: pointer;
+                "
+              >
+                Ver todos los posters
+              </a>
+              <div style="margin-bottom: 10px">
+                <input
+                  type="text"
+                  id="poster-direct-input"
+                  placeholder="Pegar URL de poster"
+                  style="width: 300px; margin-bottom: 5px; padding: 5px"
+                />
+                <button id="load-poster-direct" style="margin-left: 5px">
+                  Cargar poster directo
+                </button>
+              </div>
+              <div style="font-weight: bold; margin-bottom: 10px">Posters</div>
+              <div
+                id="poster-carousel"
+                style="display: flex; align-items: center; gap: 20px"
+              >
+                <button id="poster-prev" style="font-size: 1.5em">
+                  &#8592;
+                </button>
+                <img
+                  id="poster-carousel-img"
+                  src=""
+                  alt="Poster"
+                  style="
+                    max-width: 220px;
+                    max-height: 330px;
+                    border: 1px solid #ccc;
+                    background: #eee;
+                  "
+                />
+                <button id="poster-next" style="font-size: 1.5em">
+                  &#8594;
+                </button>
+              </div>
+              <div
+                id="poster-counter"
+                style="margin-top: 8px; font-size: 1rem; color: #555"
+              ></div>
             </div>
           </div>
           <hr />
-
-          <h2 id="instrucciones">4°: Editar textos y colores del ciclo</h2>
+          <h2 id="instrucciones">4°: Editar textos y colores.</h2>
           <h3 id="instrucciones" style="margin-top: 0px">
-            Configura el nombre del ciclo, fecha y hora del evento. Para
-            modificar colores haz click sobre los elementos del flyer.
+            Utilizar el formulario para cambiar lo deseado.
+            <br />
+            En el caso del título al darle Shift+Enter o Enter en el textarea
+            agrega un salto de línea.
+            <br />
+            Para modificar colores de textos y cajas hacer UN click sobre los
+            mismos y luego seleccionar el recuadro que abre el color picker.
+            <br />
+            <br />
+            Para aplicar borde a los textos, seleccionar el texto a agregarselo
+            de la lista, se puede seleccionar mas de uno haciendo CTRL + Click,
+            <br />
+            una vez seleccionado todos los items deseados de la lista, elegir el
+            color, y hacer click en el boton aplicar borde. Lo mismo para
+            remover, seleccionar todos los deseados y clickear en remover borde
           </h3>
 
-          <div>
-            <button id="toggle-rect">Ocultar rectángulo vertical</button>
-          </div>
-
-          <div
-            class="flyer-tabs"
-            style="display: flex; gap: 12px; margin-bottom: 18px"
-          >
-            <button id="tab-story" class="flyer-tab active">
-              Historia Instagram
-            </button>
-            <button id="tab-feed" class="flyer-tab">Feed Instagram</button>
-          </div>
 
           <div class="flyer-container">
-            <div>
-              <div
-                id="flyer-story"
-                class="flyer-version"
-                style="display: block"
-              >
-                <div class="tape"></div>
-                <div class="rect"></div>
-                <h1 class="header" id="header">VELADAS DE CINE</h1>
-
-                <div class="subheader">
-                  <h2 id="ciclo">Ciclo Temático</h2>
+            <!-- FLYER -->
+            <div id="flyer-story" class="flyer-version" style="display: block">
+                <div>
+                    <button id="toggle-rect">Ocultar rectángulo vertical</button>
                 </div>
-                <!-- Contenedor de películas del ciclo -->
-                <div id="cycle-movies" class="cycle-movies-container">
-                  <div class="cycle-movies-placeholder">
-                    <p>Agrega películas al ciclo para verlas aquí</p>
-                  </div>
-                </div>
+              <div class="tape"></div>
+              <div class="rect"></div>
+              <h1 class="header" id="header">VELADAS DE CINE</h1>
 
-                <div
-                  class="cycle-description"
-                  style="
-                    position: absolute;
-                    left: 340px;
-                    text-align: center;
-                    width: 400px;
-                    max-height: 150px;
-                    min-height: 50px;
-                    z-index: 10;
-                  "
-                >
-                  <div
-                    id="cycle-description-text"
-                    class="cycle-description-text"
-                    style="
-                      font-family: 'Gilroy', sans-serif;
-                      font-size: 40px;
-                      font-weight: 400;
-                      color: #fff;
-                      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-                      padding: 5px 15px;
-                      background: rgba(255, 255, 255, 0.1);
-                      border-radius: 12px;
-                      backdrop-filter: blur(5px);
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      text-align: center;
-                      max-width: 100%;
-                      overflow-wrap: break-word;
-                    "
-                  >
-                    Descripción del Ciclo
-                  </div>
-                </div>
+              <div class="subheader">
+                <h2 id="ciclo">Ciclo</h2>
+              </div>
 
-                <div class="cycle-info" style="text-align: center">
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      max-width: 880px;
-                      margin: 0 auto;
-                    "
-                  >
-                    <div class="flyer-hour-group" style="text-align: left">
-                      <div id="flyer-hour" class="flyer-hour-ciclos">
-                        19:00 HS
-                      </div>
-                    </div>
-                    <div
-                      class="flyer-biblioteca-group"
-                      style="text-align: right"
-                    >
-                      <div
-                        id="flyer-biblioteca"
-                        class="flyer-biblioteca-ciclos"
-                      >
-                        <img
-                          src="images/icon.png"
-                          alt="ubicación"
-                          class="flyer-location-icon"
-                        />
-                        <span
-                          >Auditorio<br />Biblioteca<br />
-                          Menéndez</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="event-data">
-                  <div class="rect2"></div>
-                  <span id="org">
-                    Organizan Matías Corona y Francisco Albani con apoyo de la
-                    Comisión Directiva de la Biblioteca Menéndez.
-                  </span>
+              <div class="poster-container">
+                <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
+                <div id="bubble" class="dialogo-comic">
+                  ¡Debate luego!
+                  <div class="comic-tail-border"></div>
+                  <div class="comic-tail-noise"></div>
                 </div>
               </div>
 
-              <div id="flyer-feed" class="flyer-version" style="display: none">
-                <div class="tape" style="top: -152px"></div>
-                <div class="rect-feed"></div>
-                <h1
-                  class="header-feed"
-                  id="header-feed"
-                  style="font-size: 85px"
-                >
-                  VELADAS DE CINE
-                </h1>
-
-                <div class="subheader-feed-ciclos">
-                  <h2 id="ciclo-feed" style="font-size: 36px">
-                    Ciclo Temático
-                  </h2>
-                </div>
-
-                <div
-                  class="feed-content"
-                  style="display: flex; flex-direction: column"
-                >
-                  <div
-                    id="cycle-movies-feed"
-                    class="cycle-movies-feed-container"
-                  >
-                    <div class="cycle-movies-placeholder">
-                      <p>Agrega películas al ciclo para verlas aquí</p>
-                    </div>
+              <div class="flyer-row">
+                <div class="flyer-date-group">
+                  <div id="flyer-date" class="flyer-date">
+                    MIÉRCOLES 6<br />DE AGOSTO
                   </div>
                 </div>
-
-                <div
-                  class="cycle-description-feed"
-                  style="
-                    position: absolute;
-                    left: 340px;
-                    text-align: center;
-                    width: 400px;
-                    max-height: 150px;
-                    min-height: 50px;
-                    z-index: 10;
-                    top: 880px;
-                  "
-                >
-                  <div
-                    id="cycle-description-text-feed"
-                    class="cycle-description-text-feed"
-                    style="
-                      font-family: 'Gilroy', sans-serif;
-                      font-size: 35px;
-                      font-weight: 400;
-                      color: #fff;
-                      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-                      padding: 12px 20px;
-                      background: rgba(255, 255, 255, 0.1);
-                      border-radius: 10px;
-                      backdrop-filter: blur(5px);
-                      max-width: 100%;
-                      overflow-wrap: break-word;
-                    "
-                  >
-                    Descripción del Ciclo
+                <div class="flyer-main-group">
+                  <h3 id="title">Título</h3>
+                  <p id="year">Año</p>
+                  <p id="director">Director</p>
+                  <p id="duracion">100 minutos</p>
+                  <p
+                    id="edad-sugerida"
+                    class="edad-sugerida"
+                    style="display: none"
+                  ></p>
+                </div>
+                <div class="flyer-hour-group">
+                  <div id="flyer-hour" class="flyer-hour">19:00 HS</div>
+                  <div id="flyer-biblioteca" class="flyer-biblioteca">
+                    <img
+                      src="images/icon.png"
+                      alt="ubicación"
+                      class="flyer-location-icon"
+                    />
+                    <span>Biblioteca Menéndez</span>
                   </div>
                 </div>
+              </div>
 
-                <div
-                  class="feed-event-info"
-                  style="
-                    display: flex;
-                    justify-content: center;
-                    gap: 475px;
-                    align-items: center;
-                  "
-                >
-                  <div class="flyer-hour-group-feed" style="text-align: left">
-                    <div
-                      id="flyer-hour-feed"
-                      class="flyer-hour-feed"
-                      style="font-size: 36px; text-align: left"
-                    >
-                      19:00 HS
-                    </div>
-                  </div>
-                  <div
-                    class="flyer-biblioteca-group-feed"
-                    style="text-align: right"
-                  >
-                    <div id="flyer-biblioteca-feed" class="flyer-biblioteca">
-                      <img
-                        src="images/icon.png"
-                        alt="ubicación"
-                        class="flyer-location-icon"
-                      />
-                      <span>
-                        Auditorio<br />Biblioteca<br />
-                        Menéndez
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="event-data" style="height: 70px">
-                  <div class="rect2-feed" style="height: 80px"></div>
-                  <span id="org-feed" style="font-size: medium">
-                    Organizan Matías Corona y Francisco Albani con apoyo de la
-                    Comisión Directiva de la Biblioteca Menéndez.
-                  </span>
-                </div>
+              <div class="event-data">
+                <div class="rect2"></div>
+                <span id="org">
+                  Organizan Matías Corona y Francisco Albani con apoyo de la
+                  Comisión Directiva de la Biblioteca Menéndez.
+                </span>
               </div>
             </div>
 
             <div class="panel">
               <div>
-                <label>Nombre del Ciclo</label>
-                <input id="cicloInput" type="text" value="Ciclo Temático" />
-              </div>
-
-              <div class="full">
-                <label>Descripción del Ciclo(opcional)</label>
-                <input
-                  id="cycleDescriptionInput"
-                  type="text"
-                  value="Descripción del Ciclo"
-                />
+                <label>Ciclo</label>
+                <input id="cicloInput" type="text" value="Ciclo" />
               </div>
 
               <div>
+                <label>Fecha</label>
+                <input id="dateInput" type="date" value="2025-08-06" />
+              </div>
+              <div>
                 <label>Hora</label>
                 <input id="hourInput" type="time" value="19:00" />
+              </div>
+              <div>
+                <label>Título</label>
+                <textarea id="titleInput" rows="2"></textarea>
+              </div>
+
+              <div class="edad-sugerida-input">
+                <label>Edad sugerida (opcional)</label>
+                <input
+                  id="edadSugeridaInput"
+                  type="text"
+                  placeholder="Ej: +13, Apta todo público, etc."
+                />
               </div>
 
               <div class="full">
                 <button id="applyTxtBtn">Aplicar cambios</button>
               </div>
 
-              <div
-                id="individual-dates-section"
-                style="margin-top: 20px; display: none"
-              >
-                <hr style="margin: 15px 0; border-top: 1px solid #444" />
-                <label style="margin-bottom: 10px; display: block"
-                  >Fechas individuales y títulos de películas</label
-                >
-                <div
-                  id="individual-dates-container"
-                  style="display: flex; flex-direction: column; gap: 8px"
-                ></div>
-                <div class="full" style="margin-top: 10px">
-                  <button id="applyIndividualDatesBtn">Aplicar cambios</button>
-                </div>
-              </div>
-
               <label>Borde textos</label>
-              <div style="display: flex; gap: 10px; align-items: flex-start">
-                <div style="flex: 1">
-                  <select
-                    id="strokeTargetSelect"
-                    multiple
-                    size="5"
-                    style="width: 100%"
-                  >
-                    <option value="header">Encabezado</option>
-                    <option value="subheader">Nombre del ciclo</option>
-                    <option value="cycle-description-text">
-                      Descripción del ciclo
-                    </option>
-                    <option value="flyer-hour">Hora</option>
-                    <option value="flyer-biblioteca">Ubicación</option>
-                    <option value="movie-title">Títulos de películas</option>
-                    <option value="movie-info">Info de películas</option>
-                    <option value="movie-date">Fechas de películas</option>
-                  </select>
-                </div>
-                <div
-                  style="
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 8px;
-                  "
-                >
-                  <input
-                    type="color"
-                    name="strokeColor"
-                    id="strokeColorInput"
-                    value="#000000"
-                    style="
-                      width: 50px;
-                      height: 50px;
-                      border: none;
-                      border-radius: 8px;
-                      cursor: pointer;
-                    "
-                  />
-                  <span style="font-size: 10px; opacity: 0.7">Color</span>
-                </div>
+              <div class="bordes" style="display: flex">
+                <select id="strokeTargetSelect" multiple size="8">
+                  <option value="header">Encabezado</option>
+                  <option value="title">Título</option>
+                  <option value="year">Año</option>
+                  <option value="director">Director</option>
+                  <option value="duracion">Duración</option>
+                  <option value="flyer-date">Fecha</option>
+                  <option value="flyer-hour">Hora</option>
+                  <option value="flyer-biblioteca">Ubicación</option>
+                </select>
+                <input
+                  type="color"
+                  name="strokeColor"
+                  id="strokeColorInput"
+                  value="#000000"
+                />
               </div>
 
-              <div
-                style="
-                  display: flex;
-                  flex-direction: row;
-                  gap: 5px;
-                  margin-top: 8px;
-                "
-              >
-                <button id="applyStrokeBtn" style="flex: 1">
+              <div style="display: flex; flex-direction: row">
+                <button id="applyStrokeBtn" style="margin-right: 5px">
                   Aplicar borde
                 </button>
-                <button id="removeStrokeBtn" style="flex: 1">
-                  Quitar borde
-                </button>
+                <button id="removeStrokeBtn">Quitar borde</button>
               </div>
 
+              <div>
+                <label>Tamaño fecha</label>
+                <input
+                  id="flyerDateFontSizeInput"
+                  type="number"
+                  min="10"
+                  max="100"
+                  value="40"
+                  style="width: 80px"
+                />
+                px
+              </div>
               <div>
                 <label>Tamaño hora</label>
                 <input
@@ -531,19 +404,31 @@
                   type="number"
                   min="10"
                   max="100"
-                  value="50"
+                  value="45"
                   style="width: 80px"
                 />
                 px
               </div>
               <div>
-                <label>Tamaño descripción</label>
+                <label>Tamaño titulo pelicula</label>
                 <input
-                  id="cycleDescriptionFontSizeInput"
+                  id="flyerTitleFontSizeInput"
                   type="number"
                   min="10"
                   max="100"
-                  value="40"
+                  value="42"
+                  style="width: 80px"
+                />
+                px
+              </div>
+              <div>
+                <label>Margen superior info pelicula</label>
+                <input
+                  id="flyerTitleMarginTopInput"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value="24"
                   style="width: 80px"
                 />
                 px
@@ -585,127 +470,92 @@
             </div>
           </div>
 
-          <h2 id="instrucciones">
-            <br />
-            5°: Guardar imagen del flyer
-            <br />
-          </h2>
+      <h2 id="instrucciones">
+        <br />
+        5°: Guardar imagen del flyer
+        <br />
+      </h2>
 
-          <button
-            type="button"
-            id="saveFlyer"
-            style="
-              margin-bottom: 20px;
-              display: block;
-              margin-top: 20px;
-              padding: 10px 20px;
-              font-size: 16px;
-              cursor: pointer;
-              margin-left: auto;
-              margin-right: auto;
-            "
-          >
-            Descargar Historia
-          </button>
-
-          <button
-            type="button"
-            id="saveFlyerFeed"
-            style="
-              margin-bottom: 20px;
-              display: none;
-              margin-top: 20px;
-              padding: 10px 20px;
-              font-size: 16px;
-              cursor: pointer;
-              margin-left: auto;
-              margin-right: auto;
-            "
-          >
-            Descargar Feed
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <input
-      type="color"
-      id="floatingColorPicker"
-      style="position: absolute; display: none; z-index: 9999"
-    />
-    <button
-      id="activateEyedropper"
-      type="button"
-      style="margin-left: 10px; display: none"
-    ></button>
-    <div
-      id="comicColorPickerPanel"
-      style="
-        position: absolute;
-        display: none;
-        z-index: 9999;
-        background: #fff;
-        padding: 12px 16px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      "
-    >
-      <div
+      <!-- Botón para exportar -->
+      <button
+        type="button"
+        id="saveFlyer"
         style="
-          display: flex;
-          align-items: center;
-          margin-bottom: 12px;
-          gap: 8px;
+          margin-bottom: 20px;
+          display: block;
+          margin-top: 20px;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer;
+          margin-left: auto;
+          margin-right: auto;
         "
       >
-        <span style="font-weight: bold">Último color:</span>
-        <div
-          id="comicLastColorSquare"
-          style="
-            width: 24px;
-            height: 24px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            background: #fff;
-            cursor: pointer;
-            display: none;
-          "
-          title="Click para seleccionar el último color seleccionado"
-        ></div>
-      </div>
-      <label style="display: block; margin-bottom: 8px">
-        Fondo <input type="color" id="comicBgColorPicker" />
-        <button
-          id="activateEyedropperBg"
-          type="button"
-          style="margin-left: 10px"
-        >
-          Seleccionar color
-        </button>
-      </label>
-      <label style="display: block; margin-bottom: 8px">
-        Borde <input type="color" id="comicBorderColorPicker" />
+        Descargar
+      </button>
 
-        <button
-          id="activateEyedropperBorder"
-          type="button"
-          style="margin-left: 10px"
-        >
-          Seleccionar color
-        </button>
-      </label>
-      <label style="display: block">
-        Texto <input type="color" id="comicTextColorPicker" />
 
-        <button
-          id="activateEyedropperText"
-          type="button"
-          style="margin-left: 10px"
-        >
-          Seleccionar color
-        </button>
-      </label>
+    <!--Color picker-->
+    <div
+      id="paintPaletteContainer"
+      style="
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        padding: 15px 25px;
+        border-radius: 30px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        display: none;
+        z-index: 10000;
+        align-items: center;
+        gap: 15px;
+        border: 2px solid #333;
+      "
+    >
+      <span
+        style="
+          font-weight: bold;
+          font-family: 'Gilroy', sans-serif;
+          font-size: 16px;
+          color: #333;
+        "
+        >Edición de Colores:</span
+      >
+      <input
+        type="color"
+        id="paintColorInput"
+        value="#ffffff"
+        style="
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          border: none;
+          border-radius: 50%;
+          padding: 0;
+        "
+        title="Elige un color y luego haz click en los elementos del flyer"
+      />
+      <button
+        id="closePaintMode"
+        style="
+          background: #f44336;
+          color: white;
+          border: none;
+          padding: 10px 15px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-weight: bold;
+          font-family: 'Gilroy', sans-serif;
+        "
+      >
+        Cerrar Modo
+      </button>
     </div>
   </body>
-  <script src="script-ciclos.js"></script>
+  <script src="importExport.js"></script>
+  <script src="tmdb.js"></script>
+  <script src="colorpicker.js"></script>
+  <script src="script.js"></script>
 </html>
