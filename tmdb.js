@@ -209,9 +209,9 @@ async function searchMovies (e) {
         `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
       );
 
-      setBackdropAsBackgroundReview(backdropUrl);
+      setBackdropAsBackground(backdropUrl);
 
-      const posterUrlReview = getSimpleCorsProxiedUrl(
+      const posterUrl = getSimpleCorsProxiedUrl(
         `https://image.tmdb.org/t/p/w500${movie.poster_path}`
       );
 
@@ -331,7 +331,7 @@ document.getElementById("poster-prev").addEventListener("click", () => {
   if (!posters.length) return;
   const filePath = posters[currentPoster].file_path;
   const posterUrlPrev = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`,
+    `https://image.tmdb.org/t/p/original${filePath}`
   );
 
   setPoster(posterUrlPrev);
@@ -343,14 +343,14 @@ document.getElementById("poster-next").addEventListener("click", () => {
   if (!posters.length) return;
   const filePath = posters[currentPoster].file_path;
   const posterUrlNext = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`,
+    `https://image.tmdb.org/t/p/original${filePath}`
   );
 
   setPoster(posterUrlNext);
 });
 
 function setPoster(url) {
-  document.getElementById("poster-review").src = url;
+  document.getElementById("poster").src = url;
 }
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {
@@ -360,11 +360,11 @@ document.getElementById("backdrop-prev").addEventListener("click", () => {
   if (!backdrops.length) return;
   const filePath = backdrops[currentBackdrop].file_path;
   const backdropUrlPrev = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`,
+    `https://image.tmdb.org/t/p/original${filePath}`
   );
-  const rectReview = document.querySelector(".rect-review");
-  rectReview.style.display = "none";
-  setBackdropAsBackgroundReview(backdropUrlPrev);
+  const rect = document.querySelector(".rect");
+  rect.style.display = "none";
+  setBackdropAsBackground(backdropUrlPrev);
 });
 
 document.getElementById("backdrop-next").addEventListener("click", () => {
@@ -374,21 +374,21 @@ document.getElementById("backdrop-next").addEventListener("click", () => {
   if (!backdrops.length) return;
   const filePath = backdrops[currentBackdrop].file_path;
   const backdropUrlNext = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`,
+    `https://image.tmdb.org/t/p/original${filePath}`
   );
 
-  const rectReview = document.querySelector(".rect-review");
-  rectReview.style.display = "none";
-  setBackdropAsBackgroundReview(backdropUrlNext);
+  const rect = document.querySelector(".rect");
+  rect.style.display = "none";
+  setBackdropAsBackground(backdropUrlNext);
 });
 
-function setBackdropAsBackgroundReview(url) {
-  const flyerReview = document.getElementById("flyer-story-review");
-  let blurBg = document.getElementById("flyer-blur-bg-review");
+function setBackdropAsBackground(url) {
+  const flyerStory = document.getElementById("flyer-story");
+  let blurBg = document.getElementById("flyer-blur-bg-story");
   if (blurBg) blurBg.remove();
 
   blurBg = document.createElement("div");
-  blurBg.id = "flyer-blur-bg-review";
+  blurBg.id = "flyer-blur-bg-story";
   blurBg.style.position = "absolute";
   blurBg.style.top = "0";
   blurBg.style.left = "0";
@@ -401,31 +401,25 @@ function setBackdropAsBackgroundReview(url) {
   blurBg.style.backgroundRepeat = "no-repeat";
   blurBg.style.filter = "blur(4px) brightness(0.9)";
   blurBg.style.backgroundImage = `url('${url}')`;
+  flyerStory.prepend(blurBg);
+
+  flyerStory.style.backgroundImage = "";
 }
 
-function setBackdropAsBackgroundReviewFeed(url) {
-  const flyerReview = document.getElementById("flyer-feed-review");
-  let blurBg = document.getElementById("flyer-blur-bg-review-feed");
-  if (blurBg) blurBg.remove();
+document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
+  const flyerStory = document.getElementById("flyer-story");
+  const rect = document.querySelector(".rect");
 
-  blurBg = document.createElement("div");
-  blurBg.id = "flyer-blur-bg-review-feed";
-  blurBg.style.position = "absolute";
-  blurBg.style.top = "0";
-  blurBg.style.left = "0";
-  blurBg.style.width = "100%";
-  blurBg.style.height = "100%";
-  blurBg.style.zIndex = "0";
-  blurBg.style.pointerEvents = "none";
-  blurBg.style.backgroundPosition = "center";
-  blurBg.style.backgroundSize = "cover";
-  blurBg.style.backgroundRepeat = "no-repeat";
-  blurBg.style.filter = "blur(4px) brightness(0.9)";
-  blurBg.style.backgroundImage = `url('${url}')`;
-  flyerReview.prepend(blurBg);
+  rect.style.display = "block";
 
-  flyerReview.style.backgroundImage = "";
-}
+  flyerStory.style.backgroundImage = "";
+
+  const blurBgStory = document.getElementById("flyer-blur-bg-story");
+
+  if (blurBgStory) {
+    blurBgStory.remove();
+  }
+});
 
 // --------------------------------------------------
 // CARGA DIRECTA POR URL
