@@ -40,9 +40,9 @@ async function applyBlurToImage(imageUrl) {
   });
 }
 
-document.getElementById("saveFlyerReview").addEventListener("click", async () => {
-  const flyerElement = document.getElementById("flyer-story-review");
-  const blurBg = document.getElementById("flyer-blur-bg-review");
+document.getElementById("saveFlyer").addEventListener("click", async () => {
+  const flyerElement = document.getElementById("flyer-story");
+  const blurBg = document.getElementById("flyer-blur-bg");
 
   const downloadCanvas = async () => {
     const canvas = await html2canvas(flyerElement, {
@@ -57,13 +57,16 @@ document.getElementById("saveFlyerReview").addEventListener("click", async () =>
     });
 
     const link = document.createElement("a");
-    const titleElement = document.getElementById("title-review");
-    const flyerTitle = titleElement 
-        ? titleElement.textContent.trim().replace(/\s+/g, "_").replace(/[^\w\-]/g, "") 
-        : "flyer";
+    const titleElement = document.getElementById("title");
+    const flyerTitle = titleElement
+      ? titleElement.textContent
+          .trim()
+          .replace(/\s+/g, "_")
+          .replace(/[^\w\-]/g, "")
+      : "flyer";
     const date = new Date().toISOString().slice(0, 10);
-    
-    link.download = `${date}_${flyerTitle}_review.png`;
+
+    link.download = `${date}_${flyerTitle}.png`;
     link.href = canvas.toDataURL("image/png");
     document.body.appendChild(link);
     link.click();
@@ -71,7 +74,9 @@ document.getElementById("saveFlyerReview").addEventListener("click", async () =>
   };
 
   if (blurBg && blurBg.style.backgroundImage) {
-    const bgImageMatch = blurBg.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+    const bgImageMatch = blurBg.style.backgroundImage.match(
+      /url\(['"]?([^'"]+)['"]?\)/,
+    );
 
     if (bgImageMatch) {
       const imageUrl = bgImageMatch[1];
@@ -93,18 +98,20 @@ document.getElementById("saveFlyerReview").addEventListener("click", async () =>
         blurBg.style.filter = originalFilter;
         blurBg.style.backgroundImage = originalBgImage;
         return;
-        
       } catch (blurError) {
-        console.warn("Error al aplicar blur, usando método alternativo:", blurError);
+        console.warn(
+          "Error al aplicar blur, usando método alternativo:",
+          blurError,
+        );
         if (originalFilter !== undefined) blurBg.style.filter = originalFilter;
-        if (originalBgImage !== undefined) blurBg.style.backgroundImage = originalBgImage;
+        if (originalBgImage !== undefined)
+          blurBg.style.backgroundImage = originalBgImage;
       }
     }
   }
 
   await downloadCanvas();
 });
-
 
 // --------------------------------------------------
 // COLORPICKER / EYEDROPPER
@@ -119,7 +126,7 @@ const lastColorIndicators = [];
 function updateGlobalLastColor(color) {
   lastUsedColor = color;
   if (lastColorSquare) lastColorSquare.style.backgroundColor = color;
-  lastColorIndicators.forEach(ind => ind.style.backgroundColor = color);
+  lastColorIndicators.forEach((ind) => (ind.style.backgroundColor = color));
 }
 
 const lastColorSquare = document.createElement("div");
@@ -140,70 +147,54 @@ document.body.appendChild(lastColorSquare);
 function isBackgroundElement(target) {
   return (
     target.classList.contains("rect") ||
-    target.classList.contains("rect-feed") ||
     target.classList.contains("rect2") ||
-    target.classList.contains("rect2-feed") ||
-    target.classList.contains("rect2-review") ||
-    target.classList.contains("rect2-review-feed") ||
+    target.classList.contains("rect2") ||
     target.classList.contains("tape") ||
-    target.id === "flyer-story" ||
-    target.id === "flyer-feed" ||
-    target.id === "flyer-story-review" ||
-    target.id === "flyer-feed-review"
+    target.id === "flyer-story"
   );
 }
-
-floatingColorPicker.addEventListener("input", (e) => {
-  const selectedColor = e.target.value;
-
-  updateGlobalLastColor(selectedColor);
-
-  colorTargets.forEach((target) => {
-    if (isBackgroundElement(target)) {
-      target.style.backgroundColor = selectedColor;
-    } else {
-      target.style.color = selectedColor;
-    }
-  });
-});
-
-lastColorSquare.addEventListener("click", (e) => {
-  e.stopPropagation();
-  floatingColorPicker.value = lastUsedColor;
-
-  colorTargets.forEach((target) => {
-    if (isBackgroundElement(target)) {
-      target.style.backgroundColor = lastUsedColor;
-    } else {
-      target.style.color = lastUsedColor;
-    }
-  });
-});
 
 // funcion aux para convertir rgb a hexa
 // el navegador devuelve estilos en RGB, pero el input type="color" requiere Hex
 function rgbToHex(rgb) {
   const result = rgb.match(/\d+/g);
   if (!result || result.length < 3) return "#ffffff";
-  const r = parseInt(result[0]).toString(16).padStart(2, '0');
-  const g = parseInt(result[1]).toString(16).padStart(2, '0');
-  const b = parseInt(result[2]).toString(16).padStart(2, '0');
+  const r = parseInt(result[0]).toString(16).padStart(2, "0");
+  const g = parseInt(result[1]).toString(16).padStart(2, "0");
+  const b = parseInt(result[2]).toString(16).padStart(2, "0");
 
   return `#${r}${g}${b}`;
 }
 
 // sincroniza colores entre version story y feed(posiblemente se vaya)
 function getColorTargets(el) {
-  if (el.classList.contains("rect") || el.classList.contains("rect2") || el.classList.contains("rect-feed") || el.classList.contains("rect2-feed")) {
-    return [".rect", ".rect2", ".rect-feed", ".rect2-feed"].map(s => document.querySelector(s)).filter(Boolean);
+  if (
+    el.classList.contains("rect") ||
+    el.classList.contains("rect2") ||
+    el.classList.contains("rect-feed") ||
+    el.classList.contains("rect2-feed")
+  ) {
+    return [".rect", ".rect2", ".rect-feed", ".rect2-feed"]
+      .map((s) => document.querySelector(s))
+      .filter(Boolean);
   }
 
-  if (el.classList.contains("rect2-review") || el.classList.contains("rect2-review-feed")) {
-    return [".rect2-review", ".rect2-review-feed"].map(s => document.querySelector(s)).filter(Boolean);
+  if (
+    el.classList.contains("rect2-review") ||
+    el.classList.contains("rect2-review-feed")
+  ) {
+    return [".rect2-review", ".rect2-review-feed"]
+      .map((s) => document.querySelector(s))
+      .filter(Boolean);
   }
 
   const idGroups = [
-    ["flyer-hour", "flyer-biblioteca", "flyer-hour-feed", "flyer-biblioteca-feed"],
+    [
+      "flyer-hour",
+      "flyer-biblioteca",
+      "flyer-hour-feed",
+      "flyer-biblioteca-feed",
+    ],
     ["ciclo", "ciclo-feed"],
     ["title", "title-feed"],
     ["title-review", "title-review-feed"],
@@ -223,12 +214,12 @@ function getColorTargets(el) {
     ["flyer-story", "flyer-feed"],
     ["flyer-story-review", "flyer-feed-review"],
     ["edad-sugerida", "edad-sugerida-feed"],
-    ["edad-sugerida-review", "edad-sugerida-review-feed"]
+    ["edad-sugerida-review", "edad-sugerida-review-feed"],
   ];
 
   for (const group of idGroups) {
     if (group.includes(el.id)) {
-      return group.map(id => document.getElementById(id)).filter(Boolean);
+      return group.map((id) => document.getElementById(id)).filter(Boolean);
     }
   }
 
@@ -244,88 +235,26 @@ function getCurrentColorForTargets(targets) {
   }
 
   const style = window.getComputedStyle(targets[0]);
-  return rgbToHex(isBackgroundElement(targets[0]) ? style.backgroundColor : style.color);
+  return rgbToHex(
+    isBackgroundElement(targets[0]) ? style.backgroundColor : style.color,
+  );
 }
-
-// muestra el color picker flotante cuando clickeas en el flyer
-function showColorPickerForElement(element, event) {
-  colorTargets = getColorTargets(element);
-
-  const colorValue = getCurrentColorForTargets(colorTargets);
-
-  floatingColorPicker.value = colorValue;
-  floatingColorPicker.style.left = event.pageX + "px";
-  floatingColorPicker.style.top = event.pageY + "px";
-  floatingColorPicker.style.display = "block";
-  floatingColorPicker.style.width = "48px";
-  floatingColorPicker.style.height = "48px";
-  floatingColorPicker.style.border = "2px solid #333";
-  floatingColorPicker.style.borderRadius = "8px";
-  floatingColorPicker.focus();
-
-  lastColorSquare.style.left = (event.pageX + 55) + "px";
-  lastColorSquare.style.top = event.pageY + "px";
-  lastColorSquare.style.display = "block";
-}
-
-floatingColorPicker.addEventListener("blur", () => {
-  setTimeout(() => {
-    floatingColorPicker.style.display = "none";
-    lastColorSquare.style.display = "none";
-  }, 200);
-});
 
 [
   document.querySelector(".header"),
-  document.querySelector(".header-feed"),
-  document.querySelector(".header-review"),
-  document.querySelector(".header-feed-review"),
   document.getElementById("title"),
   document.getElementById("year"),
   document.getElementById("director"),
   document.getElementById("duracion"),
   document.getElementById("edad-sugerida"),
-  document.getElementById("title-review"),
-  document.getElementById("origen-review"),
-  document.getElementById("year-review"),
-  document.getElementById("director-review"),
-  document.getElementById("duracion-review"),
-  document.getElementById("edad-sugerida-review"),
-  document.getElementById("sinapsis-review"),
-  document.getElementById("title-review-feed"),
-  document.getElementById("origen-review-feed"),
-  document.getElementById("year-review-feed"),
-  document.getElementById("director-review-feed"),
-  document.getElementById("duracion-review-feed"),
-  document.getElementById("edad-sugerida-review-feed"),
-  document.getElementById("sinapsis-review-feed"),
-  document.getElementById("title-feed"),
-  document.getElementById("year-feed"),
-  document.getElementById("director-feed"),
-  document.getElementById("duracion-feed"),
-  document.getElementById("edad-sugerida-feed"),
   document.getElementById("flyer-date"),
-  document.getElementById("flyer-date-feed"),
   document.getElementById("flyer-hour"),
-  document.getElementById("flyer-hour-feed"),
   document.getElementById("flyer-biblioteca"),
-  document.getElementById("flyer-biblioteca-feed"),
   document.getElementById("org"),
-  document.getElementById("org-feed"),
-  document.getElementById("org-review"),
-  document.getElementById("org-review-feed"),
   document.querySelector(".rect"),
   document.querySelector(".rect2"),
-  document.querySelector(".rect-feed"),
-  document.querySelector(".rect2-feed"),
-  document.querySelector(".rect2-review"),
-  document.querySelector(".rect2-review-feed"),
   document.getElementById("ciclo"),
-  document.getElementById("ciclo-feed"),
-  document.getElementById("flyer-feed"),
   document.getElementById("flyer-story"),
-  document.getElementById("flyer-story-review"),
-  document.getElementById("flyer-feed-review"),
   document.querySelector(".tape"),
 ].forEach((el) => {
   if (el) {
@@ -336,170 +265,27 @@ floatingColorPicker.addEventListener("blur", () => {
   }
 });
 
-// cierra el picker flotante
-document.addEventListener("click", (e) => {
-  if (e.target !== floatingColorPicker && e.target !== lastColorSquare) {
-    floatingColorPicker.style.display = "none";
-    lastColorSquare.style.display = "none";
-    colorTargets = [];
-  }
-});
-
-
-// --------------------------------------------------
-// COLORPICKER / EYEDROPPER de comic balloon (a borrar)
-// --------------------------------------------------
-
-const comicBalloon = document.querySelector(".dialogo-comic");
-const comicColorPanel = document.getElementById("comicColorPickerPanel");
-const comicBgPicker = document.getElementById("comicBgColorPicker");
-const comicBorderPicker = document.getElementById("comicBorderColorPicker");
-const comicTextPicker = document.getElementById("comicTextColorPicker");
-const posterImg = document.getElementById("poster");
-
-// agrega el lastUsedColor en el panel del globo
-function addInlineLastColorBtn(pickerInput, applyCallback) {
-  const btn = document.createElement("div");
-  btn.style.width = "24px";
-  btn.style.height = "24px";
-  btn.style.marginLeft = "10px";
-  btn.style.display = "inline-block";
-  btn.style.border = "1px solid #999";
-  btn.style.borderRadius = "4px";
-  btn.style.cursor = "pointer";
-  btn.style.backgroundColor = lastUsedColor;
-  btn.title = "Aplicar último color usado";
-
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    applyCallback(lastUsedColor);
-    pickerInput.value = lastUsedColor;
-  });
-
-  pickerInput.parentNode.appendChild(btn);
-  
-  lastColorIndicators.push(btn);
-}
-
-addInlineLastColorBtn(comicBgPicker, (color) => {
-  comicBalloon.style.backgroundColor = color;
-  comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${color} !important; }`;
-});
-
-addInlineLastColorBtn(comicBorderPicker, (color) => {
-  comicBalloon.style.borderColor = color;
-  comicTailBorderStyle.textContent = `.comic-tail-border { border-top-color: ${color} !important; }`;
-});
-
-addInlineLastColorBtn(comicTextPicker, (color) => {
-  comicBalloon.style.color = color;
-});
-
-// TODO: Se agregaron "?." (Optional Chaining) a los eventos de esta sección
-// para evitar que el script se rompa al no encontrar elementos HTML eliminados.
-// Se optó por esto en lugar de encerrar codigo en if's para facilitar posterior merge con otra branch.
-
-// Codigo modificado desde aca: --------------------------------------------------------------------
-comicBalloon?.addEventListener("click", (event) => {
-  const style = window.getComputedStyle(comicBalloon);
-  comicBgPicker.value = rgbToHex(style.backgroundColor);
-  comicBorderPicker.value = rgbToHex(style.borderColor);
-  comicTextPicker.value = rgbToHex(style.color);
-
-  comicColorPanel.style.left = event.pageX + "px";
-  comicColorPanel.style.top = event.pageY + "px";
-  comicColorPanel.style.display = "block";
-  event.stopPropagation();
-});
-
-let comicTailBgStyle = document.getElementById("comic-tail-bg-style");
-if (!comicTailBgStyle) {
-  comicTailBgStyle = document.createElement("style");
-  comicTailBgStyle.id = "comic-tail-bg-style";
-  document.head.appendChild(comicTailBgStyle);
-}
-
-let comicTailBorderStyle = document.getElementById("comic-tail-border-style");
-if (!comicTailBorderStyle) {
-  comicTailBorderStyle = document.createElement("style");
-  comicTailBorderStyle.id = "comic-tail-border-style";
-  document.head.appendChild(comicTailBorderStyle);
-}
-
-comicBgPicker?.addEventListener("input", (e) => {
-  const selectedColor = e.target.value;
-  updateGlobalLastColor(selectedColor);
-  comicBalloon.style.backgroundColor = selectedColor;
-  comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${selectedColor} !important; }`;
-});
-
-
-comicBorderPicker?.addEventListener("input", (e) => {
-  const selectedColor = e.target.value;
-  updateGlobalLastColor(selectedColor);
-  comicBalloon.style.borderColor = selectedColor;
-  comicTailBorderStyle.textContent = `.comic-tail-border { border-top-color: ${selectedColor} !important; }`;
-});
-
-// Event listeners cuando se cambia el color del texto del globo
-comicTextPicker.addEventListener("input", (e) => {
-  const selectedColor = e.target.value;
-  updateGlobalLastColor(selectedColor);
-  comicBalloon.style.color = selectedColor;
-});
-
-// cierra el panel del color picker del globo
-document.addEventListener("mousedown", (e) => {
-  if (
-    comicColorPanel?.style.display === "block" &&
-    !comicColorPanel?.contains(e.target) &&
-    !e.target.classList.contains("dialogo-comic")
-  ) {
-    comicColorPanel.style.display = "none";
-  }
-
-  const contextMenu = document.getElementById("comicColorContextMenu");
-  if (
-    contextMenu &&
-    contextMenu.style.display === "block" &&
-    !contextMenu.contains(e.target)
-  ) {
-    contextMenu.style.display = "none";
-  }
-});
-
-// Hasta aca: --------------------------------------------------------------------------------------
-
-
 // --------------------------------------------------
 // EDITOR DE TEXTOS DE FLYER
 // --------------------------------------------------
 
 document
-  .getElementById("flyerTitleFontSizeInputReview")
+  .getElementById("flyerTitleFontSizeInput")
   .addEventListener("input", (e) => {
-    document.getElementById("title-review").style.fontSize =
-      e.target.value + "px";
+    document.getElementById("title").style.fontSize = e.target.value + "px";
   });
 
-document
-  .getElementById("flyerSynopsisFontSizeInputStory")
-  .addEventListener("input", (e) => {
-    document.getElementById("sinapsis-review").style.fontSize =
-      e.target.value + "px";
-  });
-
-document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
-  const titulo = document.getElementById("titleInputReview").value.trim();
-  const sinapsis = document.getElementById("sinapsisInputReview").value.trim();
+document.getElementById("applyTxtBtn").addEventListener("click", () => {
+  const titulo = document.getElementById("titleInput").value.trim();
+  const sinapsis = document.getElementById("sinapsisInput").value.trim();
   const edadSugerida = document
-    .getElementById("edadSugeridaInputReview")
+    .getElementById("edadSugeridaInput")
     .value.trim();
 
-  document.getElementById("title-review").innerHTML = (
+  document.getElementById("title").innerHTML = (
     titulo || "Título de la película"
   ).replace(/\n/g, "<br>");
-  document.getElementById("titleInputReview").value = titulo;
+  document.getElementById("titleInput").value = titulo;
 
   const flyerReview = document.getElementById("flyer-story-review");
   if (flyerReview) {
@@ -536,9 +322,12 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
 
     if (mappedCertification) {
       if (edadSugerida) {
-        document.getElementById("edadSugeridaInputReview").value = mappedCertification;
+        document.getElementById("edadSugeridaInputReview").value =
+          mappedCertification;
       } else {
-        const edadSugeridaElement = document.getElementById("edad-sugerida-review");
+        const edadSugeridaElement = document.getElementById(
+          "edad-sugerida-review",
+        );
         if (edadSugeridaElement) {
           edadSugeridaElement.style.display = "none";
         }
@@ -578,45 +367,6 @@ document.getElementById("applyTxtBtnReview").addEventListener("click", () => {
     }
   }
 });
-
-document
-  .getElementById("applyStrokeBtnReview")
-  .addEventListener("click", () => {
-    const strokeIdMapReview = {
-      "origen-review": ["origen-review", "origen-review-feed"],
-      "sinapsis-review": ["sinapsis-review", "sinapsis-review-feed"],
-    };
-
-    const select = document.getElementById("strokeTargetSelectReview");
-    const color = document.getElementById("strokeColorInputReview").value;
-    Array.from(select.selectedOptions).forEach((option) => {
-      const ids = strokeIdMapReview[option.value] || [option.value];
-      ids.forEach((id) => {
-        const target = document.getElementById(id);
-        if (target) {
-          target.style.textShadow = `
-          -1px -1px 0 ${color},
-          1px -1px 0 ${color},
-          -1px 1px 0 ${color},
-          1px 1px 0 ${color}
-        `;
-        }
-      });
-    });
-  });
-
-document
-  .getElementById("removeStrokeBtnReview")
-  .addEventListener("click", () => {
-    const select = document.getElementById("strokeTargetSelectReview");
-    Array.from(select.selectedOptions).forEach((option) => {
-      const target = document.getElementById(option.value);
-      if (target) {
-        target.style.textShadow = "";
-      }
-    });
-  });
-
 
 // --------------------------------------------------
 // BOOTSTRAPPER

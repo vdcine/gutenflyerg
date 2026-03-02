@@ -35,7 +35,6 @@ const countryNamesES = {
   KR: "Corea del Sur",
 };
 
-
 // --------------------------------------------------
 // BUSCADOR
 // --------------------------------------------------
@@ -47,7 +46,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   const language = document.getElementById("movieLanguage").value || "en";
 
   const searchRes = await fetch(
-    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${language}`
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${language}`,
   );
 
   const searchData = await searchRes.json();
@@ -55,7 +54,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     return alert("No se encontró la película.");
 
   const orderedResults = [...searchData.results].sort(
-    (a, b) => b.popularity - a.popularity
+    (a, b) => b.popularity - a.popularity,
   );
 
   const resultsDiv = document.getElementById("movie-results");
@@ -64,20 +63,20 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   for (let idx = 0; idx < Math.min(10, orderedResults.length); idx++) {
     const movie = orderedResults[idx];
     const creditsRes = await fetch(
-      `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
+      `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`,
     );
     const creditsData = await creditsRes.json();
     const director = creditsData.crew.find((c) => c.job === "Director");
 
     const movieDetails = await (
       await fetch(
-        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`
+        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`,
       )
     ).json();
 
     const movieDetailsSinapsis = await (
       await fetch(
-        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`
+        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`,
       )
     ).json();
 
@@ -93,7 +92,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     }" style="width:48px;height:auto;margin-right:12px;" />
     <span style="font-weight:bold;">${movie.title}</span>
     <span style="margin-left:12px;">(${new Date(
-      movie.release_date
+      movie.release_date,
     ).getFullYear()})</span>
     <span style="margin-left:12px;">${
       director ? director.name : "Director no disponible"
@@ -103,7 +102,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       window.selectedMovieId = movie.id;
 
       const releaseDatesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
+        `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`,
       );
       const releaseDatesData = await releaseDatesRes.json();
       console.log(releaseDatesData);
@@ -138,11 +137,11 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
 
       for (const country of countriesOrder) {
         const countryData = releaseDatesData.results.find(
-          (r) => r.iso_3166_1 === country
+          (r) => r.iso_3166_1 === country,
         );
         if (countryData && countryData.release_dates.length > 0) {
           const certData = countryData.release_dates.find(
-            (rd) => rd.certification !== ""
+            (rd) => rd.certification !== "",
           );
           if (certData && certData.certification) {
             certification = certData.certification;
@@ -154,7 +153,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       if (!certification) {
         for (const result of releaseDatesData.results) {
           const certData = result.release_dates.find(
-            (rd) => rd.certification !== ""
+            (rd) => rd.certification !== "",
           );
           if (certData && certData.certification) {
             certification = certData.certification;
@@ -166,12 +165,13 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       const mappedCertification =
         certificationMap[certification] || certification;
 
-      document.getElementById("titleInputReview").value = movie.title;
+      document.getElementById("titleInput").value = movie.title;
 
       if (mappedCertification) {
-        document.getElementById("edadSugeridaInputReview").value = mappedCertification;
+        document.getElementById("edadSugeridaInput").value =
+          mappedCertification;
 
-        const edadLabel = document.getElementById("edad-sugerida-review");
+        const edadLabel = document.getElementById("edad-sugerida");
 
         if (edadLabel) {
           edadLabel.textContent = mappedCertification;
@@ -206,39 +206,21 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       }
 
       const backdropUrl = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+        `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
       );
 
       setBackdropAsBackgroundReview(backdropUrl);
 
       const posterUrlReview = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+        `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
       );
-      document.getElementById("poster-review").src = posterUrlReview;
-      document.getElementById(
-        "duracion-review"
-      ).textContent = `${movieDetails.runtime} minutos`;
-      document.getElementById("title-review").textContent = movie.title;
-      document.getElementById("year-review").textContent = new Date(
-        movie.release_date
-      ).getFullYear();
-      document.getElementById("sinapsis-review").textContent =
-        movieDetailsSinapsis.overview;
-      document.getElementById("sinapsisInputReview").value =
-        movieDetailsSinapsis.overview;
-      document.getElementById("director-review").textContent = director
-        ? director.name
-        : "Director no disponible";
 
       const countryCode = movieDetails.origin_country[0];
       const flag = getCountryFlagEmoji(countryCode);
       const countryName = countryNamesES[countryCode] || countryCode;
-      document.getElementById(
-        "origen-review"
-      ).textContent = `Origen: ${flag} ${countryName}`;
 
       const imagesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
+        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`,
       );
       const imagesData = await imagesRes.json();
 
@@ -251,7 +233,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       showPoster(currentPoster);
 
       Array.from(resultsDiv.children).forEach(
-        (child) => (child.style.background = "")
+        (child) => (child.style.background = ""),
       );
       result.style.background = "#386119ff";
 
@@ -280,7 +262,6 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   }
 });
 
-
 // --------------------------------------------------
 // CARROUSEL
 // --------------------------------------------------
@@ -291,7 +272,7 @@ linkBackdrops.addEventListener("click", (e) => {
   if (!window.selectedMovieId) return;
   window.open(
     `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
-    "_blank"
+    "_blank",
   );
 });
 
@@ -301,7 +282,7 @@ linkPosters.addEventListener("click", (e) => {
   if (!window.selectedMovieId) return;
   window.open(
     `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
-    "_blank"
+    "_blank",
   );
 });
 
@@ -349,7 +330,7 @@ document.getElementById("poster-prev").addEventListener("click", () => {
   if (!posters.length) return;
   const filePath = posters[currentPoster].file_path;
   const posterUrlPrev = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`
+    `https://image.tmdb.org/t/p/original${filePath}`,
   );
 
   setPoster(posterUrlPrev);
@@ -361,13 +342,15 @@ document.getElementById("poster-next").addEventListener("click", () => {
   if (!posters.length) return;
   const filePath = posters[currentPoster].file_path;
   const posterUrlNext = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`
+    `https://image.tmdb.org/t/p/original${filePath}`,
   );
 
   setPoster(posterUrlNext);
 });
 
-function setPoster(url) {document.getElementById("poster-review").src = url}
+function setPoster(url) {
+  document.getElementById("poster-review").src = url;
+}
 
 document.getElementById("backdrop-prev").addEventListener("click", () => {
   if (!backdrops.length) return;
@@ -376,7 +359,7 @@ document.getElementById("backdrop-prev").addEventListener("click", () => {
   if (!backdrops.length) return;
   const filePath = backdrops[currentBackdrop].file_path;
   const backdropUrlPrev = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`
+    `https://image.tmdb.org/t/p/original${filePath}`,
   );
   const rectReview = document.querySelector(".rect-review");
   rectReview.style.display = "none";
@@ -390,7 +373,7 @@ document.getElementById("backdrop-next").addEventListener("click", () => {
   if (!backdrops.length) return;
   const filePath = backdrops[currentBackdrop].file_path;
   const backdropUrlNext = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`
+    `https://image.tmdb.org/t/p/original${filePath}`,
   );
 
   const rectReview = document.querySelector(".rect-review");
@@ -417,9 +400,6 @@ function setBackdropAsBackgroundReview(url) {
   blurBg.style.backgroundRepeat = "no-repeat";
   blurBg.style.filter = "blur(4px) brightness(0.9)";
   blurBg.style.backgroundImage = `url('${url}')`;
-  flyerReview.prepend(blurBg);
-
-  flyerReview.style.backgroundImage = "";
 }
 
 function setBackdropAsBackgroundReviewFeed(url) {
@@ -446,7 +426,6 @@ function setBackdropAsBackgroundReviewFeed(url) {
   flyerReview.style.backgroundImage = "";
 }
 
-
 // --------------------------------------------------
 // CARGA DIRECTA POR URL
 // --------------------------------------------------
@@ -463,7 +442,7 @@ document
 
     if (!input.startsWith("http")) {
       alert(
-        "Por favor, ingresa una URL completa que comience con http:// o htt://"
+        "Por favor, ingresa una URL completa que comience con http:// o htt://",
       );
       return;
     }
@@ -513,7 +492,7 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
 
   if (!input.startsWith("http")) {
     alert(
-      "Por favor, ingresa una URL completa que comience con http:// o https://"
+      "Por favor, ingresa una URL completa que comience con http:// o https://",
     );
     return;
   }
@@ -690,34 +669,33 @@ function showImageInfo(type, filePath, fullUrl) {
   });
 }
 
-
 // --------------------------------------------------
 // CARGA POR ID
 // --------------------------------------------------
 
 async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   const res = await fetch(
-    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=es-ES`
+    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=es-ES`,
   );
   const movie = await res.json();
   const releaseDatesRes = await fetch(
-    `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
+    `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`,
   );
   const creditsRes = await fetch(
-    `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
+    `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`,
   );
   const creditsData = await creditsRes.json();
   const director = creditsData.crew.find((c) => c.job === "Director");
 
   const movieDetails = await (
     await fetch(
-      `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`
+      `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`,
     )
   ).json();
 
   const movieDetailsSinapsis = await (
     await fetch(
-      `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`
+      `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`,
     )
   ).json();
   const releaseDatesData = await releaseDatesRes.json();
@@ -753,11 +731,11 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
 
   for (const country of countriesOrder) {
     const countryData = releaseDatesData.results.find(
-      (r) => r.iso_3166_1 === country
+      (r) => r.iso_3166_1 === country,
     );
     if (countryData && countryData.release_dates.length > 0) {
       const certData = countryData.release_dates.find(
-        (rd) => rd.certification !== ""
+        (rd) => rd.certification !== "",
       );
       if (certData && certData.certification) {
         certification = certData.certification;
@@ -769,7 +747,7 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   if (!certification) {
     for (const result of releaseDatesData.results) {
       const certData = result.release_dates.find(
-        (rd) => rd.certification !== ""
+        (rd) => rd.certification !== "",
       );
       if (certData && certData.certification) {
         certification = certData.certification;
@@ -783,22 +761,37 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   document.getElementById("titleInputReview").value = movie.title;
 
   if (mappedCertification) {
-    document.getElementById("edadSugeridaInputReview").value = mappedCertification;
+    document.getElementById("edadSugeridaInputReview").value =
+      mappedCertification;
 
     const el = document.getElementById("edad-sugerida-review");
     if (el) {
       el.textContent = mappedCertification;
       el.style.display = "inline-block";
       if (mappedCertification === "ATP") {
-        el.style.backgroundColor = "#4CAF50"; el.style.color = "white";
-      } else if (mappedCertification === "+13" || mappedCertification === "SAM 13") {
-        el.style.backgroundColor = "#2196F3"; el.style.color = "white";
-      } else if (mappedCertification === "+16" || mappedCertification === "SAM 16") {
-        el.style.backgroundColor = "#FF9800"; el.style.color = "white";
-      } else if (mappedCertification === "+18" || mappedCertification === "SAM 18") {
-        el.style.backgroundColor = "#f44336"; el.style.color = "white";
+        el.style.backgroundColor = "#4CAF50";
+        el.style.color = "white";
+      } else if (
+        mappedCertification === "+13" ||
+        mappedCertification === "SAM 13"
+      ) {
+        el.style.backgroundColor = "#2196F3";
+        el.style.color = "white";
+      } else if (
+        mappedCertification === "+16" ||
+        mappedCertification === "SAM 16"
+      ) {
+        el.style.backgroundColor = "#FF9800";
+        el.style.color = "white";
+      } else if (
+        mappedCertification === "+18" ||
+        mappedCertification === "SAM 18"
+      ) {
+        el.style.backgroundColor = "#f44336";
+        el.style.color = "white";
       } else {
-        el.style.backgroundColor = "#777"; el.style.color = "white";
+        el.style.backgroundColor = "#777";
+        el.style.color = "white";
       }
     }
   }
@@ -806,7 +799,7 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   console.log(movieDetails);
 
   const posterUrlReview = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
   );
   const posterReviewImg = document.getElementById("poster-review");
   if (posterReviewImg) {
@@ -814,27 +807,35 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
     posterReviewImg.src = posterUrlReview;
   }
 
-  document.getElementById("duracion-review").textContent = `${movieDetails.runtime} minutos`;
+  document.getElementById("duracion-review").textContent =
+    `${movieDetails.runtime} minutos`;
   document.getElementById("title-review").textContent = movie.title;
-  document.getElementById("year-review").textContent = new Date(movie.release_date).getFullYear();
-  document.getElementById("sinapsis-review").textContent = movieDetailsSinapsis.overview;
-  document.getElementById("sinapsisInputReview").value = movieDetailsSinapsis.overview;
-  document.getElementById("director-review").textContent = director ? director.name : "Director no disponible";
+  document.getElementById("year-review").textContent = new Date(
+    movie.release_date,
+  ).getFullYear();
+  document.getElementById("sinapsis-review").textContent =
+    movieDetailsSinapsis.overview;
+  document.getElementById("sinapsisInputReview").value =
+    movieDetailsSinapsis.overview;
+  document.getElementById("director-review").textContent = director
+    ? director.name
+    : "Director no disponible";
 
   const countryCode = movieDetails.origin_country[0];
   const flag = getCountryFlagEmoji(countryCode);
   const countryName = countryNamesES[countryCode] || countryCode;
-  document.getElementById("origen-review").textContent = `Origen: ${flag} ${countryName}`;
+  document.getElementById("origen-review").textContent =
+    `Origen: ${flag} ${countryName}`;
 
   if (movie.backdrop_path) {
     const backdropUrl = getSimpleCorsProxiedUrl(
-      `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+      `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
     );
     setBackdropAsBackgroundReview(backdropUrl);
   }
 
   const imagesRes = await fetch(
-    `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
+    `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`,
   );
   const imagesData = await imagesRes.json();
 
