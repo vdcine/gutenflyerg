@@ -472,8 +472,15 @@ document
   });
 
 document.getElementById("applyTxtBtn").addEventListener("click", () => {
+  const ciclo = document.getElementById("cicloInput").value.trim();
+  const dateRaw = document.getElementById("dateInput").value.trim();
+  const hourRaw = document.getElementById("hourInput").value.trim();
   const titulo = document.getElementById("titleInput").value.trim();
-  const sinapsis = document.getElementById("sinapsisInput").value.trim();
+
+  document.getElementById("dateInput").value = dateRaw;
+
+  document.getElementById("hourInput").value = hourRaw;
+
   const edadSugerida = document
     .getElementById("edadSugeridaInput")
     .value.trim();
@@ -483,86 +490,118 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   ).replace(/\n/g, "<br>");
   document.getElementById("titleInput").value = titulo;
 
-  const flyerReview = document.getElementById("flyer-story-review");
-  if (flyerReview) {
-    flyerReview.querySelector("#sinapsis-review").innerHTML = (
-      sinapsis || "Sinopsis de la película"
-    ).replace(/\n/g, "<br>");
-    document.getElementById("sinapsisInputReview").value = sinapsis;
+  document.getElementById("ciclo").textContent = ciclo || "Ciclo";
 
-    const certificationMap = {
-      AA: "ATP",
-      A: "ATP",
-      ATP: "ATP",
-      Atp: "ATP",
-      12: "+13",
-      13: "+13",
-      14: "+13",
-      15: "+16",
-      16: "+16",
-      18: "+18",
-      SAM13: "SAM 13",
-      SAM16: "SAM 16",
-      SAM18: "SAM 18",
-      "MA15+": "+16",
-      M: "+13",
-      G: "ATP",
-      PG: "+13",
-      "PG-13": "+13",
-      R: "+16",
-      "NC-17": "+18",
-      NR: "",
-    };
+  const certificationMap = {
+    AA: "ATP",
+    A: "ATP",
+    ATP: "ATP",
+    Atp: "ATP",
+    12: "+13",
+    13: "+13",
+    14: "+13",
+    15: "+16",
+    16: "+16",
+    18: "+18",
+    SAM13: "SAM 13",
+    SAM16: "SAM 16",
+    SAM18: "SAM 18",
+    "MA15+": "+16",
+    M: "+13",
+    G: "ATP",
+    PG: "+13",
+    "PG-13": "+13",
+    R: "+16",
+    "NC-17": "+18",
+    NR: "",
+  };
 
-    const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
+  const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
 
-    if (mappedCertification) {
-      if (edadSugerida) {
-        document.getElementById("edadSugeridaInputReview").value =
-          mappedCertification;
-      } else {
-        const edadSugeridaElement = document.getElementById(
-          "edad-sugerida-review",
-        );
-        if (edadSugeridaElement) {
-          edadSugeridaElement.style.display = "none";
-        }
-      }
+  if (mappedCertification) {
+    if (edadSugerida) {
+      document.getElementById("edadSugeridaInput").value = mappedCertification;
+      document.getElementById("edad-sugerida").textContent =
+        mappedCertification;
+    } else {
+      edadSugeridaElement.style.display = "none";
+    }
 
-      const el = document.getElementById("edad-sugerida-review");
+    const edadElements = [
+      document.getElementById("edad-sugerida"),
+    ];
+
+    edadElements.forEach((el) => {
       if (el) {
         el.textContent = mappedCertification;
         el.style.display = "inline-block";
-
         if (mappedCertification === "ATP") {
-          el.style.backgroundColor = "#4CAF50";
+          el.style.backgroundColor = "#4CAF50"; // Verde para ATP
           el.style.color = "white";
         } else if (
           mappedCertification === "+13" ||
           mappedCertification === "SAM 13"
         ) {
-          el.style.backgroundColor = "#2196F3";
+          el.style.backgroundColor = "#2196F3"; // Azul para +13
           el.style.color = "white";
         } else if (
           mappedCertification === "+16" ||
           mappedCertification === "SAM 16"
         ) {
-          el.style.backgroundColor = "#FF9800";
+          el.style.backgroundColor = "#FF9800"; // Naranja para +16
           el.style.color = "white";
         } else if (
           mappedCertification === "+18" ||
           mappedCertification === "SAM 18"
         ) {
-          el.style.backgroundColor = "#f44336";
+          el.style.backgroundColor = "#f44336"; // Rojo para +18
           el.style.color = "white";
         } else {
-          el.style.backgroundColor = "#777";
+          el.style.backgroundColor = "#777"; // Gris para otros
           el.style.color = "white";
         }
       }
-    }
+    });
   }
+
+  const formattedDate = formatDateToSpanish(dateRaw);
+  document.getElementById("flyer-date").innerHTML = formattedDate;
+
+  const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
+  document.getElementById("flyer-hour").textContent = formattedHour;
 });
+
+function formatDateToSpanish(dateStr) {
+  if (!dateStr) return "";
+  const dias = [
+    "DOMINGO",
+    "LUNES",
+    "MARTES",
+    "MIÉRCOLES",
+    "JUEVES",
+    "VIERNES",
+    "SÁBADO",
+  ];
+  const meses = [
+    "ENERO",
+    "FEBRERO",
+    "MARZO",
+    "ABRIL",
+    "MAYO",
+    "JUNIO",
+    "JULIO",
+    "AGOSTO",
+    "SEPTIEMBRE",
+    "OCTUBRE",
+    "NOVIEMBRE",
+    "DICIEMBRE",
+  ];
+
+  const [year, month, day] = dateStr.split("-");
+  const d = new Date(year, month - 1, day);
+  if (isNaN(d)) return dateStr;
+  return `${dias[d.getDay()]} ${d.getDate()} DE ${meses[d.getMonth()]}`;
+}
 
 // --------------------------------------------------
 // BOOTSTRAPPER
