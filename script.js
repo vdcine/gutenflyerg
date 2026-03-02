@@ -42,84 +42,11 @@ async function applyBlurToImage(imageUrl) {
 
 document.getElementById("saveFlyer").addEventListener("click", async () => {
   const flyerElement = document.getElementById("flyer-story");
-  const blurBg = document.getElementById("flyer-blur-bg");
-
-  const downloadCanvas = async () => {
-    const canvas = await html2canvas(flyerElement, {
-      width: 1080,
-      height: 1920,
-      scale: 2,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor: "#ffffff",
-      scrollX: 0,
-      scrollY: 0,
-    });
-
-    const link = document.createElement("a");
-    const titleElement = document.getElementById("title");
-    const flyerTitle = titleElement
-      ? titleElement.textContent
-          .trim()
-          .replace(/\s+/g, "_")
-          .replace(/[^\w\-]/g, "")
-      : "flyer";
-    const date = new Date().toISOString().slice(0, 10);
-
-    link.download = `${date}_${flyerTitle}.png`;
-    link.href = canvas.toDataURL("image/png");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  const blurBg = document.getElementById("flyer-blur-bg-story");
 
   if (blurBg && blurBg.style.backgroundImage) {
     const bgImageMatch = blurBg.style.backgroundImage.match(
-      /url\(['"]?([^'"]+)['"]?\)/,
-    );
-
-    if (bgImageMatch) {
-      const imageUrl = bgImageMatch[1];
-      let originalFilter, originalBgImage;
-
-      try {
-        const blurredDataUrl = await applyBlurToImage(imageUrl);
-
-        originalFilter = blurBg.style.filter;
-        originalBgImage = blurBg.style.backgroundImage;
-
-        blurBg.style.filter = "none";
-        blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
-
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        await downloadCanvas();
-
-        blurBg.style.filter = originalFilter;
-        blurBg.style.backgroundImage = originalBgImage;
-        return;
-      } catch (blurError) {
-        console.warn(
-          "Error al aplicar blur, usando método alternativo:",
-          blurError,
-        );
-        if (originalFilter !== undefined) blurBg.style.filter = originalFilter;
-        if (originalBgImage !== undefined)
-          blurBg.style.backgroundImage = originalBgImage;
-      }
-    }
-  }
-
-  await downloadCanvas();
-});
-
-document.getElementById("saveFlyer").addEventListener("click", async () => {
-  const flyerElement = document.getElementById("flyer-story");
-  const blurBg = document.getElementById("flyer-blur-bg");
-
-  if (blurBg && blurBg.style.backgroundImage) {
-    const bgImageMatch = blurBg.style.backgroundImage.match(
-      /url\(['"]?([^'"]+)['"]?\)/,
+      /url\(['"]?([^'"]+)['"]?\)/
     );
 
     if (bgImageMatch) {
@@ -141,7 +68,7 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
           height: 1920,
           scale: 2,
           useCORS: true,
-          allowTaint: false,
+          allowTaint: true,
           backgroundColor: "#ffffff",
           scrollX: 0,
           scrollY: 0,
@@ -158,7 +85,7 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
           .replace(/\s+/g, "_")
           .replace(/[^\w\-]/g, "");
         const date = new Date().toISOString().slice(0, 10);
-        link.download = `${date}_${flyerTitle}.png`;
+        link.download = `${date}_${flyerTitle}_story.png`;
         link.href = canvas.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
@@ -166,7 +93,7 @@ document.getElementById("saveFlyer").addEventListener("click", async () => {
       } catch (blurError) {
         console.warn(
           "Error al aplicar blur, usando método alternativo:",
-          blurError,
+          blurError
         );
 
         await generateWithoutBlur(flyerElement, true);
