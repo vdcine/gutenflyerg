@@ -166,61 +166,72 @@ async function searchMovies (e) {
       const mappedCertification =
         certificationMap[certification] || certification;
 
-      document.getElementById("titleInput").value = movie.title;
+      document.getElementById("title").textContent = movie.title;
 
       if (mappedCertification) {
-        document.getElementById("edadSugeridaInput").value = mappedCertification;
+        document.getElementById("edadSugeridaInput").value =
+          mappedCertification;
 
-        const edadLabel = document.getElementById("edad-sugerida");
+        const edadElements = [document.getElementById("edad-sugerida")];
 
-        if (edadLabel) {
-          edadLabel.textContent = mappedCertification;
-          edadLabel.style.display = "inline-block";
-
-          if (mappedCertification === "ATP") {
-            edadLabel.style.backgroundColor = "#4CAF50"; // Verde para ATP
-            edadLabel.style.color = "white";
-          } else if (
-            mappedCertification === "+13" ||
-            mappedCertification === "SAM 13"
-          ) {
-            edadLabel.style.backgroundColor = "#2196F3"; // Azul para +13
-            edadLabel.style.color = "white";
-          } else if (
-            mappedCertification === "+16" ||
-            mappedCertification === "SAM 16"
-          ) {
-            edadLabel.style.backgroundColor = "#FF9800"; // Naranja para +16
-            edadLabel.style.color = "white";
-          } else if (
-            mappedCertification === "+18" ||
-            mappedCertification === "SAM 18"
-          ) {
-            edadLabel.style.backgroundColor = "#f44336"; // Rojo para +18
-            edadLabel.style.color = "white";
-          } else {
-            edadLabel.style.backgroundColor = "#777"; // Gris para otros
-            edadLabel.style.color = "white";
+        edadElements.forEach((el) => {
+          if (el) {
+            el.textContent = mappedCertification;
+            el.style.display = "inline-block";
+            if (mappedCertification === "ATP") {
+              el.style.backgroundColor = "#4CAF50"; // Verde para ATP
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+13" ||
+              mappedCertification === "SAM 13"
+            ) {
+              el.style.backgroundColor = "#2196F3"; // Azul para +13
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+16" ||
+              mappedCertification === "SAM 16"
+            ) {
+              el.style.backgroundColor = "#FF9800"; // Naranja para +16
+              el.style.color = "white";
+            } else if (
+              mappedCertification === "+18" ||
+              mappedCertification === "SAM 18"
+            ) {
+              el.style.backgroundColor = "#f44336"; // Rojo para +18
+              el.style.color = "white";
+            } else {
+              el.style.backgroundColor = "#777"; // Gris para otros
+              el.style.color = "white";
+            }
           }
-        }
+        });
       }
+      document.getElementById("year").textContent = new Date(
+        movie.release_date,
+      ).getFullYear();
+      const posterUrl = getSimpleCorsProxiedUrl(
+        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      );
+      document.getElementById("poster").src = posterUrl;
+      document.getElementById("director").textContent = director
+        ? director.name
+        : "Director no disponible";
+
+      console.log(movieDetails);
+      document.getElementById("duracion").textContent =
+        `${movieDetails.runtime} minutos`;
 
       const backdropUrl = getSimpleCorsProxiedUrl(
         `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
       );
-
       setBackdropAsBackground(backdropUrl);
-
-      const posterUrl = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      );
 
       const countryCode = movieDetails.origin_country[0];
       const flag = getCountryFlagEmoji(countryCode);
       const countryName = countryNamesES[countryCode] || countryCode;
 
       const imagesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
+        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`,
       );
       const imagesData = await imagesRes.json();
 
@@ -261,7 +272,6 @@ async function searchMovies (e) {
     });
   }
 }
-
 
 // --------------------------------------------------
 // CARROUSEL
@@ -419,6 +429,20 @@ document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
   if (blurBgStory) {
     blurBgStory.remove();
   }
+});
+
+const rect = document.querySelector(".rect");
+
+const rectToggle = document.getElementById("toggle-rect");
+
+let rectHidden = false;
+
+rectToggle.addEventListener("click", () => {
+  rectHidden = !rectHidden;
+  rect.style.display = rectHidden ? "none" : "block";
+  rectToggle.textContent = rectHidden
+    ? "Mostrar rectángulo vertical"
+    : "Ocultar rectángulo vertical";
 });
 
 // --------------------------------------------------
