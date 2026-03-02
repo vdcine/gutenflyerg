@@ -1,0 +1,1 @@
+document.getElementById("movieForm").addEventListener("submit", searchMovies);

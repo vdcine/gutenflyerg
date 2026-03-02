@@ -35,18 +35,44 @@ const countryNamesES = {
   KR: "Corea del Sur",
 };
 
+// Mapeo de certificaciones para normalizar los valores de arg https://calificaciones.incaa.gob.ar/
+const certificationMap = {
+  AA: "ATP",
+  A: "ATP",
+  ATP: "ATP",
+  Atp: "ATP",
+  12: "+13",
+  13: "+13",
+  14: "+13",
+  15: "+16",
+  16: "+16",
+  18: "+18",
+  SAM13: "SAM 13",
+  SAM16: "SAM 16",
+  SAM18: "SAM 18",
+  "MA15+": "+16",
+  M: "+13",
+  G: "ATP",
+  PG: "+13",
+  "PG-13": "+13",
+  R: "+16",
+  "NC-17": "+18",
+  NR: "",
+};
+
+
 // --------------------------------------------------
 // BUSCADOR
 // --------------------------------------------------
 
-document.getElementById("movieForm").addEventListener("submit", async (e) => {
+async function searchMovies (e) {
   e.preventDefault();
 
   const query = document.getElementById("movieSearch").value;
   const language = document.getElementById("movieLanguage").value || "en";
 
   const searchRes = await fetch(
-    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${language}`,
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${language}`
   );
 
   const searchData = await searchRes.json();
@@ -54,7 +80,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     return alert("No se encontró la película.");
 
   const orderedResults = [...searchData.results].sort(
-    (a, b) => b.popularity - a.popularity,
+    (a, b) => b.popularity - a.popularity
   );
 
   const resultsDiv = document.getElementById("movie-results");
@@ -63,20 +89,20 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
   for (let idx = 0; idx < Math.min(10, orderedResults.length); idx++) {
     const movie = orderedResults[idx];
     const creditsRes = await fetch(
-      `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`,
+      `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
     );
     const creditsData = await creditsRes.json();
     const director = creditsData.crew.find((c) => c.job === "Director");
 
     const movieDetails = await (
       await fetch(
-        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`,
+        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`
       )
     ).json();
 
     const movieDetailsSinapsis = await (
       await fetch(
-        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`,
+        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`
       )
     ).json();
 
@@ -92,7 +118,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
     }" style="width:48px;height:auto;margin-right:12px;" />
     <span style="font-weight:bold;">${movie.title}</span>
     <span style="margin-left:12px;">(${new Date(
-      movie.release_date,
+      movie.release_date
     ).getFullYear()})</span>
     <span style="margin-left:12px;">${
       director ? director.name : "Director no disponible"
@@ -102,46 +128,21 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       window.selectedMovieId = movie.id;
 
       const releaseDatesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`,
+        `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
       );
       const releaseDatesData = await releaseDatesRes.json();
       console.log(releaseDatesData);
-
-      // Mapeo de certificaciones para normalizar los valores de arg https://calificaciones.incaa.gob.ar/
-      const certificationMap = {
-        AA: "ATP",
-        A: "ATP",
-        ATP: "ATP",
-        Atp: "ATP",
-        12: "+13",
-        13: "+13",
-        14: "+13",
-        15: "+16",
-        16: "+16",
-        18: "+18",
-        SAM13: "SAM 13",
-        SAM16: "SAM 16",
-        SAM18: "SAM 18",
-        "MA15+": "+16",
-        M: "+13",
-        G: "ATP",
-        PG: "+13",
-        "PG-13": "+13",
-        R: "+16",
-        "NC-17": "+18",
-        NR: "",
-      };
 
       let certification = "";
       const countriesOrder = ["AR"]; // Se pueden agregar otros codigos de paises
 
       for (const country of countriesOrder) {
         const countryData = releaseDatesData.results.find(
-          (r) => r.iso_3166_1 === country,
+          (r) => r.iso_3166_1 === country
         );
         if (countryData && countryData.release_dates.length > 0) {
           const certData = countryData.release_dates.find(
-            (rd) => rd.certification !== "",
+            (rd) => rd.certification !== ""
           );
           if (certData && certData.certification) {
             certification = certData.certification;
@@ -153,7 +154,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       if (!certification) {
         for (const result of releaseDatesData.results) {
           const certData = result.release_dates.find(
-            (rd) => rd.certification !== "",
+            (rd) => rd.certification !== ""
           );
           if (certData && certData.certification) {
             certification = certData.certification;
@@ -165,13 +166,12 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       const mappedCertification =
         certificationMap[certification] || certification;
 
-      document.getElementById("titleInput").value = movie.title;
+      document.getElementById("titleInputReview").value = movie.title;
 
       if (mappedCertification) {
-        document.getElementById("edadSugeridaInput").value =
-          mappedCertification;
+        document.getElementById("edadSugeridaInputReview").value = mappedCertification;
 
-        const edadLabel = document.getElementById("edad-sugerida");
+        const edadLabel = document.getElementById("edad-sugerida-review");
 
         if (edadLabel) {
           edadLabel.textContent = mappedCertification;
@@ -206,21 +206,39 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       }
 
       const backdropUrl = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
+        `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
       );
 
       setBackdropAsBackgroundReview(backdropUrl);
 
       const posterUrlReview = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
       );
+      document.getElementById("poster-review").src = posterUrlReview;
+      document.getElementById(
+        "duracion-review"
+      ).textContent = `${movieDetails.runtime} minutos`;
+      document.getElementById("title-review").textContent = movie.title;
+      document.getElementById("year-review").textContent = new Date(
+        movie.release_date
+      ).getFullYear();
+      document.getElementById("sinapsis-review").textContent =
+        movieDetailsSinapsis.overview;
+      document.getElementById("sinapsisInputReview").value =
+        movieDetailsSinapsis.overview;
+      document.getElementById("director-review").textContent = director
+        ? director.name
+        : "Director no disponible";
 
       const countryCode = movieDetails.origin_country[0];
       const flag = getCountryFlagEmoji(countryCode);
       const countryName = countryNamesES[countryCode] || countryCode;
+      document.getElementById(
+        "origen-review"
+      ).textContent = `Origen: ${flag} ${countryName}`;
 
       const imagesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`,
+        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`
       );
       const imagesData = await imagesRes.json();
 
@@ -233,7 +251,7 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       showPoster(currentPoster);
 
       Array.from(resultsDiv.children).forEach(
-        (child) => (child.style.background = ""),
+        (child) => (child.style.background = "")
       );
       result.style.background = "#386119ff";
 
@@ -260,7 +278,8 @@ document.getElementById("movieForm").addEventListener("submit", async (e) => {
       showResultsBtn.style.display = "none";
     });
   }
-});
+}
+
 
 // --------------------------------------------------
 // CARROUSEL
