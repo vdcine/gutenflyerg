@@ -276,21 +276,6 @@ document.getElementById("load-backdrop-direct").addEventListener("click", () => 
     document.getElementById("backdrop-direct-input").value = "";
   });
 
-document.getElementById("backdrop-carousel-img").addEventListener("click", () => {
-    let backdrops = GlobalState.backdrops;
-    let currentBackdrop = GlobalState.currentBackdrop;
-
-    if (backdrops.length > 0) {
-      const currentBackdropData = backdrops[currentBackdrop];
-      const filePath = currentBackdropData.file_path;
-
-      const fullUrl = filePath.startsWith("http")
-        ? filePath
-        : `https://image.tmdb.org/t/p/original${filePath}`;
-
-      showImageInfo("Backdrop", filePath, fullUrl);
-    }
-  });
 
 document.getElementById("backdrops").addEventListener("click", (e) => {
   e.preventDefault();
@@ -345,20 +330,33 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
 });
 
 document.getElementById("poster-carousel-img").addEventListener("click", () => {
-  let posters = GlobalState.posters;
-  let currentPoster = GlobalState.currentPoster;
-  if (posters.length > 0) {
-    const currentPosterData = posters[currentPoster];
-    const filePath = currentPosterData.file_path;
+    let posters = GlobalState.posters;
+    let currentPoster = GlobalState.currentPoster;
+    if (posters.length > 0) {
+        const currentPosterData = posters[currentPoster];
+        const filePath = currentPosterData.file_path;
+        const fullUrl = filePath.startsWith("http")? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
 
-    const fullUrl = filePath.startsWith("http")
-      ? filePath
-      : `https://image.tmdb.org/t/p/original${filePath}`;
-
-    showImageInfo("Poster", filePath, fullUrl);
-  }
+        navigator.clipboard.writeText(fullUrl).then(() => {
+            alert("URL copiada al portapapeles");
+        });
+    }
 });
 
+document.getElementById("backdrop-carousel-img").addEventListener("click", () => {
+    if (GlobalState.backdrops.length > 0) {
+        const currentBackdropData = GlobalState.backdrops[GlobalState.currentBackdrop];
+        const filePath = currentBackdropData.file_path;
+
+        const fullUrl = filePath.startsWith("http")
+            ? filePath
+            : `https://image.tmdb.org/t/p/original${filePath}`;
+
+        navigator.clipboard.writeText(fullUrl).then(() => {
+            alert("URL copiada al portapapeles");
+        });
+    }
+});
 document.getElementById("posters").addEventListener("click", (e) => {
   e.preventDefault();
   if (!window.selectedMovieId) return;
@@ -367,4 +365,3 @@ document.getElementById("posters").addEventListener("click", (e) => {
     "_blank",
   );
 });
-
