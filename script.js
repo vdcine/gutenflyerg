@@ -3,15 +3,7 @@
 // --------------------------------------------------
 
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
-  const flyerReview = document.getElementById("flyer-story-review");
-  if (flyerReview) {
-    flyerReview.style.backgroundImage = "";
-  }
 
-  const blurBgReview = document.getElementById("flyer-blur-bg-review");
-  if (blurBgReview) {
-    blurBgReview.remove();
-  }
 });
 
 const flyerDate = document.getElementById("flyer-date");
@@ -41,7 +33,7 @@ async function applyBlurToImage(imageUrl) {
 }
 
 document.getElementById("saveFlyer").addEventListener("click", async () => {
-  const flyerElement = document.getElementById("flyer-story");
+  const flyerElement = document.getElementById("flyer");
   const blurBg = document.getElementById("flyer-blur-bg-story");
 
   if (blurBg && blurBg.style.backgroundImage) {
@@ -175,16 +167,8 @@ document
     const fullUrl = filePath.startsWith("http")
       ? filePath
       : `https://image.tmdb.org/t/p/original${filePath}`;
-    const rect = document.querySelector(".rect");
-    const rectFeed = document.querySelector(".rect-feed");
-    const rectReview = document.querySelector(".rect-review");
-    rect.style.display = "none";
-    rectFeed.style.display = "none";
-    rectReview.style.display = "none";
+    bandavertical.style.display = "none";
     setBackdropAsBackground(fullUrl);
-    setBackdropAsBackgroundFeed(fullUrl);
-    setBackdropAsBackgroundReview(fullUrl);
-    setBackdropAsBackgroundReviewFeed(fullUrl);
 
     document.getElementById("backdrop-direct-input").value = "";
   });
@@ -250,16 +234,8 @@ function applyBackdropDirect(url) {
   const fullUrl = filePath.startsWith("http")
     ? filePath
     : `https://image.tmdb.org/t/p/original${filePath}`;
-  const rect = document.querySelector(".rect");
-  const rectFeed = document.querySelector(".rect-feed");
-  const rectReview = document.querySelector(".rect-review");
-  rect.style.display = "none";
-  rectFeed.style.display = "none";
-  rectReview.style.display = "none";
+  bandavertical.style.display = "none";
   setBackdropAsBackground(fullUrl);
-  setBackdropAsBackgroundFeed(fullUrl);
-  setBackdropAsBackgroundReview(fullUrl);
-  setBackdropAsBackgroundReviewFeed(fullUrl);
 }
 
 function applyPosterDirect(url) {
@@ -566,28 +542,8 @@ function initializeControlValues() {
     }
   }
 
-  const flyerDateFeed = document.getElementById("flyer-date-feed");
-  const flyerHourFeed = document.getElementById("flyer-hour-feed");
 
-  if (flyerDateFeed) {
-    const currentSize = getFontSizeInPx(flyerDateFeed);
-    if (currentSize) {
-      const control = document.getElementById("flyerDateFontSizeInputFeed");
-      if (control && control.value == "50") {
-        control.value = currentSize;
-      }
-    }
-  }
 
-  if (flyerHourFeed) {
-    const currentSize = getFontSizeInPx(flyerHourFeed);
-    if (currentSize) {
-      const control = document.getElementById("flyerHourFontSizeInputFeed");
-      if (control && control.value == "50") {
-        control.value = currentSize;
-      }
-    }
-  }
 
   console.log("Valores de controles inicializados con CSS por defecto");
 }

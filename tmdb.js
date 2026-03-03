@@ -5,6 +5,8 @@
 const API_KEY = "c733c18f5b61209aa7ea217bd007b156";
 const BASE_URL = "https://api.themoviedb.org/3";
 
+const bandavertical = document.getElementById("bandavertical");
+
 function getSimpleCorsProxiedUrl(imageUrl) {
   return `https://corsproxy.io/?${imageUrl}`;
 }
@@ -235,13 +237,13 @@ async function searchMovies (e) {
       );
       const imagesData = await imagesRes.json();
 
-      backdrops = imagesData.backdrops || [];
-      currentBackdrop = 0;
-      showBackdrop(currentBackdrop);
+      toStorage('backdrops', imagesData.backdrops || []);
+      toStorage('currentBackdrop', 0);
+      showBackdrop(fromStorage('currentBackdrop'));
 
-      posters = imagesData.posters || [];
-      currentPoster = 0;
-      showPoster(currentPoster);
+      toStorage('posters', imagesData.posters || []);
+      toStorage('currentPoster', 0);
+      showPoster(fromStorage('currentPoster'));
 
       Array.from(resultsDiv.children).forEach(
         (child) => (child.style.background = "")
@@ -297,15 +299,16 @@ linkPosters.addEventListener("click", (e) => {
   );
 });
 
-let backdrops = [];
-let currentBackdrop = 0;
-let posters = [];
-let currentPoster = 0;
+if (!fromStorage('backdrops')) { toStorage('backdrops', []); }
+if (!fromStorage('currentBackdrop')) { toStorage('currentBackdrop', 0); }
+if (!fromStorage('posters')) { toStorage('posters', []); }
+if (!fromStorage('currentPoster')) { toStorage('currentPoster', 0); }
+
 
 function showBackdrop(index) {
-  if (!backdrops.length) return;
+  if (!fromStorage('backdrops').length) return;
   const img = document.getElementById("backdrop-carousel-img");
-  const filePath = backdrops[index].file_path;
+  const filePath = fromStorage('backdrops')[index].file_path;
 
   if (filePath.startsWith("http")) {
     img.src = filePath;
@@ -315,13 +318,13 @@ function showBackdrop(index) {
 
   document.getElementById("backdrop-counter").textContent = `Backdrop ${
     index + 1
-  } de ${backdrops.length}`;
+  } de ${fromStorage('backdrops').length}`;
 }
 
 function showPoster(index) {
-  if (!posters.length) return;
+  if (!fromStorage('posters').length) return;
   const img = document.getElementById("poster-carousel-img");
-  const filePath = posters[index].file_path;
+  const filePath = fromStorage('posters')[index].file_path;
 
   if (filePath.startsWith("http")) {
     img.src = filePath;
@@ -331,15 +334,15 @@ function showPoster(index) {
 
   document.getElementById("poster-counter").textContent = `Poster ${
     index + 1
-  } de ${posters.length}`;
+  } de ${fromStorage('posters').length}`;
 }
 
 document.getElementById("poster-prev").addEventListener("click", () => {
-  if (!posters.length) return;
-  currentPoster = (currentPoster - 1 + posters.length) % posters.length;
-  showPoster(currentPoster);
-  if (!posters.length) return;
-  const filePath = posters[currentPoster].file_path;
+  if (!fromStorage('posters').length) return;
+  toStorage('currentPoster', (fromStorage('currentPoster') - 1 + fromStorage('posters').length) % fromStorage('posters').length);
+  showPoster(fromStorage('currentPoster'));
+  if (!fromStorage('posters').length) return;
+  const filePath = fromStorage('posters')[fromStorage('currentPoster')].file_path;
   const posterUrlPrev = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/original${filePath}`
   );
@@ -347,11 +350,11 @@ document.getElementById("poster-prev").addEventListener("click", () => {
   setPoster(posterUrlPrev);
 });
 document.getElementById("poster-next").addEventListener("click", () => {
-  if (!posters.length) return;
-  currentPoster = (currentPoster + 1) % posters.length;
-  showPoster(currentPoster);
-  if (!posters.length) return;
-  const filePath = posters[currentPoster].file_path;
+  if (!fromStorage('posters').length) return;
+  toStorage('currentPoster', (fromStorage('currentPoster') + 1) % fromStorage('posters').length);
+  showPoster(fromStorage('currentPoster'));
+  if (!fromStorage('posters').length) return;
+  const filePath = fromStorage('posters')[fromStorage('currentPoster')].file_path;
   const posterUrlNext = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/original${filePath}`
   );
@@ -363,37 +366,23 @@ function setPoster(url) {
   document.getElementById("poster").src = url;
 }
 
+
 document.getElementById("backdrop-prev").addEventListener("click", () => {
-  if (!backdrops.length) return;
-  currentBackdrop = (currentBackdrop - 1 + backdrops.length) % backdrops.length;
-  showBackdrop(currentBackdrop);
-  if (!backdrops.length) return;
-  const filePath = backdrops[currentBackdrop].file_path;
+  if (!fromStorage('backdrops').length) return;
+  toStorage('currentBackdrop', (fromStorage('currentBackdrop') - 1 + fromStorage('backdrops').length) % fromStorage('backdrops').length);
+  showBackdrop(fromStorage('currentBackdrop'));
+  if (!fromStorage('backdrops').length) return;
+  const filePath = fromStorage('backdrops')[fromStorage('currentBackdrop')].file_path;
   const backdropUrlPrev = getSimpleCorsProxiedUrl(
     `https://image.tmdb.org/t/p/original${filePath}`
   );
-  const rect = document.querySelector(".rect");
-  rect.style.display = "none";
+  bandavertical.style.display = "none";
   setBackdropAsBackground(backdropUrlPrev);
 });
 
-document.getElementById("backdrop-next").addEventListener("click", () => {
-  if (!backdrops.length) return;
-  currentBackdrop = (currentBackdrop + 1) % backdrops.length;
-  showBackdrop(currentBackdrop);
-  if (!backdrops.length) return;
-  const filePath = backdrops[currentBackdrop].file_path;
-  const backdropUrlNext = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`
-  );
-
-  const rect = document.querySelector(".rect");
-  rect.style.display = "none";
-  setBackdropAsBackground(backdropUrlNext);
-});
 
 function setBackdropAsBackground(url) {
-  const flyerStory = document.getElementById("flyer-story");
+  const flyerStory = document.getElementById("flyer");
   let blurBg = document.getElementById("flyer-blur-bg-story");
   if (blurBg) blurBg.remove();
 
@@ -417,10 +406,9 @@ function setBackdropAsBackground(url) {
 }
 
 document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
-  const flyerStory = document.getElementById("flyer-story");
-  const rect = document.querySelector(".rect");
+  const flyerStory = document.getElementById("flyer");
 
-  rect.style.display = "block";
+  bandavertical.style.display = "block";
 
   flyerStory.style.backgroundImage = "";
 
@@ -431,18 +419,16 @@ document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
   }
 });
 
-const rect = document.querySelector(".rect");
+const bandaToggle = document.getElementById("toggle-banda");
 
-const rectToggle = document.getElementById("toggle-rect");
+let bandaHidden = false;
 
-let rectHidden = false;
-
-rectToggle.addEventListener("click", () => {
-  rectHidden = !rectHidden;
-  rect.style.display = rectHidden ? "none" : "block";
-  rectToggle.textContent = rectHidden
-    ? "Mostrar rectángulo vertical"
-    : "Ocultar rectángulo vertical";
+bandaToggle.addEventListener("click", () => {
+  bandaHidden = !bandaHidden;
+  banda.style.display = bandaHidden ? "none" : "block";
+  bandaToggle.textContent = bandaHidden
+    ? "Mostrar banda vertical"
+    : "Ocultar banda vertical";
 });
 
 // --------------------------------------------------
@@ -478,25 +464,17 @@ document
       aspect_ratio: 1.778,
     };
 
-    backdrops.unshift(newBackdrop);
-    currentBackdrop = 0;
+    fromStorage('backdrops').unshift(newBackdrop);
+    toStorage('currentBackdrop', 0);
 
-    showBackdrop(currentBackdrop);
+    showBackdrop(fromStorage('currentBackdrop'));
 
     // Aplicar automáticamente como fondo del flyer
     const fullUrl = filePath.startsWith("http")
       ? filePath
       : `https://image.tmdb.org/t/p/original${filePath}`;
-    const rect = document.querySelector(".rect");
-    const rectFeed = document.querySelector(".rect-feed");
-    const rectReview = document.querySelector(".rect-review");
-    rect.style.display = "none";
-    rectFeed.style.display = "none";
-    rectReview.style.display = "none";
+    bandavertical.style.display = "none";
     setBackdropAsBackground(fullUrl);
-    setBackdropAsBackgroundFeed(fullUrl);
-    setBackdropAsBackgroundReview(fullUrl);
-    setBackdropAsBackgroundReviewFeed(fullUrl);
 
     document.getElementById("backdrop-direct-input").value = "";
   });
@@ -528,10 +506,10 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
     aspect_ratio: 0.667,
   };
 
-  posters.unshift(newPoster);
-  currentPoster = 0;
+  fromStorage('posters').unshift(newPoster);
+  toStorage('currentPoster', 0);
 
-  showPoster(currentPoster);
+  showPoster(fromStorage('currentPoster'));
   const fullUrl = filePath.startsWith("http")
     ? filePath
     : `https://image.tmdb.org/t/p/original${filePath}`;
@@ -555,23 +533,14 @@ function applyBackdropDirect(url) {
     aspect_ratio: 1.778,
   };
 
-  backdrops.unshift(newBackdrop);
-  currentBackdrop = 0;
-  showBackdrop(currentBackdrop);
+  fromStorage('backdrops').unshift(newBackdrop);
+  toStorage('currentBackdrop', 0);
+  showBackdrop(fromStorage('currentBackdrop'));
 
   const fullUrl = filePath.startsWith("http")
     ? filePath
     : `https://image.tmdb.org/t/p/original${filePath}`;
-  const rect = document.querySelector(".rect");
-  const rectFeed = document.querySelector(".rect-feed");
-  const rectReview = document.querySelector(".rect-review");
-  rect.style.display = "none";
-  rectFeed.style.display = "none";
-  rectReview.style.display = "none";
-  setBackdropAsBackground(fullUrl);
-  setBackdropAsBackgroundFeed(fullUrl);
-  setBackdropAsBackgroundReview(fullUrl);
-  setBackdropAsBackgroundReviewFeed(fullUrl);
+  bandavertical.style.display = "none";
 }
 
 function applyPosterDirect(url) {
@@ -589,9 +558,9 @@ function applyPosterDirect(url) {
     aspect_ratio: 0.667,
   };
 
-  posters.unshift(newPoster);
-  currentPoster = 0;
-  showPoster(currentPoster);
+  fromStorage('posters').unshift(newPoster);
+  toStorage('currentPoster', 0);
+  showPoster(fromStorage('currentPoster'));
 
   const fullUrl = filePath.startsWith("http")
     ? filePath
@@ -602,8 +571,8 @@ function applyPosterDirect(url) {
 document
   .getElementById("backdrop-carousel-img")
   .addEventListener("click", () => {
-    if (backdrops.length > 0) {
-      const currentBackdropData = backdrops[currentBackdrop];
+    if (fromStorage('backdrops').length > 0) {
+      const currentBackdropData = fromStorage('backdrops')[fromStorage('currentBackdrop')];
       const filePath = currentBackdropData.file_path;
 
       const fullUrl = filePath.startsWith("http")
@@ -615,8 +584,8 @@ document
   });
 
 document.getElementById("poster-carousel-img").addEventListener("click", () => {
-  if (posters.length > 0) {
-    const currentPosterData = posters[currentPoster];
+  if (fromStorage('posters').length > 0) {
+    const currentPosterData = fromStorage('posters')[fromStorage('currentPoster')];
     const filePath = currentPosterData.file_path;
 
     const fullUrl = filePath.startsWith("http")
@@ -777,80 +746,17 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
 
   const mappedCertification = certificationMap[certification] || certification;
 
-  document.getElementById("titleInputReview").value = movie.title;
-
-  if (mappedCertification) {
-    document.getElementById("edadSugeridaInputReview").value =
-      mappedCertification;
-
-    const el = document.getElementById("edad-sugerida-review");
-    if (el) {
-      el.textContent = mappedCertification;
-      el.style.display = "inline-block";
-      if (mappedCertification === "ATP") {
-        el.style.backgroundColor = "#4CAF50";
-        el.style.color = "white";
-      } else if (
-        mappedCertification === "+13" ||
-        mappedCertification === "SAM 13"
-      ) {
-        el.style.backgroundColor = "#2196F3";
-        el.style.color = "white";
-      } else if (
-        mappedCertification === "+16" ||
-        mappedCertification === "SAM 16"
-      ) {
-        el.style.backgroundColor = "#FF9800";
-        el.style.color = "white";
-      } else if (
-        mappedCertification === "+18" ||
-        mappedCertification === "SAM 18"
-      ) {
-        el.style.backgroundColor = "#f44336";
-        el.style.color = "white";
-      } else {
-        el.style.backgroundColor = "#777";
-        el.style.color = "white";
-      }
-    }
-  }
 
   console.log(movieDetails);
-
-  const posterUrlReview = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-  );
-  const posterReviewImg = document.getElementById("poster-review");
-  if (posterReviewImg) {
-    posterReviewImg.setAttribute("crossOrigin", "anonymous");
-    posterReviewImg.src = posterUrlReview;
-  }
-
-  document.getElementById("duracion-review").textContent =
-    `${movieDetails.runtime} minutos`;
-  document.getElementById("title-review").textContent = movie.title;
-  document.getElementById("year-review").textContent = new Date(
-    movie.release_date,
-  ).getFullYear();
-  document.getElementById("sinapsis-review").textContent =
-    movieDetailsSinapsis.overview;
-  document.getElementById("sinapsisInputReview").value =
-    movieDetailsSinapsis.overview;
-  document.getElementById("director-review").textContent = director
-    ? director.name
-    : "Director no disponible";
 
   const countryCode = movieDetails.origin_country[0];
   const flag = getCountryFlagEmoji(countryCode);
   const countryName = countryNamesES[countryCode] || countryCode;
-  document.getElementById("origen-review").textContent =
-    `Origen: ${flag} ${countryName}`;
 
   if (movie.backdrop_path) {
     const backdropUrl = getSimpleCorsProxiedUrl(
       `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
     );
-    setBackdropAsBackgroundReview(backdropUrl);
   }
 
   const imagesRes = await fetch(
@@ -858,18 +764,13 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   );
   const imagesData = await imagesRes.json();
 
-  backdrops = imagesData.backdrops || [];
-  currentBackdrop = 0;
-  showBackdrop(currentBackdrop);
+  console.log(imagesData.backdrops)
+  toStorage('backdrops', imagesData.backdrops || []);
+  fromStorage('currentBackdrop') = 0;
+  showBackdrop(fromStorage('currentBackdrop'));
 
-  posters = imagesData.posters || [];
-  currentPoster = 0;
-  showPoster(currentPoster);
+  toStorage('posters', imagesData.posters || []);
+  toStorage('currentPoster', 0);
+  showPoster(fromStorage('currentPoster'));
 
-  /* TODO: Lógica de Fecha (Pendiente de implementar en flyer)
-  if (fecha) {
-    document.getElementById("dateInputReview").value = fecha;
-    document.getElementById("flyer-date-review").innerHTML = formatDateToSpanish(fecha);
-  }
-  */
-}
+};
