@@ -58,11 +58,12 @@ document.getElementById("toggle-banda").addEventListener("click", (e) => {
 });
 
 
+
 document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const ciclo = document.getElementById("cicloInput").value.trim();
   const dateRaw = document.getElementById("dateInput").value.trim();
   const hourRaw = document.getElementById("hourInput").value.trim();
-  const titulo = document.getElementById("titleInput").value.trim();
+  GlobalState.titulo = document.getElementById("titleInput").value.trim();
 
   document.getElementById("dateInput").value = dateRaw;
   document.getElementById("hourInput").value = hourRaw;
@@ -72,7 +73,7 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   document.getElementById("title").innerHTML = (
     titulo || "Título de la película"
   ).replace(/\n/g, "<br />");
-  document.getElementById("titleInput").value = titulo;
+  document.getElementById("titleInput").value = GlobalState.titulo;
   document.getElementById("ciclo").textContent = ciclo || "Ciclo";
 
   const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
@@ -348,4 +349,3 @@ document.getElementById("posters").addEventListener("click", (e) => {
     "_blank",
   );
 });
-

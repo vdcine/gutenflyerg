@@ -28,7 +28,6 @@ async function applyBlurToImage(imageUrl) {
   });
 }
 
-
 async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
   const dimensions = isStoryFormat
     ? { width: 1080, height: 1920 }
@@ -59,7 +58,6 @@ async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
   link.click();
   document.body.removeChild(link);
 }
-
 
 function applyBackdropDirect(url) {
   if (!url || !url.startsWith("http")) return;
@@ -112,10 +110,6 @@ function applyPosterDirect(url) {
   setPoster(fullUrl);
 }
 
-
-
-
-
 function formatDateToSpanish(dateStr) {
   if (!dateStr) return "";
   const dias = [
@@ -154,10 +148,12 @@ function formatDateToSpanish(dateStr) {
 
 // Función auxiliar para obtener el fontsize
 async function initializeControlValues() {
-    await populateSearchResults();
-    shiftPoster(0);
-    shiftBackdrop(0);
-    document.getElementById('movieSearch').value = GlobalState.search_title
+  await populateSearchResults();
+  shiftPoster(0);
+  shiftBackdrop(0);
+  document.getElementById("movieSearch").value = GlobalState.search_title || "";
+  document.getElementById("titleInput").value = GlobalState.titulo || "Título de la Peli";
+
   function getFontSizeInPx(element) {
     if (!element) return null;
     const computedStyle = window.getComputedStyle(element);
@@ -189,4 +185,3 @@ async function initializeControlValues() {
   }
   console.log("Valores de controles inicializados con CSS por defecto");
 }
-
