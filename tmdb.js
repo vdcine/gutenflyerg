@@ -122,13 +122,14 @@ async function populateSearchResults() {
         movie.director ? movie.director.name : "Director no disponible"
     }</span>`;
         result.addEventListener("click", async () => {
-            window.selectedMovieId = movie.id;
+            console.log(movie.title)
+            GlobalState.selectedMovie = movie
 
             const releaseDatesRes = await fetch(
                 `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
             );
             const releaseDatesData = await releaseDatesRes.json();
-            console.log(releaseDatesData);
+            // console.log(releaseDatesData);
 
             let certification = "";
             const countriesOrder = ["AR"]; // Se pueden agregar otros codigos de paises
@@ -234,11 +235,11 @@ async function populateSearchResults() {
 
             GlobalState.backdrops = imagesData.backdrops || [];
             GlobalState.currentBackdrop = 0;
-            showBackdrop(GlobalState.currentBackdrop);
+            shiftBackdrop(0);
 
             GlobalState.posters = imagesData.posters || [];
             GlobalState.currentPoster = 0;
-            showPoster(GlobalState.currentPoster);
+            shiftPoster(0);
 
             Array.from(resultsDiv.children).forEach(
                 (child) => (child.style.background = "")

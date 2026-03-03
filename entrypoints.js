@@ -272,9 +272,9 @@ document.getElementById("load-backdrop-direct").addEventListener("click", () => 
 
 document.getElementById("backdrops").addEventListener("click", (e) => {
   e.preventDefault();
-  if (!window.selectedMovieId) return;
+  if (!GlobalState.selectedMovie.id) return;
   window.open(
-    `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
+    `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/backdrops`,
     "_blank",
   );
 });
@@ -342,9 +342,9 @@ document.getElementById("backdrop-carousel-img").addEventListener("click", () =>
 
 document.getElementById("posters").addEventListener("click", (e) => {
   e.preventDefault();
-  if (!window.selectedMovieId) return;
+  if (!GlobalState.selectedMovie.id) return;
   window.open(
-    `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
+    `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/posters`,
     "_blank",
   );
 });
