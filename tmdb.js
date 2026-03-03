@@ -222,7 +222,7 @@ async function populateSearchResults() {
             const backdropUrl = getSimpleCorsProxiedUrl(
                 `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
             );
-            setBackdropAsBackground(backdropUrl);
+            updateBackdrop(backdropUrl);
 
             const countryCode = movie.details.origin_country[0];
             const flag = getCountryFlagEmoji(countryCode);
@@ -262,110 +262,79 @@ GlobalState.posters = GlobalState.posters || [];
 GlobalState.currentBackdrop = GlobalState.currentBackdrop || 0;
 GlobalState.currentPoster = GlobalState.currentPoster || 0;
 
-// FIXME unificar shift y show
+//TODO: quedan getelementbyid que ensucian la logica, hay que ver como sacarlos a entrypoints.js.
+
 function shiftBackdrop(delta) {
     let backdrops_len = GlobalState.backdrops.length;
     if (!backdrops_len) return;
-    GlobalState.currentBackdrop = (GlobalState.currentBackdrop + delta) % backdrops_len;
-    showBackdrop(GlobalState.currentBackdrop);
-    const filePath = GlobalState.backdrops[GlobalState.currentBackdrop].file_path;
-    const backdropUrlPrev = getSimpleCorsProxiedUrl(`https://image.tmdb.org/t/p/original${filePath}`);
-    // bandavertical.style.display = "none";
-    setBackdropAsBackground(backdropUrlPrev);
 
+    GlobalState.currentBackdrop = (GlobalState.currentBackdrop + delta + backdrops_len) % backdrops_len;
+    let index = GlobalState.currentBackdrop;
+
+    const filePath = GlobalState.backdrops[index].file_path;
+
+    const url = filePath.startsWith("http")
+        ? filePath
+        : `https://image.tmdb.org/t/p/w1280${filePath}`;
+
+    document.getElementById("backdrop-carousel-img").src = url;
+    document.getElementById("backdrop-counter").textContent = `Backdrop ${index + 1} de ${backdrops_len}`;
+
+    const proxiedUrl = getSimpleCorsProxiedUrl(url);
+    updateBackdrop(proxiedUrl);
 }
-
-function showBackdrop(index) {
-  if (!GlobalState.backdrops.length) return;
-  const img = document.getElementById("backdrop-carousel-img");
-  const filePath = GlobalState.backdrops[index].file_path;
-
-  if (filePath.startsWith("http")) {
-    img.src = filePath;
-  } else {
-    img.src = `https://image.tmdb.org/t/p/original${filePath}`;
-  }
-
-  document.getElementById("backdrop-counter").textContent = `Backdrop ${
-    index + 1
-  } de ${GlobalState.backdrops.length}`;
-}
-
-// FIXME: unificar shift  y show
 
 function shiftPoster(delta) {
     let posters_len = GlobalState.posters.length;
     if (!posters_len) return;
-    GlobalState.currentPoster = (GlobalState.currentPoster + delta) % posters_len;
-    showPoster(GlobalState.currentPoster);
-    const filePath = GlobalState.posters[GlobalState.currentPoster].file_path;
-    const posterUrlNext = getSimpleCorsProxiedUrl(`https://image.tmdb.org/t/p/original${filePath}`);
-    setPoster(posterUrlNext);
+
+    GlobalState.currentPoster = (GlobalState.currentPoster + delta + posters_len) % posters_len;
+    let index = GlobalState.currentPoster;
+
+    const filePath = GlobalState.posters[index].file_path;
+
+    const url = filePath.startsWith("http")
+        ? filePath
+        : `https://image.tmdb.org/t/p/w780${filePath}`;
+
+    document.getElementById("poster-carousel-img").src = url;
+    document.getElementById("poster-counter").textContent = `Poster ${index + 1} de ${posters_len}`;
+
+    const proxiedUrl = getSimpleCorsProxiedUrl(url);
+    updatePoster(proxiedUrl);
 }
 
-function showPoster(index) {
-  if (!GlobalState.posters.length) return;
-  const img = document.getElementById("poster-carousel-img");
-  const filePath = GlobalState.posters[index].file_path;
+function updateBackdrop(url) {
+  const flyer = document.getElementById("flyer");
+  let blurBg = document.getElementById("flyer-blur-bg-story");
 
-  if (filePath.startsWith("http")) {
-    img.src = filePath;
-  } else {
-    img.src = `https://image.tmdb.org/t/p/original${filePath}`;
+  if (!blurBg) {
+    blurBg = document.createElement("div");
+    blurBg.id = "flyer-blur-bg-story";
+    blurBg.classList.add("flyer-blur-bg");
+    flyer.prepend(blurBg);
   }
 
-  document.getElementById("poster-counter").textContent = `Poster ${
-    index + 1
-  } de ${GlobalState.posters.length}`;
-}
-
-
-function setPoster(url) {
-  document.getElementById("poster").src = url;
-}
-
-
-
-
-function setBackdropAsBackground(url) {
-  const flyerStory = document.getElementById("flyer");
-  let blurBg = document.getElementById("flyer-blur-bg-story");
-  if (blurBg) blurBg.remove();
-
-  blurBg = document.createElement("div");
-  blurBg.id = "flyer-blur-bg-story";
-  blurBg.style.position = "absolute";
-  blurBg.style.top = "0";
-  blurBg.style.left = "0";
-  blurBg.style.width = "100%";
-  blurBg.style.height = "100%";
-  blurBg.style.zIndex = "0";
-  blurBg.style.pointerEvents = "none";
-  blurBg.style.backgroundPosition = "center";
-  blurBg.style.backgroundSize = "cover";
-  blurBg.style.backgroundRepeat = "no-repeat";
-  blurBg.style.filter = "blur(4px) brightness(0.9)";
   blurBg.style.backgroundImage = `url('${url}')`;
-  flyerStory.prepend(blurBg);
-
-  flyerStory.style.backgroundImage = "";
+  flyer.style.backgroundImage = "";
 }
 
-
+function updatePoster(url) {
+  const poster = document.getElementById("poster");
+  if (poster) poster.src = url;
+}
 
 // --------------------------------------------------
 // CARGA DIRECTA POR URL
 // --------------------------------------------------
 
-
 function applyBackdropDirect(url) {
   if (!url || !url.startsWith("http")) return;
 
-  let filePath = "";
-  if (url.includes("image.tmdb.org/t/p/original")) {
-    filePath = url.replace("https://image.tmdb.org/t/p/original", "");
-  } else {
-    filePath = url;
+  let filePath = url;
+  const tmdbMatch = url.match(/https:\/\/image\.tmdb\.org\/t\/p\/[^/]+(\/.*)/);
+  if (tmdbMatch) {
+    filePath = tmdbMatch[1];
   }
 
   const newBackdrop = {
@@ -375,22 +344,17 @@ function applyBackdropDirect(url) {
 
   GlobalState.backdrops.unshift(newBackdrop);
   GlobalState.currentBackdrop = 0;
-  showBackdrop(GlobalState.currentBackdrop);
-
-  const fullUrl = filePath.startsWith("http")
-    ? filePath
-    : `https://image.tmdb.org/t/p/original${filePath}`;
-  bandavertical.style.display = "none";
+  
+  shiftBackdrop(0);
 }
 
 function applyPosterDirect(url) {
   if (!url || !url.startsWith("http")) return;
 
-  let filePath = "";
-  if (url.includes("image.tmdb.org/t/p/original")) {
-    filePath = url.replace("https://image.tmdb.org/t/p/original", "");
-  } else {
-    filePath = url;
+  let filePath = url;
+  const tmdbMatch = url.match(/https:\/\/image\.tmdb\.org\/t\/p\/[^/]+(\/.*)/);
+  if (tmdbMatch) {
+    filePath = tmdbMatch[1];
   }
 
   const newPoster = {
@@ -400,10 +364,6 @@ function applyPosterDirect(url) {
 
   GlobalState.posters.unshift(newPoster);
   GlobalState.currentPoster = 0;
-  showPoster(GlobalState.currentPoster);
 
-  const fullUrl = filePath.startsWith("http")
-    ? filePath
-    : `https://image.tmdb.org/t/p/original${filePath}`;
-  setPoster(fullUrl);
+  shiftPoster(0);
 }

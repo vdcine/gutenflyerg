@@ -177,81 +177,35 @@ document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
 
 document.getElementById("load-backdrop-direct").addEventListener("click", () => {
     const input = document.getElementById("backdrop-direct-input").value.trim();
+    
+    if (!input) return alert("Por favor, ingresa una URL del backdrop");
+    if (!input.startsWith("http")) return alert("Por favor, ingresa una URL completa.");
 
-    if (!input) {
-        alert("Por favor, ingresa una URL del backdrop");
-        return;
-    }
-
-    if (!input.startsWith("http")) {
-        alert("Por favor, ingresa una URL completa que comience con http:// o htt://");
-        return;
-    }
-
-    let filePath = "";
-    if (input.includes("image.tmdb.org/t/p/original")) {
-        filePath = input.replace("https://image.tmdb.org/t/p/original", "");
-    } else {
-        filePath = input;
-    }
-
-    const newBackdrop = {file_path: filePath, aspect_ratio: 1.778};
-
-    GlobalState.backdrops.unshift(newBackdrop);
-    GlobalStatee.currentBackdrop = 0;
-
-    showBackdrop(GlobalState.currentBackdrop);
-
-    // Aplicar automáticamente como fondo del flyer
-    const fullUrl = filePath.startsWith("http")
-        ? filePath
-        : `https://image.tmdb.org/t/p/original${filePath}`;
-    // bandavertical.style.display = "none";
-    setBackdropAsBackground(fullUrl);
+    applyBackdropDirect(input);
 
     document.getElementById("backdrop-direct-input").value = "";
 });
-
 
 document.getElementById("backdrops").addEventListener("click", (e) => {
   e.preventDefault();
   if (!GlobalState.selectedMovie.id) return;
   window.open(
     `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/backdrops`,
-    "_blank",
+    "_blank"
   );
 });
 
 // POSTERS
-//
+
 document.getElementById("load-poster-direct").addEventListener("click", () => {
-  const input = document.getElementById("poster-direct-input").value.trim();
+    const input = document.getElementById("poster-direct-input").value.trim();
+    
+    if (!input) return alert("Por favor, ingresa una URL del poster");
+    if (!input.startsWith("http")) return alert("Por favor, ingresa una URL completa.");
 
-  if (!input) {
-    alert("Por favor, ingresa una URL del poster");
-    return;
-  }
+    applyPosterDirect(input);
 
-  if (!input.startsWith("http")) {
-    alert("Por favor, ingresa una URL completa que comience con http:// o https://");
-    return;
-  }
-
-  let filePath = "";
-  if (input.includes("image.tmdb.org/t/p/original")) {
-    filePath = input.replace("https://image.tmdb.org/t/p/original", "");
-  } else {
-    filePath = input;
-  }
-
-  const newPoster = {file_path: filePath, aspect_ratio: 0.667};
-
-  GlobalState.posters.unshift(newPoster);
-  GlobalState.currentPoster = 0;
-  showPoster(GlobalState.currentPoster);
-  const fullUrl = filePath.startsWith("http")? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
-  setPoster(fullUrl);
-  document.getElementById("poster-direct-input").value = "";
+    document.getElementById("poster-direct-input").value = "";
 });
 
 document.getElementById("poster-carousel-img").addEventListener("click", () => {
@@ -260,8 +214,7 @@ document.getElementById("poster-carousel-img").addEventListener("click", () => {
     if (posters.length > 0) {
         const currentPosterData = posters[currentPoster];
         const filePath = currentPosterData.file_path;
-        const fullUrl = filePath.startsWith("http")? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
-
+        const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
         navigator.clipboard.writeText(fullUrl).then(() => {
             alert("URL copiada al portapapeles");
         });
@@ -272,11 +225,7 @@ document.getElementById("backdrop-carousel-img").addEventListener("click", () =>
     if (GlobalState.backdrops.length > 0) {
         const currentBackdropData = GlobalState.backdrops[GlobalState.currentBackdrop];
         const filePath = currentBackdropData.file_path;
-
-        const fullUrl = filePath.startsWith("http")
-            ? filePath
-            : `https://image.tmdb.org/t/p/original${filePath}`;
-
+        const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
         navigator.clipboard.writeText(fullUrl).then(() => {
             alert("URL copiada al portapapeles");
         });
@@ -288,7 +237,7 @@ document.getElementById("posters").addEventListener("click", (e) => {
   if (!GlobalState.selectedMovie.id) return;
   window.open(
     `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/posters`,
-    "_blank",
+    "_blank"
   );
 });
 

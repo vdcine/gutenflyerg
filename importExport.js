@@ -231,7 +231,7 @@ function restoreImages(imagesData) {
     if (typeof imagesData.currentBackdrop === "number") {
       currentBackdrop = Math.min(imagesData.currentBackdrop, backdrops.length - 1);
     }
-    if (backdrops.length > 0) showBackdrop(currentBackdrop);
+    if (backdrops.length > 0) shiftBackdrop(currentBackdrop);
   }
 
   if (imagesData.posters && Array.isArray(imagesData.posters)) {
@@ -239,7 +239,7 @@ function restoreImages(imagesData) {
     if (typeof imagesData.currentPoster === "number") {
       currentPoster = Math.min(imagesData.currentPoster, posters.length - 1);
     }
-    if (posters.length > 0) showPoster(currentPoster);
+    if (posters.length > 0) shiftPoster(currentPoster);
   }
 
   if (imagesData.backgroundImages && imagesData.backgroundImages.review) {

@@ -101,7 +101,7 @@ function applyBackdropDirect(url) {
 
   backdrops.unshift(newBackdrop);
   currentBackdrop = 0;
-  showBackdrop(currentBackdrop);
+  shiftBackdrop(currentBackdrop);
 
   const fullUrl = filePath.startsWith("http")
     ? filePath
@@ -127,7 +127,7 @@ function applyPosterDirect(url) {
 
   posters.unshift(newPoster);
   currentPoster = 0;
-  showPoster(currentPoster);
+  shiftPoster(currentPoster);
 
   const fullUrl = filePath.startsWith("http")
     ? filePath
