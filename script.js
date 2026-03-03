@@ -62,7 +62,7 @@ async function handleFlyerDownload(flyerElement, blurBgElement, titleText) {
     if (bgImageMatch) {
       const imageUrl = bgImageMatch[1];
       try {
-        const blurredDataUrl = await createBlurredImageBase64(imageUrl);
+        const blurredDataUrl = await applyBlurToImage(imageUrl);
         const originalFilter = blurBgElement.style.filter;
         const originalBgImage = blurBgElement.style.backgroundImage;
 
