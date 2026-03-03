@@ -251,29 +251,10 @@ async function populateSearchResults() {
                 (child) => (child.style.background = "")
             );
             result.style.background = "#386119ff";
-
-            // resultsDiv.style.display = "none";
-            showResultsBtn.style.display = "block";
         });
 
         resultsDiv.appendChild(result);
 
-        const showResultsBtn = document.createElement("button");
-        showResultsBtn.textContent = "Mostrar resultados de búsqueda";
-        showResultsBtn.id = "show-results-btn";
-        showResultsBtn.style.display = "none";
-        showResultsBtn.style.margin = "16px auto";
-        showResultsBtn.style.fontSize = "1rem";
-        showResultsBtn.style.textAlign = "center";
-        showResultsBtn.style.width = "fit-content";
-        showResultsBtn.style.position = "relative";
-
-        resultsDiv.parentNode.insertBefore(showResultsBtn, resultsDiv);
-
-        showResultsBtn.addEventListener("click", () => {
-            resultsDiv.style.display = "block";
-            showResultsBtn.style.display = "none";
-        });
     }
 
 }
