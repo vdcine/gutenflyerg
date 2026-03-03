@@ -59,6 +59,32 @@ document.getElementById("toggle-banda").addEventListener("click", (e) => {
 
 
 
+document.getElementById("applyStrokeBtn").addEventListener("click", () => {
+  const select = document.getElementById("strokeTargetSelect");
+  const color = document.getElementById("strokeColorInput").value;
+  Array.from(select.selectedOptions).forEach((option) => {
+    const target = document.getElementById(option.value);
+    if (target) {
+      target.style.textShadow = `
+        -1px -1px 0 ${color},
+        1px -1px 0 ${color},
+        -1px 1px 0 ${color},
+        1px 1px 0 ${color}
+      `;
+    }
+  });
+});
+
+document.getElementById("removeStrokeBtn").addEventListener("click", () => {
+  const select = document.getElementById("strokeTargetSelect");
+  Array.from(select.selectedOptions).forEach((option) => {
+    const target = document.getElementById(option.value);
+    if (target) {
+      target.style.textShadow = "";
+    }
+  });
+});
+
 document.getElementById("applyTxtBtn").addEventListener("click", () => {
   const ciclo = document.getElementById("cicloInput").value.trim();
   const dateRaw = document.getElementById("dateInput").value.trim();
@@ -69,25 +95,19 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
   document.getElementById("hourInput").value = hourRaw;
 
   const edadSugerida = document.getElementById("edadSugeridaInput").value.trim();
+  GlobalState.edadSugerida = edadSugerida;
 
   document.getElementById("title").innerHTML = (
-    titulo || "Título de la película"
+    GlobalState.titulo || "Título de la película"
   ).replace(/\n/g, "<br />");
   document.getElementById("titleInput").value = GlobalState.titulo;
   document.getElementById("ciclo").textContent = ciclo || "Ciclo";
 
   const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
+  const el = document.getElementById("edad-sugerida");
 
   if (mappedCertification) {
-      if (edadSugerida) {
-          document.getElementById("edadSugeridaInput").value = mappedCertification;
-          document.getElementById("edad-sugerida").textContent =
-              mappedCertification;
-      } else {
-          edadSugeridaElement.style.display = "none";
-      }
-
-      const el = document.getElementById("edad-sugerida");
+      document.getElementById("edadSugeridaInput").value = mappedCertification;
       el.textContent = mappedCertification;
       el.style.display = "inline-block";
       if (mappedCertification === "ATP") {
@@ -112,10 +132,20 @@ document.getElementById("applyTxtBtn").addEventListener("click", () => {
           el.style.backgroundColor = "#777"; // Gris para otros
           el.style.color = "white";
       }
+  } else {
+      el.style.display = "none";
   }
 
   document.getElementById("flyer-date").innerHTML = formatDateToSpanish(dateRaw);
   document.getElementById("flyer-hour").textContent = hourRaw ? `${hourRaw} HS` : "19:00 HS";
+
+  const orgInput = document.getElementById("orgInput");
+  if (orgInput) {
+    const orgValue = orgInput.value.trim();
+    GlobalState.orgText = orgValue;
+    const orgEl = document.getElementById("org");
+    if (orgEl) orgEl.textContent = orgValue;
+  }
 });
 
 document.getElementById("flyerDateFontSizeInput").addEventListener("input",
@@ -133,6 +163,18 @@ document.getElementById("flyerHourFontSizeInput").addEventListener("input",
 document.getElementById("flyerTitleFontSizeInput").addEventListener("input",
     (e) => {
         document.getElementById("title").style.fontSize = e.target.value + "px";
+    });
+
+
+document.getElementById("flyerTitleMarginTopInput").addEventListener("input",
+    (e) => {
+        document.getElementById("title").style.fontSize = e.target.value + "px";
+    });
+
+
+document.getElementById("rectWidthInput").addEventListener("input",
+    (e) => {
+        document.getElementById("bandavertical").style.width = e.target.value + "px";
     });
 
 document.getElementById("saveFlyer").addEventListener("click", async () => {
