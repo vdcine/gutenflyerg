@@ -165,6 +165,9 @@ async function populateSearchResults() {
                 certificationMap[certification] || certification;
 
             document.getElementById("title").textContent = movie.title;
+            document.getElementById("titleInput").value = movie.title;
+            GlobalState.titulo = movie.title;
+            GlobalState.edadSugerida = mappedCertification || "";
 
             if (mappedCertification) {
                 document.getElementById("edadSugeridaInput").value =
@@ -211,8 +214,8 @@ async function populateSearchResults() {
                 `https://image.tmdb.org/t/p/w500${movie.poster_path}`
             );
             document.getElementById("poster").src = posterUrl;
-            document.getElementById("director").textContent = director
-                ? director.name
+            document.getElementById("director").textContent = movie.director
+                ? movie.director.name
                 : "Director no disponible";
 
             console.log(movie.details);
