@@ -68,210 +68,214 @@ const certificationMap = {
 // --------------------------------------------------
 
 async function searchMovies (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const query = document.getElementById("movieSearch").value;
-  const language = document.getElementById("movieLanguage").value || "en";
-
-  const searchRes = await fetch(
-    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${language}`
-  );
-
-  const searchData = await searchRes.json();
-  if (searchData.results.length === 0)
-    return alert("No se encontró la película.");
-
-  const orderedResults = [...searchData.results].sort(
-    (a, b) => b.popularity - a.popularity
-  );
-
-  const resultsDiv = document.getElementById("movie-results");
-  resultsDiv.innerHTML = "";
-
-  for (let idx = 0; idx < Math.min(10, orderedResults.length); idx++) {
-    const movie = orderedResults[idx];
-    const creditsRes = await fetch(
-      `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
+    GlobalState.search_title = document.getElementById("movieSearch").value;
+    GlobalState.search_language = document.getElementById("movieLanguage").value || "en";
+    const searchRes = await fetch(
+        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${GlobalState.search_title}&language=${GlobalState.search_language}`
     );
-    const creditsData = await creditsRes.json();
-    const director = creditsData.crew.find((c) => c.job === "Director");
 
-    const movieDetails = await (
-      await fetch(
-        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${language}`
-      )
-    ).json();
+    const searchData = await searchRes.json();
+    if (searchData.results.length === 0) return alert("No se encontró la película.");
 
-    const movieDetailsSinapsis = await (
-      await fetch(
-        `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`
-      )
-    ).json();
+    GlobalState.orderedResults = [...searchData.results].sort((a, b) => b.popularity - a.popularity);
+    await populateSearchResults();
+}
 
-    const result = document.createElement("div");
-    result.style.cursor = "pointer";
-    result.style.padding = "8px";
-    result.style.borderBottom = "1px solid #ccc";
-    result.style.display = "flex";
-    result.style.alignItems = "center";
-    result.innerHTML = `
+
+async function populateSearchResults() {
+
+    if (!GlobalState.orderedResults) return;
+
+    const resultsDiv = document.getElementById("movie-results");
+    resultsDiv.innerHTML = "";
+
+    for (let idx = 0; idx < Math.min(10, GlobalState.orderedResults.length); idx++) {
+        const movie = GlobalState.orderedResults[idx];
+        const creditsRes = await fetch(
+            `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
+        );
+        const creditsData = await creditsRes.json();
+        const director = creditsData.crew.find((c) => c.job === "Director");
+
+        const movieDetails = await (
+            await fetch(
+                `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${GlobalState.search_language}`
+            )
+        ).json();
+
+        const movieDetailsSinapsis = await (
+            await fetch(
+                `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`
+            )
+        ).json();
+
+        const result = document.createElement("div");
+        result.style.cursor = "pointer";
+        result.style.padding = "8px";
+        result.style.borderBottom = "1px solid #ccc";
+        result.style.display = "flex";
+        result.style.alignItems = "center";
+        result.innerHTML = `
     <img src="https://image.tmdb.org/t/p/w500${
-      movie.poster_path
+        movie.poster_path
     }" style="width:48px;height:auto;margin-right:12px;" />
     <span style="font-weight:bold;">${movie.title}</span>
     <span style="margin-left:12px;">(${new Date(
-      movie.release_date
+        movie.release_date
     ).getFullYear()})</span>
     <span style="margin-left:12px;">${
-      director ? director.name : "Director no disponible"
+        director ? director.name : "Director no disponible"
     }</span>`;
-    result.addEventListener("click", async () => {
-      window.selectedMovieId = movie.id;
+        result.addEventListener("click", async () => {
+            window.selectedMovieId = movie.id;
 
-      const releaseDatesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
-      );
-      const releaseDatesData = await releaseDatesRes.json();
-      console.log(releaseDatesData);
+            const releaseDatesRes = await fetch(
+                `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
+            );
+            const releaseDatesData = await releaseDatesRes.json();
+            console.log(releaseDatesData);
 
-      let certification = "";
-      const countriesOrder = ["AR"]; // Se pueden agregar otros codigos de paises
+            let certification = "";
+            const countriesOrder = ["AR"]; // Se pueden agregar otros codigos de paises
 
-      for (const country of countriesOrder) {
-        const countryData = releaseDatesData.results.find(
-          (r) => r.iso_3166_1 === country
-        );
-        if (countryData && countryData.release_dates.length > 0) {
-          const certData = countryData.release_dates.find(
-            (rd) => rd.certification !== ""
-          );
-          if (certData && certData.certification) {
-            certification = certData.certification;
-            break;
-          }
-        }
-      }
-
-      if (!certification) {
-        for (const result of releaseDatesData.results) {
-          const certData = result.release_dates.find(
-            (rd) => rd.certification !== ""
-          );
-          if (certData && certData.certification) {
-            certification = certData.certification;
-            break;
-          }
-        }
-      }
-
-      const mappedCertification =
-        certificationMap[certification] || certification;
-
-      document.getElementById("title").textContent = movie.title;
-
-      if (mappedCertification) {
-        document.getElementById("edadSugeridaInput").value =
-          mappedCertification;
-
-        const edadElements = [document.getElementById("edad-sugerida")];
-
-        edadElements.forEach((el) => {
-          if (el) {
-            el.textContent = mappedCertification;
-            el.style.display = "inline-block";
-            if (mappedCertification === "ATP") {
-              el.style.backgroundColor = "#4CAF50"; // Verde para ATP
-              el.style.color = "white";
-            } else if (
-              mappedCertification === "+13" ||
-              mappedCertification === "SAM 13"
-            ) {
-              el.style.backgroundColor = "#2196F3"; // Azul para +13
-              el.style.color = "white";
-            } else if (
-              mappedCertification === "+16" ||
-              mappedCertification === "SAM 16"
-            ) {
-              el.style.backgroundColor = "#FF9800"; // Naranja para +16
-              el.style.color = "white";
-            } else if (
-              mappedCertification === "+18" ||
-              mappedCertification === "SAM 18"
-            ) {
-              el.style.backgroundColor = "#f44336"; // Rojo para +18
-              el.style.color = "white";
-            } else {
-              el.style.backgroundColor = "#777"; // Gris para otros
-              el.style.color = "white";
+            for (const country of countriesOrder) {
+                const countryData = releaseDatesData.results.find(
+                    (r) => r.iso_3166_1 === country
+                );
+                if (countryData && countryData.release_dates.length > 0) {
+                    const certData = countryData.release_dates.find(
+                        (rd) => rd.certification !== ""
+                    );
+                    if (certData && certData.certification) {
+                        certification = certData.certification;
+                        break;
+                    }
+                }
             }
-          }
+
+            if (!certification) {
+                for (const result of releaseDatesData.results) {
+                    const certData = result.release_dates.find(
+                        (rd) => rd.certification !== ""
+                    );
+                    if (certData && certData.certification) {
+                        certification = certData.certification;
+                        break;
+                    }
+                }
+            }
+
+            const mappedCertification =
+                certificationMap[certification] || certification;
+
+            document.getElementById("title").textContent = movie.title;
+
+            if (mappedCertification) {
+                document.getElementById("edadSugeridaInput").value =
+                    mappedCertification;
+
+                const edadElements = [document.getElementById("edad-sugerida")];
+
+                edadElements.forEach((el) => {
+                    if (el) {
+                        el.textContent = mappedCertification;
+                        el.style.display = "inline-block";
+                        if (mappedCertification === "ATP") {
+                            el.style.backgroundColor = "#4CAF50"; // Verde para ATP
+                            el.style.color = "white";
+                        } else if (
+                            mappedCertification === "+13" ||
+                            mappedCertification === "SAM 13"
+                        ) {
+                            el.style.backgroundColor = "#2196F3"; // Azul para +13
+                            el.style.color = "white";
+                        } else if (
+                            mappedCertification === "+16" ||
+                            mappedCertification === "SAM 16"
+                        ) {
+                            el.style.backgroundColor = "#FF9800"; // Naranja para +16
+                            el.style.color = "white";
+                        } else if (
+                            mappedCertification === "+18" ||
+                            mappedCertification === "SAM 18"
+                        ) {
+                            el.style.backgroundColor = "#f44336"; // Rojo para +18
+                            el.style.color = "white";
+                        } else {
+                            el.style.backgroundColor = "#777"; // Gris para otros
+                            el.style.color = "white";
+                        }
+                    }
+                });
+            }
+            document.getElementById("year").textContent = new Date(
+                movie.release_date,
+            ).getFullYear();
+            const posterUrl = getSimpleCorsProxiedUrl(
+                `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+            );
+            document.getElementById("poster").src = posterUrl;
+            document.getElementById("director").textContent = director
+                ? director.name
+                : "Director no disponible";
+
+            console.log(movieDetails);
+            document.getElementById("duracion").textContent =
+                `${movieDetails.runtime} minutos`;
+
+            const backdropUrl = getSimpleCorsProxiedUrl(
+                `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+            );
+            setBackdropAsBackground(backdropUrl);
+
+            const countryCode = movieDetails.origin_country[0];
+            const flag = getCountryFlagEmoji(countryCode);
+            const countryName = countryNamesES[countryCode] || countryCode;
+
+            const imagesRes = await fetch(
+                `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`,
+            );
+            const imagesData = await imagesRes.json();
+
+            GlobalState.backdrops = imagesData.backdrops || [];
+            GlobalState.currentBackdrop = 0;
+            showBackdrop(GlobalState.currentBackdrop);
+
+            GlobalState.posters = imagesData.posters || [];
+            GlobalState.currentPoster = 0;
+            showPoster(GlobalState.currentPoster);
+
+            Array.from(resultsDiv.children).forEach(
+                (child) => (child.style.background = "")
+            );
+            result.style.background = "#386119ff";
+
+            // resultsDiv.style.display = "none";
+            showResultsBtn.style.display = "block";
         });
-      }
-      document.getElementById("year").textContent = new Date(
-        movie.release_date,
-      ).getFullYear();
-      const posterUrl = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      );
-      document.getElementById("poster").src = posterUrl;
-      document.getElementById("director").textContent = director
-        ? director.name
-        : "Director no disponible";
 
-      console.log(movieDetails);
-      document.getElementById("duracion").textContent =
-        `${movieDetails.runtime} minutos`;
+        resultsDiv.appendChild(result);
 
-      const backdropUrl = getSimpleCorsProxiedUrl(
-        `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-      );
-      setBackdropAsBackground(backdropUrl);
+        const showResultsBtn = document.createElement("button");
+        showResultsBtn.textContent = "Mostrar resultados de búsqueda";
+        showResultsBtn.id = "show-results-btn";
+        showResultsBtn.style.display = "none";
+        showResultsBtn.style.margin = "16px auto";
+        showResultsBtn.style.fontSize = "1rem";
+        showResultsBtn.style.textAlign = "center";
+        showResultsBtn.style.width = "fit-content";
+        showResultsBtn.style.position = "relative";
 
-      const countryCode = movieDetails.origin_country[0];
-      const flag = getCountryFlagEmoji(countryCode);
-      const countryName = countryNamesES[countryCode] || countryCode;
+        resultsDiv.parentNode.insertBefore(showResultsBtn, resultsDiv);
 
-      const imagesRes = await fetch(
-        `${BASE_URL}/movie/${movie.id}/images?api_key=${API_KEY}`,
-      );
-      const imagesData = await imagesRes.json();
+        showResultsBtn.addEventListener("click", () => {
+            resultsDiv.style.display = "block";
+            showResultsBtn.style.display = "none";
+        });
+    }
 
-      GlobalState.backdrops = imagesData.backdrops || [];
-      GlobalState.currentBackdrop = 0;
-      showBackdrop(GlobalState.currentBackdrop);
-
-      GlobalState.posters = imagesData.posters || [];
-      GlobalState.currentPoster = 0;
-      showPoster(GlobalState.currentPoster);
-
-      Array.from(resultsDiv.children).forEach(
-        (child) => (child.style.background = "")
-      );
-      result.style.background = "#386119ff";
-
-      resultsDiv.style.display = "none";
-      showResultsBtn.style.display = "block";
-    });
-
-    resultsDiv.appendChild(result);
-
-    const showResultsBtn = document.createElement("button");
-    showResultsBtn.textContent = "Mostrar resultados de búsqueda";
-    showResultsBtn.id = "show-results-btn";
-    showResultsBtn.style.display = "none";
-    showResultsBtn.style.margin = "16px auto";
-    showResultsBtn.style.fontSize = "1rem";
-    showResultsBtn.style.textAlign = "center";
-    showResultsBtn.style.width = "fit-content";
-    showResultsBtn.style.position = "relative";
-
-    resultsDiv.parentNode.insertBefore(showResultsBtn, resultsDiv);
-
-    showResultsBtn.addEventListener("click", () => {
-      resultsDiv.style.display = "block";
-      showResultsBtn.style.display = "none";
-    });
-  }
 }
 
 // --------------------------------------------------
