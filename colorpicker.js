@@ -1,6 +1,4 @@
-if (!localStorage.currentPaintColor) {
-  localStorage.currentPaintColor = "#00ff00";
-}
+GlobalState.currentPaintColor = GlobalState.currentPaintColor || "#00ff00";
 
 // si es un elemento figura(rectangulos) hace el.style.backgroundColor. si es algun texto el.style.color
 function isBackgroundElement(target) {
@@ -103,18 +101,18 @@ function paintEventHandler(e) {
 
     if (comicBalloon) {
         if (e.target.classList.contains("comic-text")) {
-            comicBalloon.style.color = localStorage.currentPaintColor;
+            comicBalloon.style.color = GlobalState.currentPaintColor;
         } else {
-            comicBalloon.style.backgroundColor = localStorage.currentPaintColor;
+            comicBalloon.style.backgroundColor = GlobalState.currentPaintColor;
             if (comicTailBgStyle) {
-                comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${localStorage.currentPaintColor} !important; }`;
+                comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${GlobalState.currentPaintColor} !important; }`;
             }
         }
     } else {
         if (isBackgroundElement(e.target)) {
-            e.target.style.backgroundColor = localStorage.currentPaintColor;
+            e.target.style.backgroundColor = GlobalState.currentPaintColor;
         } else {
-            e.target.style.color = localStorage.currentPaintColor;
+            e.target.style.color = GlobalState.currentPaintColor;
         }
     }
     // e.stopPropagation();

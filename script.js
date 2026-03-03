@@ -2,10 +2,6 @@
 // DESCARGA DE IMAGEN
 // --------------------------------------------------
 
-document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
-
-});
-
 const flyerDate = document.getElementById("flyer-date");
 const flyerHour = document.getElementById("flyer-hour");
 
@@ -32,71 +28,6 @@ async function applyBlurToImage(imageUrl) {
   });
 }
 
-document.getElementById("saveFlyer").addEventListener("click", async () => {
-  const flyerElement = document.getElementById("flyer");
-  const blurBg = document.getElementById("flyer-blur-bg-story");
-
-  if (blurBg && blurBg.style.backgroundImage) {
-    const bgImageMatch = blurBg.style.backgroundImage.match(
-      /url\(['"]?([^'"]+)['"]?\)/
-    );
-
-    if (bgImageMatch) {
-      const imageUrl = bgImageMatch[1];
-
-      try {
-        const blurredDataUrl = await applyBlurToImage(imageUrl);
-
-        const originalFilter = blurBg.style.filter;
-        const originalBgImage = blurBg.style.backgroundImage;
-
-        blurBg.style.filter = "none";
-        blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
-
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        const canvas = await html2canvas(flyerElement, {
-          width: 1080,
-          height: 1920,
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: "#ffffff",
-          scrollX: 0,
-          scrollY: 0,
-        });
-
-        blurBg.style.filter = originalFilter;
-        blurBg.style.backgroundImage = originalBgImage;
-
-        // Descargar
-        const link = document.createElement("a");
-        const flyerTitle = document
-          .getElementById("title")
-          .textContent.trim()
-          .replace(/\s+/g, "_")
-          .replace(/[^\w\-]/g, "");
-        const date = new Date().toISOString().slice(0, 10);
-        link.download = `${date}_${flyerTitle}_story.png`;
-        link.href = canvas.toDataURL("image/png");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (blurError) {
-        console.warn(
-          "Error al aplicar blur, usando método alternativo:",
-          blurError
-        );
-
-        await generateWithoutBlur(flyerElement, true);
-      }
-    } else {
-      await generateWithoutBlur(flyerElement, true);
-    }
-  } else {
-    await generateWithoutBlur(flyerElement, true);
-  }
-});
 
 async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
   const dimensions = isStoryFormat
@@ -129,88 +60,6 @@ async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
   document.body.removeChild(link);
 }
 
-document
-  .getElementById("load-backdrop-direct")
-  .addEventListener("click", () => {
-    const input = document.getElementById("backdrop-direct-input").value.trim();
-
-    if (!input) {
-      alert("Por favor, ingresa una URL del backdrop");
-      return;
-    }
-
-    if (!input.startsWith("http")) {
-      alert(
-        "Por favor, ingresa una URL completa que comience con http:// o htt://",
-      );
-      return;
-    }
-
-    let filePath = "";
-    if (input.includes("image.tmdb.org/t/p/original")) {
-      filePath = input.replace("https://image.tmdb.org/t/p/original", "");
-    } else {
-      filePath = input;
-    }
-
-    const newBackdrop = {
-      file_path: filePath,
-      aspect_ratio: 1.778,
-    };
-
-    backdrops.unshift(newBackdrop);
-    currentBackdrop = 0;
-
-    showBackdrop(currentBackdrop);
-
-    // Aplicar automáticamente como fondo del flyer
-    const fullUrl = filePath.startsWith("http")
-      ? filePath
-      : `https://image.tmdb.org/t/p/original${filePath}`;
-    bandavertical.style.display = "none";
-    setBackdropAsBackground(fullUrl);
-
-    document.getElementById("backdrop-direct-input").value = "";
-  });
-
-document.getElementById("load-poster-direct").addEventListener("click", () => {
-  const input = document.getElementById("poster-direct-input").value.trim();
-
-  if (!input) {
-    alert("Por favor, ingresa una URL del poster");
-    return;
-  }
-
-  if (!input.startsWith("http")) {
-    alert(
-      "Por favor, ingresa una URL completa que comience con http:// o https://",
-    );
-    return;
-  }
-
-  let filePath = "";
-  if (input.includes("image.tmdb.org/t/p/original")) {
-    filePath = input.replace("https://image.tmdb.org/t/p/original", "");
-  } else {
-    filePath = input;
-  }
-
-  const newPoster = {
-    file_path: filePath,
-    aspect_ratio: 0.667,
-  };
-
-  posters.unshift(newPoster);
-  currentPoster = 0;
-
-  showPoster(currentPoster);
-  const fullUrl = filePath.startsWith("http")
-    ? filePath
-    : `https://image.tmdb.org/t/p/original${filePath}`;
-  setPoster(fullUrl);
-
-  document.getElementById("poster-direct-input").value = "";
-});
 
 function applyBackdropDirect(url) {
   if (!url || !url.startsWith("http")) return;
@@ -263,33 +112,7 @@ function applyPosterDirect(url) {
   setPoster(fullUrl);
 }
 
-document
-  .getElementById("backdrop-carousel-img")
-  .addEventListener("click", () => {
-    if (backdrops.length > 0) {
-      const currentBackdropData = backdrops[currentBackdrop];
-      const filePath = currentBackdropData.file_path;
 
-      const fullUrl = filePath.startsWith("http")
-        ? filePath
-        : `https://image.tmdb.org/t/p/original${filePath}`;
-
-      showImageInfo("Backdrop", filePath, fullUrl);
-    }
-  });
-
-document.getElementById("poster-carousel-img").addEventListener("click", () => {
-  if (posters.length > 0) {
-    const currentPosterData = posters[currentPoster];
-    const filePath = currentPosterData.file_path;
-
-    const fullUrl = filePath.startsWith("http")
-      ? filePath
-      : `https://image.tmdb.org/t/p/original${filePath}`;
-
-    showImageInfo("Poster", filePath, fullUrl);
-  }
-});
 
 function showImageInfo(type, filePath, fullUrl) {
   const existingModal = document.getElementById("image-info-modal");
@@ -352,127 +175,7 @@ function showImageInfo(type, filePath, fullUrl) {
   });
 }
 
-document
-  .getElementById("flyerDateFontSizeInput")
-  .addEventListener("input", (e) => {
-    document.getElementById("flyer-date").style.fontSize =
-      e.target.value + "px";
-    console.log("Aplicado tamaño fecha Story:", e.target.value + "px");
-  });
 
-document
-  .getElementById("flyerHourFontSizeInput")
-  .addEventListener("input", (e) => {
-    document.getElementById("flyer-hour").style.fontSize =
-      e.target.value + "px";
-    console.log("Aplicado tamaño hora Story:", e.target.value + "px");
-  });
-
-document
-  .getElementById("flyerTitleFontSizeInput")
-  .addEventListener("input", (e) => {
-    document.getElementById("title").style.fontSize = e.target.value + "px";
-  });
-
-document.getElementById("applyTxtBtn").addEventListener("click", () => {
-  const ciclo = document.getElementById("cicloInput").value.trim();
-  const dateRaw = document.getElementById("dateInput").value.trim();
-  const hourRaw = document.getElementById("hourInput").value.trim();
-  const titulo = document.getElementById("titleInput").value.trim();
-
-  document.getElementById("dateInput").value = dateRaw;
-
-  document.getElementById("hourInput").value = hourRaw;
-
-  const edadSugerida = document
-    .getElementById("edadSugeridaInput")
-    .value.trim();
-
-  document.getElementById("title").innerHTML = (
-    titulo || "Título de la película"
-  ).replace(/\n/g, "<br>");
-  document.getElementById("titleInput").value = titulo;
-
-  document.getElementById("ciclo").textContent = ciclo || "Ciclo";
-
-  const certificationMap = {
-    AA: "ATP",
-    A: "ATP",
-    ATP: "ATP",
-    Atp: "ATP",
-    12: "+13",
-    13: "+13",
-    14: "+13",
-    15: "+16",
-    16: "+16",
-    18: "+18",
-    SAM13: "SAM 13",
-    SAM16: "SAM 16",
-    SAM18: "SAM 18",
-    "MA15+": "+16",
-    M: "+13",
-    G: "ATP",
-    PG: "+13",
-    "PG-13": "+13",
-    R: "+16",
-    "NC-17": "+18",
-    NR: "",
-  };
-
-  const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
-
-  if (mappedCertification) {
-    if (edadSugerida) {
-      document.getElementById("edadSugeridaInput").value = mappedCertification;
-      document.getElementById("edad-sugerida").textContent =
-        mappedCertification;
-    } else {
-      edadSugeridaElement.style.display = "none";
-    }
-
-    const edadElements = [
-      document.getElementById("edad-sugerida"),
-    ];
-
-    edadElements.forEach((el) => {
-      if (el) {
-        el.textContent = mappedCertification;
-        el.style.display = "inline-block";
-        if (mappedCertification === "ATP") {
-          el.style.backgroundColor = "#4CAF50"; // Verde para ATP
-          el.style.color = "white";
-        } else if (
-          mappedCertification === "+13" ||
-          mappedCertification === "SAM 13"
-        ) {
-          el.style.backgroundColor = "#2196F3"; // Azul para +13
-          el.style.color = "white";
-        } else if (
-          mappedCertification === "+16" ||
-          mappedCertification === "SAM 16"
-        ) {
-          el.style.backgroundColor = "#FF9800"; // Naranja para +16
-          el.style.color = "white";
-        } else if (
-          mappedCertification === "+18" ||
-          mappedCertification === "SAM 18"
-        ) {
-          el.style.backgroundColor = "#f44336"; // Rojo para +18
-          el.style.color = "white";
-        } else {
-          el.style.backgroundColor = "#777"; // Gris para otros
-          el.style.color = "white";
-        }
-      }
-    });
-  }
-
-  const formattedDate = formatDateToSpanish(dateRaw);
-  document.getElementById("flyer-date").innerHTML = formattedDate;
-
-  const formattedHour = hourRaw ? `${hourRaw} HS` : "19:00 HS";
-  document.getElementById("flyer-hour").textContent = formattedHour;
-});
 
 function formatDateToSpanish(dateStr) {
   if (!dateStr) return "";
@@ -511,7 +214,7 @@ function formatDateToSpanish(dateStr) {
 // --------------------------------------------------
 
 // Función auxiliar para obtener el fontsize
-function initializeControlValues() {
+async function initializeControlValues() {
   function getFontSizeInPx(element) {
     if (!element) return null;
     const computedStyle = window.getComputedStyle(element);
@@ -541,44 +244,6 @@ function initializeControlValues() {
       }
     }
   }
-
-
-
-
   console.log("Valores de controles inicializados con CSS por defecto");
 }
 
-document.addEventListener("DOMContentLoaded", async function () {
-  initializeControlValues();
-
-  const exportBtn = document.getElementById("exportDataBtn");
-  if (exportBtn) {
-    exportBtn.addEventListener("click", function () {
-      try {
-        exportUserData();
-      } catch (error) {
-        console.error("Error al exportar datos:", error);
-        alert("Error al exportar los datos. Por favor intenta de nuevo.");
-      }
-    });
-  }
-
-  const importBtn = document.getElementById("importDataBtn");
-  const fileInput = document.getElementById("importFileInput");
-
-  if (importBtn && fileInput) {
-    importBtn.addEventListener("click", function () {
-      fileInput.click();
-    });
-
-    fileInput.addEventListener("change", handleFileImport);
-  }
-
-  const params = new URLSearchParams(window.location.search);
-  const movieId = params.get("movieId");
-  const language = params.get("lang") || params.get("language") || "es-ES";
-  const fecha = params.get("date");
-  if (movieId) {
-    fetchMovieByIdAndCompleteFlyer(movieId, language, fecha);
-  }
-});

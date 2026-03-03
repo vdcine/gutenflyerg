@@ -124,8 +124,7 @@ async function searchMovies (e) {
     ).getFullYear()})</span>
     <span style="margin-left:12px;">${
       director ? director.name : "Director no disponible"
-    }</span>
-  `;
+    }</span>`;
     result.addEventListener("click", async () => {
       window.selectedMovieId = movie.id;
 
@@ -237,13 +236,13 @@ async function searchMovies (e) {
       );
       const imagesData = await imagesRes.json();
 
-      toStorage('backdrops', imagesData.backdrops || []);
-      toStorage('currentBackdrop', 0);
-      showBackdrop(fromStorage('currentBackdrop'));
+      GlobalState.backdrops = imagesData.backdrops || [];
+      GlobalState.currentBackdrop = 0;
+      showBackdrop(GlobalState.currentBackdrop);
 
-      toStorage('posters', imagesData.posters || []);
-      toStorage('currentPoster', 0);
-      showPoster(fromStorage('currentPoster'));
+      GlobalState.posters = imagesData.posters || [];
+      GlobalState.currentPoster = 0;
+      showPoster(GlobalState.currentPoster);
 
       Array.from(resultsDiv.children).forEach(
         (child) => (child.style.background = "")
@@ -279,36 +278,28 @@ async function searchMovies (e) {
 // CARROUSEL
 // --------------------------------------------------
 
-const linkBackdrops = document.getElementById("backdrops");
-linkBackdrops.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (!window.selectedMovieId) return;
-  window.open(
-    `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/backdrops`,
-    "_blank",
-  );
-});
+GlobalState.backdrops = GlobalState.backdrops || [];
+GlobalState.posters = GlobalState.posters || [];
+GlobalState.currentBackdrop = GlobalState.currentBackdrop || 0;
+GlobalState.currentPoster = GlobalState.currentPoster || 0;
 
-const linkPosters = document.getElementById("posters");
-linkPosters.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (!window.selectedMovieId) return;
-  window.open(
-    `https://www.themoviedb.org/movie/${window.selectedMovieId}/images/posters`,
-    "_blank",
-  );
-});
+// FIXME unificar shift y show
+function shiftBackdrop(delta) {
+    let backdrops_len = GlobalState.backdrops.length;
+    if (!backdrops_len) return;
+    GlobalState.currentBackdrop = (GlobalState.currentBackdrop + delta) % backdrops_len;
+    showBackdrop(GlobalState.currentBackdrop);
+    const filePath = GlobalState.backdrops[GlobalState.currentBackdrop].file_path;
+    const backdropUrlPrev = getSimpleCorsProxiedUrl(`https://image.tmdb.org/t/p/original${filePath}`);
+    // bandavertical.style.display = "none";
+    setBackdropAsBackground(backdropUrlPrev);
 
-if (!fromStorage('backdrops')) { toStorage('backdrops', []); }
-if (!fromStorage('currentBackdrop')) { toStorage('currentBackdrop', 0); }
-if (!fromStorage('posters')) { toStorage('posters', []); }
-if (!fromStorage('currentPoster')) { toStorage('currentPoster', 0); }
-
+}
 
 function showBackdrop(index) {
-  if (!fromStorage('backdrops').length) return;
+  if (!GlobalState.backdrops.length) return;
   const img = document.getElementById("backdrop-carousel-img");
-  const filePath = fromStorage('backdrops')[index].file_path;
+  const filePath = GlobalState.backdrops[index].file_path;
 
   if (filePath.startsWith("http")) {
     img.src = filePath;
@@ -318,13 +309,25 @@ function showBackdrop(index) {
 
   document.getElementById("backdrop-counter").textContent = `Backdrop ${
     index + 1
-  } de ${fromStorage('backdrops').length}`;
+  } de ${GlobalState.backdrops.length}`;
+}
+
+// FIXME: unificar shift  y show
+
+function shiftPoster(delta) {
+    let posters_len = GlobalState.posters.length;
+    if (!posters_len) return;
+    GlobalState.currentPoster = (GlobalState.currentPoster + delta) % posters_len;
+    showPoster(GlobalState.currentPoster);
+    const filePath = GlobalState.posters[GlobalState.currentPoster].file_path;
+    const posterUrlNext = getSimpleCorsProxiedUrl(`https://image.tmdb.org/t/p/original${filePath}`);
+    setPoster(posterUrlNext);
 }
 
 function showPoster(index) {
-  if (!fromStorage('posters').length) return;
+  if (!GlobalState.posters.length) return;
   const img = document.getElementById("poster-carousel-img");
-  const filePath = fromStorage('posters')[index].file_path;
+  const filePath = GlobalState.posters[index].file_path;
 
   if (filePath.startsWith("http")) {
     img.src = filePath;
@@ -334,51 +337,15 @@ function showPoster(index) {
 
   document.getElementById("poster-counter").textContent = `Poster ${
     index + 1
-  } de ${fromStorage('posters').length}`;
+  } de ${GlobalState.posters.length}`;
 }
 
-document.getElementById("poster-prev").addEventListener("click", () => {
-  if (!fromStorage('posters').length) return;
-  toStorage('currentPoster', (fromStorage('currentPoster') - 1 + fromStorage('posters').length) % fromStorage('posters').length);
-  showPoster(fromStorage('currentPoster'));
-  if (!fromStorage('posters').length) return;
-  const filePath = fromStorage('posters')[fromStorage('currentPoster')].file_path;
-  const posterUrlPrev = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`
-  );
-
-  setPoster(posterUrlPrev);
-});
-document.getElementById("poster-next").addEventListener("click", () => {
-  if (!fromStorage('posters').length) return;
-  toStorage('currentPoster', (fromStorage('currentPoster') + 1) % fromStorage('posters').length);
-  showPoster(fromStorage('currentPoster'));
-  if (!fromStorage('posters').length) return;
-  const filePath = fromStorage('posters')[fromStorage('currentPoster')].file_path;
-  const posterUrlNext = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`
-  );
-
-  setPoster(posterUrlNext);
-});
 
 function setPoster(url) {
   document.getElementById("poster").src = url;
 }
 
 
-document.getElementById("backdrop-prev").addEventListener("click", () => {
-  if (!fromStorage('backdrops').length) return;
-  toStorage('currentBackdrop', (fromStorage('currentBackdrop') - 1 + fromStorage('backdrops').length) % fromStorage('backdrops').length);
-  showBackdrop(fromStorage('currentBackdrop'));
-  if (!fromStorage('backdrops').length) return;
-  const filePath = fromStorage('backdrops')[fromStorage('currentBackdrop')].file_path;
-  const backdropUrlPrev = getSimpleCorsProxiedUrl(
-    `https://image.tmdb.org/t/p/original${filePath}`
-  );
-  bandavertical.style.display = "none";
-  setBackdropAsBackground(backdropUrlPrev);
-});
 
 
 function setBackdropAsBackground(url) {
@@ -405,31 +372,7 @@ function setBackdropAsBackground(url) {
   flyerStory.style.backgroundImage = "";
 }
 
-document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
-  const flyerStory = document.getElementById("flyer");
 
-  bandavertical.style.display = "block";
-
-  flyerStory.style.backgroundImage = "";
-
-  const blurBgStory = document.getElementById("flyer-blur-bg-story");
-
-  if (blurBgStory) {
-    blurBgStory.remove();
-  }
-});
-
-const bandaToggle = document.getElementById("toggle-banda");
-
-let bandaHidden = false;
-
-bandaToggle.addEventListener("click", () => {
-  bandaHidden = !bandaHidden;
-  banda.style.display = bandaHidden ? "none" : "block";
-  bandaToggle.textContent = bandaHidden
-    ? "Mostrar banda vertical"
-    : "Ocultar banda vertical";
-});
 
 // --------------------------------------------------
 // CARGA DIRECTA POR URL
@@ -464,10 +407,10 @@ document
       aspect_ratio: 1.778,
     };
 
-    fromStorage('backdrops').unshift(newBackdrop);
-    toStorage('currentBackdrop', 0);
+    GlobalState.backdrops.unshift(newBackdrop);
+    GlobalStatee.currentBackdrop = 0;
 
-    showBackdrop(fromStorage('currentBackdrop'));
+    showBackdrop(GlobalState.currentBackdrop);
 
     // Aplicar automáticamente como fondo del flyer
     const fullUrl = filePath.startsWith("http")
@@ -506,10 +449,10 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
     aspect_ratio: 0.667,
   };
 
-  fromStorage('posters').unshift(newPoster);
-  toStorage('currentPoster', 0);
+  GlobalState.posters.unshift(newPoster);
+  GlobalState.currentPoster = 0;
 
-  showPoster(fromStorage('currentPoster'));
+  showPoster(GlobalState.currentPoster);
   const fullUrl = filePath.startsWith("http")
     ? filePath
     : `https://image.tmdb.org/t/p/original${filePath}`;
@@ -533,9 +476,9 @@ function applyBackdropDirect(url) {
     aspect_ratio: 1.778,
   };
 
-  fromStorage('backdrops').unshift(newBackdrop);
-  toStorage('currentBackdrop', 0);
-  showBackdrop(fromStorage('currentBackdrop'));
+  GlobalState.backdrops.unshift(newBackdrop);
+  GlobalState.currentBackdrop = 0;
+  showBackdrop(GlobalState.currentBackdrop);
 
   const fullUrl = filePath.startsWith("http")
     ? filePath
@@ -558,9 +501,9 @@ function applyPosterDirect(url) {
     aspect_ratio: 0.667,
   };
 
-  fromStorage('posters').unshift(newPoster);
-  toStorage('currentPoster', 0);
-  showPoster(fromStorage('currentPoster'));
+  GlobalState.posters.unshift(newPoster);
+  GlobalState.currentPoster = 0;
+  showPoster(GlobalState.currentPoster);
 
   const fullUrl = filePath.startsWith("http")
     ? filePath
@@ -571,8 +514,8 @@ function applyPosterDirect(url) {
 document
   .getElementById("backdrop-carousel-img")
   .addEventListener("click", () => {
-    if (fromStorage('backdrops').length > 0) {
-      const currentBackdropData = fromStorage('backdrops')[fromStorage('currentBackdrop')];
+    if (GlobalState.backdrops.length > 0) {
+      const currentBackdropData = GlobalState.backdrops[GlobalState.currentBackdrop];
       const filePath = currentBackdropData.file_path;
 
       const fullUrl = filePath.startsWith("http")
@@ -584,8 +527,8 @@ document
   });
 
 document.getElementById("poster-carousel-img").addEventListener("click", () => {
-  if (fromStorage('posters').length > 0) {
-    const currentPosterData = fromStorage('posters')[fromStorage('currentPoster')];
+  if (GlobalState.posters.length > 0) {
+    const currentPosterData = GlobalState.posters[GlobalState.currentPoster];
     const filePath = currentPosterData.file_path;
 
     const fullUrl = filePath.startsWith("http")
@@ -765,12 +708,12 @@ async function fetchMovieByIdAndCompleteFlyer(movieId, language, fecha) {
   const imagesData = await imagesRes.json();
 
   console.log(imagesData.backdrops)
-  toStorage('backdrops', imagesData.backdrops || []);
-  fromStorage('currentBackdrop') = 0;
-  showBackdrop(fromStorage('currentBackdrop'));
+  GlobalState.backdrops = imagesData.backdrops || [];
+  GlobalState.currentBackdrop = 0;
+  showBackdrop(GlobalState.currentBackdrop);
 
-  toStorage('posters', imagesData.posters || []);
-  toStorage('currentPoster', 0);
-  showPoster(fromStorage('currentPoster'));
+  GlobalState.posters = imagesData.posters || [];
+  GlobalState.currentPoster = 0;
+  showPoster(GlobalState.currentPoster);
 
 };
