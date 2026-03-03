@@ -157,6 +157,7 @@ async function initializeControlValues() {
     await populateSearchResults();
     shiftPoster(0);
     shiftBackdrop(0);
+    document.getElementById('movieSearch').value = GlobalState.search_title
   function getFontSizeInPx(element) {
     if (!element) return null;
     const computedStyle = window.getComputedStyle(element);

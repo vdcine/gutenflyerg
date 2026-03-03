@@ -79,10 +79,19 @@ async function searchMovies (e) {
     const searchData = await searchRes.json();
     if (searchData.results.length === 0) return alert("No se encontró la película.");
 
-    GlobalState.orderedResults = [...searchData.results].sort((a, b) => b.popularity - a.popularity);
+    GlobalState.orderedResults = (await Promise.all(searchData.results
+                                    .map( async (m) => ({...m, ...await fetchMovieDetails(m)}))))
+                                    .sort((a, b) => b.popularity - a.popularity);
     await populateSearchResults();
 }
 
+async function fetchMovieDetails(movie) {
+    const credits = await (await fetch(`${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`)).json();
+    const director = credits.crew.find((c) => c.job === "Director");
+    const details = await (await fetch(`${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${GlobalState.search_language}`)).json();
+    // const movieDetailsSinopsis = await (await fetch(`${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`)).json();
+    return {director: director, details: details}
+}
 
 async function populateSearchResults() {
 
@@ -91,25 +100,9 @@ async function populateSearchResults() {
     const resultsDiv = document.getElementById("movie-results");
     resultsDiv.innerHTML = "";
 
+    // FIXME: no usar idx : iterar directo
     for (let idx = 0; idx < Math.min(10, GlobalState.orderedResults.length); idx++) {
         const movie = GlobalState.orderedResults[idx];
-        const creditsRes = await fetch(
-            `${BASE_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`
-        );
-        const creditsData = await creditsRes.json();
-        const director = creditsData.crew.find((c) => c.job === "Director");
-
-        const movieDetails = await (
-            await fetch(
-                `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${GlobalState.search_language}`
-            )
-        ).json();
-
-        const movieDetailsSinapsis = await (
-            await fetch(
-                `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`
-            )
-        ).json();
 
         const result = document.createElement("div");
         result.style.cursor = "pointer";
@@ -126,7 +119,7 @@ async function populateSearchResults() {
         movie.release_date
     ).getFullYear()})</span>
     <span style="margin-left:12px;">${
-        director ? director.name : "Director no disponible"
+        movie.director ? movie.director.name : "Director no disponible"
     }</span>`;
         result.addEventListener("click", async () => {
             window.selectedMovieId = movie.id;
@@ -221,16 +214,16 @@ async function populateSearchResults() {
                 ? director.name
                 : "Director no disponible";
 
-            console.log(movieDetails);
+            console.log(movie.details);
             document.getElementById("duracion").textContent =
-                `${movieDetails.runtime} minutos`;
+                `${movie.details.runtime} minutos`;
 
             const backdropUrl = getSimpleCorsProxiedUrl(
                 `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
             );
             setBackdropAsBackground(backdropUrl);
 
-            const countryCode = movieDetails.origin_country[0];
+            const countryCode = movie.details.origin_country[0];
             const flag = getCountryFlagEmoji(countryCode);
             const countryName = countryNamesES[countryCode] || countryCode;
 
