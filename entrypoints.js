@@ -236,45 +236,38 @@ document.getElementById("load-backdrop-direct").addEventListener("click", () => 
     const input = document.getElementById("backdrop-direct-input").value.trim();
 
     if (!input) {
-      alert("Por favor, ingresa una URL del backdrop");
-      return;
+        alert("Por favor, ingresa una URL del backdrop");
+        return;
     }
 
     if (!input.startsWith("http")) {
-      alert(
-        "Por favor, ingresa una URL completa que comience con http:// o htt://",
-      );
-      return;
+        alert("Por favor, ingresa una URL completa que comience con http:// o htt://");
+        return;
     }
 
     let filePath = "";
     if (input.includes("image.tmdb.org/t/p/original")) {
-      filePath = input.replace("https://image.tmdb.org/t/p/original", "");
+        filePath = input.replace("https://image.tmdb.org/t/p/original", "");
     } else {
-      filePath = input;
+        filePath = input;
     }
 
-    const newBackdrop = {
-      file_path: filePath,
-      aspect_ratio: 1.778,
-    };
+    const newBackdrop = {file_path: filePath, aspect_ratio: 1.778};
 
-    let backdrops = GlobalState.backdrops;
-    backdrops.unshift(newBackdrop);
-    currentBackdrop = 0;
-    GlobalState.currentBackdrop = currentBackdrop;
+    GlobalState.backdrops.unshift(newBackdrop);
+    GlobalStatee.currentBackdrop = 0;
 
-    showBackdrop(currentBackdrop);
+    showBackdrop(GlobalState.currentBackdrop);
 
     // Aplicar automáticamente como fondo del flyer
     const fullUrl = filePath.startsWith("http")
-      ? filePath
-      : `https://image.tmdb.org/t/p/original${filePath}`;
+        ? filePath
+        : `https://image.tmdb.org/t/p/original${filePath}`;
     // bandavertical.style.display = "none";
     setBackdropAsBackground(fullUrl);
 
     document.getElementById("backdrop-direct-input").value = "";
-  });
+});
 
 
 document.getElementById("backdrops").addEventListener("click", (e) => {
@@ -297,9 +290,7 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
   }
 
   if (!input.startsWith("http")) {
-    alert(
-      "Por favor, ingresa una URL completa que comience con http:// o https://",
-    );
+    alert("Por favor, ingresa una URL completa que comience con http:// o https://");
     return;
   }
 
@@ -310,22 +301,13 @@ document.getElementById("load-poster-direct").addEventListener("click", () => {
     filePath = input;
   }
 
-  const newPoster = {
-    file_path: filePath,
-    aspect_ratio: 0.667,
-  };
+  const newPoster = {file_path: filePath, aspect_ratio: 0.667};
 
-  let posters = GlobalState.posters;
-  posters.unshift(newPoster);
-  currentPoster = 0;
-  GlobalState.currentPoster = currentPoster;
-
-  showPoster(currentPoster);
-  const fullUrl = filePath.startsWith("http")
-    ? filePath
-    : `https://image.tmdb.org/t/p/original${filePath}`;
+  GlobalState.posters.unshift(newPoster);
+  GlobalState.currentPoster = 0;
+  showPoster(GlobalState.currentPoster);
+  const fullUrl = filePath.startsWith("http")? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
   setPoster(fullUrl);
-
   document.getElementById("poster-direct-input").value = "";
 });
 
@@ -357,6 +339,7 @@ document.getElementById("backdrop-carousel-img").addEventListener("click", () =>
         });
     }
 });
+
 document.getElementById("posters").addEventListener("click", (e) => {
   e.preventDefault();
   if (!window.selectedMovieId) return;
@@ -365,3 +348,4 @@ document.getElementById("posters").addEventListener("click", (e) => {
     "_blank",
   );
 });
+

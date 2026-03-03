@@ -154,6 +154,8 @@ function formatDateToSpanish(dateStr) {
 
 // Función auxiliar para obtener el fontsize
 async function initializeControlValues() {
+    shiftPoster(0);
+    shiftBackdrop(0);
   function getFontSizeInPx(element) {
     if (!element) return null;
     const computedStyle = window.getComputedStyle(element);
