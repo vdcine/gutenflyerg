@@ -28,16 +28,11 @@ async function applyBlurToImage(imageUrl) {
   });
 }
 
-
-async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
-  const dimensions = isStoryFormat
-    ? { width: 1080, height: 1920 }
-    : { width: 1080, height: 1080 };
-
+async function captureAndDownloadFlyer(flyerElement, titleText) {
   const canvas = await html2canvas(flyerElement, {
-    width: dimensions.width,
-    height: dimensions.height,
-    scale: 2,
+    width: 1080,
+    height: 1440,
+    scale: 1,
     useCORS: true,
     allowTaint: false,
     backgroundColor: "#ffffff",
@@ -46,20 +41,48 @@ async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
   });
 
   const link = document.createElement("a");
-  const flyerTitle = document
-    .getElementById("title")
-    .textContent.trim()
+  
+  const cleanTitle = titleText
+    .trim()
     .replace(/\s+/g, "_")
     .replace(/[^\w\-]/g, "");
   const date = new Date().toISOString().slice(0, 10);
-  const formatType = isStoryFormat ? "story" : "feed";
-  link.download = `${date}_${flyerTitle}_${formatType}.png`;
+  
+  link.download = `${date}_${cleanTitle}.png`;
   link.href = canvas.toDataURL("image/png");
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
 
+async function handleFlyerDownload(flyerElement, blurBgElement, titleText) {
+  if (blurBgElement && blurBgElement.style.backgroundImage) {
+    const bgImageMatch = blurBgElement.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+
+    if (bgImageMatch) {
+      const imageUrl = bgImageMatch[1];
+      try {
+        const blurredDataUrl = await createBlurredImageBase64(imageUrl);
+        const originalFilter = blurBgElement.style.filter;
+        const originalBgImage = blurBgElement.style.backgroundImage;
+
+        blurBgElement.style.filter = "none";
+        blurBgElement.style.backgroundImage = `url('${blurredDataUrl}')`;
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        await captureAndDownloadFlyer(flyerElement, titleText);
+
+        blurBgElement.style.filter = originalFilter;
+        blurBgElement.style.backgroundImage = originalBgImage;
+        return; 
+      } catch (blurError) {
+        console.warn("Error al aplicar blur, ignorando efecto:", blurError);
+      }
+    }
+  }
+  await captureAndDownloadFlyer(flyerElement, titleText);
+}
 
 function applyBackdropDirect(url) {
   if (!url || !url.startsWith("http")) return;

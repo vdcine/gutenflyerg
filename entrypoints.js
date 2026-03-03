@@ -134,69 +134,12 @@ document.getElementById("flyerTitleFontSizeInput").addEventListener("input",
         document.getElementById("title").style.fontSize = e.target.value + "px";
     });
 
-document.getElementById("saveFlyer").addEventListener("click", async () => {
-  const blurBg = document.getElementById("flyer-blur-bg-story");
+document.getElementById("saveFlyer").addEventListener("click", () => {
+  const flyerElement = document.getElementById("flyer");
+  const blurBgElement = document.getElementById("flyer-blur-bg-story");
+  const titleText = document.getElementById("title").textContent;
 
-  if (blurBg && blurBg.style.backgroundImage) {
-    const bgImageMatch = blurBg.style.backgroundImage.match(
-      /url\(['"]?([^'"]+)['"]?\)/
-    );
-
-    if (bgImageMatch) {
-      const imageUrl = bgImageMatch[1];
-
-      try {
-        const blurredDataUrl = await applyBlurToImage(imageUrl);
-
-        const originalFilter = blurBg.style.filter;
-        const originalBgImage = blurBg.style.backgroundImage;
-
-        blurBg.style.filter = "none";
-        blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
-
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        const canvas = await html2canvas(flyer, {
-          width: 1080,
-          height: 1920,
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: "#ffffff",
-          scrollX: 0,
-          scrollY: 0,
-        });
-
-        blurBg.style.filter = originalFilter;
-        blurBg.style.backgroundImage = originalBgImage;
-
-        // Descargar
-        const link = document.createElement("a");
-        const flyerTitle = document
-          .getElementById("title")
-          .textContent.trim()
-          .replace(/\s+/g, "_")
-          .replace(/[^\w\-]/g, "");
-        const date = new Date().toISOString().slice(0, 10);
-        link.download = `${date}_${flyerTitle}_story.png`;
-        link.href = canvas.toDataURL("image/png");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (blurError) {
-        console.warn(
-          "Error al aplicar blur, usando método alternativo:",
-          blurError
-        );
-
-        await generateWithoutBlur(flyer, true);
-      }
-    } else {
-      await generateWithoutBlur(flyer, true);
-    }
-  } else {
-    await generateWithoutBlur(flyer, true);
-  }
+  handleFlyerDownload(flyerElement, blurBgElement, titleText);
 });
 
 // Backdrop Carousel
