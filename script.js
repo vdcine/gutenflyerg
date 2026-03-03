@@ -183,5 +183,35 @@ async function initializeControlValues() {
       }
     }
   }
+
+  if (GlobalState.selectedMovie) {
+    const movie = GlobalState.selectedMovie;
+    if (movie.release_date) {
+      document.getElementById("year").textContent = new Date(movie.release_date).getFullYear();
+    }
+    const director = movie.director;
+    document.getElementById("director").textContent = director ? director.name : "";
+    if (movie.details && movie.details.runtime) {
+      document.getElementById("duracion").textContent = `${movie.details.runtime} minutos`;
+    }
+  }
+
+  if (GlobalState.titulo) {
+    document.getElementById("titleInput").value = GlobalState.titulo;
+    document.getElementById("title").innerHTML = GlobalState.titulo.replace(/\n/g, "<br />");
+  }
+
+  if (GlobalState.edadSugerida) {
+    document.getElementById("edadSugeridaInput").value = GlobalState.edadSugerida;
+  }
+
+  if (GlobalState.orgText) {
+    const orgInput = document.getElementById("orgInput");
+    if (orgInput) orgInput.value = GlobalState.orgText;
+  }
+
+  const applyBtn = document.getElementById("applyTxtBtn");
+  if (applyBtn) applyBtn.click();
+
   console.log("Valores de controles inicializados con CSS por defecto");
 }
