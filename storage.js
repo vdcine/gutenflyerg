@@ -1,4 +1,3 @@
-
 function toStorage(key, obj) {
     localStorage[key] = JSON.stringify(obj);
 }
@@ -21,6 +20,6 @@ const GlobalState = new Proxy(
             // Luego actualizamos el objeto en el localStorage:
             toStorage('GlobalState', target);
             return true;
-        }
+        },
     }
-)
+);
