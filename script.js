@@ -28,11 +28,6 @@ async function applyBlurToImage(imageUrl) {
   });
 }
 
-// FIXME: esta función estaba rota al hacer el merge:
-async function generateWithoutBlur(flyerElement, isStoryFormat = false) {
-  const dimensions = isStoryFormat
-    ? { width: 1080, height: 1920 }
-    : { width: 1080, height: 1080 };
 
 async function captureAndDownloadFlyer(flyerElement, titleText) {
 
