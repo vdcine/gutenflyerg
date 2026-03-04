@@ -30,21 +30,21 @@ flyer.addEventListener("click", paintEventHandler);
 document.addEventListener("DOMContentLoaded", initializeControlValues);
 
 // JSON EXPORT & IMPORT
-document.getElementById("exportDataBtn").addEventListener("click",
-    function (e) {
-        try {
-            exportUserData();
-        } catch (error) {
-            console.error("Error al exportar datos:", error);
-            alert("Error al exportar los datos. Por favor intenta de nuevo.");
-        }
-    }
-);
+// document.getElementById("exportDataBtn").addEventListener("click",
+//     function (e) {
+//         try {
+//             exportUserData();
+//         } catch (error) {
+//             console.error("Error al exportar datos:", error);
+//             alert("Error al exportar los datos. Por favor intenta de nuevo.");
+//         }
+//     }
+// );
 
-const fileInput = document.getElementById("importFileInput");
-fileInput.addEventListener("change", handleFileImport);
-// Este truco es para usar el file-picker sin que sea visible:
-document.getElementById("importDataBtn").addEventListener("click", fileInput.click);
+// const fileInput = document.getElementById("importFileInput");
+// fileInput.addEventListener("change", handleFileImport);
+// // Este truco es para usar el file-picker sin que sea visible:
+// document.getElementById("importDataBtn").addEventListener("click", fileInput.click);
 
 
 // PANEL
