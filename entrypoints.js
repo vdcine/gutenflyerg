@@ -171,75 +171,16 @@ document.getElementById("flyerTitleMarginTopInput").addEventListener("input",
         document.getElementById("title").style.fontSize = e.target.value + "px";
     });
 
-
 document.getElementById("rectWidthInput").addEventListener("input",
     (e) => {
         document.getElementById("bandavertical").style.width = e.target.value + "px";
     });
 
-document.getElementById("saveFlyer").addEventListener("click", async () => {
-  const blurBg = document.getElementById("flyer-blur-bg-story");
-
-  if (blurBg && blurBg.style.backgroundImage) {
-    const bgImageMatch = blurBg.style.backgroundImage.match(
-      /url\(['"]?([^'"]+)['"]?\)/
-    );
-
-    if (bgImageMatch) {
-      const imageUrl = bgImageMatch[1];
-
-      try {
-        const blurredDataUrl = await applyBlurToImage(imageUrl);
-
-        const originalFilter = blurBg.style.filter;
-        const originalBgImage = blurBg.style.backgroundImage;
-
-        blurBg.style.filter = "none";
-        blurBg.style.backgroundImage = `url('${blurredDataUrl}')`;
-
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        const canvas = await html2canvas(flyer, {
-          width: 1080,
-          height: 1920,
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: "#ffffff",
-          scrollX: 0,
-          scrollY: 0,
-        });
-
-        blurBg.style.filter = originalFilter;
-        blurBg.style.backgroundImage = originalBgImage;
-
-        // Descargar
-        const link = document.createElement("a");
-        const flyerTitle = document
-          .getElementById("title")
-          .textContent.trim()
-          .replace(/\s+/g, "_")
-          .replace(/[^\w\-]/g, "");
-        const date = new Date().toISOString().slice(0, 10);
-        link.download = `${date}_${flyerTitle}_story.png`;
-        link.href = canvas.toDataURL("image/png");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (blurError) {
-        console.warn(
-          "Error al aplicar blur, usando método alternativo:",
-          blurError
-        );
-
-        await generateWithoutBlur(flyer, true);
-      }
-    } else {
-      await generateWithoutBlur(flyer, true);
-    }
-  } else {
-    await generateWithoutBlur(flyer, true);
-  }
+document.getElementById("saveFlyer").addEventListener("click", () => {
+  const flyerElement = document.getElementById("flyer");
+  const blurBgElement = document.getElementById("flyer-blur-bg-story");
+  const titleText = document.getElementById("title").textContent;
+  handleFlyerDownload(flyerElement, blurBgElement, titleText);
 });
 
 // Backdrop Carousel
@@ -277,81 +218,35 @@ document.getElementById("remove-backdrop-bg").addEventListener("click", () => {
 
 document.getElementById("load-backdrop-direct").addEventListener("click", () => {
     const input = document.getElementById("backdrop-direct-input").value.trim();
+    
+    if (!input) return alert("Por favor, ingresa una URL del backdrop");
+    if (!input.startsWith("http")) return alert("Por favor, ingresa una URL completa.");
 
-    if (!input) {
-        alert("Por favor, ingresa una URL del backdrop");
-        return;
-    }
-
-    if (!input.startsWith("http")) {
-        alert("Por favor, ingresa una URL completa que comience con http:// o htt://");
-        return;
-    }
-
-    let filePath = "";
-    if (input.includes("image.tmdb.org/t/p/original")) {
-        filePath = input.replace("https://image.tmdb.org/t/p/original", "");
-    } else {
-        filePath = input;
-    }
-
-    const newBackdrop = {file_path: filePath, aspect_ratio: 1.778};
-
-    GlobalState.backdrops.unshift(newBackdrop);
-    GlobalStatee.currentBackdrop = 0;
-
-    showBackdrop(GlobalState.currentBackdrop);
-
-    // Aplicar automáticamente como fondo del flyer
-    const fullUrl = filePath.startsWith("http")
-        ? filePath
-        : `https://image.tmdb.org/t/p/original${filePath}`;
-    // bandavertical.style.display = "none";
-    setBackdropAsBackground(fullUrl);
+    applyBackdropDirect(input);
 
     document.getElementById("backdrop-direct-input").value = "";
 });
-
 
 document.getElementById("backdrops").addEventListener("click", (e) => {
   e.preventDefault();
   if (!GlobalState.selectedMovie.id) return;
   window.open(
     `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/backdrops`,
-    "_blank",
+    "_blank"
   );
 });
 
 // POSTERS
-//
+
 document.getElementById("load-poster-direct").addEventListener("click", () => {
-  const input = document.getElementById("poster-direct-input").value.trim();
+    const input = document.getElementById("poster-direct-input").value.trim();
+    
+    if (!input) return alert("Por favor, ingresa una URL del poster");
+    if (!input.startsWith("http")) return alert("Por favor, ingresa una URL completa.");
 
-  if (!input) {
-    alert("Por favor, ingresa una URL del poster");
-    return;
-  }
+    applyPosterDirect(input);
 
-  if (!input.startsWith("http")) {
-    alert("Por favor, ingresa una URL completa que comience con http:// o https://");
-    return;
-  }
-
-  let filePath = "";
-  if (input.includes("image.tmdb.org/t/p/original")) {
-    filePath = input.replace("https://image.tmdb.org/t/p/original", "");
-  } else {
-    filePath = input;
-  }
-
-  const newPoster = {file_path: filePath, aspect_ratio: 0.667};
-
-  GlobalState.posters.unshift(newPoster);
-  GlobalState.currentPoster = 0;
-  showPoster(GlobalState.currentPoster);
-  const fullUrl = filePath.startsWith("http")? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
-  setPoster(fullUrl);
-  document.getElementById("poster-direct-input").value = "";
+    document.getElementById("poster-direct-input").value = "";
 });
 
 document.getElementById("poster-carousel-img").addEventListener("click", () => {
@@ -360,8 +255,7 @@ document.getElementById("poster-carousel-img").addEventListener("click", () => {
     if (posters.length > 0) {
         const currentPosterData = posters[currentPoster];
         const filePath = currentPosterData.file_path;
-        const fullUrl = filePath.startsWith("http")? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
-
+        const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
         navigator.clipboard.writeText(fullUrl).then(() => {
             alert("URL copiada al portapapeles");
         });
@@ -372,11 +266,7 @@ document.getElementById("backdrop-carousel-img").addEventListener("click", () =>
     if (GlobalState.backdrops.length > 0) {
         const currentBackdropData = GlobalState.backdrops[GlobalState.currentBackdrop];
         const filePath = currentBackdropData.file_path;
-
-        const fullUrl = filePath.startsWith("http")
-            ? filePath
-            : `https://image.tmdb.org/t/p/original${filePath}`;
-
+        const fullUrl = filePath.startsWith("http") ? filePath : `https://image.tmdb.org/t/p/original${filePath}`;
         navigator.clipboard.writeText(fullUrl).then(() => {
             alert("URL copiada al portapapeles");
         });
@@ -388,6 +278,6 @@ document.getElementById("posters").addEventListener("click", (e) => {
   if (!GlobalState.selectedMovie.id) return;
   window.open(
     `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/posters`,
-    "_blank",
+    "_blank"
   );
 });
