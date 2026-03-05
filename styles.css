@@ -60,12 +60,12 @@ form {
     z-index: 3;
     position: relative;
     margin-bottom: 0px;
-    margin-top: 45px;
+    margin-top: 35px;
 }
 
 #tape {
     position: absolute;
-    top: -150px;
+    top: -165px;
     left: 50%;
     transform: translateX(-50%);
     width: 1340px;
@@ -138,16 +138,19 @@ form {
 }
 
 .subheader {
-    width: 570px;
+    display: flex;
+    width: max-content;
+    min-width: 600px;
+    max-width: 900px;
     min-height: 70px;
+    padding: 0 10px;
     margin: 0 auto;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.6);
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     z-index: 16;
-    display: flex;
     align-items: center;
     justify-content: center;
     top: 225px;
@@ -167,79 +170,18 @@ form {
 }
 
 #poster-container {
-    width: 600px;
+    width: 550px;
     margin: 0 auto;
-    margin-top: 35px;
+    margin-top: 150px;
     display: flex;
     justify-content: center;
 }
 
 #poster {
-    width: 600px;
-    height: auto;
+    width: 100%;
     border-radius: 10px;
     z-index: 15;
     position: relative;
-}
-
-#title {
-    font-size: 42px;
-    width: 490px;
-    font-weight: lighter;
-    margin-top: 5px;
-    margin-bottom: 0px;
-    z-index: 10;
-    position: relative;
-    font-family: "Gilroy", sans-serif;
-    font-weight: 700;
-    text-align: center;
-    white-space: normal;
-    word-break: break-word;
-}
-
-#director {
-    font-size: 25px;
-    z-index: 10;
-    position: relative;
-    margin-top: 2px;
-    margin-bottom: 0px;
-    font-family: "Gilroy", sans-serif;
-    font-weight: 700;
-}
-
-#year {
-    font-size: 32px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    z-index: 10;
-    position: relative;
-    font-family: "Gilroy", sans-serif;
-    font-weight: 700;
-}
-
-#duracion {
-    font-size: 20px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    z-index: 10;
-    position: relative;
-    font-family: "Gilroy", sans-serif;
-    font-weight: 700;
-}
-
-#edad-sugerida {
-    font-size: 18px;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    z-index: 10;
-    position: relative;
-    font-family: "Gilroy", sans-serif;
-    font-weight: 700;
-    background-color: rgba(199, 194, 194, 0.9);
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    display: inline-block;
 }
 
 .event-data {
@@ -281,83 +223,101 @@ form {
     font-family: "Gilroy", sans-serif;
     font-weight: 600;
     bottom: -25px;
-    font-size: 24px;
-}
-
-#title,
-#year,
-#director,
-#org {
-    color: inherit;
+    font-size: 21px;
 }
 
 .flyer-row {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
-    gap: 10px;
-}
-
-.flyer-date-group,
-.flyer-hour-group {
-    width: 260px;
-    min-width: 260px;
-    max-width: 260px;
-    display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    margin-top: 50px;
-    z-index: 10;
-    position: relative;
-}
-
-.flyer-date {
-    font-size: 40px;
-    text-align: center;
     width: 100%;
-    margin-left: 50px;
-    font-family: "Gilroy", sans-serif;
-    font-weight: 650;
-}
+    height: 200px;
+    gap: 20px;
+    box-sizing: border-box;
+    padding: 0 20px;
 
-.flyer-hour {
-    font-size: 45px;
-    text-align: center;
-    width: 100%;
-    margin-bottom: 5px;
-    text-align: left;
-    margin-left: 30px;
-    font-family: "Gilroy", sans-serif;
-    font-weight: 650;
-}
+    .flyer-date-group,
+    .flyer-main-group,
+    .flyer-biblioteca-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        height: 100%;
+    }
 
-.flyer-biblioteca {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    margin-top: 0;
-    text-align: left;
-    margin-left: 15px;
-    font-family: "Gilroy", sans-serif;
-    font-weight: 600;
-}
+    .flyer-date-group {
+        flex: 1;
+        position: relative;
 
-.flyer-location-icon {
-    width: 40px;
-    height: 40px;
-}
+        .flyer-date {
+            font-size: 34px;
+            text-align: center;
+            width: 100%;
+            font-family: "Gilroy", sans-serif;
+            font-weight: 650;
+        }
 
-.flyer-main-group {
-    flex: 0 1 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 490px;
-    margin-top: 24px;
+        .flyer-hour {
+            font-size: 40px;
+            text-align: center;
+            width: 100%;
+            font-family: "Gilroy", sans-serif;
+            font-weight: 650;
+        }
+    }
+
+    .flyer-main-group {
+        flex: 2;
+        gap: 5px;
+
+        #title, #year, #director, #org {
+            color: inherit;
+        }
+
+        #title, #year, #director, #duracion, #edad-sugerida {
+            font-family: "Gilroy", sans-serif;
+            font-weight: 700;
+            position: relative;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        #title {
+            font-size: 42px;            
+            max-width: 500px;
+            text-align: center;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        #year {font-size: 32px}
+
+        #director {font-size: 25px}
+
+        #duracion {font-size: 20px}
+
+        #edad-sugerida {
+            font-size: 18px;
+            color: white;
+            background-color: rgba(199, 194, 194, 0.9);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+    }
+
+    .flyer-biblioteca-group {
+        flex: 1;
+        position: relative;
+        
+        img {
+            width: 200px;
+            height: 200px;
+            display: block;
+        }
+    }
 }
 
 /* Clase para el fondo difuminado del flyer */
@@ -373,12 +333,6 @@ form {
     background-size: cover;
     background-repeat: no-repeat;
     filter: blur(4px) brightness(0.9);
-}
-
-#title,
-#year,
-#director {
-    text-align: center;
 }
 
 #movieSearch,
@@ -418,8 +372,8 @@ button {
 
 .dialogo-comic {
     position: absolute;
-    left: 750px;
-    top: 180px;
+    left: 760px;
+    top: 140px;
     width: 160px;
     height: 90px;
     padding: 8px 16px;
