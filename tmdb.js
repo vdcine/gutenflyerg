@@ -5,7 +5,8 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 const bandavertical = document.getElementById('bandavertical');
 
 function getSimpleCorsProxiedUrl(imageUrl) {
-    return `https://corsproxy.io/?${imageUrl}`;
+    if (!imageUrl) return "";
+    return `https://images.weserv.nl/?url=${encodeURIComponent(imageUrl)}&default=${encodeURIComponent(imageUrl)}`;
 }
 
 function getCountryFlagEmoji(countryCode) {
@@ -65,18 +66,18 @@ const certificationMap = {
 async function searchMovies(e) {
     e.preventDefault();
 
-    GlobalState.search_title = document.getElementById('movieSearch').value;
-    GlobalState.search_language =
+    SearchState.search_title = document.getElementById('movieSearch').value;
+    SearchState.search_language =
         document.getElementById('movieLanguage').value || 'en';
     const searchRes = await fetch(
-        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${GlobalState.search_title}&language=${GlobalState.search_language}`
+        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${SearchState.search_title}&language=${SearchState.search_language}`
     );
 
     const searchData = await searchRes.json();
     if (searchData.results.length === 0)
         return alert('No se encontró la película.');
 
-    GlobalState.orderedResults = (
+    SearchState.orderedResults = (
         await Promise.all(
             searchData.results.map( async (m) => ({...m, ...await fetchMovieDetails(m)}))
         )
@@ -91,7 +92,7 @@ async function fetchMovieDetails(movie) {
     const director = credits.crew.find((c) => c.job === 'Director');
     const details = await (
         await fetch(
-            `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${GlobalState.search_language}`
+            `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${SearchState.search_language}`
         )
     ).json();
     // const movieDetailsSinopsis = await (await fetch(`${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`)).json();
@@ -99,14 +100,14 @@ async function fetchMovieDetails(movie) {
 }
 
 async function populateSearchResults() {
-    if (!GlobalState.orderedResults) return;
+    if (!SearchState.orderedResults) return;
 
     const resultsDiv = document.getElementById('movie-results');
     resultsDiv.innerHTML = '';
 
     // FIXME: no usar idx : iterar directo
-    for (let idx = 0; idx < Math.min(10, GlobalState.orderedResults.length); idx++) {
-        const movie = GlobalState.orderedResults[idx];
+    for (let idx = 0; idx < Math.min(10, SearchState.orderedResults.length); idx++) {
+        const movie = SearchState.orderedResults[idx];
 
         const result = document.createElement('div');
         result.style.cursor = 'pointer';
@@ -127,7 +128,7 @@ async function populateSearchResults() {
     }</span>`;
         result.addEventListener('click', async () => {
             console.log(movie.title);
-            GlobalState.selectedMovie = movie;
+            SearchState.selectedMovie = movie;
 
             const releaseDatesRes = await fetch(
                 `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
@@ -170,8 +171,8 @@ async function populateSearchResults() {
 
             document.getElementById('title').textContent = movie.title;
             document.getElementById('titleInput').value = movie.title;
-            GlobalState.titulo = movie.title;
-            GlobalState.edadSugerida = mappedCertification || '';
+            DesignState.titulo = movie.title;
+            DesignState.edadSugerida = mappedCertification || '';
 
             if (mappedCertification) {
                 document.getElementById('edadSugeridaInput').value =
@@ -240,12 +241,12 @@ async function populateSearchResults() {
             );
             const imagesData = await imagesRes.json();
 
-            GlobalState.backdrops = imagesData.backdrops || [];
-            GlobalState.currentBackdrop = 0;
+            SearchState.backdrops = imagesData.backdrops || [];
+            SearchState.currentBackdrop = 0;
             shiftBackdrop(0);
 
-            GlobalState.posters = imagesData.posters || [];
-            GlobalState.currentPoster = 0;
+            SearchState.posters = imagesData.posters || [];
+            SearchState.currentPoster = 0;
             shiftPoster(0);
 
             Array.from(resultsDiv.children).forEach(
@@ -259,21 +260,21 @@ async function populateSearchResults() {
 }
 
 // CARROUSEL
-GlobalState.backdrops = GlobalState.backdrops || [];
-GlobalState.posters = GlobalState.posters || [];
-GlobalState.currentBackdrop = GlobalState.currentBackdrop || 0;
-GlobalState.currentPoster = GlobalState.currentPoster || 0;
+SearchState.backdrops = SearchState.backdrops || [];
+SearchState.posters = SearchState.posters || [];
+SearchState.currentBackdrop = SearchState.currentBackdrop || 0;
+SearchState.currentPoster = SearchState.currentPoster || 0;
 
 //TODO: quedan getelementbyid que ensucian la logica, hay que ver como sacarlos a entrypoints.js.
 
 function shiftBackdrop(delta) {
-    let backdrops_len = GlobalState.backdrops.length;
+    let backdrops_len = SearchState.backdrops.length;
     if (!backdrops_len) return;
 
-    GlobalState.currentBackdrop = (GlobalState.currentBackdrop + delta + backdrops_len) % backdrops_len;
-    let index = GlobalState.currentBackdrop;
+    SearchState.currentBackdrop = (SearchState.currentBackdrop + delta + backdrops_len) % backdrops_len;
+    let index = SearchState.currentBackdrop;
 
-    const filePath = GlobalState.backdrops[index].file_path;
+    const filePath = SearchState.backdrops[index].file_path;
 
     const url = filePath.startsWith('http')
         ? filePath
@@ -288,13 +289,13 @@ function shiftBackdrop(delta) {
 }
 
 function shiftPoster(delta) {
-    let posters_len = GlobalState.posters.length;
+    let posters_len = SearchState.posters.length;
     if (!posters_len) return;
 
-    GlobalState.currentPoster = (GlobalState.currentPoster + delta + posters_len) % posters_len;
-    let index = GlobalState.currentPoster;
+    SearchState.currentPoster = (SearchState.currentPoster + delta + posters_len) % posters_len;
+    let index = SearchState.currentPoster;
 
-    const filePath = GlobalState.posters[index].file_path;
+    const filePath = SearchState.posters[index].file_path;
 
     const url = filePath.startsWith('http')
         ? filePath
@@ -345,8 +346,8 @@ function applyBackdropDirect(url) {
         aspect_ratio: 1.778,
     };
 
-    GlobalState.backdrops.unshift(newBackdrop);
-    GlobalState.currentBackdrop = 0;
+    SearchState.backdrops.unshift(newBackdrop);
+    SearchState.currentBackdrop = 0;
 
     shiftBackdrop(0);
 }
@@ -367,8 +368,8 @@ function applyPosterDirect(url) {
         aspect_ratio: 0.667,
     };
 
-    GlobalState.posters.unshift(newPoster);
-    GlobalState.currentPoster = 0;
+    SearchState.posters.unshift(newPoster);
+    SearchState.currentPoster = 0;
 
     shiftPoster(0);
 }
