@@ -5,7 +5,8 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 const bandavertical = document.getElementById('bandavertical');
 
 function getSimpleCorsProxiedUrl(imageUrl) {
-    return `https://corsproxy.io/?${imageUrl}`;
+    if (!imageUrl) return "";
+    return `https://images.weserv.nl/?url=${encodeURIComponent(imageUrl)}&default=${encodeURIComponent(imageUrl)}`;
 }
 
 function getCountryFlagEmoji(countryCode) {
