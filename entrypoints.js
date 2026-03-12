@@ -8,7 +8,7 @@ const paintPalette = document.getElementById('paintPaletteContainer');
 const paintColorInput = document.getElementById('paintColorInput');
 
 paintColorInput.addEventListener('input', (e) => {
-    GlobalState.currentPaintColor = e.target.value;
+    DesignState.currentPaintColor = e.target.value;
 });
 
 // Efecto hover (highlighter)
@@ -45,12 +45,12 @@ document.addEventListener('DOMContentLoaded', initializeControlValues);
 // document.getElementById("importDataBtn").addEventListener("click", fileInput.click);
 
 // PANEL
-GlobalState.bandaHidden = GlobalState.bandaHidden || false;
+DesignState.bandaHidden = DesignState.bandaHidden || false;
 
 document.getElementById('toggle-banda').addEventListener('click', (e) => {
-    GlobalState.bandaHidden = !GlobalState.bandaHidden;
-    bandavertical.style.display = GlobalState.bandaHidden ? 'none' : 'block';
-    this.textContent = GlobalState.bandaHidden
+    DesignState.bandaHidden = !DesignState.bandaHidden;
+    bandavertical.style.display = DesignState.bandaHidden ? 'none' : 'block';
+    this.textContent = DesignState.bandaHidden
         ? 'Mostrar banda vertical'
         : 'Ocultar banda vertical';
 });
@@ -85,7 +85,7 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
     const ciclo = document.getElementById('cicloInput').value.trim();
     const dateRaw = document.getElementById('dateInput').value.trim();
     const hourRaw = document.getElementById('hourInput').value.trim();
-    GlobalState.titulo = document.getElementById('titleInput').value.trim();
+    DesignState.titulo = document.getElementById('titleInput').value.trim();
 
     document.getElementById('dateInput').value = dateRaw;
     document.getElementById('hourInput').value = hourRaw;
@@ -93,12 +93,12 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
     const edadSugerida = document
         .getElementById('edadSugeridaInput')
         .value.trim();
-    GlobalState.edadSugerida = edadSugerida;
+    DesignState.edadSugerida = edadSugerida;
 
     document.getElementById('title').innerHTML = (
-        GlobalState.titulo || 'Título de la película'
+        DesignState.titulo || 'Título de la película'
     ).replace(/\n/g, '<br />');
-    document.getElementById('titleInput').value = GlobalState.titulo;
+    document.getElementById('titleInput').value = DesignState.titulo;
     document.getElementById('ciclo').textContent = ciclo || 'Ciclo';
 
     const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
@@ -147,7 +147,7 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
     const orgInput = document.getElementById('orgInput');
     if (orgInput) {
         const orgValue = orgInput.value.trim();
-        GlobalState.orgText = orgValue;
+        DesignState.orgText = orgValue;
         const orgEl = document.getElementById('org');
         if (orgEl) orgEl.textContent = orgValue;
     }
@@ -242,9 +242,9 @@ document
 
 document.getElementById('backdrops').addEventListener('click', (e) => {
     e.preventDefault();
-    if (!GlobalState.selectedMovie.id) return;
+    if (!SearchState.selectedMovie.id) return;
     window.open(
-        `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/backdrops`,
+        `https://www.themoviedb.org/movie/${SearchState.selectedMovie.id}/images/backdrops`,
         '_blank'
     );
 });
@@ -263,8 +263,8 @@ document.getElementById('load-poster-direct').addEventListener('click', () => {
 });
 
 document.getElementById('poster-carousel-img').addEventListener('click', () => {
-    let posters = GlobalState.posters;
-    let currentPoster = GlobalState.currentPoster;
+    let posters = SearchState.posters;
+    let currentPoster = SearchState.currentPoster;
     if (posters.length > 0) {
         const currentPosterData = posters[currentPoster];
         const filePath = currentPosterData.file_path;
@@ -280,9 +280,9 @@ document.getElementById('poster-carousel-img').addEventListener('click', () => {
 document
     .getElementById('backdrop-carousel-img')
     .addEventListener('click', () => {
-        if (GlobalState.backdrops.length > 0) {
+        if (SearchState.backdrops.length > 0) {
             const currentBackdropData =
-                GlobalState.backdrops[GlobalState.currentBackdrop];
+                SearchState.backdrops[SearchState.currentBackdrop];
             const filePath = currentBackdropData.file_path;
             const fullUrl = filePath.startsWith('http')
                 ? filePath
@@ -295,9 +295,9 @@ document
 
 document.getElementById('posters').addEventListener('click', (e) => {
     e.preventDefault();
-    if (!GlobalState.selectedMovie.id) return;
+    if (!SearchState.selectedMovie.id) return;
     window.open(
-        `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/posters`,
+        `https://www.themoviedb.org/movie/${SearchState.selectedMovie.id}/images/posters`,
         '_blank'
     );
 });
