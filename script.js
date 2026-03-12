@@ -172,13 +172,14 @@ function formatDateToSpanish(dateStr) {
 // BOOTSTRAPPER
 // Función auxiliar para obtener el fontsize
 async function initializeControlValues() {
+    restoreElementColors();
     await populateSearchResults();
     shiftPoster(0);
     shiftBackdrop(0);
     document.getElementById('movieSearch').value =
-        GlobalState.search_title || '';
+        SearchState.search_title || '';
     document.getElementById('titleInput').value =
-        GlobalState.titulo || 'Título de la Peli';
+        DesignState.titulo || 'Título de la Peli';
 
     function getFontSizeInPx(element) {
         if (!element) return null;
@@ -210,8 +211,8 @@ async function initializeControlValues() {
         }
     }
 
-    if (GlobalState.selectedMovie) {
-        const movie = GlobalState.selectedMovie;
+    if (SearchState.selectedMovie) {
+        const movie = SearchState.selectedMovie;
         if (movie.release_date) {
             document.getElementById('year').textContent = new Date(
                 movie.release_date
@@ -227,19 +228,19 @@ async function initializeControlValues() {
         }
     }
 
-    if (GlobalState.titulo) {
-        document.getElementById('titleInput').value = GlobalState.titulo;
-        document.getElementById('title').innerHTML = GlobalState.titulo.replace(/\n/g, '<br />');
+    if (DesignState.titulo) {
+        document.getElementById('titleInput').value = DesignState.titulo;
+        document.getElementById('title').innerHTML = DesignState.titulo.replace(/\n/g, '<br />');
     }
 
-    if (GlobalState.edadSugerida) {
+    if (DesignState.edadSugerida) {
         document.getElementById('edadSugeridaInput').value =
-            GlobalState.edadSugerida;
+            DesignState.edadSugerida;
     }
 
-    if (GlobalState.orgText) {
+    if (DesignState.orgText) {
         const orgInput = document.getElementById('orgInput');
-        if (orgInput) orgInput.value = GlobalState.orgText;
+        if (orgInput) orgInput.value = DesignState.orgText;
     }
 
     const applyBtn = document.getElementById('applyTxtBtn');
