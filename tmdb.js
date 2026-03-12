@@ -9,7 +9,7 @@ const bandavertical = document.getElementById("bandavertical");
 
 function getSimpleCorsProxiedUrl(imageUrl) {
     if (!imageUrl) return "";
-    return https://images.weserv.nl/?url=${encodeURIComponent(imageUrl)}&default=${encodeURIComponent(imageUrl)};
+    return `https://images.weserv.nl/?url=${encodeURIComponent(imageUrl)}&default=${encodeURIComponent(imageUrl)}`;
 }
 
 function getCountryFlagEmoji(countryCode) {
