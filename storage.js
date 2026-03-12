@@ -23,3 +23,27 @@ const GlobalState = new Proxy(
         },
     }
 );
+
+
+const SearchState = new Proxy(
+    fromStorage('SearchState') || {},
+    {
+        set(target, prop, value) {
+            target[prop] = value;
+            toStorage('SearchState', target);
+            return true;
+        },
+    }
+);
+
+
+const DesignState = new Proxy(
+    fromStorage('DesignState') || {},
+    {
+        set(target, prop, value) {
+            target[prop] = value;
+            toStorage('DesignState', target);
+            return true;
+        },
+    }
+);
