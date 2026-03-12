@@ -4,9 +4,9 @@ GlobalState.currentPaintColor = GlobalState.currentPaintColor || '#00ff00';
 function isBackgroundElement(target) {
     console.log(target);
     return (
-        target.classList.contains('bandavertical') ||
-        target.classList.contains('bandahorizontal') ||
-        target.classList.contains('tape') ||
+        target.classList.contains('bandavertical') || target.id === 'bandavertical' ||
+        target.classList.contains('bandahorizontal') || target.id === 'bandahorizontal' ||
+        target.classList.contains('tape') || target.id === 'tape' ||
         target.id === 'flyer'
     );
 }
