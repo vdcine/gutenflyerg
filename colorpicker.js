@@ -5,6 +5,10 @@ function isBackgroundElement(target) {
     return ['bandavertical', 'bandahorizontal', 'header', 'flyer', 'ciclo-bg'].includes(target.id);
 }
 
+function isSvgElement(target) {
+    return ['tape', 'logo-bm'].includes(target.id);
+}
+
 // const editableIdsAndClasses = [
 //     "header",
 //     "header-feed",
@@ -86,9 +90,43 @@ document.head.appendChild(comicTailBgStyle);
 // }
 //
 
-function paintEventHandler(e) {
+async function colorizarSvg(rutaSvg, colorHexadecimal) {
+    try {
+        const response = await fetch(rutaSvg);
+        if (!response.ok) throw new Error("No se pudo cargar el SVG: " + response.statusText);
+        const svgText = await response.text();
+
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
+        const svgElement = svgDoc.documentElement;
+
+        const style = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+        style.textContent = `
+            * {
+                fill: ${colorHexadecimal} !important;
+            }
+        `;
+        svgElement.insertBefore(style, svgElement.firstChild);
+
+        const serializer = new XMLSerializer();
+        const nuevoSvgText = serializer.serializeToString(svgElement);
+
+        const base64 = btoa(unescape(encodeURIComponent(nuevoSvgText)));
+        const dataUrl = `data:image/svg+xml;base64,${base64}`;
+        
+        console.log("SVG convertido exitosamente para:", rutaSvg);
+        return dataUrl;
+
+    } catch (error) {
+        console.error("Error al colorizar el SVG:", error);
+        return rutaSvg;
+    }
+}
+
+async function paintEventHandler(e) {
     // if (localStorage.isPaintModeActive && isEditableElement(e.target)) {
     const comicBalloon = e.target.closest('.dialogo-comic');
+    const targetId = e.target.id;
 
     if (comicBalloon) {
         if (e.target.classList.contains('comic-text')) {
@@ -99,6 +137,10 @@ function paintEventHandler(e) {
                 comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${GlobalState.currentPaintColor} !important; }`;
             }
         }
+    } else if (isSvgElement(e.target)) {
+        const rutaSvg = targetId === 'tape' ? './images/tape.svg' : './images/LogoBM.svg';
+        const nuevaImg = await colorizarSvg(rutaSvg, GlobalState.currentPaintColor);
+        e.target.src = nuevaImg;
     } else {
         if (isBackgroundElement(e.target)) {
             e.target.style.backgroundColor = GlobalState.currentPaintColor;
