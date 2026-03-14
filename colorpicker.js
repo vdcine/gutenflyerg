@@ -2,13 +2,7 @@ GlobalState.currentPaintColor = GlobalState.currentPaintColor || '#00ff00';
 
 // si es un elemento figura(rectangulos) hace el.style.backgroundColor. si es algun texto el.style.color
 function isBackgroundElement(target) {
-    console.log(target);
-    return (
-        target.classList.contains('bandavertical') || target.id === 'bandavertical' ||
-        target.classList.contains('bandahorizontal') || target.id === 'bandahorizontal' ||
-        target.classList.contains('tape') || target.id === 'tape' ||
-        target.id === 'flyer'
-    );
+    return ['bandavertical', 'bandahorizontal', 'tape', 'flyer', 'ciclo-bg'].includes(target.id);
 }
 
 // const editableIdsAndClasses = [
