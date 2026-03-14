@@ -175,12 +175,6 @@ document
         document.getElementById('title').style.fontSize = e.target.value + 'px';
     });
 
-document
-    .getElementById('flyerTitleMarginTopInput')
-    .addEventListener('input', (e) => {
-        document.getElementById('title').style.fontSize = e.target.value + 'px';
-    });
-
 document.getElementById('rectWidthInput').addEventListener('input', (e) => {
     document.getElementById('bandavertical').style.width =
         e.target.value + 'px';

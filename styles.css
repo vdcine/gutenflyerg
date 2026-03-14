@@ -45,26 +45,21 @@ form {
         flex-direction: column;
         z-index: 0;
 
-        .v-box {
-            width: 100%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            pointer-events: none; /* Para debug de cajas comentar */ 
-        }
-
         #bandavertical {
             position: absolute;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 460px;
+            width: 430px;
             height: 100%;
             background: #043f61;
+            margin: 0;
+            display: block;
+            pointer-events: auto;
+            z-index: 1;
             /*  TODO: Comentado porque solo se ve en la vista previa
                 Habría que decidir si se saca o se deja
+                Hay que investigar el tema de mask con html2canvas
             mask-image: url("images/texture.png"), url("images/ruido.png");
             mask-repeat: repeat, repeat;
             mask-size: cover, auto 2.5%;
@@ -73,10 +68,6 @@ form {
             -webkit-mask-size: cover, auto 2.5%;
             mask-composite: intersect;
             */
-            margin: 0;
-            display: block;
-            pointer-events: auto;
-            z-index: 1;
 
             &::after {
                 content: "";
@@ -86,6 +77,16 @@ form {
                 background: url("images/ruido.png");
                 opacity: 0.20;
             }
+        }
+
+        .v-box {
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            pointer-events: none; /* Para debug de cajas comentar */ 
         }
 
         #header {
@@ -261,7 +262,7 @@ form {
             justify-content: space-between;
             gap: 20px;
             box-sizing: border-box;
-            padding: 0 20px;
+            padding: 0 40px;
 
             .flyer-date-group,
             .flyer-main-group,
@@ -274,7 +275,7 @@ form {
             }
 
             .flyer-date-group {
-                flex: 3;
+                flex: 1;
                 position: relative;
 
                 .flyer-date,
@@ -291,7 +292,7 @@ form {
             }
 
             .flyer-main-group {
-                flex: 5;
+                flex: 2;
                 gap: 6px;
 
                 #title, #year, #director, #duracion, #edad-sugerida {
@@ -325,7 +326,7 @@ form {
             }
 
             .flyer-biblioteca-group {
-                flex: 3;
+                flex: 1;
                 position: relative;
                 gap: 10px;
                 
@@ -388,15 +389,6 @@ form {
     }
 }
 
-.instrucciones {
-    font-family: "Gilroy", sans-serif;
-    margin-bottom: 10px;
-}
-
-#movie-results {
-    font-family: "Gilroy", sans-serif;
-}
-
 /* Clase para el fondo difuminado del flyer */
 .flyer-blur-bg {
     position: absolute;
@@ -410,6 +402,15 @@ form {
     background-size: cover;
     background-repeat: no-repeat;
     filter: blur(4px) brightness(0.9);
+}
+
+.instrucciones {
+    font-family: "Gilroy", sans-serif;
+    margin-bottom: 10px;
+}
+
+#movie-results {
+    font-family: "Gilroy", sans-serif;
 }
 
 #movieSearch,
@@ -445,83 +446,6 @@ button {
     margin-left: auto;
     margin-right: auto;
     padding: 10px 20px;
-}
-
-.dialogo-comic {
-    position: absolute;
-    left: 760px;
-    top: 140px;
-    width: 160px;
-    height: 90px;
-    padding: 8px 16px;
-    background: #ffff;
-    color: #000000;
-    font-family: "Gilroy", sans-serif;
-    font-size: 1.5rem;
-    font-weight: bold;
-    border: 2.5px solid #000000;
-    border-radius: 50%;
-    z-index: 50;
-    text-align: center;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.dialogo-comic::after {
-    content: "";
-    position: absolute;
-    bottom: -12px;
-    left: 50px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 12px solid transparent;
-    border-top: 15px solid #ffff;
-    transform: rotate(12deg);
-    z-index: 2;
-}
-
-.dialogo-comic::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    background: url("images/ruido.png");
-    opacity: 0.18;
-    z-index: 4;
-    border-radius: 50%;
-}
-
-.comic-tail-noise {
-    position: absolute;
-    bottom: -11px;
-    left: 56px;
-    width: 11px;
-    height: 17px;
-    background: url("images/ruido.png") repeat;
-    opacity: 0.18;
-    pointer-events: none;
-    z-index: 3;
-    transform: rotate(72deg);
-    clip-path: polygon(40% 0%, 100% 100%, 0% 100%);
-}
-
-.comic-tail-border {
-    position: absolute;
-    bottom: -16px;
-    left: 49px;
-    width: 0;
-    height: 0;
-    border-left: 9px solid transparent;
-    border-right: 13px solid transparent;
-    border-top: 17px solid #000000 !important;
-    transform: rotate(11deg);
-    z-index: 1;
 }
 
 #backdrop-direct-input,
