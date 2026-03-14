@@ -55,79 +55,6 @@ form {
             pointer-events: none; /* Para debug de cajas comentar */ 
         }
 
-        #bubble {
-            position: absolute;
-            left: 750px;
-            top: 130px;
-            width: 160px;
-            height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #ffffff;
-            color: #000000;
-            border: 2.5px solid #000000;
-            border-radius: 50%;
-            z-index: 99;
-            box-sizing: border-box;
-            pointer-events: auto;
-
-            .comic-text {
-                font-family: "Gilroy", sans-serif;
-                font-size: 24px;
-                font-weight: 700;
-            }
-
-            &::before {
-                content: "";
-                position: absolute;
-                top: 0; left: 0; width: 100%; height: 100%;
-                pointer-events: none;
-                background: url("images/ruido.png");
-                opacity: 0.20;
-                z-index: 99;
-                border-radius: 50%;
-            }
-
-            &::after {
-                content: "";
-                position: absolute;
-                bottom: -12px;
-                left: 50px;
-                width: 0; height: 0;
-                border-left: 8px solid transparent;
-                border-right: 12px solid transparent;
-                border-top: 15px solid #ffff;
-                transform: rotate(12deg);
-                z-index: 1;
-            }
-
-            .comic-tail-border {
-                position: absolute;
-                bottom: -16px;
-                left: 49px;
-                width: 0; height: 0;
-                border-left: 9px solid transparent;
-                border-right: 13px solid transparent;
-                border-top: 17px solid #000000 !important;
-                transform: rotate(11deg);
-                z-index: 1;
-            }
-
-            .comic-tail-noise {
-                position: absolute;
-                bottom: -11px;
-                left: 56px;
-                width: 11px; height: 17px;
-                background: url("images/ruido.png") repeat;
-                opacity: 0.18;
-                pointer-events: none;
-                z-index: 99;
-                transform: rotate(72deg);
-                clip-path: polygon(40% 0%, 100% 100%, 0% 100%);
-            }
-        }
-
         #bandavertical {
             position: absolute;
             top: 0;
@@ -207,11 +134,10 @@ form {
             
             #ciclo-wrapper {
                 position: relative;
+                top: 20px;
                 display: flex;
-                min-width: 600px;
-                max-width: 1000px;
-                min-height: 70px;
-                padding: 5px 20px;
+                width: max-content;
+                max-width: 850px;
                 align-items: center;
                 justify-content: center;
 
@@ -232,11 +158,88 @@ form {
                     margin: 0;
                     font-size: 30px;
                     font-family: "Gilroy", sans-serif;
+                    padding: 16px 32px;
                     text-align: center;
                     word-break: break-word;
                     white-space: normal;
                     color: #000000;
                     pointer-events: auto;
+                }
+
+                #bubble {
+                    position: absolute;
+                    top: -85px;
+                    right: -40px;
+                    bottom: auto;
+                    left: auto;
+
+                    width: 160px;
+                    height: 90px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #ffffff;
+                    color: #000000;
+                    border: 2.5px solid #000000;
+                    border-radius: 50%;
+                    z-index: 99;
+                    box-sizing: border-box;
+                    pointer-events: auto;
+
+                    .comic-text {
+                        font-family: "Gilroy", sans-serif;
+                        font-size: 24px;
+                        font-weight: 700;
+                    }
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: 0; left: 0; width: 100%; height: 100%;
+                        pointer-events: none;
+                        background: url("images/ruido.png");
+                        opacity: 0.20;
+                        z-index: 99;
+                        border-radius: 50%;
+                    }
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        bottom: -12px;
+                        left: 50px;
+                        width: 0; height: 0;
+                        border-left: 8px solid transparent;
+                        border-right: 12px solid transparent;
+                        border-top: 15px solid #ffff;
+                        transform: rotate(12deg);
+                        z-index: 1;
+                    }
+
+                    .comic-tail-border {
+                        position: absolute;
+                        bottom: -16px;
+                        left: 49px;
+                        width: 0; height: 0;
+                        border-left: 9px solid transparent;
+                        border-right: 13px solid transparent;
+                        border-top: 17px solid #000000 !important;
+                        transform: rotate(11deg);
+                        z-index: 1;
+                    }
+
+                    .comic-tail-noise {
+                        position: absolute;
+                        bottom: -11px;
+                        left: 56px;
+                        width: 11px; height: 17px;
+                        background: url("images/ruido.png") repeat;
+                        opacity: 0.18;
+                        pointer-events: none;
+                        z-index: 99;
+                        transform: rotate(72deg);
+                        clip-path: polygon(40% 0%, 100% 100%, 0% 100%);
+                    }
                 }
             }
         }
@@ -271,7 +274,7 @@ form {
             }
 
             .flyer-date-group {
-                flex: 1;
+                flex: 3;
                 position: relative;
 
                 .flyer-date,
@@ -288,7 +291,7 @@ form {
             }
 
             .flyer-main-group {
-                flex: 2;
+                flex: 5;
                 gap: 6px;
 
                 #title, #year, #director, #duracion, #edad-sugerida {
@@ -322,7 +325,7 @@ form {
             }
 
             .flyer-biblioteca-group {
-                flex: 1;
+                flex: 3;
                 position: relative;
                 gap: 10px;
                 
