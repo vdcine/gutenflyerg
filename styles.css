@@ -369,6 +369,14 @@ button {
     margin-right: auto;
     padding: 10px 20px;
 }
+#deleteLocalS {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#deleteLocalS:hover {
+  background-color: red;
+}
 
 .dialogo-comic {
     position: absolute;
@@ -765,6 +773,8 @@ button {
     outline-offset: 2px !important;
     cursor: crosshair !important;
     transition: outline 0.1s ease-in-out;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
 }
 
 #backdrops {
