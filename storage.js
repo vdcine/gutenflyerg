@@ -7,6 +7,11 @@ function fromStorage(key) {
     return JSON.parse(x);
 }
 
+function clearAllStorage() {
+    localStorage.clear();
+    window.location.reload();
+}
+
 // En este objeto guardamos todas las propiedades
 // para que se repliquen en el localStorage
 const GlobalState = new Proxy(
