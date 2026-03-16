@@ -301,3 +301,9 @@ document.getElementById('posters').addEventListener('click', (e) => {
         '_blank'
     );
 });
+
+document.getElementById('deleteLocalS').addEventListener('click', () => {
+    if (confirm('¿Estás seguro de que deseas borrar todos los datos guardados y cargados del Flyer?')) {
+        clearAllStorage();
+    }
+});
