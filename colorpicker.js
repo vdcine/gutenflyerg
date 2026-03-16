@@ -35,9 +35,9 @@ function restoreElementColors() {
 
 function isBackgroundElement(target) {
     return (
-        target.classList.contains('bandavertical') || target.id === 'bandavertical' ||
-        target.classList.contains('bandahorizontal') || target.id === 'bandahorizontal' ||
-        target.classList.contains('tape') || target.id === 'tape' ||
+        target.id === 'bandavertical' ||
+        target.id === 'bandahorizontal' ||
+        target.id === 'tape' ||
         target.id === 'flyer'
     );
 }
