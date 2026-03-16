@@ -35,6 +35,13 @@ async function captureAndDownloadFlyer(flyerElement, titleText) {
         backgroundColor: '#ffffff',
         scrollX: 0,
         scrollY: 0,
+        onclone: (clonedDoc) => {
+            const clonedFlyer = clonedDoc.getElementById('flyer');
+            const mainGroup = clonedFlyer?.querySelector('.flyer-main-group');
+            if (mainGroup) {
+                mainGroup.style.transform = 'translateZ(0)';
+            }
+        },
     });
 
     const link = document.createElement('a');
