@@ -16,6 +16,7 @@ function clearAllStorage() {
 }
 
 const defaultDesignState = {
+    version: 1,
     titulo: '',
     edadSugerida: '',
     orgText: '',
@@ -49,6 +50,7 @@ const SearchState = new Proxy(
     }
 );
 
+// FIXME: que funcione para todas las anidaciones
 const DesignState = new Proxy(
     { ...defaultDesignState, ...fromStorage('DesignState') },
     {

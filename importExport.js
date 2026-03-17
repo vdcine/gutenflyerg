@@ -3,6 +3,7 @@ function exportUserData() {
         searchState: { ...SearchState },
         designState: { ...DesignState },
         exportDate: new Date().toISOString(),
+        version: 1,
     };
 
     const dataStr = JSON.stringify(userData, null, 2);
@@ -27,43 +28,39 @@ function importUserData(file) {
     const reader = new FileReader();
 
     reader.onload = function (e) {
-        try {
-            const userData = JSON.parse(e.target.result);
-            console.log('Importando datos, versión:', userData.version || 'desconocida');
+      const userData = JSON.parse(e.target.result);
+      console.log('Importando datos, versión:', userData.version || 'desconocida');
 
-            if (userData.searchState) {
-                Object.keys(userData.searchState).forEach(key => {
-                    SearchState[key] = userData.searchState[key];
-                });
-            }
+      // esto no se puede porque los state son proxys
+      // SearchState = userData.SearchState;
 
-            if (userData.designState) {
-                Object.keys(userData.designState).forEach(key => {
-                    if (key === 'fontSizes' && userData.designState.fontSizes) {
-                        DesignState.fontSizes = { ...DesignState.fontSizes, ...userData.designState.fontSizes };
-                    } else {
-                        DesignState[key] = userData.designState[key];
-                    }
-                });
-            }
+      // ¿y esto?:
+      SearchState = {...SearchState, ...userData.SearchState}
 
-            setTimeout(() => {
-                initializeControlValues(); // lee los estados y actualiza inputs. pero para correr esta funcion necesitamos que el dom este listo
-                if (typeof restoreElementColors === 'function') {
-                    restoreElementColors();
-                }
-                if (SearchState.backdrops?.length > 0 && typeof shiftBackdrop === 'function') {
-                    shiftBackdrop(SearchState.currentBackdrop || 0);
-                }
-                if (SearchState.posters?.length > 0 && typeof shiftPoster === 'function') {
-                    shiftPoster(SearchState.currentPoster || 0);
-                }
-            }, 100);
+      // hay que encapsular de alguna manera tipo:
+      // updateStateFromFile()
+      Object.keys(userData.searchState).forEach(key => {
+        SearchState[key] = userData.searchState[key];
+      });
 
-        } catch (error) {
-            console.error('Error al importar:', error);
-            alert('Error al leer el archivo. Verifica que sea un JSON válido.');
+      // FIXME: que el proxy resuelva esto:
+      Object.keys(userData.designState).forEach(key => {
+        if (key === 'fontSizes' && userData.designState.fontSizes) {
+          DesignState.fontSizes = { ...DesignState.fontSizes, ...userData.designState.fontSizes };
+        } else {
+          DesignState[key] = userData.designState[key];
         }
+      });
+
+      // FIXME: emprolijar. Crear una función qué SOLO haga "actualizo el dom cuando cambia el state".
+      initializeControlValues(); // lee los estados y actualiza inputs. pero para correr esta funcion necesitamos que el dom este listo
+      restoreElementColors();
+      if (SearchState.backdrops?.length > 0) {
+        shiftBackdrop(SearchState.currentBackdrop || 0);
+      }
+      if (SearchState.posters?.length > 0) {
+        shiftPoster(SearchState.currentPoster || 0);
+      }
     };
 
     reader.onerror = function () {
