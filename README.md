@@ -7,7 +7,7 @@ Generador de volantes
 * En los html, sólo dejar los style vinculados a posicionamiento
 * Que no haya funciones más largas que una pantalla
 
-### Rationale: Unificación de tamaños y variantes de flyer
+## Rationale: Unificación de tamaños y variantes de flyer
 **El problema:** previo a los cambios introducidos, la generación de flyers para un ciclo de películas constaba de 2 partes:
 1.  El flujo de uso de la pagina comenzaba en la pagina generadora del flyer de ciclos. acá elegías las películas a incluir en el ciclo y editabas 2 variantes del flyer para distintos tamaños específicos según la plataforma de destino (Feed e Historias).
 
