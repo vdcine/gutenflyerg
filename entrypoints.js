@@ -318,7 +318,7 @@ document.getElementById('deleteLocalS').addEventListener('click', () => {
     if (confirm('¿Estás seguro de que deseas borrar todos los datos guardados y cargados del Flyer?')) {
         document.getElementById('cicloInput').value = 'Nombre del ciclo';
         document.getElementById('dateInput').value = '2026-03-11';
-        document.getElementById('hourInput').value = '';
+        document.getElementById('hourInput').value = '19:00';
         document.getElementById('titleInput').value = 'Titulo de la Peli';
         document.getElementById('edadSugeridaInput').value = '';
         document.getElementById('orgInput').value = 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.';
