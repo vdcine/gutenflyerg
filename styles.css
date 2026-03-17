@@ -378,6 +378,10 @@ button {
   background-color: red;
 }
 
+#saveFlyer:hover {
+  background-color: green;
+}
+
 .dialogo-comic {
     position: absolute;
     left: 760px;
