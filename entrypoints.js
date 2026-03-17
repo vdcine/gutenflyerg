@@ -28,21 +28,20 @@ flyer.addEventListener('click', paintEventHandler);
 document.addEventListener('DOMContentLoaded', initializeControlValues);
 
 // JSON EXPORT & IMPORT
-// document.getElementById("exportDataBtn").addEventListener("click",
-//     function (e) {
-//         try {
-//             exportUserData();
-//         } catch (error) {
-//             console.error("Error al exportar datos:", error);
-//             alert("Error al exportar los datos. Por favor intenta de nuevo.");
-//         }
-//     }
-// );
+document.getElementById("exportDataBtn").addEventListener("click",
+    function (e) {
+        try {
+            exportUserData();
+        } catch (error) {
+            console.error("Error al exportar datos:", error);
+            alert("Error al exportar los datos. Por favor intenta de nuevo.");
+        }
+    }
+);
 
-// const fileInput = document.getElementById("importFileInput");
-// fileInput.addEventListener("change", handleFileImport);
-// // Este truco es para usar el file-picker sin que sea visible:
-// document.getElementById("importDataBtn").addEventListener("click", fileInput.click);
+const fileInput = document.getElementById("importFileInput");
+fileInput.addEventListener("change", handleFileImport);
+document.getElementById("importDataBtn").addEventListener("click", () => fileInput.click());
 
 // PANEL
 DesignState.bandaHidden = DesignState.bandaHidden || false;
@@ -55,9 +54,14 @@ document.getElementById('toggle-banda').addEventListener('click', (e) => {
         : 'Ocultar banda vertical';
 });
 
+document.getElementById('strokeColorInput').addEventListener('input', (e) => {
+    DesignState.strokeColor = e.target.value;
+});
+
 document.getElementById('applyStrokeBtn').addEventListener('click', () => {
     const select = document.getElementById('strokeTargetSelect');
     const color = document.getElementById('strokeColorInput').value;
+    DesignState.strokeColor = color;
     Array.from(select.selectedOptions).forEach((option) => {
         const target = document.getElementById(option.value);
         if (target) {
@@ -85,6 +89,9 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
     const ciclo = document.getElementById('cicloInput').value.trim();
     const dateRaw = document.getElementById('dateInput').value.trim();
     const hourRaw = document.getElementById('hourInput').value.trim();
+    DesignState.ciclo = ciclo;
+    DesignState.date = dateRaw;
+    DesignState.hour = hourRaw;
     DesignState.titulo = document.getElementById('titleInput').value.trim();
 
     document.getElementById('dateInput').value = dateRaw;
@@ -99,7 +106,7 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
         DesignState.titulo || 'Título de la película'
     ).replace(/\n/g, '<br />');
     document.getElementById('titleInput').value = DesignState.titulo;
-    document.getElementById('ciclo').textContent = ciclo || 'Ciclo';
+    document.getElementById('ciclo').textContent = ciclo || 'Nombre del ciclo';
 
     const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
     const el = document.getElementById('edad-sugerida');
@@ -138,19 +145,20 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
         el.style.display = 'none';
     }
 
-    document.getElementById('flyer-date').innerHTML =
-        formatDateToSpanish(dateRaw);
+    const formattedDate = dateRaw ? formatDateToSpanish(dateRaw) : '';
+    document.getElementById('flyer-date').innerHTML = formattedDate;
+    document.getElementById('flyer-date').textContent = formattedDate || '';
+
     document.getElementById('flyer-hour').textContent = hourRaw
         ? `${hourRaw} HS`
-        : '19:00 HS';
+        : '';
 
     const orgInput = document.getElementById('orgInput');
-    if (orgInput) {
-        const orgValue = orgInput.value.trim();
-        DesignState.orgText = orgValue;
-        const orgEl = document.getElementById('org');
-        if (orgEl) orgEl.textContent = orgValue;
-    }
+    const orgValue = orgInput?.value.trim() || '';
+    DesignState.orgText = orgValue;
+    const orgEl = document.getElementById('org');
+    const defaultOrg = 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.';
+    if (orgEl) orgEl.textContent = orgValue || defaultOrg;
 });
 
 document
@@ -158,7 +166,7 @@ document
     .addEventListener('input', (e) => {
         document.getElementById('flyer-date').style.fontSize =
             e.target.value + 'px';
-        console.log('Aplicado tamaño fecha Story:', e.target.value + 'px');
+        DesignState.fontSizes.flyerDate = e.target.value;
     });
 
 document
@@ -166,24 +174,27 @@ document
     .addEventListener('input', (e) => {
         document.getElementById('flyer-hour').style.fontSize =
             e.target.value + 'px';
-        console.log('Aplicado tamaño hora Story:', e.target.value + 'px');
+        DesignState.fontSizes.flyerHour = e.target.value;
     });
 
 document
     .getElementById('flyerTitleFontSizeInput')
     .addEventListener('input', (e) => {
         document.getElementById('title').style.fontSize = e.target.value + 'px';
+        DesignState.fontSizes.flyerTitle = e.target.value;
     });
 
 document
     .getElementById('flyerTitleMarginTopInput')
     .addEventListener('input', (e) => {
-        document.getElementById('title').style.fontSize = e.target.value + 'px';
+        document.getElementById('title').style.marginTop = e.target.value + 'px';
+        DesignState.fontSizes.flyerTitleMarginTop = e.target.value;
     });
 
 document.getElementById('rectWidthInput').addEventListener('input', (e) => {
     document.getElementById('bandavertical').style.width =
         e.target.value + 'px';
+    DesignState.fontSizes.rectWidth = e.target.value;
 });
 
 document.getElementById('saveFlyer').addEventListener('click', () => {
@@ -216,6 +227,7 @@ document.getElementById('remove-backdrop-bg').addEventListener('click', () => {
     bandavertical.style.display = 'block';
 
     flyerStory.style.backgroundImage = '';
+    DesignState.backgroundImage = '';
 
     const blurBgStory = document.getElementById('flyer-blur-bg-story');
 
@@ -304,6 +316,16 @@ document.getElementById('posters').addEventListener('click', (e) => {
 
 document.getElementById('deleteLocalS').addEventListener('click', () => {
     if (confirm('¿Estás seguro de que deseas borrar todos los datos guardados y cargados del Flyer?')) {
+        document.getElementById('cicloInput').value = 'Nombre del ciclo';
+        document.getElementById('dateInput').value = '2026-03-11';
+        document.getElementById('hourInput').value = '';
+        document.getElementById('titleInput').value = 'Titulo de la Peli';
+        document.getElementById('edadSugeridaInput').value = '';
+        document.getElementById('orgInput').value = 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.';
+        document.getElementById('ciclo').textContent = '';
+        document.getElementById('flyer-date').textContent = '';
+        document.getElementById('flyer-hour').textContent = '';
+        document.getElementById('title').textContent = '';
         clearAllStorage();
     }
 });

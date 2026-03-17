@@ -313,6 +313,8 @@ function updateBackdrop(url) {
     const flyer = document.getElementById('flyer');
     let blurBg = document.getElementById('flyer-blur-bg-story');
 
+    DesignState.backgroundImage = url;
+
     if (!blurBg) {
         blurBg = document.createElement('div');
         blurBg.id = 'flyer-blur-bg-story';

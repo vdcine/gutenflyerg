@@ -235,23 +235,72 @@ async function initializeControlValues() {
         }
     }
 
-    if (DesignState.titulo) {
-        document.getElementById('titleInput').value = DesignState.titulo;
-        document.getElementById('title').innerHTML = DesignState.titulo.replace(/\n/g, '<br />');
-    }
+    if (DesignState.titulo) document.getElementById('titleInput').value = DesignState.titulo;
+    document.getElementById('title').innerHTML = (DesignState.titulo || 'Título de la Peli').replace(/\n/g, '<br />');
 
     if (DesignState.edadSugerida) {
-        document.getElementById('edadSugeridaInput').value =
-            DesignState.edadSugerida;
+        document.getElementById('edadSugeridaInput').value = DesignState.edadSugerida;
     }
 
-    if (DesignState.orgText) {
-        const orgInput = document.getElementById('orgInput');
-        if (orgInput) orgInput.value = DesignState.orgText;
+    const orgInput = document.getElementById('orgInput');
+    if (orgInput && DesignState.orgText) orgInput.value = DesignState.orgText;
+    const orgEl = document.getElementById('org');
+    const defaultOrg = 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.';
+    if (orgEl) orgEl.textContent = DesignState.orgText || defaultOrg;
+
+    const cicloInput = document.getElementById('cicloInput');
+    if (cicloInput && DesignState.ciclo) cicloInput.value = DesignState.ciclo;
+    const cicloEl = document.getElementById('ciclo');
+    if (cicloEl) cicloEl.textContent = DesignState.ciclo || 'Nombre del ciclo';
+
+    const dateInput = document.getElementById('dateInput');
+    if (dateInput && DesignState.date) dateInput.value = DesignState.date;
+    const flyerDateEl = document.getElementById('flyer-date');
+    if (flyerDateEl) {
+        flyerDateEl.textContent = DesignState.date ? formatDateToSpanish(DesignState.date) : '';
+    }
+
+    const hourInput = document.getElementById('hourInput');
+    if (hourInput && DesignState.hour) hourInput.value = DesignState.hour;
+    const flyerHourEl = document.getElementById('flyer-hour');
+    if (flyerHourEl) flyerHourEl.textContent = DesignState.hour ? `${DesignState.hour} HS` : '';
+
+    if (DesignState.fontSizes) {
+        const { flyerDate, flyerHour, flyerTitle, flyerTitleMarginTop, rectWidth } = DesignState.fontSizes;
+        if (flyerDate) {
+            const el = document.getElementById('flyerDateFontSizeInput');
+            if (el) { el.value = flyerDate; el.dispatchEvent(new Event('input')); }
+        }
+        if (flyerHour) {
+            const el = document.getElementById('flyerHourFontSizeInput');
+            if (el) { el.value = flyerHour; el.dispatchEvent(new Event('input')); }
+        }
+        if (flyerTitle) {
+            const el = document.getElementById('flyerTitleFontSizeInput');
+            if (el) { el.value = flyerTitle; el.dispatchEvent(new Event('input')); }
+        }
+        if (flyerTitleMarginTop) {
+            const el = document.getElementById('flyerTitleMarginTopInput');
+            if (el) { el.value = flyerTitleMarginTop; el.dispatchEvent(new Event('input')); }
+        }
+        if (rectWidth) {
+            const el = document.getElementById('rectWidthInput');
+            if (el) { el.value = rectWidth; el.dispatchEvent(new Event('input')); }
+        }
+    }
+
+    if (DesignState.strokeColor) {
+        const el = document.getElementById('strokeColorInput');
+        if (el) el.value = DesignState.strokeColor;
+    }
+
+    if (DesignState.backgroundImage) {
+        const flyerEl = document.getElementById('flyer');
+        if (flyerEl) flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
     }
 
     const applyBtn = document.getElementById('applyTxtBtn');
     if (applyBtn) applyBtn.click();
 
-    console.log('Valores de controles inicializados con CSS por defecto');
+    console.log('Valores de controles inicializados desde estados');
 }
