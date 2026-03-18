@@ -144,10 +144,10 @@ form {
             
             #ciclo-wrapper {
                 position: relative;
-                top: 20px;
+                top: 10px;
                 display: flex;
                 width: max-content;
-                max-width: 850px;
+                max-width: 960px;
                 padding: 16px 32px;
                 align-items: center;
                 justify-content: center;
@@ -179,11 +179,10 @@ form {
                 #bubble {
                     position: absolute;
                     top: -85px;
-                    right: -40px;
+                    right: max(-100px, calc(50% - 500px));
                     bottom: auto;
                     left: auto;
-
-                    width: 160px;
+                    width: 220px;
                     height: 90px;
                     display: flex;
                     align-items: center;
@@ -198,8 +197,8 @@ form {
 
                     .comic-text {
                         font-family: "Gilroy", sans-serif;
-                        font-size: 24px;
-                        font-weight: 700;
+                        font-size: 28px;
+                        font-weight: 650;
                     }
 
                     &::before {
@@ -209,45 +208,44 @@ form {
                         pointer-events: none;
                         background: url("images/ruido.png");
                         opacity: 0.20;
-                        z-index: 99;
                         border-radius: 50%;
                     }
 
                     &::after {
                         content: "";
                         position: absolute;
-                        bottom: -12px;
+                        bottom: -10px;
                         left: 50px;
                         width: 0; height: 0;
                         border-left: 8px solid transparent;
                         border-right: 12px solid transparent;
                         border-top: 15px solid #ffff;
                         transform: rotate(12deg);
-                        z-index: 1;
+                        z-index: 2;
                     }
 
                     .comic-tail-border {
                         position: absolute;
-                        bottom: -16px;
+                        bottom: -14px;
                         left: 49px;
                         width: 0; height: 0;
                         border-left: 9px solid transparent;
                         border-right: 13px solid transparent;
                         border-top: 17px solid #000000 !important;
-                        transform: rotate(11deg);
-                        z-index: 1;
+                        transform: rotate(12deg);
+                        z-index: -1;
                     }
 
                     .comic-tail-noise {
                         position: absolute;
-                        bottom: -11px;
+                        bottom: -9px;
                         left: 56px;
                         width: 11px; height: 17px;
                         background: url("images/ruido.png") repeat;
                         opacity: 0.18;
                         pointer-events: none;
                         z-index: 99;
-                        transform: rotate(72deg);
+                        transform: rotate(12deg);
                         clip-path: polygon(40% 0%, 100% 100%, 0% 100%);
                     }
                 }
