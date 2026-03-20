@@ -28,20 +28,29 @@ async function initSvgCache() {
 }
 initSvgCache();
 
+const coloresOriginalesSVG = {
+    'tape': /#101010/gi,
+    'logo-bm': /#ca550b/gi
+};
+
 function applySvgColor(targetId, hexColor) {
     const originalSvgText = svgCache[targetId];
     if (!originalSvgText) return;
     
-    let coloredSvg;
-    
-    if (targetId === 'tape') {
-        coloredSvg = originalSvgText.replace(/#101010/gi, hexColor);
-    } else if (targetId === 'logo-bm') {
-        coloredSvg = originalSvgText.replace(/#ca550b/gi, hexColor);
-    }
+    const regexColor = coloresOriginalesSVG[targetId];
+    if (!regexColor) return;
 
-    const base64 = btoa(unescape(encodeURIComponent(coloredSvg)));
-    document.getElementById(targetId).src = `data:image/svg+xml;base64,${base64}`;
+    const coloredSvg = originalSvgText.replace(regexColor, hexColor);
+
+    const blob = new Blob([coloredSvg], { type: 'image/svg+xml' });
+    const blobUrl = URL.createObjectURL(blob);
+    
+    const imgElement = document.getElementById(targetId);
+    
+    if (imgElement.dataset.blobUrl) {URL.revokeObjectURL(imgElement.dataset.blobUrl);}
+    
+    imgElement.src = blobUrl;
+    imgElement.dataset.blobUrl = blobUrl; 
 }
 
 // const editableIdsAndClasses = [
