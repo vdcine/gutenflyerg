@@ -1,5 +1,6 @@
 GlobalState.currentPaintColor = GlobalState.currentPaintColor || '#00ff00';
-GlobalState.svgCache = GlobalState.svgCache || {};
+
+let svgCache = {};
 
 // si es un elemento figura(rectangulos) hace el.style.backgroundColor. si es algun texto el.style.color
 function isBackgroundElement(target) {
@@ -16,11 +17,11 @@ async function initSvgCache() {
             fetch('./images/tape.svg'),
             fetch('./images/LogoBM.svg')
         ]);
-        
-        if (resTape.ok) GlobalState.svgCache['tape'] = await resTape.text();
-        if (resLogo.ok) GlobalState.svgCache['logo-bm'] = await resLogo.text();
-        
-        console.log("SVGs cacheados correctamente en GlobalState");
+
+        if (resTape.ok) svgCache['tape'] = await resTape.text();
+        if (resLogo.ok) svgCache['logo-bm'] = await resLogo.text();
+
+        console.log("SVGs cacheados correctamente en variable global");
     } catch (error) {
         console.error("Error al precargar SVGs:", error);
     }
@@ -28,7 +29,7 @@ async function initSvgCache() {
 initSvgCache();
 
 function applySvgColor(targetId, hexColor) {
-    const originalSvgText = GlobalState.svgCache[targetId];
+    const originalSvgText = svgCache[targetId];
     if (!originalSvgText) return;
     
     let coloredSvg;
