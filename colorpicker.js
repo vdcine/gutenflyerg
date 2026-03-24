@@ -15,7 +15,7 @@ async function initSvgCache() {
     try {
         const [resTape, resLogo, resBubble] = await Promise.all([
             fetch('./images/tape.svg'),
-            fetch('./images/logoBM.svg'),
+            fetch('./images/LogoBM.svg'),
             fetch('./images/bubble.svg')
         ]);
 
