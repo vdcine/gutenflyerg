@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+  viewBox="0 0 220 120"
+  preserveAspectRatio="none"
+  version="1.1"
+  id="svg3"
+  xml:space="preserve"
+  width="220"
+  height="120"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg">
+  <g id="Globo">
+    <ellipse
+      style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+      id="Borde"
+      cx="110"
+      cy="50"
+      rx="110"
+      ry="50" />
+    <path
+      style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+      id="Cola"
+      d="m 43.165541,70.168645 -1.718014,-19.703913 -1.718016,-19.703913 17.923096,8.364113 17.923097,8.364111 -16.205081,11.3398 z"
+      transform="matrix(-0.91545011,1.215546,-0.84533965,-0.74743635,160.57149,61.740529)" />
+    <ellipse
+      style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+      id="Fondo"
+      cx="110"
+      cy="50"
+      rx="108"
+      ry="48" />
+  </g>
+</svg>

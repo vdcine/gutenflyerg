@@ -13,13 +13,15 @@ function isSvgElement(target) {
 
 async function initSvgCache() {
     try {
-        const [resTape, resLogo] = await Promise.all([
+        const [resTape, resLogo, resBubble] = await Promise.all([
             fetch('./images/tape.svg'),
-            fetch('./images/LogoBM.svg')
+            fetch('./images/logoBM.svg'),
+            fetch('./images/bubble.svg')
         ]);
 
         if (resTape.ok) svgCache['tape'] = await resTape.text();
         if (resLogo.ok) svgCache['logo-bm'] = await resLogo.text();
+        if (resBubble.ok) svgCache['bubble-bg'] = await resBubble.text();
 
         console.log("SVGs cacheados correctamente en variable global");
     } catch (error) {
@@ -30,7 +32,8 @@ initSvgCache();
 
 const coloresOriginalesSVG = {
     'tape': /#101010/gi,
-    'logo-bm': /#ca550b/gi
+    'logo-bm': /#ca550b/gi,
+    'bubble-bg': /#ffffff/gi
 };
 
 function applySvgColor(targetId, hexColor) {
@@ -128,9 +131,9 @@ function applySvgColor(targetId, hexColor) {
 // estilos dinámicos para el globo porque tiene pseudo-elementos
 // let comicTailBgStyle = document.getElementById("comic-tail-bg-style");
 // if (!comicTailBgStyle) {
-comicTailBgStyle = document.createElement('style');
-comicTailBgStyle.id = 'comic-tail-bg-style';
-document.head.appendChild(comicTailBgStyle);
+// comicTailBgStyle = document.createElement('style');
+// comicTailBgStyle.id = 'comic-tail-bg-style';
+// document.head.appendChild(comicTailBgStyle);
 // }
 //
 
@@ -141,14 +144,11 @@ function paintEventHandler(e) {
 
     if (comicBalloon) {
         if (e.target.classList.contains('comic-text')) {
-            comicBalloon.style.color = colorElegido;
+            e.target.style.color = colorElegido;
         } else {
-            comicBalloon.style.backgroundColor = colorElegido;
-            if (comicTailBgStyle) {
-                comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${colorElegido} !important; }`;
-            }
+            applySvgColor('bubble-bg', colorElegido);
         }
-    } 
+    }
 
     else if (isSvgElement(e.target)) {
         applySvgColor(e.target.id, colorElegido);
