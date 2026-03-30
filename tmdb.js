@@ -267,6 +267,56 @@ SearchState.currentPoster = SearchState.currentPoster || 0;
 
 //TODO: quedan getelementbyid que ensucian la logica, hay que ver como sacarlos a entrypoints.js.
 
+function restoreBackdropDisplay() {
+    if (!SearchState.backdrops?.length) return;
+    const index = SearchState.currentBackdrop || 0;
+    const filePath = SearchState.backdrops[index].file_path;
+    const url = filePath.startsWith('http')
+        ? filePath
+        : `https://image.tmdb.org/t/p/w1280${filePath}`;
+
+    document.getElementById('backdrop-carousel-img').src = url;
+    document.getElementById('backdrop-counter').textContent =
+        `Backdrop ${index + 1} de ${SearchState.backdrops.length}`;
+
+    const proxiedUrl = getSimpleCorsProxiedUrl(url);
+    restoreBackdropImage(proxiedUrl);
+}
+
+function restorePosterDisplay() {
+    if (!SearchState.posters?.length) return;
+    const index = SearchState.currentPoster || 0;
+    const filePath = SearchState.posters[index].file_path;
+    const url = filePath.startsWith('http')
+        ? filePath
+        : `https://image.tmdb.org/t/p/w780${filePath}`;
+
+    document.getElementById('poster-carousel-img').src = url;
+    document.getElementById('poster-counter').textContent =
+        `Poster ${index + 1} de ${SearchState.posters.length}`;
+
+    const proxiedUrl = getSimpleCorsProxiedUrl(url);
+    restorePosterImage(proxiedUrl);
+}
+
+function restoreBackdropImage(url) {
+    const flyer = document.getElementById('flyer');
+    let blurBg = document.getElementById('flyer-blur-bg-story');
+    if (!blurBg) {
+        blurBg = document.createElement('div');
+        blurBg.id = 'flyer-blur-bg-story';
+        blurBg.classList.add('flyer-blur-bg');
+        flyer.prepend(blurBg);
+    }
+    blurBg.style.backgroundImage = `url('${url}')`;
+    flyer.style.backgroundImage = '';
+}
+
+function restorePosterImage(url) {
+    const poster = document.getElementById('poster');
+    if (poster) poster.src = url;
+}
+
 function shiftBackdrop(delta) {
     let backdrops_len = SearchState.backdrops.length;
     if (!backdrops_len) return;

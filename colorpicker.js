@@ -1,3 +1,5 @@
+let comicTailBgStyle;
+
 DesignState.currentPaintColor = DesignState.currentPaintColor || '#00ff00';
 if (!('elementColors' in DesignState) || !DesignState.elementColors) {
     DesignState.elementColors = {};

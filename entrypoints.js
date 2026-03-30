@@ -162,12 +162,14 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
 });
 
 document
-    .getElementById('flyerDateFontSizeInput')
-    .addEventListener('input', (e) => {
-        document.getElementById('flyer-date').style.fontSize =
-            e.target.value + 'px';
-        DesignState.fontSizes.flyerDate = e.target.value;
-    });
+    .getElementById("flyerDateFontSizeInput")
+    .addEventListener("input", (e) => {
+      document.getElementById("flyer-date").style.fontSize =
+        e.target.value + "px";
+      // FIXME: llevar a updateDOM
+      DesignState.fontSizes.flyerDate = e.target.value;
+      // en vez poner updateDOMFromState() acá, lo tendríamos que poner en el proxy
+  });
 
 document
     .getElementById('flyerHourFontSizeInput')

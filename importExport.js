@@ -6,7 +6,10 @@ function exportUserData() {
     };
 
     const dataStr = JSON.stringify(userData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+
+  console.log("Peso del JSON:", (dataStr.length / 1024).toFixed(2), "KB");
 
     const link = document.createElement('a');
     const movieTitle = (DesignState.titulo || 'flyer')
@@ -27,52 +30,37 @@ function importUserData(file) {
     const reader = new FileReader();
 
     reader.onload = function (e) {
-        try {
-            const userData = JSON.parse(e.target.result);
-            console.log('Importando datos, versión:', userData.version || 'desconocida');
+        const userData = JSON.parse(e.target.result);
+        console.log('Importando datos, versión:', userData.version || 'desconocida');
 
-            if (userData.searchState) {
-                Object.keys(userData.searchState).forEach(key => {
-                    SearchState[key] = userData.searchState[key];
-                });
-            }
-
-            if (userData.designState) {
-                Object.keys(userData.designState).forEach(key => {
-                    if (key === 'fontSizes' && userData.designState.fontSizes) {
-                        DesignState.fontSizes = { ...DesignState.fontSizes, ...userData.designState.fontSizes };
-                    } else {
-                        DesignState[key] = userData.designState[key];
-                    }
-                });
-            }
-
-            setTimeout(() => {
-                initializeControlValues(); // lee los estados y actualiza inputs. pero para correr esta funcion necesitamos que el dom este listo
-                if (typeof restoreElementColors === 'function') {
-                    restoreElementColors();
-                }
-                if (SearchState.backdrops?.length > 0 && typeof shiftBackdrop === 'function') {
-                    shiftBackdrop(SearchState.currentBackdrop || 0);
-                }
-                if (SearchState.posters?.length > 0 && typeof shiftPoster === 'function') {
-                    shiftPoster(SearchState.currentPoster || 0);
-                }
-            }, 100);
-
-        } catch (error) {
-            console.error('Error al importar:', error);
-            alert('Error al leer el archivo. Verifica que sea un JSON válido.');
+        if (userData.searchState) {
+            Object.keys(userData.searchState).forEach(key => {
+                SearchState[key] = userData.searchState[key];
+            });
         }
-    };
 
+        if (userData.designState) {
+            Object.keys(userData.designState).forEach(key => {
+                if (key === 'fontSizes' && userData.designState.fontSizes) {
+                    DesignState.fontSizes = { ...DesignState.fontSizes, ...userData.designState.fontSizes };
+                } else {
+                    DesignState[key] = userData.designState[key];
+                }
+            });
+        }
+
+        updateDOMFromState();
+    };
     reader.onerror = function () {
-        console.error('Error de lectura del archivo');
-        alert('Hubo un problema al leer el archivo.');
+      console.error("Error de lectura del archivo");
+      alert("Hubo un problema al leer el archivo.");
     };
 
     reader.readAsText(file);
-}
+  }
+
+
+
 
 function handleFileImport(event) {
     const file = event.target.files[0];
