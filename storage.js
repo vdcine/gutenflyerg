@@ -94,12 +94,31 @@ function updateDOMFromState() {
       if (DesignState.fontSizes) {
         const { flyerDate, flyerHour, flyerTitle, flyerTitleMarginTop, rectWidth } =
           DesignState.fontSizes;
-        if (flyerDate) setInputValue("flyerDateFontSizeInput", flyerDate);
-        if (flyerHour) setInputValue("flyerHourFontSizeInput", flyerHour);
-        if (flyerTitle) setInputValue("flyerTitleFontSizeInput", flyerTitle);
-        if (flyerTitleMarginTop)
+        if (flyerDate) {
+          setInputValue("flyerDateFontSizeInput", flyerDate);
+          const flyerDateEl = document.getElementById("flyer-date");
+          if (flyerDateEl) flyerDateEl.style.fontSize = flyerDate + "px";
+        }
+        if (flyerHour) {
+          setInputValue("flyerHourFontSizeInput", flyerHour);
+          const flyerHourEl = document.getElementById("flyer-hour");
+          if (flyerHourEl) flyerHourEl.style.fontSize = flyerHour + "px";
+        }
+        if (flyerTitle) {
+          setInputValue("flyerTitleFontSizeInput", flyerTitle);
+          const titleEl = document.getElementById("title");
+          if (titleEl) titleEl.style.fontSize = flyerTitle + "px";
+        }
+        if (flyerTitleMarginTop) {
           setInputValue("flyerTitleMarginTopInput", flyerTitleMarginTop);
-        if (rectWidth) setInputValue("rectWidthInput", rectWidth);
+          const titleEl = document.getElementById("title");
+          if (titleEl) titleEl.style.marginTop = flyerTitleMarginTop + "px";
+        }
+        if (rectWidth) {
+          setInputValue("rectWidthInput", rectWidth);
+          const bandaEl = document.getElementById("bandavertical");
+          if (bandaEl) bandaEl.style.width = rectWidth + "px";
+        }
       }
 
       if (DesignState.strokeColor) {
@@ -150,18 +169,30 @@ const SearchState = new Proxy(
 //const initialDesignData = { ...defaultDesignState, ...fromStorage('DesignState') };
 //initialDesignData[INIT_FLAG] = false;
 
-const DesignState = new Proxy(
-    { ...defaultDesignState, ...fromStorage('DesignState') },
-    {
+// posible proxy recursivo que detecta cambios en objetos anidados
+function createDeepProxy(obj, onChange) {
+    const handler = {
+        get(target, prop) {
+            const value = target[prop];
+            if (value && typeof value === 'object') {
+                return createDeepProxy(value, onChange);
+            }
+            return value;
+        },
         set(target, prop, value) {
             target[prop] = value;
-            //if (target[INIT_FLAG] && prop !== INIT_FLAG) {
-            toStorage('DesignState', target);
-            // soñar es gratis: qué lindo sería acá saber qué propiedad del DOM corresponde modificar
-            // document.getElementById('target').prop = value;
-            updateDOMFromState();
+            onChange();
             return true;
-        },
+        }
+    };
+    return new Proxy(obj, handler);
+}
+
+const DesignState = createDeepProxy(
+    { ...defaultDesignState, ...fromStorage('DesignState') },
+    () => {
+        toStorage('DesignState', DesignState);
+        updateDOMFromState();
     }
 );
 
