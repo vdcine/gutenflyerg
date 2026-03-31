@@ -27,6 +27,7 @@ const defaultDesignState = {
     strokeColor: '#000000',
     bandaHidden: false,
     elementColors: {},
+    strokeTargets: [],
     fontSizes: {
         flyerDate: '34',
         flyerHour: '40',
@@ -124,6 +125,21 @@ function updateDOMFromState() {
 
       if (DesignState.strokeColor) {
         setInputValue("strokeColorInput", DesignState.strokeColor);
+      }
+
+      if (DesignState.strokeTargets && DesignState.strokeTargets.length > 0) {
+        const color = DesignState.strokeColor || '#000000';
+        DesignState.strokeTargets.forEach(targetId => {
+          const target = document.getElementById(targetId);
+          if (target) {
+            target.style.textShadow = `
+              -1px -1px 0 ${color},
+              1px -1px 0 ${color},
+              -1px 1px 0 ${color},
+              1px 1px 0 ${color}
+            `;
+          }
+        });
       }
 
       if (DesignState.backgroundImage) {

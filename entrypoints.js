@@ -62,6 +62,9 @@ document.getElementById('applyStrokeBtn').addEventListener('click', () => {
     const select = document.getElementById('strokeTargetSelect');
     const color = document.getElementById('strokeColorInput').value;
     DesignState.strokeColor = color;
+
+    const currentTargets = new Set(DesignState.strokeTargets || []);
+
     Array.from(select.selectedOptions).forEach((option) => {
         const target = document.getElementById(option.value);
         if (target) {
@@ -71,18 +74,24 @@ document.getElementById('applyStrokeBtn').addEventListener('click', () => {
                 -1px 1px 0 ${color},
                 1px 1px 0 ${color}
             `;
+            currentTargets.add(option.value);
         }
     });
+    DesignState.strokeTargets = Array.from(currentTargets);
 });
 
 document.getElementById('removeStrokeBtn').addEventListener('click', () => {
     const select = document.getElementById('strokeTargetSelect');
+    const currentTargets = new Set(DesignState.strokeTargets || []);
+
     Array.from(select.selectedOptions).forEach((option) => {
         const target = document.getElementById(option.value);
         if (target) {
             target.style.textShadow = '';
+            currentTargets.delete(option.value);
         }
     });
+    DesignState.strokeTargets = Array.from(currentTargets);
 });
 
 function updateEdadSugeridaDisplay(edadSugerida) {
