@@ -6,10 +6,8 @@ function exportUserData() {
     };
 
     const dataStr = JSON.stringify(userData, null, 2);
-  const dataBlob = new Blob([dataStr], { type: 'application/json' });
-
-
-  console.log("Peso del JSON:", (dataStr.length / 1024).toFixed(2), "KB");
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    console.log("Peso del JSON:", (dataStr.length / 1024).toFixed(2), "KB");
 
     const link = document.createElement('a');
     const movieTitle = (DesignState.titulo || 'flyer')
@@ -60,8 +58,6 @@ function importUserData(file) {
   }
 
 
-
-
 function handleFileImport(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -79,6 +75,5 @@ function handleFileImport(event) {
     if (confirm(fileInfo)) {
         importUserData(file);
     }
-
     event.target.value = '';
 }
