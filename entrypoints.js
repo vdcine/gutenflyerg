@@ -164,38 +164,28 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
 document
     .getElementById("flyerDateFontSizeInput")
     .addEventListener("input", (e) => {
-      document.getElementById("flyer-date").style.fontSize =
-        e.target.value + "px";
-      // FIXME: llevar a updateDOM
       DesignState.fontSizes.flyerDate = e.target.value;
-      // en vez poner updateDOMFromState() acá, lo tendríamos que poner en el proxy
   });
 
 document
     .getElementById('flyerHourFontSizeInput')
     .addEventListener('input', (e) => {
-        document.getElementById('flyer-hour').style.fontSize =
-            e.target.value + 'px';
         DesignState.fontSizes.flyerHour = e.target.value;
     });
 
 document
     .getElementById('flyerTitleFontSizeInput')
     .addEventListener('input', (e) => {
-        document.getElementById('title').style.fontSize = e.target.value + 'px';
         DesignState.fontSizes.flyerTitle = e.target.value;
     });
 
 document
     .getElementById('flyerTitleMarginTopInput')
     .addEventListener('input', (e) => {
-        document.getElementById('title').style.marginTop = e.target.value + 'px';
         DesignState.fontSizes.flyerTitleMarginTop = e.target.value;
     });
 
 document.getElementById('rectWidthInput').addEventListener('input', (e) => {
-    document.getElementById('bandavertical').style.width =
-        e.target.value + 'px';
     DesignState.fontSizes.rectWidth = e.target.value;
 });
 
