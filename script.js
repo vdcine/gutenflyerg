@@ -183,40 +183,16 @@ async function initializeControlValues() {
     await populateSearchResults();
     shiftPoster(0);
     shiftBackdrop(0);
-    document.getElementById('movieSearch').value =
-        SearchState.search_title || '';
-    document.getElementById('titleInput').value =
-        DesignState.titulo || 'Título de la Peli';
 
-    function getFontSizeInPx(element) {
-        if (!element) return null;
-        const computedStyle = window.getComputedStyle(element);
-        const fontSize = computedStyle.fontSize;
-        return parseInt(fontSize.replace('px', ''));
-    }
+    document.getElementById('movieSearch').value = SearchState.search_title || '';
 
-    const flyerDate = document.getElementById('flyer-date');
-    const flyerHour = document.getElementById('flyer-hour');
-
-    if (flyerDate) {
-        const currentSize = getFontSizeInPx(flyerDate);
-        if (currentSize) {
-            const control = document.getElementById('flyerDateFontSizeInput');
-            if (control && control.value == '40') {
-                control.value = currentSize;
-            }
-        }
-    }
-
-    if (flyerHour) {
-        const currentSize = getFontSizeInPx(flyerHour);
-        if (currentSize) {
-            const control = document.getElementById('flyerHourFontSizeInput');
-            if (control && control.value == '45') {
-                control.value = currentSize;
-            }
-        }
-    }
+    // carga los valores del state en los inputs
+    document.getElementById('titleInput').value = DesignState.titulo;
+    document.getElementById('cicloInput').value = DesignState.ciclo;
+    document.getElementById('dateInput').value = DesignState.date;
+    document.getElementById('hourInput').value = DesignState.hour;
+    document.getElementById('orgInput').value = DesignState.orgText;
+    document.getElementById('edadSugeridaInput').value = DesignState.edadSugerida;
 
     if (SearchState.selectedMovie) {
         const movie = SearchState.selectedMovie;
@@ -234,36 +210,6 @@ async function initializeControlValues() {
                 `${movie.details.runtime} minutos`;
         }
     }
-
-    if (DesignState.titulo) document.getElementById('titleInput').value = DesignState.titulo;
-    document.getElementById('title').innerHTML = (DesignState.titulo || 'Título de la Peli').replace(/\n/g, '<br />');
-
-    if (DesignState.edadSugerida) {
-        document.getElementById('edadSugeridaInput').value = DesignState.edadSugerida;
-    }
-
-    const orgInput = document.getElementById('orgInput');
-    if (orgInput && DesignState.orgText) orgInput.value = DesignState.orgText;
-    const orgEl = document.getElementById('org');
-    const defaultOrg = 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.';
-    if (orgEl) orgEl.textContent = DesignState.orgText || defaultOrg;
-
-    const cicloInput = document.getElementById('cicloInput');
-    if (cicloInput && DesignState.ciclo) cicloInput.value = DesignState.ciclo;
-    const cicloEl = document.getElementById('ciclo');
-    if (cicloEl) cicloEl.textContent = DesignState.ciclo || 'Nombre del ciclo';
-
-    const dateInput = document.getElementById('dateInput');
-    if (dateInput && DesignState.date) dateInput.value = DesignState.date;
-    const flyerDateEl = document.getElementById('flyer-date');
-    if (flyerDateEl) {
-        flyerDateEl.textContent = DesignState.date ? formatDateToSpanish(DesignState.date) : '';
-    }
-
-    const hourInput = document.getElementById('hourInput');
-    if (hourInput && DesignState.hour) hourInput.value = DesignState.hour;
-    const flyerHourEl = document.getElementById('flyer-hour');
-    if (flyerHourEl) flyerHourEl.textContent = DesignState.hour ? `${DesignState.hour} HS` : '';
 
     if (DesignState.fontSizes) {
         const { flyerDate, flyerHour, flyerTitle, flyerTitleMarginTop, rectWidth } = DesignState.fontSizes;
@@ -299,8 +245,9 @@ async function initializeControlValues() {
         if (flyerEl) flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
     }
 
-    const applyBtn = document.getElementById('applyTxtBtn');
-    if (applyBtn) applyBtn.click();
+    if (typeof updateEdadSugeridaDisplay === 'function') {
+        updateEdadSugeridaDisplay(DesignState.edadSugerida);
+    }
 
     console.log('Valores de controles inicializados desde estados');
 }

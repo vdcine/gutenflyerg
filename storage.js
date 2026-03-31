@@ -17,12 +17,12 @@ function clearAllStorage() {
 
 const defaultDesignState = {
     version: '1',
-    titulo: '',
+    titulo: 'Título de la Peli',
     edadSugerida: '',
-    orgText: '',
-    ciclo: '',
-    date: '',
-    hour: '',
+    orgText: 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.',
+    ciclo: 'Nombre del ciclo',
+    date: '2026-03-11',
+    hour: '19:00',
     currentPaintColor: '#00ff00',
     strokeColor: '#000000',
     bandaHidden: false,
@@ -64,54 +64,55 @@ function updateDOMFromState() {
         }
       }
 
-      document.getElementById("title").innerHTML = (
-        DesignState.titulo || "Título de la Peli"
-      ).replace(/\n/g, "<br />");
-      setInputValue("titleInput", DesignState.titulo || "");
-      setInputValue("edadSugeridaInput", DesignState.edadSugerida || "");
-      setInputValue("orgInput", DesignState.orgText || "");
-      setInputValue("cicloInput", DesignState.ciclo || "");
-      setInputValue("dateInput", DesignState.date || "");
-      setInputValue("hourInput", DesignState.hour || "");
+      const titleEl = document.getElementById("title");
+      if (titleEl) {
+        const titleValue = DesignState.titulo || defaultDesignState.titulo;
+        titleEl.innerHTML = titleValue.replace(/\n/g, "<br />");
+      }
 
       const orgEl = document.getElementById("org");
-      if (orgEl) orgEl.textContent = DesignState.orgText || "";
+      if (orgEl) {
+        orgEl.textContent = DesignState.orgText || defaultDesignState.orgText;
+      }
 
       const cicloEl = document.getElementById("ciclo");
-      if (cicloEl) cicloEl.textContent = DesignState.ciclo || "";
+      if (cicloEl) {
+        cicloEl.textContent = DesignState.ciclo || defaultDesignState.ciclo;
+      }
 
       const flyerDateEl = document.getElementById("flyer-date");
-      if (flyerDateEl)
-        flyerDateEl.textContent = DesignState.date
-          ? formatDateToSpanish(DesignState.date)
-          : "";
+      if (flyerDateEl) {
+        const dateValue = DesignState.date || defaultDesignState.date;
+        flyerDateEl.textContent = dateValue ? formatDateToSpanish(dateValue) : "";
+      }
 
       const flyerHourEl = document.getElementById("flyer-hour");
-      if (flyerHourEl)
-        //fix: si esto falla quiero saber
-        flyerHourEl.textContent = DesignState.hour ? `${DesignState.hour} HS` : "";
+      if (flyerHourEl) {
+        const hourValue = DesignState.hour || defaultDesignState.hour;
+        flyerHourEl.textContent = hourValue ? `${hourValue} HS` : "";
+      }
+
+
 
       if (DesignState.fontSizes) {
         const { flyerDate, flyerHour, flyerTitle, flyerTitleMarginTop, rectWidth } =
           DesignState.fontSizes;
         if (flyerDate) {
           setInputValue("flyerDateFontSizeInput", flyerDate);
-          const flyerDateEl = document.getElementById("flyer-date");
-          if (flyerDateEl) flyerDateEl.style.fontSize = flyerDate + "px";
+          const flyerDateDisplay = document.getElementById("flyer-date");
+          if (flyerDateDisplay) flyerDateDisplay.style.fontSize = flyerDate + "px";
         }
         if (flyerHour) {
           setInputValue("flyerHourFontSizeInput", flyerHour);
-          const flyerHourEl = document.getElementById("flyer-hour");
-          if (flyerHourEl) flyerHourEl.style.fontSize = flyerHour + "px";
+          const flyerHourDisplay = document.getElementById("flyer-hour");
+          if (flyerHourDisplay) flyerHourDisplay.style.fontSize = flyerHour + "px";
         }
         if (flyerTitle) {
           setInputValue("flyerTitleFontSizeInput", flyerTitle);
-          const titleEl = document.getElementById("title");
           if (titleEl) titleEl.style.fontSize = flyerTitle + "px";
         }
         if (flyerTitleMarginTop) {
           setInputValue("flyerTitleMarginTopInput", flyerTitleMarginTop);
-          const titleEl = document.getElementById("title");
           if (titleEl) titleEl.style.marginTop = flyerTitleMarginTop + "px";
         }
         if (rectWidth) {
@@ -131,13 +132,13 @@ function updateDOMFromState() {
           flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
       }
 
-      if (typeof restoreElementColors === 'function') {
+      if (typeof restoreElementColors === "function") {
         restoreElementColors();
       }
-      if (typeof restoreBackdropDisplay === 'function') {
+      if (typeof restoreBackdropDisplay === "function") {
         restoreBackdropDisplay();
       }
-      if (typeof restorePosterDisplay === 'function') {
+      if (typeof restorePosterDisplay === "function") {
         restorePosterDisplay();
       }
 

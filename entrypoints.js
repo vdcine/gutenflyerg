@@ -85,80 +85,53 @@ document.getElementById('removeStrokeBtn').addEventListener('click', () => {
     });
 });
 
-document.getElementById('applyTxtBtn').addEventListener('click', () => {
-    const ciclo = document.getElementById('cicloInput').value.trim();
-    const dateRaw = document.getElementById('dateInput').value.trim();
-    const hourRaw = document.getElementById('hourInput').value.trim();
-    DesignState.ciclo = ciclo;
-    DesignState.date = dateRaw;
-    DesignState.hour = hourRaw;
-    DesignState.titulo = document.getElementById('titleInput').value.trim();
-
-    document.getElementById('dateInput').value = dateRaw;
-    document.getElementById('hourInput').value = hourRaw;
-
-    const edadSugerida = document
-        .getElementById('edadSugeridaInput')
-        .value.trim();
-    DesignState.edadSugerida = edadSugerida;
-
-    document.getElementById('title').innerHTML = (
-        DesignState.titulo || 'Título de la película'
-    ).replace(/\n/g, '<br />');
-    document.getElementById('titleInput').value = DesignState.titulo;
-    document.getElementById('ciclo').textContent = ciclo || 'Nombre del ciclo';
-
+function updateEdadSugeridaDisplay(edadSugerida) {
     const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
     const el = document.getElementById('edad-sugerida');
 
     if (mappedCertification) {
-        document.getElementById('edadSugeridaInput').value =
-            mappedCertification;
+        document.getElementById('edadSugeridaInput').value = mappedCertification;
         el.textContent = mappedCertification;
         el.style.display = 'inline-block';
         if (mappedCertification === 'ATP') {
-            el.style.backgroundColor = '#4CAF50'; // Verde para ATP
+            el.style.backgroundColor = '#4CAF50';
             el.style.color = 'white';
         } else if (
             mappedCertification === '+13' ||
             mappedCertification === 'SAM 13'
         ) {
-            el.style.backgroundColor = '#2196F3'; // Azul para +13
+            el.style.backgroundColor = '#2196F3';
             el.style.color = 'white';
         } else if (
             mappedCertification === '+16' ||
             mappedCertification === 'SAM 16'
         ) {
-            el.style.backgroundColor = '#FF9800'; // Naranja para +16
+            el.style.backgroundColor = '#FF9800';
             el.style.color = 'white';
         } else if (
             mappedCertification === '+18' ||
             mappedCertification === 'SAM 18'
         ) {
-            el.style.backgroundColor = '#f44336'; // Rojo para +18
+            el.style.backgroundColor = '#f44336';
             el.style.color = 'white';
         } else {
-            el.style.backgroundColor = '#777'; // Gris para otros
+            el.style.backgroundColor = '#777';
             el.style.color = 'white';
         }
     } else {
         el.style.display = 'none';
     }
+}
 
-    const formattedDate = dateRaw ? formatDateToSpanish(dateRaw) : '';
-    document.getElementById('flyer-date').innerHTML = formattedDate;
-    document.getElementById('flyer-date').textContent = formattedDate || '';
+document.getElementById('applyTxtBtn').addEventListener('click', () => {
+    DesignState.ciclo = document.getElementById('cicloInput').value;
+    DesignState.date = document.getElementById('dateInput').value;
+    DesignState.hour = document.getElementById('hourInput').value;
+    DesignState.titulo = document.getElementById('titleInput').value;
+    DesignState.edadSugerida = document.getElementById('edadSugeridaInput').value.trim();
+    DesignState.orgText = document.getElementById('orgInput').value;
 
-    document.getElementById('flyer-hour').textContent = hourRaw
-        ? `${hourRaw} HS`
-        : '';
-
-    const orgInput = document.getElementById('orgInput');
-    const orgValue = orgInput?.value.trim() || '';
-    DesignState.orgText = orgValue;
-    const orgEl = document.getElementById('org');
-    const defaultOrg = 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.';
-    if (orgEl) orgEl.textContent = orgValue || defaultOrg;
+    updateEdadSugeridaDisplay(DesignState.edadSugerida);
 });
 
 document
