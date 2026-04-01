@@ -35,6 +35,7 @@ form {
 #work-area {
     display: flex;
     justify-content: center;
+    gap: 10px;
 
     #flyer {
         width: 1080px;
@@ -351,6 +352,81 @@ form {
             }
         }
     }
+
+    #panel {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: start;
+        padding: 14px;
+        border-radius: 12px;
+        background: #14181e;
+        color: #dbe5ee;
+        /* max-height: 940px; */
+        font-family: "Gilroy", sans-serif;
+    }
+
+    #panel label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.8;
+        margin-right: 10px;
+        justify-self: left;
+    }
+
+    #panel input[type="text"],
+    #panel input[type="number"] {
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #29303a;
+        background: #101419;
+        color: #e8f1ff;
+    }
+
+    #panel select {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid #29303a;
+        background: #e8f1ff;
+        color: #101419;
+        font-family: "Gilroy", sans-serif;
+        font-size: 16px;
+    }
+
+    #panel select:focus {
+        outline: none;
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+
+    #panel input[type="color"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    #panel input[type="color"]::-webkit-color-swatch {
+        border: none;
+        border-radius: 8px;
+    }
+
+    #panel input[type="color"]::-moz-color-swatch {
+        border: none;
+        border-radius: 8px;
+    }
+
+    #panel button {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #283241;
+        background: #1a2430;
+        color: #e8f1ff;
+        cursor: pointer;
+        font-weight: 700;
+    }
 }
 
 /* Clase para el fondo difuminado del flyer */
@@ -494,82 +570,6 @@ button {
 
 #image-info-modal button#close-modal:hover {
     background: #444;
-}
-
-#panel {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-left: 10px;
-    align-items: start;
-    padding: 14px;
-    border-radius: 12px;
-    background: #14181e;
-    color: #dbe5ee;
-    /* max-height: 940px; */
-    font-family: "Gilroy", sans-serif;
-}
-
-#panel label {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    opacity: 0.8;
-    margin-right: 10px;
-    justify-self: left;
-}
-
-#panel input[type="text"],
-#panel input[type="number"] {
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid #29303a;
-    background: #101419;
-    color: #e8f1ff;
-}
-
-#panel select {
-    padding: 8px 10px;
-    border-radius: 8px;
-    border: 1px solid #29303a;
-    background: #e8f1ff;
-    color: #101419;
-    font-family: "Gilroy", sans-serif;
-    font-size: 16px;
-}
-
-#panel select:focus {
-    outline: none;
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-}
-
-#panel input[type="color"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: transparent;
-    cursor: pointer;
-}
-
-#panel input[type="color"]::-webkit-color-swatch {
-    border: none;
-    border-radius: 8px;
-}
-
-#panel input[type="color"]::-moz-color-swatch {
-    border: none;
-    border-radius: 8px;
-}
-
-#panel button {
-    padding: 10px 14px;
-    border-radius: 10px;
-    border: 1px solid #283241;
-    background: #1a2430;
-    color: #e8f1ff;
-    cursor: pointer;
-    font-weight: 700;
 }
 
 #browsers-container {
