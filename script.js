@@ -184,15 +184,6 @@ async function initializeControlValues() {
     shiftPoster(0);
     shiftBackdrop(0);
 
-    document.getElementById('movieSearch').value = SearchState.search_title || '';
-
-    // carga los valores del state en los inputs
-    document.getElementById('titleInput').value = DesignState.titulo;
-    document.getElementById('cicloInput').value = DesignState.ciclo;
-    document.getElementById('dateInput').value = DesignState.date;
-    document.getElementById('hourInput').value = DesignState.hour;
-    document.getElementById('orgInput').value = DesignState.orgText;
-    document.getElementById('edadSugeridaInput').value = DesignState.edadSugerida;
 
     if (SearchState.selectedMovie) {
         const movie = SearchState.selectedMovie;

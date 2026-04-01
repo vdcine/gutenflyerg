@@ -2,6 +2,7 @@
 
 function toStorage(key, obj) {
     localStorage[key] = JSON.stringify(obj);
+    console.log(`[Storage] Guardado ${key}:`, JSON.parse(JSON.stringify(obj)));
 }
 
 function fromStorage(key) {
@@ -39,133 +40,54 @@ const defaultDesignState = {
 };
 
 function updateDOMFromState() {
-      if (!document.getElementById("flyer")) {
+    console.log('[State] Actualizando DOM desde state...');
+    if (!document.getElementById("flyer")) {
         console.warn("DOM no listo para actualizar");
         return;
-      }
-
-      if (SearchState.search_title) {
-        document.getElementById("movieSearch").value = SearchState.search_title;
-      }
-
-      if (SearchState.selectedMovie) {
-        const movie = SearchState.selectedMovie;
-        if (movie.release_date) {
-          document.getElementById("year").textContent = new Date(
-            movie.release_date,
-          ).getFullYear();
-        }
-        const director = movie.director;
-        document.getElementById("director").textContent = director
-          ? director.name
-          : "";
-        if (movie.details?.runtime) {
-          document.getElementById("duracion").textContent =
-            `${movie.details.runtime} minutos`;
-        }
-      }
-
-      const titleEl = document.getElementById("title");
-      if (titleEl) {
-        const titleValue = DesignState.titulo || defaultDesignState.titulo;
-        titleEl.innerHTML = titleValue.replace(/\n/g, "<br />");
-      }
-
-      const orgEl = document.getElementById("org");
-      if (orgEl) {
-        orgEl.textContent = DesignState.orgText || defaultDesignState.orgText;
-      }
-
-      const cicloEl = document.getElementById("ciclo");
-      if (cicloEl) {
-        cicloEl.textContent = DesignState.ciclo || defaultDesignState.ciclo;
-      }
-
-      const flyerDateEl = document.getElementById("flyer-date");
-      if (flyerDateEl) {
-        const dateValue = DesignState.date || defaultDesignState.date;
-        flyerDateEl.textContent = dateValue ? formatDateToSpanish(dateValue) : "";
-      }
-
-      const flyerHourEl = document.getElementById("flyer-hour");
-      if (flyerHourEl) {
-        const hourValue = DesignState.hour || defaultDesignState.hour;
-        flyerHourEl.textContent = hourValue ? `${hourValue} HS` : "";
-      }
-
-
-
-      if (DesignState.fontSizes) {
-        const { flyerDate, flyerHour, flyerTitle, flyerTitleMarginTop, rectWidth } =
-          DesignState.fontSizes;
-        if (flyerDate) {
-          setInputValue("flyerDateFontSizeInput", flyerDate);
-          const flyerDateDisplay = document.getElementById("flyer-date");
-          if (flyerDateDisplay) flyerDateDisplay.style.fontSize = flyerDate + "px";
-        }
-        if (flyerHour) {
-          setInputValue("flyerHourFontSizeInput", flyerHour);
-          const flyerHourDisplay = document.getElementById("flyer-hour");
-          if (flyerHourDisplay) flyerHourDisplay.style.fontSize = flyerHour + "px";
-        }
-        if (flyerTitle) {
-          setInputValue("flyerTitleFontSizeInput", flyerTitle);
-          if (titleEl) titleEl.style.fontSize = flyerTitle + "px";
-        }
-        if (flyerTitleMarginTop) {
-          setInputValue("flyerTitleMarginTopInput", flyerTitleMarginTop);
-          if (titleEl) titleEl.style.marginTop = flyerTitleMarginTop + "px";
-        }
-        if (rectWidth) {
-          setInputValue("rectWidthInput", rectWidth);
-          const bandaEl = document.getElementById("bandavertical");
-          if (bandaEl) bandaEl.style.width = rectWidth + "px";
-        }
-      }
-
-      if (DesignState.strokeColor) {
-        setInputValue("strokeColorInput", DesignState.strokeColor);
-      }
-
-      if (DesignState.strokeTargets && DesignState.strokeTargets.length > 0) {
-        const color = DesignState.strokeColor || '#000000';
-        DesignState.strokeTargets.forEach(targetId => {
-          const target = document.getElementById(targetId);
-          if (target) {
-            target.style.textShadow = `
-              -1px -1px 0 ${color},
-              1px -1px 0 ${color},
-              -1px 1px 0 ${color},
-              1px 1px 0 ${color}
-            `;
-          }
-        });
-      }
-
-      if (DesignState.backgroundImage) {
-        const flyerEl = document.getElementById("flyer");
-        if (flyerEl)
-          flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
-      }
-
-      if (typeof restoreElementColors === "function") {
-        restoreElementColors();
-      }
-      if (typeof restoreBackdropDisplay === "function") {
-        restoreBackdropDisplay();
-      }
-      if (typeof restorePosterDisplay === "function") {
-        restorePosterDisplay();
-      }
-
-      console.log("DOM actualizado desde state");
     }
 
-function setInputValue(id, value) {
-    document.getElementById(id).value = value;
-  }
+    Object.entries(SearchState.DOM).forEach(([eid, props]) =>  Object.entries(props).forEach(([k, v]) => document.getElementById(eid)[k] = v));
+    Object.entries(DesignState.DOM).forEach(([eid, props]) =>  Object.entries(props).forEach(([k, v]) => document.getElementById(eid)[k] = v));
+    // idealmente la función debería terminar acá
+
+    if (DesignState.strokeColor) {
+        setInputValue("strokeColorInput", DesignState.strokeColor);
+    }
+
+    if (DesignState.strokeTargets && DesignState.strokeTargets.length > 0) {
+        const color = DesignState.strokeColor || '#000000';
+        DesignState.strokeTargets.forEach(targetId => {
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.style.textShadow = `
+                    -1px -1px 0 ${color},
+                    1px -1px 0 ${color},
+                    -1px 1px 0 ${color},
+                    1px 1px 0 ${color}
+                    `;
+            }
+        });
+    }
+
+    if (DesignState.backgroundImage) {
+        const flyerEl = document.getElementById("flyer");
+        if (flyerEl)
+            flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
+    }
+
+    restoreElementColors();
+    restoreBackdropDisplay();
+    restorePosterDisplay();
+
+    console.log("DOM actualizado desde state");
+}
 
 
+  // CARROUSEL
+  SearchState.backdrops = SearchState.backdrops || [];
+  SearchState.posters = SearchState.posters || [];
+  SearchState.currentBackdrop = SearchState.currentBackdrop || 0;
+  SearchState.currentPoster = SearchState.currentPoster || 0;
 
 //const initialSearchData = fromStorage('SearchState') || {};
 //initialSearchData[INIT_FLAG] = false;
@@ -197,6 +119,7 @@ function createDeepProxy(obj, onChange) {
             return value;
         },
         set(target, prop, value) {
+            console.log(`[State] Cambiando DesignState.${prop}:`, value);
             target[prop] = value;
             onChange();
             return true;

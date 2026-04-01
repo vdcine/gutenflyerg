@@ -59,9 +59,9 @@ document.getElementById('strokeColorInput').addEventListener('input', (e) => {
 });
 
 document.getElementById('applyStrokeBtn').addEventListener('click', () => {
+    DesignState.DOM.strokeColorInput = { value: document.getElementById('strokeColorInput').value }
+
     const select = document.getElementById('strokeTargetSelect');
-    const color = document.getElementById('strokeColorInput').value;
-    DesignState.strokeColor = color;
 
     const currentTargets = new Set(DesignState.strokeTargets || []);
 
@@ -94,81 +94,83 @@ document.getElementById('removeStrokeBtn').addEventListener('click', () => {
     DesignState.strokeTargets = Array.from(currentTargets);
 });
 
-function updateEdadSugeridaDisplay(edadSugerida) {
-    const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
-    const el = document.getElementById('edad-sugerida');
+// function updateEdadSugeridaDisplay() {
+//     const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
+//     const el = document.getElementById('edadSugerida');
 
-    if (mappedCertification) {
-        document.getElementById('edadSugeridaInput').value = mappedCertification;
-        el.textContent = mappedCertification;
-        el.style.display = 'inline-block';
-        if (mappedCertification === 'ATP') {
-            el.style.backgroundColor = '#4CAF50';
-            el.style.color = 'white';
-        } else if (
-            mappedCertification === '+13' ||
-            mappedCertification === 'SAM 13'
-        ) {
-            el.style.backgroundColor = '#2196F3';
-            el.style.color = 'white';
-        } else if (
-            mappedCertification === '+16' ||
-            mappedCertification === 'SAM 16'
-        ) {
-            el.style.backgroundColor = '#FF9800';
-            el.style.color = 'white';
-        } else if (
-            mappedCertification === '+18' ||
-            mappedCertification === 'SAM 18'
-        ) {
-            el.style.backgroundColor = '#f44336';
-            el.style.color = 'white';
-        } else {
-            el.style.backgroundColor = '#777';
-            el.style.color = 'white';
-        }
-    } else {
-        el.style.display = 'none';
-    }
-}
+//     if (mappedCertification) {
+//         document.getElementById('edadSugeridaInput').value = mappedCertification;
+//         el.textContent = mappedCertification;
+//         el.style.display = 'inline-block';
+//         if (mappedCertification === 'ATP') {
+//             el.style.backgroundColor = '#4CAF50';
+//             el.style.color = 'white';
+//         } else if (
+//             mappedCertification === '+13' ||
+//             mappedCertification === 'SAM 13'
+//         ) {
+//             el.style.backgroundColor = '#2196F3';
+//             el.style.color = 'white';
+//         } else if (
+//             mappedCertification === '+16' ||
+//             mappedCertification === 'SAM 16'
+//         ) {
+//             el.style.backgroundColor = '#FF9800';
+//             el.style.color = 'white';
+//         } else if (
+//             mappedCertification === '+18' ||
+//             mappedCertification === 'SAM 18'
+//         ) {
+//             el.style.backgroundColor = '#f44336';
+//             el.style.color = 'white';
+//         } else {
+//             el.style.backgroundColor = '#777';
+//             el.style.color = 'white';
+//         }
+//     } else {
+//         el.style.display = 'none';
+//     }
+// }
 
 document.getElementById('applyTxtBtn').addEventListener('click', () => {
-    DesignState.ciclo = document.getElementById('cicloInput').value;
-    DesignState.date = document.getElementById('dateInput').value;
-    DesignState.hour = document.getElementById('hourInput').value;
-    DesignState.titulo = document.getElementById('titleInput').value;
-    DesignState.edadSugerida = document.getElementById('edadSugeridaInput').value.trim();
-    DesignState.orgText = document.getElementById('orgInput').value;
+    // Elementos del flyer
+    DesignState.DOM.flyerTitle = { textContent: document.getElementById('titleInput').value.replace(/\n/g, "<br />") };
+    DesignState.DOM.flyerCiclo = { textContent: document.getElementById('cicloInput').value };
+    DesignState.DOM.flyerDate = { textContent: formatDateToSpanish(document.getElementById('dateInput').value) };
+    DesignState.DOM.flyerHour = { textContent: document.getElementById('hourInput').value };
+    DesignState.DOM.flyerOrg = { textContent: document.getElementById('orgInput').value };
 
-    updateEdadSugeridaDisplay(DesignState.edadSugerida);
+    // Elementos del panel
+    DesignState.DOM.titleInput = { value: document.getElementById('titleInput').value };
+    DesignState.DOM.cicloInput = { value: document.getElementById('cicloInput').value };
+    DesignState.DOM.dateInput = { value: document.getElementById('dateInput').value };
+    DesignState.DOM.hourInput = { value: document.getElementById('hourInput').value };
+    DesignState.DOM.orgInput = { value: document.getElementById('orgInput').value };
 });
 
-document
-    .getElementById("flyerDateFontSizeInput")
-    .addEventListener("input", (e) => {
-      DesignState.fontSizes.flyerDate = e.target.value;
-  });
+document.getElementById("flyerDateFontSizeInput").addEventListener("input", (e) => {
+    DesignState.DOM.flyerDateFontSizeInput = { value: e.target.value };
+    DesignState.DOM.flyerDate.style = { fontSize: e.target.value + "px" };
+});
 
-document
-    .getElementById('flyerHourFontSizeInput')
-    .addEventListener('input', (e) => {
-        DesignState.fontSizes.flyerHour = e.target.value;
-    });
+document.getElementById('flyerHourFontSizeInput').addEventListener('input', (e) => {
+    DesignState.DOM.flyerHourFontSizeInput = {value: e.target.value}
+    DesignState.DOM.flyerHour.style = { fontSize: e.target.value + "px" }
+});
 
-document
-    .getElementById('flyerTitleFontSizeInput')
-    .addEventListener('input', (e) => {
-        DesignState.fontSizes.flyerTitle = e.target.value;
-    });
+document.getElementById('flyerTitleFontSizeInput').addEventListener('input', (e) => {
+    DesignState.DOM.flyerTitleFontSizeInput = {value: e.target.value}
+    DesignState.DOM.flyerTitle.style = { fontSize: e.target.value + "px" }
+});
 
-document
-    .getElementById('flyerTitleMarginTopInput')
-    .addEventListener('input', (e) => {
-        DesignState.fontSizes.flyerTitleMarginTop = e.target.value;
-    });
+document.getElementById('flyerTitleMarginTopInput').addEventListener('input', (e) => {
+    DesignState.DOM.flyerTitleMarginTopInput = {value: e.target.value}
+    DesignState.DOM.flyerTitle.style = { marginTop: e.target.value + "px" }
+});
 
 document.getElementById('rectWidthInput').addEventListener('input', (e) => {
-    DesignState.fontSizes.rectWidth = e.target.value;
+    DesignState.DOM.rectWidthInput = {value: e.target.value}
+    DesignState.DOM.bandavertical.style = { width: e.target.value + "px" }
 });
 
 document.getElementById('saveFlyer').addEventListener('click', () => {
@@ -179,13 +181,19 @@ document.getElementById('saveFlyer').addEventListener('click', () => {
 });
 
 // BACKDROP CAROUSEL
-document.getElementById('backdrop-next').addEventListener('click', (e) => {
-    shiftBackdrop(1);
-});
+document.getElementById('backdrop-next').addEventListener('click',
+  (e) => {
+    const k = SearchState.backdrops.length;
+    SearchState.currentBackdrop = (SearchState.currentBackdrop + 1) % k;
+  }
+);
 
-document.getElementById('backdrop-prev').addEventListener('click', (e) => {
-    shiftBackdrop(-1);
-});
+document.getElementById('backdrop-prev').addEventListener('click',
+    (e) => {
+      const k = SearchState.backdrops.length;
+      SearchState.currentBackdrop = (SearchState.currentBackdrop - 1) % k;
+    }
+);
 
 document.getElementById('poster-prev').addEventListener('click', (e) => {
     shiftPoster(-1);

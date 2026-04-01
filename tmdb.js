@@ -64,11 +64,12 @@ const certificationMap = {
 
 // BUSCADOR
 async function searchMovies(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    SearchState.search_title = document.getElementById('movieSearch').value;
-    SearchState.search_language =
-        document.getElementById('movieLanguage').value || 'en';
+  // SearchState.search_title = document.getElementById('movieSearch').value;
+  SearchState.DOM.movieSearch = { value: document.getElementById('movieSearch').value };
+  SearchState.DOM.movieLanguage = { value: document.getElementById('movieLanguage').value };
+
     const searchRes = await fetch(
         `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${SearchState.search_title}&language=${SearchState.search_language}`
     );
@@ -129,6 +130,13 @@ async function populateSearchResults() {
         result.addEventListener('click', async () => {
             console.log(movie.title);
             SearchState.selectedMovie = movie;
+            SearchState.DOM.year = { textContent: new Date(movie.release_date).getFullYear() };
+            SearchState.DOM.director = { textContent: movie.director ? director.name : "" };
+            SearchState.DOM.duracion = { textContent: `${movie.details.runtime} minutos` };
+            SearchState.DOM.title = { textContent: movie.title };
+            SearchState.DOM.titleInput = { value: movie.title };
+            DesignState.DOM.edadSugerida = { textContent: mappedCertification || '' };
+            DesignState.DOM.edadSugeridaInput = { value: mappedCertification || '' };
 
             const releaseDatesRes = await fetch(
                 `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
@@ -169,10 +177,6 @@ async function populateSearchResults() {
             const mappedCertification =
                 certificationMap[certification] || certification;
 
-            document.getElementById('title').textContent = movie.title;
-            document.getElementById('titleInput').value = movie.title;
-            DesignState.titulo = movie.title;
-            DesignState.edadSugerida = mappedCertification || '';
 
             if (mappedCertification) {
                 document.getElementById('edadSugeridaInput').value =
@@ -258,12 +262,6 @@ async function populateSearchResults() {
         resultsDiv.appendChild(result);
     }
 }
-
-// CARROUSEL
-SearchState.backdrops = SearchState.backdrops || [];
-SearchState.posters = SearchState.posters || [];
-SearchState.currentBackdrop = SearchState.currentBackdrop || 0;
-SearchState.currentPoster = SearchState.currentPoster || 0;
 
 //TODO: quedan getelementbyid que ensucian la logica, hay que ver como sacarlos a entrypoints.js.
 

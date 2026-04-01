@@ -10,7 +10,7 @@ function exportUserData() {
     console.log("Peso del JSON:", (dataStr.length / 1024).toFixed(2), "KB");
 
     const link = document.createElement('a');
-    const movieTitle = (DesignState.titulo || 'flyer')
+    const movieTitle = (DesignState.movie.title || 'flyer')
         .replace(/[^\w\s]/gi, '')
         .replace(/\s+/g, '_') || 'flyer';
     const filename = `${movieTitle}_datos_${new Date().toISOString().slice(0, 10)}.json`;
