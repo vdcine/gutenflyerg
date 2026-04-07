@@ -219,37 +219,6 @@ document.getElementById('load-poster-direct').addEventListener('click', () => {
     document.getElementById('poster-direct-input').value = '';
 });
 
-document.getElementById('poster-carousel-img').addEventListener('click', () => {
-    let posters = GlobalState.posters;
-    let currentPoster = GlobalState.currentPoster;
-    if (posters.length > 0) {
-        const currentPosterData = posters[currentPoster];
-        const filePath = currentPosterData.file_path;
-        const fullUrl = filePath.startsWith('http')
-            ? filePath
-            : `https://image.tmdb.org/t/p/original${filePath}`;
-        navigator.clipboard.writeText(fullUrl).then(() => {
-            alert('URL copiada al portapapeles');
-        });
-    }
-});
-
-document
-    .getElementById('backdrop-carousel-img')
-    .addEventListener('click', () => {
-        if (GlobalState.backdrops.length > 0) {
-            const currentBackdropData =
-                GlobalState.backdrops[GlobalState.currentBackdrop];
-            const filePath = currentBackdropData.file_path;
-            const fullUrl = filePath.startsWith('http')
-                ? filePath
-                : `https://image.tmdb.org/t/p/original${filePath}`;
-            navigator.clipboard.writeText(fullUrl).then(() => {
-                alert('URL copiada al portapapeles');
-            });
-        }
-    });
-
 document.getElementById('posters').addEventListener('click', (e) => {
     e.preventDefault();
     if (!GlobalState.selectedMovie.id) return;
