@@ -142,14 +142,8 @@
             </div> <!-- flyer -->
             <div id="panel">
                 <div class="panel-section">
-                    <button id="toggle-banda">Alternar banda</button>
-                </div>
-
-                <hr/>
-
-                <div class="panel-section">
                     <h3>Info del Flyer</h3>
-                    
+
                     <div class="input-group">
                         <label for="cicloInput">Nombre del ciclo</label>
                         <input id="cicloInput" type="text" placeholder="Escriba aquí" />
@@ -187,37 +181,39 @@
                         <textarea id="orgInput" rows="3">Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.</textarea>
                     </div>
 
-                    <button id="applyTxtBtn">Aplicar cambios</button>
+                    <div class="input-row">
+                        <button id="applyTxtBtn">Aplicar cambios</button>
+                        <button id="toggle-banda">Alternar banda</button>
+                    </div>
                 </div>
 
                 <hr/>
 
                 <div class="panel-section">
-                    <h3>Tamaños</h3>                    
-                    <div class="input-group inline-group">
-                        <div class="input-labels">
-                            <label>Tamaño fecha</label>
-                            <label>Tamaño hora</label>
-                            <label>Tamaño título</label>
-                            <label>Ancho Banda</label>
+                    <h3>Tamaños</h3>
+                    <div class="tamanos-grid">
+                        <label>Tamaño fecha</label>
+                        <div class="input-with-unit">
+                            <input id="flyerDateFontSizeInput" type="number" min="10" max="100" value="40" />
+                            <span>px</span>
                         </div>
-                        <div class="input-group">
-                            <div class="input-with-unit">
-                                <input id="flyerDateFontSizeInput" type="number" min="10" max="100" value="40" />
-                                <span>px</span>
-                            </div>
-                            <div class="input-with-unit">
-                                <input id="flyerHourFontSizeInput" type="number" min="10" max="100" value="45" />
-                                <span>px</span>
-                            </div>
-                            <div class="input-with-unit">
-                                <input id="flyerTitleFontSizeInput" type="number" min="10" max="100" value="42" />
-                                <span>px</span>
-                            </div>
-                            <div class="input-with-unit">
-                                <input id="rectWidthInput" type="number" min="10" max="1000" value="430" />
-                                <span>px</span>
-                            </div>
+
+                        <label>Tamaño hora</label>
+                        <div class="input-with-unit">
+                            <input id="flyerHourFontSizeInput" type="number" min="10" max="100" value="45" />
+                            <span>px</span>
+                        </div>
+
+                        <label>Tamaño título</label>
+                        <div class="input-with-unit">
+                            <input id="flyerTitleFontSizeInput" type="number" min="10" max="100" value="42" />
+                            <span>px</span>
+                        </div>
+
+                        <label>Ancho banda</label>
+                        <div class="input-with-unit">
+                            <input id="rectWidthInput" type="number" min="10" max="1000" value="430" />
+                            <span>px</span>
                         </div>
                     </div>
                 </div>
@@ -226,7 +222,7 @@
 
                 <div class="panel-section">
                     <h3>Bordes</h3>
-                    
+
                     <div class="bordes-layout">
                         <select id="strokeTargetSelect" multiple size="8">
                             <option value="header">Encabezado</option>
@@ -238,20 +234,17 @@
                             <option value="flyer-hour">Hora</option>
                             <option value="flyer-biblioteca">Ubicación</option>
                         </select>
-                        
+
                         <div class="bordes-controles">
-                            <div class="input-group">
-                                <div class= "input-row">
-                                    <label>Color:</label>
-                                    <input id="strokeColorInput" type="color" name="strokeColor" value="#000000" />
-                                </div>
-                                
+                            <div class="input-row">
+                                <label>Color:</label>
+                                <input id="strokeColorInput" type="color" name="strokeColor" value="#000000" />
                             </div>
                             <button id="applyStrokeBtn">Aplicar borde</button>
                             <button id="removeStrokeBtn">Quitar borde</button>
                         </div>
                     </div>
-                    <span class="hint-text">Se puede seleccionar mas de uno haciendo CTRL + Click</span>
+                    <span class="hint-text">Se puede seleccionar más de uno haciendo CTRL + Click</span>
                 </div>
 
                 <hr/>
