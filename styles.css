@@ -73,8 +73,10 @@ form {
             &::after {
                 content: "";
                 position: absolute;
-                top: 0; left: 0; 
-                width: 100%; height: 100%;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
                 pointer-events: none;
                 background: url("images/ruido.png");
                 opacity: 0.20;
@@ -88,7 +90,8 @@ form {
             align-items: center;
             justify-content: center;
             z-index: 10;
-            pointer-events: none; /* Para debug de cajas comentar */ 
+            pointer-events: none;
+            /* Para debug de cajas comentar */
         }
 
         #header {
@@ -102,8 +105,10 @@ form {
             &::after {
                 content: "";
                 position: absolute;
-                top: 10px; left: 0; 
-                width: 100%; height: 160px;
+                top: 10px;
+                left: 0;
+                width: 100%;
+                height: 160px;
                 background: url("images/ruido.png");
                 opacity: 0.20;
                 pointer-events: none;
@@ -117,8 +122,10 @@ form {
 
             #tape {
                 position: absolute;
-                top: 10px; left: 0;
-                width: 100%; height: 160px;
+                top: 10px;
+                left: 0;
+                width: 100%;
+                height: 160px;
                 object-fit: fill;
                 margin: 0;
                 display: block;
@@ -142,7 +149,7 @@ form {
 
         #subheader {
             height: 170px;
-            
+
             #ciclo-wrapper {
                 position: relative;
                 top: 10px;
@@ -181,18 +188,20 @@ form {
                     position: absolute;
                     top: -85px;
                     right: max(-150px, calc(50% - 500px));
-                    width: 240px; 
+                    width: 240px;
                     height: 100px;
                     display: flex;
-                    align-items: center; 
+                    align-items: center;
                     justify-content: center;
                     z-index: 99;
                     pointer-events: auto;
 
                     #bubble-bg {
                         position: absolute;
-                        top: 0; left: 0;
-                        width: 100%; height: 100%;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
                         z-index: 1;
                         pointer-events: none;
                     }
@@ -252,15 +261,24 @@ form {
                     pointer-events: auto;
                 }
 
-                .flyer-date { font-size: 34px; }
-                .flyer-hour { font-size: 40px; }
+                .flyer-date {
+                    font-size: 34px;
+                }
+
+                .flyer-hour {
+                    font-size: 40px;
+                }
             }
 
             .flyer-main-group {
                 flex: 2;
                 gap: 6px;
 
-                #title, #year, #director, #duracion, #edad-sugerida {
+                #title,
+                #year,
+                #director,
+                #duracion,
+                #edad-sugerida {
                     font-family: "Gilroy", sans-serif;
                     font-weight: 700;
                     position: relative;
@@ -270,16 +288,22 @@ form {
                 }
 
                 #title {
-                    font-size: 42px;            
+                    font-size: 42px;
                     max-width: 500px;
                     word-break: break-word;
                 }
 
-                #year { font-size: 32px; }
+                #year {
+                    font-size: 32px;
+                }
 
-                #director { font-size: 26px; }
+                #director {
+                    font-size: 26px;
+                }
 
-                #duracion { font-size: 22px; }
+                #duracion {
+                    font-size: 22px;
+                }
 
                 #edad-sugerida {
                     font-size: 20px;
@@ -294,7 +318,7 @@ form {
                 flex: 1;
                 position: relative;
                 gap: 10px;
-                
+
                 img {
                     height: 130px;
                     width: auto;
@@ -322,8 +346,10 @@ form {
 
             #bandahorizontal {
                 position: absolute;
-                top: 0; left: 0;
-                width: 100%; height: 100%;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
                 background: #043f61;
                 margin: 0;
                 display: block;
@@ -332,7 +358,10 @@ form {
                 &::after {
                     content: "";
                     position: absolute;
-                    top: 0; left: 0; width: 100%; height: 100%;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
                     background: url("images/ruido.png");
                     opacity: 0.20;
                 }
@@ -357,7 +386,7 @@ form {
         display: flex;
         flex-direction: column;
         width: 360px;
-        gap: 10px;
+        gap: 6px;
         align-items: stretch;
         padding: 20px;
         border-radius: 10px;
@@ -401,12 +430,14 @@ form {
             justify-content: center;
             gap: 10px;
 
-            .input-group { flex: 1; }
+            .input-group {
+                flex: 1;
+            }
 
-            button { 
-                flex: 1; 
-                margin: 0; 
-                width: auto; 
+            button {
+                flex: 1;
+                margin: 0;
+                width: auto;
             }
         }
 
@@ -437,12 +468,80 @@ form {
             }
         }
 
+        .carousel-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .carousel-header {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            a {
+                position: absolute;
+                right: 0;
+                margin: 0;
+                font-size: 12px;
+                color: #4a90e2;
+                cursor: pointer;
+                text-decoration: none;
+                font-weight: 600;
+
+                &:hover {
+                    text-decoration: underline;
+                    color: #5ba1f2;
+                }
+            }
+        }
+
+        .carousel-input {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+
+            input[type="text"] {
+                flex: 1;
+            }
+        }
+
+        .carousel-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .carousel-counter {
+            font-size: 13px;
+            color: #8c9baf;
+            min-width: 60px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .btn-icon {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            margin: 0;
+            flex-shrink: 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .bordes-layout {
             display: flex;
             gap: 12px;
             align-items: center;
 
-            select { flex: 3; }
+            select {
+                flex: 3;
+            }
 
             .bordes-controles {
                 flex: 4;
@@ -450,7 +549,10 @@ form {
                 flex-direction: column;
                 gap: 10px;
 
-                button { width: 100%; margin: 0; }
+                button {
+                    width: 100%;
+                    margin: 0;
+                }
             }
         }
 
@@ -459,7 +561,9 @@ form {
             align-items: center;
             gap: 12px;
 
-            h3 { margin: 0; }
+            h3 {
+                margin: 0;
+            }
         }
 
         .hint-text {
@@ -483,7 +587,9 @@ form {
             align-items: center;
             margin: 0 auto;
 
-            &:hover { background: #232f3f; }
+            &:hover {
+                background: #232f3f;
+            }
         }
 
         #saveFlyer {
@@ -493,7 +599,9 @@ form {
             font-size: 14px;
             padding: 12px 20px;
 
-            &:hover { background: #1f8045; }
+            &:hover {
+                background: #1f8045;
+            }
         }
 
         input[type="color"] {
@@ -509,8 +617,15 @@ form {
             cursor: pointer;
             color-scheme: dark;
 
-            &::-webkit-color-swatch { border: none; border-radius: 8px; }
-            &::-moz-color-swatch    { border: none; border-radius: 8px; }
+            &::-webkit-color-swatch {
+                border: none;
+                border-radius: 8px;
+            }
+
+            &::-moz-color-swatch {
+                border: none;
+                border-radius: 8px;
+            }
         }
     }
 
@@ -624,7 +739,6 @@ button {
     font-family: "Gilroy", sans-serif;
     font-size: 14px;
     width: 500px;
-    margin-bottom: 5px;
     padding: 5px;
 }
 
@@ -840,6 +954,7 @@ button {
     /* gap: 15px; */
     /* border: 2px solid #333; */
 }
+
 #paintColorInput {
     cursor: pointer;
     width: 40px;
