@@ -224,7 +224,7 @@ async function populateSearchResults() {
     }
 }
 
-// CARROUSEL
+// CAROUSEL
 GlobalState.backdrops = GlobalState.backdrops || [];
 GlobalState.posters = GlobalState.posters || [];
 GlobalState.currentBackdrop = GlobalState.currentBackdrop || 0;
@@ -245,9 +245,8 @@ function shiftBackdrop(delta) {
         ? filePath
         : `https://image.tmdb.org/t/p/w1280${filePath}`;
 
-    document.getElementById('backdrop-carousel-img').src = url;
-    document.getElementById('backdrop-counter').textContent =
-        `Backdrop ${index + 1} de ${backdrops_len}`;
+    document.getElementById('backdrop-counter').textContent = 
+        `${index + 1} de ${backdrops_len}`;
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
     updateBackdrop(proxiedUrl);
@@ -266,9 +265,8 @@ function shiftPoster(delta) {
         ? filePath
         : `https://image.tmdb.org/t/p/w780${filePath}`;
 
-    document.getElementById('poster-carousel-img').src = url;
-    document.getElementById('poster-counter').textContent =
-        `Poster ${index + 1} de ${posters_len}`;
+    document.getElementById('poster-counter').textContent = 
+        `${index + 1} de ${posters_len}`;
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
     updatePoster(proxiedUrl);
