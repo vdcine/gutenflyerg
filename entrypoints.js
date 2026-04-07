@@ -90,9 +90,7 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
     document.getElementById('dateInput').value = dateRaw;
     document.getElementById('hourInput').value = hourRaw;
 
-    const edadSugerida = document
-        .getElementById('edadSugeridaInput')
-        .value.trim();
+    const edadSugerida = document.getElementById('edadSugeridaSelect').value;
     GlobalState.edadSugerida = edadSugerida;
 
     document.getElementById('title').innerHTML = (
@@ -101,42 +99,7 @@ document.getElementById('applyTxtBtn').addEventListener('click', () => {
     document.getElementById('titleInput').value = GlobalState.titulo;
     document.getElementById('ciclo').textContent = ciclo || 'Ciclo';
 
-    const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
-    const el = document.getElementById('edad-sugerida');
-
-    if (mappedCertification) {
-        document.getElementById('edadSugeridaInput').value =
-            mappedCertification;
-        el.textContent = mappedCertification;
-        el.style.display = 'inline-block';
-        if (mappedCertification === 'ATP') {
-            el.style.backgroundColor = '#4CAF50'; // Verde para ATP
-            el.style.color = 'white';
-        } else if (
-            mappedCertification === '+13' ||
-            mappedCertification === 'SAM 13'
-        ) {
-            el.style.backgroundColor = '#2196F3'; // Azul para +13
-            el.style.color = 'white';
-        } else if (
-            mappedCertification === '+16' ||
-            mappedCertification === 'SAM 16'
-        ) {
-            el.style.backgroundColor = '#FF9800'; // Naranja para +16
-            el.style.color = 'white';
-        } else if (
-            mappedCertification === '+18' ||
-            mappedCertification === 'SAM 18'
-        ) {
-            el.style.backgroundColor = '#f44336'; // Rojo para +18
-            el.style.color = 'white';
-        } else {
-            el.style.backgroundColor = '#777'; // Gris para otros
-            el.style.color = 'white';
-        }
-    } else {
-        el.style.display = 'none';
-    }
+    actualizarEdadSugerida(edadSugerida);
 
     document.getElementById('flyer-date').innerHTML =
         formatDateToSpanish(dateRaw);

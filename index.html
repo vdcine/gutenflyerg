@@ -141,74 +141,133 @@
                 </div>
             </div> <!-- flyer -->
             <div id="panel">
-                <button id="toggle-banda">Alternar banda</button>
-                <input id="cicloInput" type="text" value="Nombre del ciclo" />
-                <input id="dateInput" type="date" value="2026-03-11" />
-                <input id="hourInput" type="time" value="19:00" />
-                <textarea id="titleInput" rows="2">Título de la Peli</textarea>
-                <div class="edad-sugerida-input">
-                    <label>Edad sugerida (opcional)</label>
-                    <input id="edadSugeridaInput" type="text" placeholder="Ej: +13, Apta todo público, etc." />
+                <div class="panel-section">
+                    <button id="toggle-banda">Alternar banda</button>
                 </div>
-                <div class="org-input">
-                    <label>Organización</label>
-                    <textarea id="orgInput"
-                        rows="3">Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.</textarea>
+
+                <hr/>
+
+                <div class="panel-section">
+                    <h3>Info del Flyer</h3>
+                    
+                    <div class="input-group">
+                        <label for="cicloInput">Nombre del ciclo</label>
+                        <input id="cicloInput" type="text" placeholder="Escriba aquí" />
+                    </div>
+
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="dateInput">Fecha</label>
+                            <input id="dateInput" type="date" value="2026-03-11" />
+                        </div>
+                        <div class="input-group">
+                            <label for="hourInput">Hora</label>
+                            <input id="hourInput" type="time" value="19:00" />
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="titleInput">Título de la Película</label>
+                        <input id="titleInput" type="text" placeholder="Escriba aquí" />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="edadSugeridaSelect">Edad sugerida</label>
+                        <select id="edadSugeridaSelect">
+                            <option value="">Sin especificar / Ocultar</option>
+                            <option value="ATP">Apta para todo público (ATP)</option>
+                            <option value="+13">Mayores de 13 años (+13)</option>
+                            <option value="+16">Mayores de 16 años (+16)</option>
+                            <option value="+18">Mayores de 18 años (+18)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Organización</label>
+                        <textarea id="orgInput" rows="3">Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.</textarea>
+                    </div>
+
+                    <button id="applyTxtBtn">Aplicar cambios</button>
                 </div>
-                <button id="applyTxtBtn">Aplicar cambios</button>
-                <h3>Bordes</h3>
-                <span>Se puede seleccionar mas de uno haciendo CTRL + Click</span>
-                <div class="bordes" style="display: flex">
-                    <select id="strokeTargetSelect" multiple size="8">
-                        <option value="header">Encabezado</option>
-                        <option value="title">Título</option>
-                        <option value="year">Año</option>
-                        <option value="director">Director</option>
-                        <option value="duracion">Duración</option>
-                        <option value="flyer-date">Fecha</option>
-                        <option value="flyer-hour">Hora</option>
-                        <option value="flyer-biblioteca">Ubicación</option>
-                    </select>
-                    <input id="strokeColorInput" type="color" name="strokeColor" value="#000000" />
+
+                <hr/>
+
+                <div class="panel-section">
+                    <h3>Tamaños</h3>                    
+                    <div class="input-group inline-group">
+                        <div class="input-labels">
+                            <label>Tamaño fecha</label>
+                            <label>Tamaño hora</label>
+                            <label>Tamaño título</label>
+                            <label>Ancho Banda</label>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-with-unit">
+                                <input id="flyerDateFontSizeInput" type="number" min="10" max="100" value="40" />
+                                <span>px</span>
+                            </div>
+                            <div class="input-with-unit">
+                                <input id="flyerHourFontSizeInput" type="number" min="10" max="100" value="45" />
+                                <span>px</span>
+                            </div>
+                            <div class="input-with-unit">
+                                <input id="flyerTitleFontSizeInput" type="number" min="10" max="100" value="42" />
+                                <span>px</span>
+                            </div>
+                            <div class="input-with-unit">
+                                <input id="rectWidthInput" type="number" min="10" max="1000" value="430" />
+                                <span>px</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div style="display: flex; flex-direction: row">
-                    <button id="applyStrokeBtn" style="margin-right: 5px">Aplicar borde</button>
-                    <button id="removeStrokeBtn">Quitar borde</button>
+
+                <hr/>
+
+                <div class="panel-section">
+                    <h3>Bordes</h3>
+                    
+                    <div class="bordes-layout">
+                        <select id="strokeTargetSelect" multiple size="8">
+                            <option value="header">Encabezado</option>
+                            <option value="title">Título</option>
+                            <option value="year">Año</option>
+                            <option value="director">Director</option>
+                            <option value="duracion">Duración</option>
+                            <option value="flyer-date">Fecha</option>
+                            <option value="flyer-hour">Hora</option>
+                            <option value="flyer-biblioteca">Ubicación</option>
+                        </select>
+                        
+                        <div class="bordes-controles">
+                            <div class="input-group">
+                                <div class= "input-row">
+                                    <label>Color:</label>
+                                    <input id="strokeColorInput" type="color" name="strokeColor" value="#000000" />
+                                </div>
+                                
+                            </div>
+                            <button id="applyStrokeBtn">Aplicar borde</button>
+                            <button id="removeStrokeBtn">Quitar borde</button>
+                        </div>
+                    </div>
+                    <span class="hint-text">Se puede seleccionar mas de uno haciendo CTRL + Click</span>
                 </div>
-                <div>
-                    <label>Tamaño fecha</label>
-                    <input id="flyerDateFontSizeInput" type="number" min="10" max="100" value="40" style="width: 80px" />
-                    px
+
+                <hr/>
+
+                <div class="panel-section" id="paintPaletteContainer">
+                    <div class="pistola-layout">
+                        <h3>Pistola de color:</h3>
+                        <input id="paintColorInput" type="color" value="#00ff00" title="Elige un color y luego haz click en los elementos del flyer" />
+                    </div>
                 </div>
-                <div>
-                    <label>Tamaño hora</label>
-                    <input id="flyerHourFontSizeInput" type="number" min="10" max="100" value="45" style="width: 80px" />
-                    px
+
+                <hr/>
+
+                <div class="panel-section">
+                    <button type="button" id="saveFlyer">Guardar Flyer</button>
                 </div>
-                <div>
-                    <label>Tamaño titulo pelicula</label>
-                    <input id="flyerTitleFontSizeInput" type="number" min="10" max="100" value="42" style="width: 80px" />
-                    px
-                </div>
-                <div>
-                    <label>Ancho Banda</label>
-                    <input id="rectWidthInput" type="number" min="10" max="1000" value="430" style="width: 80px" />
-                    px
-                </div>
-                <div id="paintPaletteContainer">
-                    <h3>Pistola de color:</h3>
-                    <span>Buscá el cuentagotas para ayudarte</span>
-                    <input id="paintColorInput" type="color" value="#00ff00"
-                        title="Elige un color y luego haz click en los elementos del flyer" />
-                </div> <!-- paintPaletteContainer -->
-                <!-- desactivados hasta que lo arreglemos
-                <div id="import-export-buttons">
-                    <button id="exportDataBtn" title="Exportar toda la configuración actual como archivo JSON">📤 Exportar Datos</button>
-                    <button id="importDataBtn" title="Importar configuración desde archivo JSON">📥 Importar Datos</button>
-                    <input id="importFileInput" type="file" accept=".json" style="display: none" />
-                </div>
-                -->
-                <button type="button" id="saveFlyer">Guardar Flyer</button>
             </div> <!-- panel -->
         </div> <!-- work-area -->
     </body>

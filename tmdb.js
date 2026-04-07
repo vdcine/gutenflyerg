@@ -53,6 +53,7 @@ const certificationMap = {
     SAM16: 'SAM 16',
     SAM18: 'SAM 18',
     'MA15+': '+16',
+    'MA 15+': '+16',
     M: '+13',
     G: 'ATP',
     PG: '+13',
@@ -174,44 +175,8 @@ async function populateSearchResults() {
             GlobalState.titulo = movie.title;
             GlobalState.edadSugerida = mappedCertification || '';
 
-            if (mappedCertification) {
-                document.getElementById('edadSugeridaInput').value =
-                    mappedCertification;
+            actualizarEdadSugerida(mappedCertification || '');
 
-                const edadElements = [document.getElementById('edad-sugerida')];
-
-                edadElements.forEach((el) => {
-                    if (el) {
-                        el.textContent = mappedCertification;
-                        el.style.display = 'inline-block';
-                        if (mappedCertification === 'ATP') {
-                            el.style.backgroundColor = '#4CAF50'; // Verde para ATP
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+13' ||
-                            mappedCertification === 'SAM 13'
-                        ) {
-                            el.style.backgroundColor = '#2196F3'; // Azul para +13
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+16' ||
-                            mappedCertification === 'SAM 16'
-                        ) {
-                            el.style.backgroundColor = '#FF9800'; // Naranja para +16
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+18' ||
-                            mappedCertification === 'SAM 18'
-                        ) {
-                            el.style.backgroundColor = '#f44336'; // Rojo para +18
-                            el.style.color = 'white';
-                        } else {
-                            el.style.backgroundColor = '#777'; // Gris para otros
-                            el.style.color = 'white';
-                        }
-                    }
-                });
-            }
             document.getElementById('year').textContent = new Date(
                 movie.release_date
             ).getFullYear();

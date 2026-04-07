@@ -356,14 +356,167 @@ form {
     #panel {
         display: flex;
         flex-direction: column;
+        width: 360px;
         gap: 10px;
-        align-items: start;
-        padding: 14px;
-        border-radius: 12px;
+        align-items: stretch;
+        padding: 20px;
+        border-radius: 10px;
         background: #14181e;
         color: #dbe5ee;
-        /* max-height: 940px; */
         font-family: "Gilroy", sans-serif;
+        box-sizing: border-box;
+
+        hr {
+            border: none;
+            border-top: 1px solid #283241;
+            margin: 4px 0;
+            width: 100%;
+        }
+
+        .panel-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            &.inline-group {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .input-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            
+            .input-group {
+                flex: 1;
+            }
+        }
+
+        /* Títulos de sección */
+        .panel-section h3 {
+            margin: 0;
+            font-size: 15px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- TAMAÑOS: Alineación de label a izquierda e input a derecha --- */
+        .input-group.inline-group {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        .input-labels {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            justify-content: space-between;
+        }
+
+        .input-with-unit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-with-unit input[type="number"] {
+            width: 70px;
+            text-align: center;
+        }
+
+        .input-with-unit span {
+            font-size: 12px;
+            color: #8c9baf;
+            font-weight: 600;
+        }
+
+        /* --- BORDES: Disposición lado a lado --- */
+        .bordes-layout {
+            display: flex;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        .bordes-layout select {
+            flex: 3; /* El select ocupa la mitad izquierda */
+        }
+
+        .bordes-controles {
+            flex: 5; /* Los botones ocupan la mitad derecha */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .bordes-controles button {
+            width: 100%; /* Para que los botones ocupen todo el ancho de su columna */
+            margin: 0;
+        }
+
+        /* Texto de ayuda debajo de los bordes */
+        .hint-text {
+            font-size: 11px;
+            color: #8c9baf;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        /* --- PISTOLA DE COLOR: Título e input lado a lado --- */
+        .pistola-layout {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pistola-layout h3 {
+            margin: 0; /* Le sacamos el margen al título para que quede centrado verticalmente con el input */
+        }
+        
+        /* Asegurarnos que el input de color se vea con el estilo de los inputs normales (borde, fondo, etc) */
+        #panel input[type="color"] {
+            width: 40px;
+            height: 40px;
+            padding: 2px;
+            border-radius: 50%;
+            border: 1px solid #29303a;
+            background: #101419;
+            cursor: pointer;
+            color-scheme: dark;
+        }
+
+        button {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #283241;
+            background: #1a2430;
+            color: #e8f1ff;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            font-size: 13px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+
+            &:hover {
+                background: #232f3f;
+            }
+        }
     }
 
     #panel label {
@@ -371,33 +524,48 @@ form {
         text-transform: uppercase;
         letter-spacing: 0.1em;
         opacity: 0.8;
-        margin-right: 10px;
         justify-self: left;
     }
 
     #panel input[type="text"],
-    #panel input[type="number"] {
+    #panel input[type="number"],
+    #panel input[type="date"],
+    #panel input[type="time"],
+    #panel textarea,
+    #panel select {
         padding: 10px 12px;
         border-radius: 10px;
         border: 1px solid #29303a;
         background: #101419;
         color: #e8f1ff;
-    }
-
-    #panel select {
-        padding: 8px 10px;
-        border-radius: 8px;
-        border: 1px solid #29303a;
-        background: #e8f1ff;
-        color: #101419;
         font-family: "Gilroy", sans-serif;
-        font-size: 16px;
+        font-size: 14px;
+        width: 100%;
+        box-sizing: border-box;
+        color-scheme: dark;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
+    #panel input[type="text"]:focus,
+    #panel input[type="number"]:focus,
+    #panel input[type="date"]:focus,
+    #panel input[type="time"]:focus,
+    #panel textarea:focus,
     #panel select:focus {
         outline: none;
         border-color: #4a90e2;
         box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+
+    #panel textarea {
+        resize: vertical;
+        min-height: 60px;
+    }
+
+    #panel select option {
+        background: #101419;
+        color: #e8f1ff;
+        padding: 4px;
     }
 
     #panel input[type="color"] {
@@ -416,16 +584,6 @@ form {
     #panel input[type="color"]::-moz-color-swatch {
         border: none;
         border-radius: 8px;
-    }
-
-    #panel button {
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 1px solid #283241;
-        background: #1a2430;
-        color: #e8f1ff;
-        cursor: pointer;
-        font-weight: 700;
     }
 }
 
@@ -623,11 +781,6 @@ button {
     height: 28px;
     vertical-align: middle;
     margin-right: 8px;
-}
-
-.edad-sugerida-input {
-    display: flex;
-    flex-direction: column;
 }
 
 /* Botones de importar/exportar */
