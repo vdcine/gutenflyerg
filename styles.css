@@ -7,137 +7,280 @@
 
 @font-face {
     font-family: "Gilroy";
-    src: url("./fonts/GILROY-BOLD.woff") format("woff");
+    src: url("./fonts/Gilroy/Thin.woff") format("woff");
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gilroy";
+    src: url("./fonts/Gilroy/UltraLight.woff") format("woff");
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gilroy";
+    src: url("./fonts/Gilroy/Light.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gilroy";
+    src: url("./fonts/Gilroy/Regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gilroy";
+    src: url("./fonts/Gilroy/Medium.woff") format("woff");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gilroy";
+    src: url("./fonts/Gilroy/SemiBold.woff") format("woff");
     font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Gilroy";
-    src: url("./fonts/GILROY-EXTRABOLD.woff") format("woff");
+    src: url("./fonts/Gilroy/Bold.woff") format("woff");
     font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gilroy";
+    src: url("./fonts/Gilroy/ExtraBold.woff") format("woff");
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gilroy";
+    src: url("./fonts/Gilroy/Black.woff") format("woff");
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gilroy";
+    src: url("./fonts/Gilroy/Heavy.woff") format("woff");
+    font-weight: 950;
     font-style: normal;
 }
 
 body {
     font-family: "Newake", Arial, sans-serif;
     background: #f8f8f8;
-    /* display: flex; */
-    justify-content: center;
-    text-align: center;
-    margin-top: 20px;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-hr {
+hr.main-divider {
     width: 100%;
+    max-width: 1460px;
     border: none;
-    border-top: 2px solid #ccc;
-    margin: 24px 0;
-    display: block;
+    border-top: 1px solid #d1d9e2;
+    margin: 30px 0;
 }
 
-.instrucciones {
+/* ENCABEZADO Y NAVEGADORES */
+.top-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.main-title {
     font-family: "Gilroy", sans-serif;
-    margin-bottom: 10px;
+    color: #14181e;
+    margin: 0;
+    font-size: 32px;
 }
 
 #browsers-container {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    gap: 15px;
 
-    .browser {
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        padding: 8px 12px;
-        background-color: #555;
-        color: white;
-        font-family: "Gilroy", sans-serif;
+    .browser-badge {
         display: flex;
-        align-items: center;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
     }
 
-    .browser-ok {
-        padding: 8px 12px;
-        background-color: #4caf50;
+    .browser-info {
+        background-color: #4a5568;
         color: white;
-        font-family: "Gilroy", sans-serif;
-        margin-right: 10px;
-        height: 28px;
+        padding: 6px 12px;
         display: flex;
         align-items: center;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-    }
-
-    .browser-x {
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-        height: 28px;
-        padding: 8px 12px;
-        background-color: #f44336;
-        color: white;
+        gap: 8px;
         font-family: "Gilroy", sans-serif;
-        margin-right: 10px;
-        display: flex;
-        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
     }
 
     .browser-logo {
-        width: 28px;
-        height: 28px;
-        vertical-align: middle;
-        margin-right: 8px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .browser-status {
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        color: white;
+        font-family: "Gilroy", sans-serif;
+        font-weight: 700;
+
+        &.status-ok {
+            background-color: #4caf50;
+        }
+        &.status-error {
+            background-color: #f44336;
+        }
     }
 }
 
-form #movieForm {
-    margin-bottom: 20px;
-
-    #movieSearch,
-    #movieLanguage {
-        margin-bottom: 10px;
-    }
-
-    button {
-        font-size: 14px;
-        cursor: pointer;
-        display: block;
-        margin: 20px auto;
-        padding: 10px 20px;
-    }
+/* Buscador y Resultados */
+.top-section {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-#movie-results {
+.results-section {
+    max-width: 1080px;
+}
+
+.light-panel {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
+}
+
+.light-panel .search-flex {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 15px;
+    width: 100%;
+}
+
+.light-panel .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.light-panel .title-group {
+    flex: 3;
+}
+
+.light-panel .lang-group {
+    flex: 1;
+}
+
+.light-panel .label-with-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.light-panel label {
     font-family: "Gilroy", sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    font-weight: 700;
+    margin: 0;
+}
 
-    .movie-item-alternating {
-        width: 900px;
-        max-width: 100%;
-        box-sizing: border-box;
-        min-height: 250px;
+.light-panel .hint-text {
+    font-family: "Gilroy", sans-serif;
+    font-size: 11px;
+    color: #94a3b8;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: normal;
+}
 
-        @media (max-width: 768px) {
-            flex-direction: column !important;
-            text-align: center !important;
-            margin: 0 auto 25px auto !important;
+.light-panel input[type="text"] {
+    padding: 0 14px;
+    height: 46px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    color: #0f172a;
+    font-family: "Gilroy", sans-serif;
+    font-size: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
 
-            img {
-                margin: 0 0 15px 0 !important;
-            }
-        }
-    }
+.light-panel input[type="text"]:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+    background: #ffffff;
+}
 
-    .movie-date-individual {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        white-space: nowrap;
-        
-        @media (max-width: 768px) {
-            margin: 0 0 15px 0 !important;
-        }
+.light-panel .btn-buscar {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    padding: 0;
+    margin: 0;
+    border-radius: 10px;
+    border: 0;
+    background: #283241;
+    color: #e8f1ff;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s ease;
+}
+
+.light-panel .btn-buscar:hover {
+    background: #232f3f;
+}
+
+.results-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 768px) {
+    .results-container {
+        grid-template-columns: 1fr;
     }
 }
 

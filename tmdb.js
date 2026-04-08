@@ -112,15 +112,17 @@ async function populateSearchResults() {
 
         const result = document.createElement('div');
         result.style.cursor = 'pointer';
-        result.style.padding = '8px';
-        result.style.borderBottom = '1px solid #ccc';
+        result.style.padding = '10px 12px';
+        result.style.border = '1px solid #d1d9e2';
+        result.style.borderRadius = '10px';
+        result.style.backgroundColor = '#ffffff';
         result.style.display = 'flex';
         result.style.alignItems = 'center';
         result.innerHTML = `
     <img src="https://image.tmdb.org/t/p/w500${
         movie.poster_path
-    }" style="width:48px;height:auto;margin-right:12px;" />
-    <span style="font-weight:bold;">${movie.title}</span>
+    }" style="width:48px;height:auto;margin-right:12px; border-radius: 4px;" />
+    <span style="font-weight: normal;">${movie.title}</span>
     <span style="margin-left:12px;">(${new Date(
         movie.release_date
     ).getFullYear()})</span>
@@ -217,7 +219,7 @@ async function populateSearchResults() {
             Array.from(resultsDiv.children).forEach(
                 (child) => (child.style.background = '')
             );
-            result.style.background = '#386119ff';
+            result.style.background = '#4a90e2';
         });
 
         resultsDiv.appendChild(result);

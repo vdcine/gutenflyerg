@@ -12,49 +12,67 @@
         <meta property="og:locale" content="es_ES" />
     </head>
 
-    <body>
-        <h1 class="instrucciones" style="text-align: center; padding-left: 100px">
-            Gutenflyerg de Veladas de Cine
-        </h1>
-        <div id="browsers-container">
-            <div class="browser">
-                <img src="images/firefox.svg" alt="Firefox" class="browser-logo" />
-                <span>Firefox</span>
+<body>
+        <header class="top-header">
+            <h1 class="main-title">Gutenflyerg de Veladas de Cine</h1>
+            
+            <div id="browsers-container">
+                <div class="browser-badge">
+                    <div class="browser-info"><img src="images/firefox.svg" alt="Firefox" class="browser-logo" />
+                        <span>Firefox</span>
+                    </div>
+                    <div class="browser-status status-ok">✔</div>
+                </div>
+                <div class="browser-badge">
+                    <div class="browser-info"><img src="images/chrome.png" alt="Chrome" class="browser-logo" />
+                        <span>Chrome</span>
+                    </div>
+                    <div class="browser-status status-ok">✔</div>
+                </div>
+                <div class="browser-badge">
+                    <div class="browser-info"><img src="images/edge.png" alt="Edge" class="browser-logo" />
+                        <span>Edge</span>
+                    </div>
+                    <div class="browser-status status-ok">✔</div>
+                </div>
+                <div class="browser-badge">
+                    <div class="browser-info"><img src="images/brave.png" alt="Brave" class="browser-logo" />
+                        <span>Brave</span>
+                    </div>
+                    <div class="browser-status status-ok">✔</div>
+                </div>
             </div>
-            <div class="browser-ok">✔</div>
-            <div class="browser">
-                <img src="images/chrome.png" alt="Chrome" class="browser-logo" />
-                <span>Chrome</span>
-            </div>
-            <div class="browser-ok">✔</div>
-            <div class="browser">
-                <img src="images/edge.png" alt="Edge" class="browser-logo" />
-                <span>Edge</span>
-            </div>
-            <div class="browser-ok">✔</div>
-            <div class="browser">
-                <img src="images/brave.png" alt="Brave" class="browser-logo" />
-                <span>Brave</span>
-            </div>
-            <div class="browser-ok">✔</div>
-        </div>
-        <hr />
-        <form id="movieForm">
-            <h2 class="instrucciones">1°: Buscar película</h2>
-            <span class="instrucciones">Título:</span>
-            <input type="text" id="movieSearch" placeholder="Terminator" required />
-            <br />
-            <span class="instrucciones">Idioma:</span>
-            <input type="text" id="movieLanguage" placeholder="es" />
-            <br />
-            <span class="instrucciones">No es obligatorio. 'en' para ingles, 'es' para español</span>
-            <br />
-            <button id="searchButton" type="submit">Buscar</button>
-        </form>
-        <hr />
-        <h2 class="instrucciones">2°: Seleccionar pelicula de los resultados</h2>
-        <div id="movie-results" style="margin-top: 20px"></div>
-        <hr />
+        </header>
+
+        <hr class="main-divider" />
+
+<section class="top-section">
+            <form id="movieForm" class="light-panel">
+                <div class="search-flex">
+                    <div class="input-group title-group">
+                        <label for="movieSearch">Título de la película</label>
+                        <input type="text" id="movieSearch" placeholder="Ej: Terminator" required />
+                    </div>
+                    
+                    <div class="input-group lang-group">
+                        <div class="label-with-hint">
+                            <label for="movieLanguage">Idioma</label>
+                            <span class="hint-text">(opcional)</span>
+                        </div>
+                        <input type="text" id="movieLanguage" placeholder="Ej: es" />
+                    </div>
+                    
+                    <button id="searchButton" type="submit" class="btn-buscar" title="Buscar película">&#8629;</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="top-section results-section">
+            <div id="movie-results" class="results-container"></div>
+        </section>
+
+        <hr class="main-divider" />
+        
         <div id="work-area">
             <div id="flyer" class="flyer-version" style="display: block">
                 <div id="bandavertical"></div>
