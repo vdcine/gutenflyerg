@@ -1,3 +1,8 @@
+// Esto es para ocultar la alerta de JavaScript cuando sabemos que hay JS.
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('js-alert').style.display = 'none';
+});
+
 document.getElementById('movieForm').addEventListener('submit', searchMovies);
 
 const flyer = document.getElementById('flyer');
