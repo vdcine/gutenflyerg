@@ -1,6 +1,6 @@
 // DESCARGA DE IMAGEN
-const flyerDate = document.getElementById('flyer-date');
-const flyerHour = document.getElementById('flyer-hour');
+const flyerDate = document.getElementById('flyerDate');
+const flyerHour = document.getElementById('flyerHour');
 
 const dateInput = document.getElementById('dateInput');
 const hourInput = document.getElementById('hourInput');
@@ -115,7 +115,10 @@ function applyBackdropDirect(url) {
     const fullUrl = filePath.startsWith('http')
         ? filePath
         : `https://image.tmdb.org/t/p/original${filePath}`;
-    bandavertical.style.display = 'none';
+    DesignState.DOM.bandavertical = {
+        ...(DesignState.DOM.bandavertical || {}),
+        style: { ...(DesignState.DOM.bandavertical?.style || {}), display: 'none' }
+    };
     setBackdropAsBackground(fullUrl);
 }
 
@@ -179,7 +182,7 @@ function formatDateToSpanish(dateStr) {
 // BOOTSTRAPPER
 // Función auxiliar para obtener el fontsize
 async function initializeControlValues() {
-    restoreElementColors();
+    migrateElementColors();
     await populateSearchResults();
     shiftPoster(0);
     shiftBackdrop(0);
@@ -188,19 +191,47 @@ async function initializeControlValues() {
     if (SearchState.selectedMovie) {
         const movie = SearchState.selectedMovie;
         if (movie.release_date) {
-            document.getElementById('year').textContent = new Date(
-                movie.release_date
-            ).getFullYear();
+            SearchState.DOM.year = { textContent: new Date(movie.release_date).getFullYear() };
         }
         const director = movie.director;
-        document.getElementById('director').textContent = director
-            ? director.name
-            : '';
+        SearchState.DOM.director = { textContent: director ? director.name : '' };
         if (movie.details && movie.details.runtime) {
-            document.getElementById('duracion').textContent =
-                `${movie.details.runtime} minutos`;
+            SearchState.DOM.duracion = { textContent: `${movie.details.runtime} minutos` };
         }
     }
+
+    // cargar valores del panel desde DesignState o usar defaults
+    // el título editado manualmente (si no está vacío) tiene prioridad sobre el que viene de tmdb
+    const designTitle = DesignState.DOM.titleInput?.value;
+    const titleValue = designTitle && designTitle !== '' ? designTitle : (SearchState.selectedMovie?.title || '');
+    const cicloValue = DesignState.DOM.cicloInput?.value || DesignState.ciclo || defaultDesignState.ciclo;
+    const dateValue = DesignState.DOM.dateInput?.value || DesignState.date || defaultDesignState.date;
+    const hourValue = DesignState.DOM.hourInput?.value || DesignState.hour || defaultDesignState.hour;
+    const orgValue = DesignState.DOM.orgInput?.value || DesignState.orgText || defaultDesignState.orgText;
+
+    const titleEl = document.getElementById('titleInput');
+    if (titleEl) titleEl.value = titleValue;
+
+    const cicloEl = document.getElementById('cicloInput');
+    if (cicloEl) cicloEl.value = cicloValue;
+
+    const dateEl = document.getElementById('dateInput');
+    if (dateEl) dateEl.value = dateValue;
+
+    const hourEl = document.getElementById('hourInput');
+    if (hourEl) hourEl.value = hourValue;
+
+    const orgEl = document.getElementById('orgInput');
+    if (orgEl) orgEl.value = orgValue;
+
+    DesignState.DOM = {
+        ...DesignState.DOM,
+        title: { textContent: titleValue.replace(/\n/g, "<br />") },
+        flyerCiclo: { textContent: cicloValue },
+        flyerDate: { textContent: formatDateToSpanish(dateValue) },
+        flyerHour: { textContent: hourValue },
+        flyerOrg: { textContent: orgValue }
+    };
 
     if (DesignState.fontSizes) {
         const { flyerDate, flyerHour, flyerTitle, flyerTitleMarginTop, rectWidth } = DesignState.fontSizes;
