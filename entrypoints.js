@@ -227,3 +227,11 @@ document.getElementById('posters').addEventListener('click', (e) => {
         '_blank'
     );
 });
+
+window.addEventListener('error', (e) => {
+  alert(`En la línea ${e.lineno}\ndel archivo\n${e.filename}\nsucedió:\n${e.message}.`);
+})
+
+window.addEventListener('unhandledrejection', (e) => {
+  alert(`Promesa ${e.promise} rechazada sin manejar.\nRazón: ${e.reason}.`);
+});
