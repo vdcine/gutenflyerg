@@ -107,6 +107,7 @@ hr.main-divider {
     color: #14181e;
     margin: 0;
     font-size: 32px;
+    font-weight: 800;
 }
 
 #browsers-container {
@@ -130,13 +131,13 @@ hr.main-divider {
         align-items: center;
         gap: 8px;
         font-family: "Gilroy", sans-serif;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 600;
     }
 
     .browser-logo {
-        width: 20px;
-        height: 20px;
+        width: 32px;
+        height: 32px;
     }
 
     .browser-status {
@@ -145,7 +146,7 @@ hr.main-divider {
         align-items: center;
         color: white;
         font-family: "Gilroy", sans-serif;
-        font-weight: 700;
+        font-weight: 600;
 
         &.status-ok {
             background-color: #4caf50;
@@ -215,7 +216,7 @@ hr.main-divider {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #64748b;
-    font-weight: 700;
+    font-weight: 800;
     margin: 0;
 }
 
@@ -226,6 +227,7 @@ hr.main-divider {
     font-style: italic;
     text-transform: none;
     letter-spacing: normal;
+    font-weight: 600;
 }
 
 .light-panel input[type="text"] {
@@ -237,6 +239,7 @@ hr.main-divider {
     color: #0f172a;
     font-family: "Gilroy", sans-serif;
     font-size: 15px;
+    font-weight: 500;
     width: 100%;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
@@ -255,20 +258,21 @@ hr.main-divider {
     flex-shrink: 0;
     padding: 0;
     margin: 0;
-    border-radius: 10px;
-    border: 0;
-    background: #283241;
+    border-radius: 8px;
+    border: 1px solid #283241;
+    background: #1a2430;
     color: #e8f1ff;
     cursor: pointer;
     font-size: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .light-panel .btn-buscar:hover {
     background: #232f3f;
+    border-color: #3a4759;
 }
 
 .results-container {
@@ -454,6 +458,7 @@ hr.main-divider {
                     white-space: normal;
                     color: #000000;
                     pointer-events: auto;
+                    font-weight: 800;
                 }
 
                 #bubble {
@@ -481,7 +486,7 @@ hr.main-divider {
                     .comic-text {
                         font-family: "Gilroy", sans-serif;
                         font-size: 28px;
-                        font-weight: 650;
+                        font-weight: 800;
                         color: #000000;
                         position: relative;
                         z-index: 2;
@@ -529,7 +534,7 @@ hr.main-divider {
                     text-align: center;
                     width: 100%;
                     font-family: "Gilroy", sans-serif;
-                    font-weight: 700;
+                    font-weight: 800;
                     pointer-events: auto;
                 }
 
@@ -552,7 +557,7 @@ hr.main-divider {
                 #duracion,
                 #edad-sugerida {
                     font-family: "Gilroy", sans-serif;
-                    font-weight: 700;
+                    font-weight: 800;
                     position: relative;
                     margin: 0;
                     line-height: 1;
@@ -563,6 +568,7 @@ hr.main-divider {
                     font-size: 42px;
                     max-width: 500px;
                     word-break: break-word;
+                    text-align: center;
                 }
 
                 #year {
@@ -604,7 +610,7 @@ hr.main-divider {
                     font-family: "Gilroy", sans-serif;
                     color: #ca550b;
                     font-size: 28px;
-                    font-weight: 700;
+                    font-weight: 800;
                     text-align: center;
                     line-height: 1;
                     flex-shrink: 0;
@@ -645,8 +651,8 @@ hr.main-divider {
                 text-align: center;
                 position: relative;
                 font-family: "Gilroy", sans-serif;
-                font-weight: 600;
-                font-size: 21px;
+                font-weight: 700;
+                font-size: 20px;
                 margin: 0;
                 z-index: 2;
                 pointer-events: auto;
@@ -679,6 +685,8 @@ hr.main-divider {
             text-transform: uppercase;
             letter-spacing: 0.1em;
             opacity: 0.8;
+            font-weight: 600;
+            text-align: center;
         }
 
         .panel-section {
@@ -693,6 +701,8 @@ hr.main-divider {
                 color: #ffffff;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
+                font-weight: 600;
+                text-align: center;
             }
         }
 
@@ -734,6 +744,7 @@ hr.main-divider {
             color: #e8f1ff;
             font-family: "Gilroy", sans-serif;
             font-size: 14px;
+            font-weight: 500;
             width: 100%;
             box-sizing: border-box;
             color-scheme: dark;
@@ -836,7 +847,7 @@ hr.main-divider {
             span {
                 font-size: 12px;
                 color: #8c9baf;
-                font-weight: 600;
+                font-weight: 500;
                 min-width: 14px;
             }
         }
@@ -893,7 +904,7 @@ hr.main-divider {
             color: #8c9baf;
             min-width: 60px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .btn-icon {
@@ -935,6 +946,7 @@ hr.main-divider {
             font-size: 13px;
             color: #8c9baf;
             text-align: center;
+            font-weight: 400;
         }
 
         /* --- Pistola de Color --- */

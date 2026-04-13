@@ -118,17 +118,27 @@ async function populateSearchResults() {
         result.style.backgroundColor = '#ffffff';
         result.style.display = 'flex';
         result.style.alignItems = 'center';
+        result.style.gap = '15px'; // Espaciado automático entre la imagen, el título y la info
+        result.style.fontFamily = '"Gilroy", sans-serif';
+
         result.innerHTML = `
     <img src="https://image.tmdb.org/t/p/w500${
         movie.poster_path
-    }" style="width:48px;height:auto;margin-right:12px; border-radius: 4px;" />
-    <span style="font-weight: normal;">${movie.title}</span>
-    <span style="margin-left:12px;">(${new Date(
-        movie.release_date
-    ).getFullYear()})</span>
-    <span style="margin-left:12px;">${
-        movie.director ? movie.director.name : 'Director no disponible'
-    }</span>`;
+    }" style="width:48px; height:auto; border-radius: 4px; flex-shrink: 0;" />
+
+    <div style="flex-grow: 1; text-align: left;">
+        <span style="font-weight: 700; font-size: 16px; color: #0f172a;">${movie.title}</span>
+    </div>
+
+    <div style="display: flex; gap: 8px; align-items: center; text-align: right; flex-shrink: 0;">
+        <span style="font-weight: 500; color: #334155;">(${new Date(
+            movie.release_date
+        ).getFullYear()})</span>
+
+        <span style="font-weight: 500; color: #334155;">${
+            movie.director ? movie.director.name : 'Director no disponible'
+        }</span>
+    </div>`;
         result.addEventListener('click', async () => {
             console.log(movie.title);
             GlobalState.selectedMovie = movie;
@@ -247,7 +257,7 @@ function shiftBackdrop(delta) {
         ? filePath
         : `https://image.tmdb.org/t/p/w1280${filePath}`;
 
-    document.getElementById('backdrop-counter').textContent = 
+    document.getElementById('backdrop-counter').textContent =
         `${index + 1} de ${backdrops_len}`;
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
@@ -267,7 +277,7 @@ function shiftPoster(delta) {
         ? filePath
         : `https://image.tmdb.org/t/p/w780${filePath}`;
 
-    document.getElementById('poster-counter').textContent = 
+    document.getElementById('poster-counter').textContent =
         `${index + 1} de ${posters_len}`;
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
