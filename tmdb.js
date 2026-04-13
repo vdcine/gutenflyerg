@@ -71,7 +71,7 @@ async function searchMovies(e) {
   SearchState.DOM.movieLanguage = { value: document.getElementById('movieLanguage').value };
 
     const searchRes = await fetch(
-        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${SearchState.search_title}&language=${SearchState.search_language}`
+        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${SearchState.DOM.movieSearch?.value || ''}&language=${SearchState.DOM.movieLanguage?.value || 'es-AR'}`
     );
 
     const searchData = await searchRes.json();
@@ -131,12 +131,10 @@ async function populateSearchResults() {
             console.log(movie.title);
             SearchState.selectedMovie = movie;
             SearchState.DOM.year = { textContent: new Date(movie.release_date).getFullYear() };
-            SearchState.DOM.director = { textContent: movie.director ? director.name : "" };
+            SearchState.DOM.director = { textContent: movie.director ? movie.director.name : "" };
             SearchState.DOM.duracion = { textContent: `${movie.details.runtime} minutos` };
-            SearchState.DOM.title = { textContent: movie.title };
-            SearchState.DOM.titleInput = { value: movie.title };
-            DesignState.DOM.edadSugerida = { textContent: mappedCertification || '' };
-            DesignState.DOM.edadSugeridaInput = { value: mappedCertification || '' };
+            DesignState.DOM.title = { textContent: movie.title };
+            DesignState.DOM.titleInput = { value: movie.title };
 
             const releaseDatesRes = await fetch(
                 `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
@@ -177,11 +175,10 @@ async function populateSearchResults() {
             const mappedCertification =
                 certificationMap[certification] || certification;
 
+            DesignState.DOM.edadSugerida = { textContent: mappedCertification || '' };
+            DesignState.DOM.edadSugeridaInput = { value: mappedCertification || '' };
 
             if (mappedCertification) {
-                document.getElementById('edadSugeridaInput').value =
-                    mappedCertification;
-
                 const edadElements = [document.getElementById('edad-sugerida')];
 
                 edadElements.forEach((el) => {
@@ -273,9 +270,10 @@ function restoreBackdropDisplay() {
         ? filePath
         : `https://image.tmdb.org/t/p/w1280${filePath}`;
 
-    document.getElementById('backdrop-carousel-img').src = url;
-    document.getElementById('backdrop-counter').textContent =
-        `Backdrop ${index + 1} de ${SearchState.backdrops.length}`;
+    SearchState.DOM['backdrop-carousel-img'] = { src: url };
+    SearchState.DOM['backdrop-counter'] = {
+        textContent: `Backdrop ${index + 1} de ${SearchState.backdrops.length}`
+    };
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
     restoreBackdropImage(proxiedUrl);
@@ -289,9 +287,10 @@ function restorePosterDisplay() {
         ? filePath
         : `https://image.tmdb.org/t/p/w780${filePath}`;
 
-    document.getElementById('poster-carousel-img').src = url;
-    document.getElementById('poster-counter').textContent =
-        `Poster ${index + 1} de ${SearchState.posters.length}`;
+    SearchState.DOM['poster-carousel-img'] = { src: url };
+    SearchState.DOM['poster-counter'] = {
+        textContent: `Poster ${index + 1} de ${SearchState.posters.length}`
+    };
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
     restorePosterImage(proxiedUrl);
@@ -370,8 +369,12 @@ function updateBackdrop(url) {
         flyer.prepend(blurBg);
     }
 
-    blurBg.style.backgroundImage = `url('${url}')`;
-    flyer.style.backgroundImage = '';
+    DesignState.DOM['flyer-blur-bg-story'] = {
+        style: { backgroundImage: `url('${url}')` }
+    };
+    DesignState.DOM['flyer'] = {
+        style: { backgroundImage: '' }
+    };
 }
 
 function updatePoster(url) {
