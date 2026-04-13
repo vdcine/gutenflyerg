@@ -16,6 +16,15 @@ function clearAllStorage() {
     window.location.reload();
 }
 
+const defaultSearchState = {
+    DOM: {},
+    backdrops: [],
+    posters: [],
+    currentBackdrop: 0,
+    currentPoster: 0,
+};
+
+// TODO: ver redundancias
 const defaultDesignState = {
     version: '1',
     titulo: 'Título de la Peli',
@@ -26,8 +35,6 @@ const defaultDesignState = {
     hour: '19:00',
     currentPaintColor: '#00ff00',
     strokeColor: '#000000',
-    bandaHidden: false,
-    elementColors: {},
     strokeTargets: [],
     fontSizes: {
         flyerDate: '34',
@@ -37,63 +44,64 @@ const defaultDesignState = {
         rectWidth: '460',
     },
     backgroundImage: '',
+    DOM: {
+        // inputs del panel
+        titleInput: { value: '' },
+        cicloInput: { value: 'Nombre del ciclo' },
+        dateInput: { value: '2026-03-11' },
+        hourInput: { value: '19:00' },
+        orgInput: { value: 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.' },
+        // elementos del flyer
+        title: { textContent: 'Título' },
+        flyerCiclo: { textContent: 'Ciclo' },
+        flyerDate: { textContent: '' },
+        flyerHour: { textContent: '19:00 HS' },
+        flyerOrg: { textContent: 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.' },
+        // tamaños del panel
+        flyerDateFontSizeInput: { value: '34' },
+        flyerHourFontSizeInput: { value: '40' },
+        flyerTitleFontSizeInput: { value: '42' },
+        flyerTitleMarginTopInput: { value: '24' },
+        rectWidthInput: { value: '460' },
+        // figuras
+        bandavertical: { style: { display: 'block', width: '460px' } },
+        flyer: { style: { backgroundImage: '' } },
+        // edades
+        edadSugerida: { textContent: '' },
+        edadSugeridaInput: { value: '' },
+    },
 };
 
 function updateDOMFromState() {
-    console.log('[State] Actualizando DOM desde state...');
-    if (!document.getElementById("flyer")) {
-        console.warn("DOM no listo para actualizar");
-        return;
-    }
+    if (!document.getElementById("flyer")) return;
 
-    Object.entries(SearchState.DOM).forEach(([eid, props]) =>  Object.entries(props).forEach(([k, v]) => document.getElementById(eid)[k] = v));
-    Object.entries(DesignState.DOM).forEach(([eid, props]) =>  Object.entries(props).forEach(([k, v]) => document.getElementById(eid)[k] = v));
-    // idealmente la función debería terminar acá
+    //Object.entries(SearchState.DOM).forEach(([eid, props]) =>  Object.entries(props).forEach(([k, v]) => document.getElementById(eid)[k] = v));
+    Object.entries(SearchState.DOM).forEach(([eid, props]) => {
+        const el = document.getElementById(eid);
+        if (!el) return;
+        Object.entries(props).forEach(([k, v]) => el[k] = v);
+    });
 
-    if (DesignState.strokeColor) {
-        setInputValue("strokeColorInput", DesignState.strokeColor);
-    }
-
-    if (DesignState.strokeTargets && DesignState.strokeTargets.length > 0) {
-        const color = DesignState.strokeColor || '#000000';
-        DesignState.strokeTargets.forEach(targetId => {
-            const target = document.getElementById(targetId);
-            if (target) {
-                target.style.textShadow = `
-                    -1px -1px 0 ${color},
-                    1px -1px 0 ${color},
-                    -1px 1px 0 ${color},
-                    1px 1px 0 ${color}
-                    `;
+    Object.entries(DesignState.DOM).forEach(([eid, props]) => {
+      // document.getElementByID(eid)[k] = v // mal cuando el valor es un dict , porque pisa todo el previo y no lo actualiza
+        const el = document.getElementById(eid);
+        if (!el) return;// TODO: agregarle el else para que tire el error en caso de que haya
+        Object.entries(props).forEach(([prop, v]) => {
+            if (typeof el[prop] === 'object') { // ¿testear el typo del valor actual o del valor que quiero aplicar?
+            // if (typeof v === 'object') { // ¿testear el typo del valor actual o del valor que quiero aplicar?
+                Object.assign(el[prop], v);
+            } else {
+                el[prop] = v;
             }
         });
-    }
-
-    if (DesignState.backgroundImage) {
-        const flyerEl = document.getElementById("flyer");
-        if (flyerEl)
-            flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
-    }
-
-    restoreElementColors();
-    restoreBackdropDisplay();
-    restorePosterDisplay();
-
-    console.log("DOM actualizado desde state");
+    });
 }
-
-
-  // CARROUSEL
-  SearchState.backdrops = SearchState.backdrops || [];
-  SearchState.posters = SearchState.posters || [];
-  SearchState.currentBackdrop = SearchState.currentBackdrop || 0;
-  SearchState.currentPoster = SearchState.currentPoster || 0;
 
 //const initialSearchData = fromStorage('SearchState') || {};
 //initialSearchData[INIT_FLAG] = false;
 
 const SearchState = new Proxy(
-    fromStorage('SearchState') || {},
+    { ...defaultSearchState, ...fromStorage('SearchState') },
     {
         set(target, prop, value) {
             target[prop] = value;
