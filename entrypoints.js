@@ -44,14 +44,16 @@ fileInput.addEventListener("change", handleFileImport);
 document.getElementById("importDataBtn").addEventListener("click", () => fileInput.click());
 
 // PANEL
-DesignState.bandaHidden = DesignState.bandaHidden || false;
-
 document.getElementById('toggle-banda').addEventListener('click', (e) => {
-    DesignState.bandaHidden = !DesignState.bandaHidden;
-    bandavertical.style.display = DesignState.bandaHidden ? 'none' : 'block';
-    this.textContent = DesignState.bandaHidden
-        ? 'Mostrar banda vertical'
-        : 'Ocultar banda vertical';
+    const banda_display = DesignState.DOM.bandavertical.style.display;
+    if (banda_display == 'block') {
+        // Si es block, está visible y la vamos a ocultar.
+        this.textContent = 'Mostrar banda vertical';
+        DesignState.DOM.bandavertical.style.display = 'none';
+    } else {
+        this.textContent = 'Ocultar banda vertical';
+        DesignState.DOM.bandavertical.style.display = 'block';
+    }
 });
 
 document.getElementById('strokeColorInput').addEventListener('input', (e) => {
@@ -132,45 +134,66 @@ document.getElementById('removeStrokeBtn').addEventListener('click', () => {
 //     }
 // }
 
-document.getElementById('applyTxtBtn').addEventListener('click', () => {
-    // Elementos del flyer
-    DesignState.DOM.flyerTitle = { textContent: document.getElementById('titleInput').value.replace(/\n/g, "<br />") };
-    DesignState.DOM.flyerCiclo = { textContent: document.getElementById('cicloInput').value };
-    DesignState.DOM.flyerDate = { textContent: formatDateToSpanish(document.getElementById('dateInput').value) };
-    DesignState.DOM.flyerHour = { textContent: document.getElementById('hourInput').value };
-    DesignState.DOM.flyerOrg = { textContent: document.getElementById('orgInput').value };
+document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
+    e.preventDefault();
 
-    // Elementos del panel
-    DesignState.DOM.titleInput = { value: document.getElementById('titleInput').value };
-    DesignState.DOM.cicloInput = { value: document.getElementById('cicloInput').value };
-    DesignState.DOM.dateInput = { value: document.getElementById('dateInput').value };
-    DesignState.DOM.hourInput = { value: document.getElementById('hourInput').value };
-    DesignState.DOM.orgInput = { value: document.getElementById('orgInput').value };
+    const titleInput = document.getElementById('titleInput');
+    const cicloInput = document.getElementById('cicloInput');
+    const dateInput = document.getElementById('dateInput');
+    const hourInput = document.getElementById('hourInput');
+    const orgInput = document.getElementById('orgInput');
+
+    DesignState.DOM = {
+        ...DesignState.DOM,
+        // elementos del flyer
+        title: { textContent: titleInput.value.replace(/\n/g, "<br />") },
+        flyerCiclo: { textContent: cicloInput.value },
+        flyerDate: { textContent: formatDateToSpanish(dateInput.value) },
+        flyerHour: { textContent: hourInput.value },
+        flyerOrg: { textContent: orgInput.value },
+        // elementos del panel
+        titleInput: { value: titleInput.value },
+        cicloInput: { value: cicloInput.value },
+        dateInput: { value: dateInput.value },
+        hourInput: { value: hourInput.value },
+        orgInput: { value: orgInput.value }
+    };
 });
 
 document.getElementById("flyerDateFontSizeInput").addEventListener("input", (e) => {
     DesignState.DOM.flyerDateFontSizeInput = { value: e.target.value };
-    DesignState.DOM.flyerDate.style = { fontSize: e.target.value + "px" };
+    DesignState.fontSizes.flyerDate = e.target.value;
+    DesignState.DOM.flyerDate = { ...(DesignState.DOM.flyerDate || {}), style: { fontSize: e.target.value + "px" } };
 });
 
 document.getElementById('flyerHourFontSizeInput').addEventListener('input', (e) => {
     DesignState.DOM.flyerHourFontSizeInput = {value: e.target.value}
-    DesignState.DOM.flyerHour.style = { fontSize: e.target.value + "px" }
+    DesignState.fontSizes.flyerHour = e.target.value;
+    DesignState.DOM.flyerHour = { ...(DesignState.DOM.flyerHour || {}), style: { fontSize: e.target.value + "px" } }
 });
 
 document.getElementById('flyerTitleFontSizeInput').addEventListener('input', (e) => {
     DesignState.DOM.flyerTitleFontSizeInput = {value: e.target.value}
-    DesignState.DOM.flyerTitle.style = { fontSize: e.target.value + "px" }
+    DesignState.fontSizes.flyerTitle = e.target.value;
+    DesignState.DOM.title = {
+        textContent: DesignState.DOM.title?.textContent || '',
+        style: { fontSize: e.target.value + "px" }
+    }
 });
 
 document.getElementById('flyerTitleMarginTopInput').addEventListener('input', (e) => {
     DesignState.DOM.flyerTitleMarginTopInput = {value: e.target.value}
-    DesignState.DOM.flyerTitle.style = { marginTop: e.target.value + "px" }
+    DesignState.fontSizes.flyerTitleMarginTop = e.target.value;
+    DesignState.DOM.title = {
+        textContent: DesignState.DOM.title?.textContent || '',
+        style: { ...(DesignState.DOM.title?.style || {}), marginTop: e.target.value + "px" }
+    }
 });
 
 document.getElementById('rectWidthInput').addEventListener('input', (e) => {
     DesignState.DOM.rectWidthInput = {value: e.target.value}
-    DesignState.DOM.bandavertical.style = { width: e.target.value + "px" }
+    DesignState.fontSizes.rectWidth = e.target.value;
+    DesignState.DOM.bandavertical = { ...(DesignState.DOM.bandavertical || {}), style: { ...(DesignState.DOM.bandavertical?.style || {}), width: e.target.value + "px" } }
 });
 
 document.getElementById('saveFlyer').addEventListener('click', () => {
@@ -204,12 +227,16 @@ document.getElementById('poster-next').addEventListener('click', (e) => {
 });
 
 document.getElementById('remove-backdrop-bg').addEventListener('click', () => {
-    const flyerStory = document.getElementById('flyer');
+    DesignState.DOM.bandavertical = {
+        ...(DesignState.DOM.bandavertical || {}),
+        style: { ...(DesignState.DOM.bandavertical?.style || {}), display: 'block' }
+    };
 
-    bandavertical.style.display = 'block';
-
-    flyerStory.style.backgroundImage = '';
     DesignState.backgroundImage = '';
+    DesignState.DOM['flyer'] = {
+        style: { backgroundImage: '' }
+    };
+    delete DesignState.DOM['flyer-blur-bg-story'];
 
     const blurBgStory = document.getElementById('flyer-blur-bg-story');
 
