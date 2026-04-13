@@ -5,6 +5,13 @@ const flyerHour = document.getElementById('flyer-hour');
 const dateInput = document.getElementById('dateInput');
 const hourInput = document.getElementById('hourInput');
 
+const coloresEdad = {
+    'ATP': '#4CAF50',
+    '+13': '#2196F3',
+    '+16': '#FF9800',
+    '+18': '#f44336',
+};
+
 async function applyBlurToImage(imageUrl) {
     return new Promise((resolve) => {
         const img = new Image();
@@ -233,8 +240,8 @@ async function initializeControlValues() {
     }
 
     if (GlobalState.edadSugerida) {
-        document.getElementById('edadSugeridaInput').value =
-            GlobalState.edadSugerida;
+        const selectEdad = document.getElementById('edadSugeridaSelect');
+        selectEdad.value = GlobalState.edadSugerida;
     }
 
     if (GlobalState.orgText) {
@@ -246,4 +253,26 @@ async function initializeControlValues() {
     if (applyBtn) applyBtn.click();
 
     console.log('Valores de controles inicializados con CSS por defecto');
+}
+
+function actualizarEdadSugerida(certificacion) {
+    const badge = document.getElementById('edad-sugerida');
+    const select = document.getElementById('edadSugeridaSelect');
+
+    if (select && certificacion !== undefined) {
+        select.value = certificacion;
+    }
+
+    if (!badge) return;
+
+    if (!certificacion) {
+        badge.style.display = 'none';
+        return;
+    }
+
+    badge.textContent = certificacion;
+    badge.style.display = 'inline-block';
+    badge.style.color = 'white';
+    
+    badge.style.backgroundColor = coloresEdad[certificacion] || '#777'; 
 }

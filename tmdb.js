@@ -53,6 +53,7 @@ const certificationMap = {
     SAM16: 'SAM 16',
     SAM18: 'SAM 18',
     'MA15+': '+16',
+    'MA 15+': '+16',
     M: '+13',
     G: 'ATP',
     PG: '+13',
@@ -111,21 +112,33 @@ async function populateSearchResults() {
 
         const result = document.createElement('div');
         result.style.cursor = 'pointer';
-        result.style.padding = '8px';
-        result.style.borderBottom = '1px solid #ccc';
+        result.style.padding = '10px 12px';
+        result.style.border = '1px solid #d1d9e2';
+        result.style.borderRadius = '10px';
+        result.style.backgroundColor = '#ffffff';
         result.style.display = 'flex';
         result.style.alignItems = 'center';
+        result.style.gap = '15px'; // Espaciado automático entre la imagen, el título y la info
+        result.style.fontFamily = '"Gilroy", sans-serif';
+
         result.innerHTML = `
     <img src="https://image.tmdb.org/t/p/w500${
         movie.poster_path
-    }" style="width:48px;height:auto;margin-right:12px;" />
-    <span style="font-weight:bold;">${movie.title}</span>
-    <span style="margin-left:12px;">(${new Date(
-        movie.release_date
-    ).getFullYear()})</span>
-    <span style="margin-left:12px;">${
-        movie.director ? movie.director.name : 'Director no disponible'
-    }</span>`;
+    }" style="width:48px; height:auto; border-radius: 4px; flex-shrink: 0;" />
+
+    <div style="flex-grow: 1; text-align: left;">
+        <span style="font-weight: 700; font-size: 16px; color: #0f172a;">${movie.title}</span>
+    </div>
+
+    <div style="display: flex; gap: 8px; align-items: center; text-align: right; flex-shrink: 0;">
+        <span style="font-weight: 500; color: #334155;">(${new Date(
+            movie.release_date
+        ).getFullYear()})</span>
+
+        <span style="font-weight: 500; color: #334155;">${
+            movie.director ? movie.director.name : 'Director no disponible'
+        }</span>
+    </div>`;
         result.addEventListener('click', async () => {
             console.log(movie.title);
             GlobalState.selectedMovie = movie;
@@ -174,44 +187,8 @@ async function populateSearchResults() {
             GlobalState.titulo = movie.title;
             GlobalState.edadSugerida = mappedCertification || '';
 
-            if (mappedCertification) {
-                document.getElementById('edadSugeridaInput').value =
-                    mappedCertification;
+            actualizarEdadSugerida(mappedCertification || '');
 
-                const edadElements = [document.getElementById('edad-sugerida')];
-
-                edadElements.forEach((el) => {
-                    if (el) {
-                        el.textContent = mappedCertification;
-                        el.style.display = 'inline-block';
-                        if (mappedCertification === 'ATP') {
-                            el.style.backgroundColor = '#4CAF50'; // Verde para ATP
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+13' ||
-                            mappedCertification === 'SAM 13'
-                        ) {
-                            el.style.backgroundColor = '#2196F3'; // Azul para +13
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+16' ||
-                            mappedCertification === 'SAM 16'
-                        ) {
-                            el.style.backgroundColor = '#FF9800'; // Naranja para +16
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+18' ||
-                            mappedCertification === 'SAM 18'
-                        ) {
-                            el.style.backgroundColor = '#f44336'; // Rojo para +18
-                            el.style.color = 'white';
-                        } else {
-                            el.style.backgroundColor = '#777'; // Gris para otros
-                            el.style.color = 'white';
-                        }
-                    }
-                });
-            }
             document.getElementById('year').textContent = new Date(
                 movie.release_date
             ).getFullYear();
@@ -252,14 +229,14 @@ async function populateSearchResults() {
             Array.from(resultsDiv.children).forEach(
                 (child) => (child.style.background = '')
             );
-            result.style.background = '#386119ff';
+            result.style.background = '#4a90e2';
         });
 
         resultsDiv.appendChild(result);
     }
 }
 
-// CARROUSEL
+// CAROUSEL
 GlobalState.backdrops = GlobalState.backdrops || [];
 GlobalState.posters = GlobalState.posters || [];
 GlobalState.currentBackdrop = GlobalState.currentBackdrop || 0;
@@ -280,9 +257,8 @@ function shiftBackdrop(delta) {
         ? filePath
         : `https://image.tmdb.org/t/p/w1280${filePath}`;
 
-    document.getElementById('backdrop-carousel-img').src = url;
     document.getElementById('backdrop-counter').textContent =
-        `Backdrop ${index + 1} de ${backdrops_len}`;
+        `${index + 1} de ${backdrops_len}`;
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
     updateBackdrop(proxiedUrl);
@@ -301,9 +277,8 @@ function shiftPoster(delta) {
         ? filePath
         : `https://image.tmdb.org/t/p/w780${filePath}`;
 
-    document.getElementById('poster-carousel-img').src = url;
     document.getElementById('poster-counter').textContent =
-        `Poster ${index + 1} de ${posters_len}`;
+        `${index + 1} de ${posters_len}`;
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
     updatePoster(proxiedUrl);
