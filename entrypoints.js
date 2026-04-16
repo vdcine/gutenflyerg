@@ -145,13 +145,11 @@ document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
 
     DesignState.DOM = {
         ...DesignState.DOM,
-        // elementos del flyer
-        title: { textContent: titleInput.value.replace(/\n/g, "<br />") },
-        flyerCiclo: { textContent: cicloInput.value },
-        flyerDate: { textContent: formatDateToSpanish(dateInput.value) },
-        flyerHour: { textContent: hourInput.value },
-        flyerOrg: { textContent: orgInput.value },
-        // elementos del panel
+        title: { ...(DesignState.DOM.title || {}), textContent: titleInput.value.replace(/\n/g, "<br />") },
+        flyerCiclo: { ...(DesignState.DOM.flyerCiclo || {}), textContent: cicloInput.value },
+        flyerDate: { ...(DesignState.DOM.flyerDate || {}), textContent: formatDateToSpanish(dateInput.value) },
+        flyerHour: { ...(DesignState.DOM.flyerHour || {}), textContent: hourInput.value },
+        flyerOrg: { ...(DesignState.DOM.flyerOrg || {}), textContent: orgInput.value },
         titleInput: { value: titleInput.value },
         cicloInput: { value: cicloInput.value },
         dateInput: { value: dateInput.value },
@@ -163,13 +161,13 @@ document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
 document.getElementById("flyerDateFontSizeInput").addEventListener("input", (e) => {
     DesignState.DOM.flyerDateFontSizeInput = { value: e.target.value };
     DesignState.fontSizes.flyerDate = e.target.value;
-    DesignState.DOM.flyerDate = { ...(DesignState.DOM.flyerDate || {}), style: { fontSize: e.target.value + "px" } };
+    DesignState.DOM.flyerDate = { ...(DesignState.DOM.flyerDate || {}), style: { ...(DesignState.DOM.flyerDate?.style || {}), fontSize: e.target.value + "px" } };
 });
 
 document.getElementById('flyerHourFontSizeInput').addEventListener('input', (e) => {
     DesignState.DOM.flyerHourFontSizeInput = {value: e.target.value}
     DesignState.fontSizes.flyerHour = e.target.value;
-    DesignState.DOM.flyerHour = { ...(DesignState.DOM.flyerHour || {}), style: { fontSize: e.target.value + "px" } }
+    DesignState.DOM.flyerHour = { ...(DesignState.DOM.flyerHour || {}), style: { ...(DesignState.DOM.flyerHour?.style || {}), fontSize: e.target.value + "px" } }
 });
 
 document.getElementById('flyerTitleFontSizeInput').addEventListener('input', (e) => {
@@ -177,7 +175,7 @@ document.getElementById('flyerTitleFontSizeInput').addEventListener('input', (e)
     DesignState.fontSizes.flyerTitle = e.target.value;
     DesignState.DOM.title = {
         textContent: DesignState.DOM.title?.textContent || '',
-        style: { fontSize: e.target.value + "px" }
+        style: { ...(DesignState.DOM.title?.style || {}), fontSize: e.target.value + "px" }
     }
 });
 
@@ -206,15 +204,13 @@ document.getElementById('saveFlyer').addEventListener('click', () => {
 // BACKDROP CAROUSEL
 document.getElementById('backdrop-next').addEventListener('click',
   (e) => {
-    const k = SearchState.backdrops.length;
-    SearchState.currentBackdrop = (SearchState.currentBackdrop + 1) % k;
+    shiftBackdrop(1);
   }
 );
 
 document.getElementById('backdrop-prev').addEventListener('click',
     (e) => {
-      const k = SearchState.backdrops.length;
-      SearchState.currentBackdrop = (SearchState.currentBackdrop - 1) % k;
+      shiftBackdrop(-1);
     }
 );
 
@@ -325,16 +321,12 @@ document.getElementById('posters').addEventListener('click', (e) => {
 
 document.getElementById('deleteLocalS').addEventListener('click', () => {
     if (confirm('¿Estás seguro de que deseas borrar todos los datos guardados y cargados del Flyer?')) {
-        document.getElementById('cicloInput').value = 'Nombre del ciclo';
-        document.getElementById('dateInput').value = '2026-03-11';
-        document.getElementById('hourInput').value = '19:00';
-        document.getElementById('titleInput').value = 'Titulo de la Peli';
-        document.getElementById('edadSugeridaInput').value = '';
-        document.getElementById('orgInput').value = 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.';
-        document.getElementById('ciclo').textContent = '';
-        document.getElementById('flyer-date').textContent = '';
-        document.getElementById('flyer-hour').textContent = '';
-        document.getElementById('title').textContent = '';
+        Object.keys(defaultDesignState).forEach(key => {
+            DesignState[key] = defaultDesignState[key];
+        });
+        Object.keys(defaultSearchState).forEach(key => {
+            SearchState[key] = defaultSearchState[key];
+        });
         clearAllStorage();
     }
 });
