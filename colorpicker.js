@@ -1,38 +1,34 @@
 let comicTailBgStyle;
 
-DesignState.currentPaintColor = DesignState.currentPaintColor || '#00ff00';
-if (!('elementColors' in DesignState) || !DesignState.elementColors) {
-    DesignState.elementColors = {};
-}
+comicTailBgStyle = document.createElement('style');
+comicTailBgStyle.id = 'comic-tail-bg-style';
+document.head.appendChild(comicTailBgStyle);
 
 function saveElementColor(element, color, isBackground) {
     if (!element || !element.id) return;
-    const colorData = DesignState.elementColors[element.id] || {};
-    if (isBackground) {
-        colorData.backgroundColor = color;
-    } else {
-        colorData.color = color;
-    }
-    DesignState.elementColors[element.id] = colorData;
-    DesignState.elementColors = DesignState.elementColors;
+    const prop = isBackground ? 'backgroundColor' : 'color';
+    const existing = DesignState.DOM[element.id] || {};
+    const existingStyle = existing.style || {};
+    DesignState.DOM[element.id] = { ...existing, style: { ...existingStyle, [prop]: color } };
 }
 
-function restoreElementColors() {
-    if (!DesignState.elementColors) return;
+function migrateElementColors() {
+    if (!DesignState.elementColors || Object.keys(DesignState.elementColors).length === 0) return;
     Object.keys(DesignState.elementColors).forEach(id => {
+        const colorData = DesignState.elementColors[id];
         if (id === 'comic-tail') {
-            if (comicTailBgStyle && DesignState.elementColors[id].comicTailColor) {
-                comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${DesignState.elementColors[id].comicTailColor} !important; }`;
+            if (colorData.comicTailColor) {
+                DesignState.DOM['comic-tail-bg-style'] = {
+                    textContent: `.dialogo-comic::after { border-top-color: ${colorData.comicTailColor} !important; }`
+                };
             }
-            return;
-        }
-        const element = document.getElementById(id);
-        if (element) {
-            const colorData = DesignState.elementColors[id];
-            if (colorData.color) element.style.color = colorData.color;
-            if (colorData.backgroundColor) element.style.backgroundColor = colorData.backgroundColor;
+        } else {
+            const existing = DesignState.DOM[id] || {};
+            const existingStyle = existing.style || {};
+            DesignState.DOM[id] = { ...existing, style: { ...existingStyle, ...colorData } };
         }
     });
+    DesignState.elementColors = {};
 }
 
 function isBackgroundElement(target) {
@@ -43,10 +39,6 @@ function isBackgroundElement(target) {
         target.id === 'flyer'
     );
 }
-
-comicTailBgStyle = document.createElement('style');
-comicTailBgStyle.id = 'comic-tail-bg-style';
-document.head.appendChild(comicTailBgStyle);
 
 function paintEventHandler(e) {
     const comicBalloon = e.target.closest('.dialogo-comic');
@@ -60,14 +52,9 @@ function paintEventHandler(e) {
         } else {
             comicBalloon.style.backgroundColor = currentColor;
             saveElementColor(comicBalloon, currentColor, true);
-            if (!DesignState.elementColors['comic-tail']) {
-                DesignState.elementColors['comic-tail'] = {};
-            }
-            DesignState.elementColors['comic-tail'].comicTailColor = currentColor;
-            DesignState.elementColors = DesignState.elementColors;
-            if (comicTailBgStyle) {
-                comicTailBgStyle.textContent = `.dialogo-comic::after { border-top-color: ${currentColor} !important; }`;
-            }
+            DesignState.DOM['comic-tail-bg-style'] = {
+                textContent: `.dialogo-comic::after { border-top-color: ${currentColor} !important; }`
+            };
         }
     } else {
         if (isBackgroundElement(e.target)) {
