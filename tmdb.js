@@ -133,7 +133,7 @@ async function populateSearchResults() {
             SearchState.DOM.year = { textContent: new Date(movie.release_date).getFullYear() };
             SearchState.DOM.director = { textContent: movie.director ? movie.director.name : "" };
             SearchState.DOM.duracion = { textContent: `${movie.details.runtime} minutos` };
-            DesignState.DOM.title = { textContent: movie.title };
+            DesignState.DOM.title = { ...(DesignState.DOM.title || {}), textContent: movie.title };
             DesignState.DOM.titleInput = { value: movie.title };
 
             const releaseDatesRes = await fetch(

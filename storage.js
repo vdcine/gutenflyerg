@@ -27,12 +27,7 @@ const defaultSearchState = {
 // TODO: ver redundancias
 const defaultDesignState = {
     version: '1',
-    titulo: 'Título de la Peli',
     edadSugerida: '',
-    orgText: 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.',
-    ciclo: 'Nombre del ciclo',
-    date: '2026-03-11',
-    hour: '19:00',
     currentPaintColor: '#00ff00',
     strokeColor: '#000000',
     strokeTargets: [],
@@ -46,7 +41,7 @@ const defaultDesignState = {
     backgroundImage: '',
     DOM: {
         // inputs del panel
-        titleInput: { value: '' },
+        titleInput: { value: 'Titulo' },
         cicloInput: { value: 'Nombre del ciclo' },
         dateInput: { value: '2026-03-11' },
         hourInput: { value: '19:00' },
@@ -73,8 +68,6 @@ const defaultDesignState = {
 };
 
 function updateDOMFromState() {
-    if (!document.getElementById("flyer")) return;
-
     //Object.entries(SearchState.DOM).forEach(([eid, props]) =>  Object.entries(props).forEach(([k, v]) => document.getElementById(eid)[k] = v));
     Object.entries(SearchState.DOM).forEach(([eid, props]) => {
         const el = document.getElementById(eid);

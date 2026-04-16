@@ -226,11 +226,11 @@ async function initializeControlValues() {
 
     DesignState.DOM = {
         ...DesignState.DOM,
-        title: { textContent: titleValue.replace(/\n/g, "<br />") },
-        flyerCiclo: { textContent: cicloValue },
-        flyerDate: { textContent: formatDateToSpanish(dateValue) },
-        flyerHour: { textContent: hourValue },
-        flyerOrg: { textContent: orgValue }
+        title: { ...(DesignState.DOM.title || {}), textContent: titleValue.replace(/\n/g, "<br />") },
+        flyerCiclo: { ...(DesignState.DOM.flyerCiclo || {}), textContent: cicloValue },
+        flyerDate: { ...(DesignState.DOM.flyerDate || {}), textContent: formatDateToSpanish(dateValue) },
+        flyerHour: { ...(DesignState.DOM.flyerHour || {}), textContent: hourValue },
+        flyerOrg: { ...(DesignState.DOM.flyerOrg || {}), textContent: orgValue }
     };
 
     if (DesignState.fontSizes) {
