@@ -31,6 +31,19 @@ function migrateElementColors() {
     DesignState.elementColors = {};
 }
 
+function migrateStroke() {
+    if (!DesignState.strokeTargets || DesignState.strokeTargets.length === 0) return;
+    const color = DesignState.strokeColor || '#000000';
+    const shadow = `-1px -1px 0 ${color}, 1px -1px 0 ${color}, -1px 1px 0 ${color}, 1px 1px 0 ${color}`;
+    DesignState.strokeTargets.forEach(id => {
+        const existing = DesignState.DOM[id] || {};
+        const existingStyle = existing.style || {};
+        DesignState.DOM[id] = { ...existing, style: { ...existingStyle, textShadow: shadow } };
+    });
+    delete DesignState.strokeTargets;
+    delete DesignState.strokeColor;
+}
+
 function isBackgroundElement(target) {
     return (
         target.id === 'bandavertical' ||

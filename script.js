@@ -183,6 +183,7 @@ function formatDateToSpanish(dateStr) {
 // Función auxiliar para obtener el fontsize
 async function initializeControlValues() {
     migrateElementColors();
+    migrateStroke();
     await populateSearchResults();
     shiftPoster(0);
     shiftBackdrop(0);
@@ -255,11 +256,6 @@ async function initializeControlValues() {
             const el = document.getElementById('rectWidthInput');
             if (el) { el.value = rectWidth; el.dispatchEvent(new Event('input')); }
         }
-    }
-
-    if (DesignState.strokeColor) {
-        const el = document.getElementById('strokeColorInput');
-        if (el) el.value = DesignState.strokeColor;
     }
 
     if (DesignState.backgroundImage) {

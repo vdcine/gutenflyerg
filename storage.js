@@ -29,8 +29,6 @@ const defaultDesignState = {
     version: '1',
     edadSugerida: '',
     currentPaintColor: '#00ff00',
-    strokeColor: '#000000',
-    strokeTargets: [],
     fontSizes: {
         flyerDate: '34',
         flyerHour: '40',
@@ -64,6 +62,8 @@ const defaultDesignState = {
         // edades
         edadSugerida: { textContent: '' },
         edadSugeridaInput: { value: '' },
+        // stroke
+        strokeColorInput: { value: '#000000' },
     },
 };
 

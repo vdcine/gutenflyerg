@@ -57,43 +57,28 @@ document.getElementById('toggle-banda').addEventListener('click', (e) => {
 });
 
 document.getElementById('strokeColorInput').addEventListener('input', (e) => {
-    DesignState.strokeColor = e.target.value;
+    DesignState.DOM.strokeColorInput = { value: e.target.value };
 });
 
 document.getElementById('applyStrokeBtn').addEventListener('click', () => {
-    DesignState.DOM.strokeColorInput = { value: document.getElementById('strokeColorInput').value }
+    const color = document.getElementById('strokeColorInput').value;
+    const shadow = `-1px -1px 0 ${color}, 1px -1px 0 ${color}, -1px 1px 0 ${color}, 1px 1px 0 ${color}`;
 
-    const select = document.getElementById('strokeTargetSelect');
-
-    const currentTargets = new Set(DesignState.strokeTargets || []);
-
-    Array.from(select.selectedOptions).forEach((option) => {
-        const target = document.getElementById(option.value);
-        if (target) {
-            target.style.textShadow = `
-                -1px -1px 0 ${color},
-                1px -1px 0 ${color},
-                -1px 1px 0 ${color},
-                1px 1px 0 ${color}
-            `;
-            currentTargets.add(option.value);
-        }
+    Array.from(document.getElementById('strokeTargetSelect').selectedOptions).forEach((option) => {
+        const id = option.value;
+        const existing = DesignState.DOM[id] || {};
+        const existingStyle = existing.style || {};
+        DesignState.DOM[id] = { ...existing, style: { ...existingStyle, textShadow: shadow } };
     });
-    DesignState.strokeTargets = Array.from(currentTargets);
 });
 
 document.getElementById('removeStrokeBtn').addEventListener('click', () => {
-    const select = document.getElementById('strokeTargetSelect');
-    const currentTargets = new Set(DesignState.strokeTargets || []);
-
-    Array.from(select.selectedOptions).forEach((option) => {
-        const target = document.getElementById(option.value);
-        if (target) {
-            target.style.textShadow = '';
-            currentTargets.delete(option.value);
-        }
+    Array.from(document.getElementById('strokeTargetSelect').selectedOptions).forEach((option) => {
+        const id = option.value;
+        const existing = DesignState.DOM[id] || {};
+        const existingStyle = existing.style || {};
+        DesignState.DOM[id] = { ...existing, style: { ...existingStyle, textShadow: '' } };
     });
-    DesignState.strokeTargets = Array.from(currentTargets);
 });
 
 // function updateEdadSugeridaDisplay() {
