@@ -81,43 +81,12 @@ document.getElementById('removeStrokeBtn').addEventListener('click', () => {
     });
 });
 
-// function updateEdadSugeridaDisplay() {
-//     const mappedCertification = certificationMap[edadSugerida] || edadSugerida;
-//     const el = document.getElementById('edadSugerida');
-
-//     if (mappedCertification) {
-//         document.getElementById('edadSugeridaInput').value = mappedCertification;
-//         el.textContent = mappedCertification;
-//         el.style.display = 'inline-block';
-//         if (mappedCertification === 'ATP') {
-//             el.style.backgroundColor = '#4CAF50';
-//             el.style.color = 'white';
-//         } else if (
-//             mappedCertification === '+13' ||
-//             mappedCertification === 'SAM 13'
-//         ) {
-//             el.style.backgroundColor = '#2196F3';
-//             el.style.color = 'white';
-//         } else if (
-//             mappedCertification === '+16' ||
-//             mappedCertification === 'SAM 16'
-//         ) {
-//             el.style.backgroundColor = '#FF9800';
-//             el.style.color = 'white';
-//         } else if (
-//             mappedCertification === '+18' ||
-//             mappedCertification === 'SAM 18'
-//         ) {
-//             el.style.backgroundColor = '#f44336';
-//             el.style.color = 'white';
-//         } else {
-//             el.style.backgroundColor = '#777';
-//             el.style.color = 'white';
-//         }
-//     } else {
-//         el.style.display = 'none';
-//     }
-// }
+function getEdadStyles(value) {
+    const mapped = certificationMap[value] || value;
+    return mapped
+        ? (certificationStyles[mapped] || { display: 'inline-block', backgroundColor: '#777', color: 'white' })
+        : { display: 'none' };
+}
 
 document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
     e.preventDefault();
@@ -127,6 +96,7 @@ document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
     const dateInput = document.getElementById('dateInput');
     const hourInput = document.getElementById('hourInput');
     const orgInput = document.getElementById('orgInput');
+    const edadSugeridaInput = document.getElementById('edadSugeridaInput');
 
     DesignState.DOM = {
         ...DesignState.DOM,
@@ -135,6 +105,8 @@ document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
         flyerDate: { ...(DesignState.DOM.flyerDate || {}), textContent: formatDateToSpanish(dateInput.value) },
         flyerHour: { ...(DesignState.DOM.flyerHour || {}), textContent: hourInput.value },
         flyerOrg: { ...(DesignState.DOM.flyerOrg || {}), textContent: orgInput.value },
+        edadSugerida: { textContent: edadSugeridaInput ? edadSugeridaInput.value : '', style: getEdadStyles(edadSugeridaInput ? edadSugeridaInput.value.trim() : '') },
+        edadSugeridaInput: { ...(DesignState.DOM.edadSugeridaInput || {}), value: edadSugeridaInput ? edadSugeridaInput.value : '' },
         titleInput: { value: titleInput.value },
         cicloInput: { value: cicloInput.value },
         dateInput: { value: dateInput.value },
