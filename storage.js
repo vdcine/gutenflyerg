@@ -1,5 +1,13 @@
 // const INIT_FLAG = Symbol('isInitialized');
 
+function getNextWednesday() {
+    const d = new Date();
+    const day = d.getDay();
+    const daysUntilWed = (3 - day + 7) % 7 || 7;
+    d.setDate(d.getDate() + daysUntilWed);
+    return d.toISOString().slice(0, 10);
+}
+
 function toStorage(key, obj) {
     localStorage[key] = JSON.stringify(obj);
     console.log(`[Storage] Guardado ${key}:`, JSON.parse(JSON.stringify(obj)));
@@ -27,7 +35,6 @@ const defaultSearchState = {
 // TODO: ver redundancias
 const defaultDesignState = {
     version: '1',
-    edadSugerida: '',
     currentPaintColor: '#00ff00',
     fontSizes: {
         flyerDate: '34',
@@ -41,7 +48,7 @@ const defaultDesignState = {
         // inputs del panel
         titleInput: { value: 'Titulo' },
         cicloInput: { value: 'Nombre del ciclo' },
-        dateInput: { value: '2026-03-11' },
+        dateInput: { value: getNextWednesday() },
         hourInput: { value: '19:00' },
         orgInput: { value: 'Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.' },
         // elementos del flyer
@@ -60,7 +67,7 @@ const defaultDesignState = {
         bandavertical: { style: { display: 'block', width: '460px' } },
         flyer: { style: { backgroundImage: '' } },
         // edades
-        edadSugerida: { textContent: '' },
+        edadSugerida: { textContent: '', style: { display: 'none' } },
         edadSugeridaInput: { value: '' },
         // stroke
         strokeColorInput: { value: '#000000' },
