@@ -263,9 +263,5 @@ async function initializeControlValues() {
         if (flyerEl) flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
     }
 
-    if (typeof updateEdadSugeridaDisplay === 'function') {
-        updateEdadSugeridaDisplay(DesignState.edadSugerida);
-    }
-
     console.log('Valores de controles inicializados desde estados');
 }

@@ -277,7 +277,7 @@ form {
             color: inherit;
         }
 
-        #title, #year, #director, #duracion, #edad-sugerida {
+        #title, #year, #director, #duracion, #edadSugerida {
             font-family: "Gilroy", sans-serif;
             font-weight: 700;
             position: relative;
@@ -299,7 +299,7 @@ form {
 
         #duracion {font-size: 20px}
 
-        #edad-sugerida {
+        #edadSugerida {
             font-size: 18px;
             color: white;
             background-color: rgba(199, 194, 194, 0.9);

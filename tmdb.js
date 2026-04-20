@@ -62,6 +62,16 @@ const certificationMap = {
     NR: '',
 };
 
+const certificationStyles = {
+    'ATP':     { display: 'inline-block', backgroundColor: '#4CAF50', color: 'white' },
+    '+13':     { display: 'inline-block', backgroundColor: '#2196F3', color: 'white' },
+    'SAM 13':  { display: 'inline-block', backgroundColor: '#2196F3', color: 'white' },
+    '+16':     { display: 'inline-block', backgroundColor: '#FF9800', color: 'white' },
+    'SAM 16':  { display: 'inline-block', backgroundColor: '#FF9800', color: 'white' },
+    '+18':     { display: 'inline-block', backgroundColor: '#f44336', color: 'white' },
+    'SAM 18':  { display: 'inline-block', backgroundColor: '#f44336', color: 'white' },
+};
+
 // BUSCADOR
 async function searchMovies(e) {
   e.preventDefault();
@@ -175,44 +185,10 @@ async function populateSearchResults() {
             const mappedCertification =
                 certificationMap[certification] || certification;
 
-            DesignState.DOM.edadSugerida = { textContent: mappedCertification || '' };
+            DesignState.DOM.edadSugerida = mappedCertification
+                ? { textContent: mappedCertification, style: getEdadStyles(mappedCertification) }
+                : { textContent: '', style: { display: 'none' } };
             DesignState.DOM.edadSugeridaInput = { value: mappedCertification || '' };
-
-            if (mappedCertification) {
-                const edadElements = [document.getElementById('edad-sugerida')];
-
-                edadElements.forEach((el) => {
-                    if (el) {
-                        el.textContent = mappedCertification;
-                        el.style.display = 'inline-block';
-                        if (mappedCertification === 'ATP') {
-                            el.style.backgroundColor = '#4CAF50'; // Verde para ATP
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+13' ||
-                            mappedCertification === 'SAM 13'
-                        ) {
-                            el.style.backgroundColor = '#2196F3'; // Azul para +13
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+16' ||
-                            mappedCertification === 'SAM 16'
-                        ) {
-                            el.style.backgroundColor = '#FF9800'; // Naranja para +16
-                            el.style.color = 'white';
-                        } else if (
-                            mappedCertification === '+18' ||
-                            mappedCertification === 'SAM 18'
-                        ) {
-                            el.style.backgroundColor = '#f44336'; // Rojo para +18
-                            el.style.color = 'white';
-                        } else {
-                            el.style.backgroundColor = '#777'; // Gris para otros
-                            el.style.color = 'white';
-                        }
-                    }
-                });
-            }
             document.getElementById('year').textContent = new Date(
                 movie.release_date
             ).getFullYear();
