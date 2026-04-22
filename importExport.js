@@ -1,7 +1,14 @@
+function getExportFilename() {
+    const movieTitle = (DesignState.DOM.titleInput?.value || 'flyer')
+        .replace(/[^\w\s]/gi, '')
+        .replace(/\s+/g, '_') || 'flyer';
+    return `${movieTitle}_datos_${new Date().toISOString().slice(0, 10)}.json`;
+}
+
 function exportUserData() {
     const userData = {
-        searchState: { ...SearchState },
-        designState: { ...DesignState },
+        searchState: JSON.parse(JSON.stringify(SearchState)),
+        designState: JSON.parse(JSON.stringify(DesignState)),
         exportDate: new Date().toISOString(),
     };
 
@@ -10,10 +17,7 @@ function exportUserData() {
     console.log("Peso del JSON:", (dataStr.length / 1024).toFixed(2), "KB");
 
     const link = document.createElement('a');
-    const movieTitle = (DesignState.movie.title || 'flyer')
-        .replace(/[^\w\s]/gi, '')
-        .replace(/\s+/g, '_') || 'flyer';
-    const filename = `${movieTitle}_datos_${new Date().toISOString().slice(0, 10)}.json`;
+    const filename = getExportFilename();
 
     link.href = URL.createObjectURL(dataBlob);
     link.download = filename;
@@ -39,24 +43,23 @@ function importUserData(file) {
 
         if (userData.designState) {
             Object.keys(userData.designState).forEach(key => {
-                if (key === 'fontSizes' && userData.designState.fontSizes) {
-                    DesignState.fontSizes = { ...DesignState.fontSizes, ...userData.designState.fontSizes };
-                } else {
-                    DesignState[key] = userData.designState[key];
-                }
+                DesignState[key] = userData.designState[key];
             });
         }
 
         updateDOMFromState();
+        restoreBackdropDisplay();
+        restorePosterDisplay();
+        shiftBackdrop(0);
+        shiftPoster(0);
     };
     reader.onerror = function () {
-      console.error("Error de lectura del archivo");
-      alert("Hubo un problema al leer el archivo.");
+        console.error("Error de lectura del archivo");
+        alert("Hubo un problema al leer el archivo.");
     };
 
     reader.readAsText(file);
-  }
-
+}
 
 function handleFileImport(event) {
     const file = event.target.files[0];
