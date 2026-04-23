@@ -1,3 +1,8 @@
+// Esto es para ocultar la alerta de JavaScript cuando sabemos que hay JS.
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('js-alert').style.display = 'none';
+});
+
 document.getElementById('movieForm').addEventListener('submit', searchMovies);
 
 const flyer = document.getElementById('flyer');
@@ -91,14 +96,17 @@ function getEdadStyles(value) {
 document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
     e.preventDefault();
 
+
     const titleInput = document.getElementById('titleInput');
     const cicloInput = document.getElementById('cicloInput');
     const dateInput = document.getElementById('dateInput');
     const hourInput = document.getElementById('hourInput');
     const orgInput = document.getElementById('orgInput');
-    const edadSugeridaInput = document.getElementById('edadSugeridaInput');
+    //const edadSugeridaInput = document.getElementById('edadSugeridaInput');
+    const edadSugeridaInput = document.getElementById('edadSugeridaSelect');
+    //actualizarEdadSugerida(edadSugerida);
 
-    DesignState.DOM = {
+  DesignState.DOM = {
         ...DesignState.DOM,
         title: { ...(DesignState.DOM.title || {}), textContent: titleInput.value.replace(/\n/g, "<br />") },
         flyerCiclo: { ...(DesignState.DOM.flyerCiclo || {}), textContent: cicloInput.value },
@@ -133,15 +141,6 @@ document.getElementById('flyerTitleFontSizeInput').addEventListener('input', (e)
     DesignState.DOM.title = {
         textContent: DesignState.DOM.title?.textContent || '',
         style: { ...(DesignState.DOM.title?.style || {}), fontSize: e.target.value + "px" }
-    }
-});
-
-document.getElementById('flyerTitleMarginTopInput').addEventListener('input', (e) => {
-    DesignState.DOM.flyerTitleMarginTopInput = {value: e.target.value}
-    DesignState.fontSizes.flyerTitleMarginTop = e.target.value;
-    DesignState.DOM.title = {
-        textContent: DesignState.DOM.title?.textContent || '',
-        style: { ...(DesignState.DOM.title?.style || {}), marginTop: e.target.value + "px" }
     }
 });
 
@@ -236,37 +235,6 @@ document.getElementById('load-poster-direct').addEventListener('click', () => {
     document.getElementById('poster-direct-input').value = '';
 });
 
-document.getElementById('poster-carousel-img').addEventListener('click', () => {
-    let posters = SearchState.posters;
-    let currentPoster = SearchState.currentPoster;
-    if (posters.length > 0) {
-        const currentPosterData = posters[currentPoster];
-        const filePath = currentPosterData.file_path;
-        const fullUrl = filePath.startsWith('http')
-            ? filePath
-            : `https://image.tmdb.org/t/p/original${filePath}`;
-        navigator.clipboard.writeText(fullUrl).then(() => {
-            alert('URL copiada al portapapeles');
-        });
-    }
-});
-
-document
-    .getElementById('backdrop-carousel-img')
-    .addEventListener('click', () => {
-        if (SearchState.backdrops.length > 0) {
-            const currentBackdropData =
-                SearchState.backdrops[SearchState.currentBackdrop];
-            const filePath = currentBackdropData.file_path;
-            const fullUrl = filePath.startsWith('http')
-                ? filePath
-                : `https://image.tmdb.org/t/p/original${filePath}`;
-            navigator.clipboard.writeText(fullUrl).then(() => {
-                alert('URL copiada al portapapeles');
-            });
-        }
-    });
-
 document.getElementById('posters').addEventListener('click', (e) => {
     e.preventDefault();
     if (!SearchState.selectedMovie.id) return;
@@ -286,4 +254,12 @@ document.getElementById('deleteLocalS').addEventListener('click', () => {
         });
         clearAllStorage();
     }
+});
+
+window.addEventListener('error', (e) => {
+    alert(`En la línea ${e.lineno}\ndel archivo\n${e.filename}\nsucedió:\n${e.message}.`);
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+    alert(`Promesa ${e.promise} rechazada sin manejar.\nRazón: ${e.reason}.`);
 });
