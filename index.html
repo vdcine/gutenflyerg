@@ -79,13 +79,13 @@
 
                 <div id="header" class="v-box">
                     <img id="tape" src="./images/tape.svg" />
-                    <h1 class="header-text">VELADAS DE CINE</h1>
+                    <h1 id="header-text" class="header-text">VELADAS DE CINE</h1>
                 </div>
 
                 <div id="subheader" class="v-box">
                     <div id="ciclo-wrapper">
                         <div id="ciclo-bg"></div>
-                        <h2 id="ciclo">Ciclo</h2>
+                        <h2 id="flyerCiclo">Ciclo</h2>
 
                         <div id="bubble" class="dialogo-comic">
                             <img
@@ -347,7 +347,7 @@ Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Men
                     <div class="bordes-layout">
                         <select id="strokeTargetSelect" multiple size="8">
                             <option value="header">Encabezado</option>
-                            <option value="ciclo">Ciclo</option>
+                            <option value="flyerCiclo">Ciclo</option>
                             <option value="comic-text">Globo</option>
                             <option value="title">Título</option>
                             <option value="year">Año</option>
@@ -393,7 +393,6 @@ Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Men
                     </div>
                 </div>
 
-                <hr />
                 <div id="import-export-buttons">
                     <button
                         id="exportDataBtn"
@@ -415,11 +414,14 @@ Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Men
                     />
                 </div>
 
+                <hr />
                 <div class="panel-section">
-                    <button type="button" id="saveFlyer">Guardar Flyer</button>
-                    <button type="button" id="deleteLocalS">
-                        Borrar datos del Flyer
-                    </button>
+                    <div class="button-row">
+                        <button type="button" id="saveFlyer">Guardar Flyer</button>
+                        <button type="button" id="deleteLocalS">
+                            Borrar datos del Flyer
+                        </button>
+                    </div>
                 </div>
             </div>
             <!-- panel -->

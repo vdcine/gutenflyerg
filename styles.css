@@ -423,7 +423,7 @@ hr.main-divider {
                     pointer-events: auto;
                 }
 
-                #ciclo {
+                #flyerCiclo {
                     position: relative;
                     margin: 0;
                     font-size: 30px;
@@ -998,11 +998,26 @@ hr.main-divider {
     }
 }
 
-#deleteLocalS {
-  margin-top: 0px;
-  margin-bottom: 0px;
+.button-row {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.button-row #saveFlyer {
+    flex: 0 0 70%;
+    width: 70%;
+}
+
+.button-row #deleteLocalS {
+    flex: 1 1 auto;
+    width: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 #deleteLocalS:hover {
-  background-color: red;
+    background-color: red !important;
 }
