@@ -1,6 +1,6 @@
 // DESCARGA DE IMAGEN
-const flyerDate = document.getElementById('flyer-date');
-const flyerHour = document.getElementById('flyer-hour');
+const flyerDate = document.getElementById('flyerDate');
+const flyerHour = document.getElementById('flyerHour');
 
 const dateInput = document.getElementById('dateInput');
 const hourInput = document.getElementById('hourInput');
@@ -42,6 +42,13 @@ async function captureAndDownloadFlyer(flyerElement, titleText) {
         backgroundColor: '#ffffff',
         scrollX: 0,
         scrollY: 0,
+        onclone: (clonedDoc) => {
+            const clonedFlyer = clonedDoc.getElementById('flyer');
+            const mainGroup = clonedFlyer?.querySelector('.flyer-main-group');
+            if (mainGroup) {
+                mainGroup.style.transform = 'translateZ(0)';
+            }
+        },
     });
 
     const link = document.createElement('a');
@@ -115,7 +122,10 @@ function applyBackdropDirect(url) {
     const fullUrl = filePath.startsWith('http')
         ? filePath
         : `https://image.tmdb.org/t/p/original${filePath}`;
-    bandavertical.style.display = 'none';
+    DesignState.DOM.bandavertical = {
+        ...(DesignState.DOM.bandavertical || {}),
+        style: { ...(DesignState.DOM.bandavertical?.style || {}), display: 'none' }
+    };
     setBackdropAsBackground(fullUrl);
 }
 
@@ -179,82 +189,96 @@ function formatDateToSpanish(dateStr) {
 // BOOTSTRAPPER
 // Función auxiliar para obtener el fontsize
 async function initializeControlValues() {
+    migrateElementColors();
+    migrateStroke();
     await populateSearchResults();
     shiftPoster(0);
     shiftBackdrop(0);
-    document.getElementById('movieSearch').value =
-        GlobalState.search_title || '';
-    document.getElementById('titleInput').value =
-        GlobalState.titulo || 'Título de la Peli';
 
-    function getFontSizeInPx(element) {
-        if (!element) return null;
-        const computedStyle = window.getComputedStyle(element);
-        const fontSize = computedStyle.fontSize;
-        return parseInt(fontSize.replace('px', ''));
-    }
 
-    const flyerDate = document.getElementById('flyer-date');
-    const flyerHour = document.getElementById('flyer-hour');
-
-    if (flyerDate) {
-        const currentSize = getFontSizeInPx(flyerDate);
-        if (currentSize) {
-            const control = document.getElementById('flyerDateFontSizeInput');
-            if (control && control.value == '40') {
-                control.value = currentSize;
-            }
-        }
-    }
-
-    if (flyerHour) {
-        const currentSize = getFontSizeInPx(flyerHour);
-        if (currentSize) {
-            const control = document.getElementById('flyerHourFontSizeInput');
-            if (control && control.value == '45') {
-                control.value = currentSize;
-            }
-        }
-    }
-
-    if (GlobalState.selectedMovie) {
-        const movie = GlobalState.selectedMovie;
+    if (SearchState.selectedMovie) {
+        const movie = SearchState.selectedMovie;
         if (movie.release_date) {
-            document.getElementById('year').textContent = new Date(
-                movie.release_date
-            ).getFullYear();
+            SearchState.DOM.year = { textContent: new Date(movie.release_date).getFullYear() };
         }
         const director = movie.director;
-        document.getElementById('director').textContent = director
-            ? director.name
-            : '';
+        SearchState.DOM.director = { textContent: director ? director.name : '' };
         if (movie.details && movie.details.runtime) {
-            document.getElementById('duracion').textContent =
-                `${movie.details.runtime} minutos`;
+            SearchState.DOM.duracion = { textContent: `${movie.details.runtime} minutos` };
         }
     }
 
-    if (GlobalState.titulo) {
-        document.getElementById('titleInput').value = GlobalState.titulo;
-        document.getElementById('title').innerHTML = GlobalState.titulo.replace(/\n/g, '<br />');
+    // cargar valores del panel desde DesignState o usar defaults
+    // el título editado manualmente (si no está vacío) tiene prioridad sobre el que viene de tmdb
+    const designTitle = DesignState.DOM.titleInput?.value;
+    const titleValue = designTitle && designTitle !== '' ? designTitle : (SearchState.selectedMovie?.title || '');
+    const cicloValue = DesignState.DOM.cicloInput?.value || DesignState.ciclo || defaultDesignState.ciclo;
+    const dateValue = DesignState.DOM.dateInput?.value || DesignState.date || defaultDesignState.date;
+    const hourValue = DesignState.DOM.hourInput?.value || DesignState.hour || defaultDesignState.hour;
+    const orgValue = DesignState.DOM.orgInput?.value || DesignState.orgText || defaultDesignState.orgText;
+
+    const titleEl = document.getElementById('titleInput');
+    if (titleEl) titleEl.value = titleValue;
+
+    const cicloEl = document.getElementById('cicloInput');
+    if (cicloEl) cicloEl.value = cicloValue;
+
+    const dateEl = document.getElementById('dateInput');
+    if (dateEl) dateEl.value = dateValue;
+
+    const hourEl = document.getElementById('hourInput');
+    if (hourEl) hourEl.value = hourValue;
+
+    const orgEl = document.getElementById('orgInput');
+    if (orgEl) orgEl.value = orgValue;
+
+    DesignState.DOM = {
+        ...DesignState.DOM,
+        title: { ...(DesignState.DOM.title || {}), textContent: titleValue.replace(/\n/g, "<br />") },
+        flyerCiclo: { ...(DesignState.DOM.flyerCiclo || {}), textContent: cicloValue },
+        flyerDate: { ...(DesignState.DOM.flyerDate || {}), textContent: formatDateToSpanish(dateValue) },
+        flyerHour: { ...(DesignState.DOM.flyerHour || {}), textContent: hourValue },
+        flyerOrg: { ...(DesignState.DOM.flyerOrg || {}), textContent: orgValue }
+    };
+
+    if (DesignState.fontSizes) {
+        const { flyerDate, flyerHour, flyerTitle, flyerTitleMarginTop, rectWidth } = DesignState.fontSizes;
+        if (flyerDate) {
+            const el = document.getElementById('flyerDateFontSizeInput');
+            if (el) { el.value = flyerDate; el.dispatchEvent(new Event('input')); }
+        }
+        if (flyerHour) {
+            const el = document.getElementById('flyerHourFontSizeInput');
+            if (el) { el.value = flyerHour; el.dispatchEvent(new Event('input')); }
+        }
+        if (flyerTitle) {
+            const el = document.getElementById('flyerTitleFontSizeInput');
+            if (el) { el.value = flyerTitle; el.dispatchEvent(new Event('input')); }
+        }
+        if (flyerTitleMarginTop) {
+            const el = document.getElementById('flyerTitleMarginTopInput');
+            if (el) { el.value = flyerTitleMarginTop; el.dispatchEvent(new Event('input')); }
+        }
+        if (rectWidth) {
+            const el = document.getElementById('rectWidthInput');
+            if (el) { el.value = rectWidth; el.dispatchEvent(new Event('input')); }
+        }
     }
 
-    if (GlobalState.edadSugerida) {
+    if (DesignState.backgroundImage) {
+        const flyerEl = document.getElementById('flyer');
+        if (flyerEl) flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
+    }
+
+    if (DesignState.edadSugerida) {
         const selectEdad = document.getElementById('edadSugeridaSelect');
-        selectEdad.value = GlobalState.edadSugerida;
+        selectEdad.value = DesignState.edadSugerida;
     }
 
-    if (GlobalState.orgText) {
-        const orgInput = document.getElementById('orgInput');
-        if (orgInput) orgInput.value = GlobalState.orgText;
-    }
-
-    const applyBtn = document.getElementById('applyTxtBtn');
-    if (applyBtn) applyBtn.click();
-
-    console.log('Valores de controles inicializados con CSS por defecto');
+    console.log('Valores de controles inicializados desde estados');
 }
 
+// TODO: ver para que funcion con updateDOMFromState y aplique al State
 function actualizarEdadSugerida(certificacion) {
     const badge = document.getElementById('edad-sugerida');
     const select = document.getElementById('edadSugeridaSelect');
@@ -273,6 +297,6 @@ function actualizarEdadSugerida(certificacion) {
     badge.textContent = certificacion;
     badge.style.display = 'inline-block';
     badge.style.color = 'white';
-    
-    badge.style.backgroundColor = coloresEdad[certificacion] || '#777'; 
+
+    badge.style.backgroundColor = coloresEdad[certificacion] || '#777';
 }

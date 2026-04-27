@@ -63,22 +63,33 @@ const certificationMap = {
     NR: '',
 };
 
+const certificationStyles = {
+    'ATP':     { display: 'inline-block', backgroundColor: '#4CAF50', color: 'white' },
+    '+13':     { display: 'inline-block', backgroundColor: '#2196F3', color: 'white' },
+    'SAM 13':  { display: 'inline-block', backgroundColor: '#2196F3', color: 'white' },
+    '+16':     { display: 'inline-block', backgroundColor: '#FF9800', color: 'white' },
+    'SAM 16':  { display: 'inline-block', backgroundColor: '#FF9800', color: 'white' },
+    '+18':     { display: 'inline-block', backgroundColor: '#f44336', color: 'white' },
+    'SAM 18':  { display: 'inline-block', backgroundColor: '#f44336', color: 'white' },
+};
+
 // BUSCADOR
 async function searchMovies(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    GlobalState.search_title = document.getElementById('movieSearch').value;
-    GlobalState.search_language =
-        document.getElementById('movieLanguage').value || 'en';
+  // SearchState.search_title = document.getElementById('movieSearch').value;
+  SearchState.DOM.movieSearch = { value: document.getElementById('movieSearch').value };
+  SearchState.DOM.movieLanguage = { value: document.getElementById('movieLanguage').value };
+
     const searchRes = await fetch(
-        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${GlobalState.search_title}&language=${GlobalState.search_language}`
+        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${SearchState.DOM.movieSearch?.value || ''}&language=${SearchState.DOM.movieLanguage?.value || 'es-AR'}`
     );
 
     const searchData = await searchRes.json();
     if (searchData.results.length === 0)
         return alert('No se encontró la película.');
 
-    GlobalState.orderedResults = (
+    SearchState.orderedResults = (
         await Promise.all(
             searchData.results.map( async (m) => ({...m, ...await fetchMovieDetails(m)}))
         )
@@ -93,7 +104,7 @@ async function fetchMovieDetails(movie) {
     const director = credits.crew.find((c) => c.job === 'Director');
     const details = await (
         await fetch(
-            `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${GlobalState.search_language}`
+            `${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=${SearchState.search_language}`
         )
     ).json();
     // const movieDetailsSinopsis = await (await fetch(`${BASE_URL}/movie/${movie.id}?api_key=${API_KEY}&language=es-ES`)).json();
@@ -101,14 +112,14 @@ async function fetchMovieDetails(movie) {
 }
 
 async function populateSearchResults() {
-    if (!GlobalState.orderedResults) return;
+    if (!SearchState.orderedResults) return;
 
     const resultsDiv = document.getElementById('movie-results');
     resultsDiv.innerHTML = '';
 
     // FIXME: no usar idx : iterar directo
-    for (let idx = 0; idx < Math.min(10, GlobalState.orderedResults.length); idx++) {
-        const movie = GlobalState.orderedResults[idx];
+    for (let idx = 0; idx < Math.min(10, SearchState.orderedResults.length); idx++) {
+        const movie = SearchState.orderedResults[idx];
 
         const result = document.createElement('div');
         result.style.cursor = 'pointer';
@@ -141,7 +152,12 @@ async function populateSearchResults() {
     </div>`;
         result.addEventListener('click', async () => {
             console.log(movie.title);
-            GlobalState.selectedMovie = movie;
+            SearchState.selectedMovie = movie;
+            SearchState.DOM.year = { textContent: new Date(movie.release_date).getFullYear() };
+            SearchState.DOM.director = { textContent: movie.director ? movie.director.name : "" };
+            SearchState.DOM.duracion = { textContent: `${movie.details.runtime} minutos` };
+            DesignState.DOM.title = { ...(DesignState.DOM.title || {}), textContent: movie.title };
+            DesignState.DOM.titleInput = { value: movie.title };
 
             const releaseDatesRes = await fetch(
                 `${BASE_URL}/movie/${movie.id}/release_dates?api_key=${API_KEY}`
@@ -182,12 +198,12 @@ async function populateSearchResults() {
             const mappedCertification =
                 certificationMap[certification] || certification;
 
-            document.getElementById('title').textContent = movie.title;
-            document.getElementById('titleInput').value = movie.title;
-            GlobalState.titulo = movie.title;
-            GlobalState.edadSugerida = mappedCertification || '';
+            DesignState.DOM.edadSugerida = mappedCertification
+                ? { textContent: mappedCertification, style: getEdadStyles(mappedCertification) }
+                : { textContent: '', style: { display: 'none' } };
+            DesignState.DOM.edadSugeridaInput = { value: mappedCertification || '' };// TODO: ver si esto funciona con el dropdown
 
-            actualizarEdadSugerida(mappedCertification || '');
+            actualizarEdadSugerida(mappedCertification || '');// TODO: ver si esta bien aca
 
             document.getElementById('year').textContent = new Date(
                 movie.release_date
@@ -218,12 +234,12 @@ async function populateSearchResults() {
             );
             const imagesData = await imagesRes.json();
 
-            GlobalState.backdrops = imagesData.backdrops || [];
-            GlobalState.currentBackdrop = 0;
+            SearchState.backdrops = imagesData.backdrops || [];
+            SearchState.currentBackdrop = 0;
             shiftBackdrop(0);
 
-            GlobalState.posters = imagesData.posters || [];
-            GlobalState.currentPoster = 0;
+            SearchState.posters = imagesData.posters || [];
+            SearchState.currentPoster = 0;
             shiftPoster(0);
 
             Array.from(resultsDiv.children).forEach(
@@ -236,22 +252,68 @@ async function populateSearchResults() {
     }
 }
 
-// CAROUSEL
-GlobalState.backdrops = GlobalState.backdrops || [];
-GlobalState.posters = GlobalState.posters || [];
-GlobalState.currentBackdrop = GlobalState.currentBackdrop || 0;
-GlobalState.currentPoster = GlobalState.currentPoster || 0;
-
 //TODO: quedan getelementbyid que ensucian la logica, hay que ver como sacarlos a entrypoints.js.
 
+function restoreBackdropDisplay() {
+    if (!SearchState.backdrops?.length) return;
+    const index = SearchState.currentBackdrop || 0;
+    const filePath = SearchState.backdrops[index].file_path;
+    const url = filePath.startsWith('http')
+        ? filePath
+        : `https://image.tmdb.org/t/p/w1280${filePath}`;
+
+    SearchState.DOM['backdrop-carousel-img'] = { src: url };
+    SearchState.DOM['backdrop-counter'] = {
+        textContent: `Backdrop ${index + 1} de ${SearchState.backdrops.length}`
+    };
+
+    const proxiedUrl = getSimpleCorsProxiedUrl(url);
+    restoreBackdropImage(proxiedUrl);
+}
+
+function restorePosterDisplay() {
+    if (!SearchState.posters?.length) return;
+    const index = SearchState.currentPoster || 0;
+    const filePath = SearchState.posters[index].file_path;
+    const url = filePath.startsWith('http')
+        ? filePath
+        : `https://image.tmdb.org/t/p/w780${filePath}`;
+
+    SearchState.DOM['poster-carousel-img'] = { src: url };
+    SearchState.DOM['poster-counter'] = {
+        textContent: `Poster ${index + 1} de ${SearchState.posters.length}`
+    };
+
+    const proxiedUrl = getSimpleCorsProxiedUrl(url);
+    restorePosterImage(proxiedUrl);
+}
+
+function restoreBackdropImage(url) {
+    const flyer = document.getElementById('flyer');
+    let blurBg = document.getElementById('flyer-blur-bg-story');
+    if (!blurBg) {
+        blurBg = document.createElement('div');
+        blurBg.id = 'flyer-blur-bg-story';
+        blurBg.classList.add('flyer-blur-bg');
+        flyer.prepend(blurBg);
+    }
+    blurBg.style.backgroundImage = `url('${url}')`;
+    flyer.style.backgroundImage = '';
+}
+
+function restorePosterImage(url) {
+    const poster = document.getElementById('poster');
+    if (poster) poster.src = url;
+}
+
 function shiftBackdrop(delta) {
-    let backdrops_len = GlobalState.backdrops.length;
+    let backdrops_len = SearchState.backdrops.length;
     if (!backdrops_len) return;
 
-    GlobalState.currentBackdrop = (GlobalState.currentBackdrop + delta + backdrops_len) % backdrops_len;
-    let index = GlobalState.currentBackdrop;
+    SearchState.currentBackdrop = (SearchState.currentBackdrop + delta + backdrops_len) % backdrops_len;
+    let index = SearchState.currentBackdrop;
 
-    const filePath = GlobalState.backdrops[index].file_path;
+    const filePath = SearchState.backdrops[index].file_path;
 
     const url = filePath.startsWith('http')
         ? filePath
@@ -265,13 +327,13 @@ function shiftBackdrop(delta) {
 }
 
 function shiftPoster(delta) {
-    let posters_len = GlobalState.posters.length;
+    let posters_len = SearchState.posters.length;
     if (!posters_len) return;
 
-    GlobalState.currentPoster = (GlobalState.currentPoster + delta + posters_len) % posters_len;
-    let index = GlobalState.currentPoster;
+    SearchState.currentPoster = (SearchState.currentPoster + delta + posters_len) % posters_len;
+    let index = SearchState.currentPoster;
 
-    const filePath = GlobalState.posters[index].file_path;
+    const filePath = SearchState.posters[index].file_path;
 
     const url = filePath.startsWith('http')
         ? filePath
@@ -288,6 +350,8 @@ function updateBackdrop(url) {
     const flyer = document.getElementById('flyer');
     let blurBg = document.getElementById('flyer-blur-bg-story');
 
+    DesignState.backgroundImage = url;
+
     if (!blurBg) {
         blurBg = document.createElement('div');
         blurBg.id = 'flyer-blur-bg-story';
@@ -295,8 +359,12 @@ function updateBackdrop(url) {
         flyer.prepend(blurBg);
     }
 
-    blurBg.style.backgroundImage = `url('${url}')`;
-    flyer.style.backgroundImage = '';
+    DesignState.DOM['flyer-blur-bg-story'] = {
+        style: { backgroundImage: `url('${url}')` }
+    };
+    DesignState.DOM['flyer'] = {
+        style: { backgroundImage: '' }
+    };
 }
 
 function updatePoster(url) {
@@ -321,8 +389,8 @@ function applyBackdropDirect(url) {
         aspect_ratio: 1.778,
     };
 
-    GlobalState.backdrops.unshift(newBackdrop);
-    GlobalState.currentBackdrop = 0;
+    SearchState.backdrops.unshift(newBackdrop);
+    SearchState.currentBackdrop = 0;
 
     shiftBackdrop(0);
 }
@@ -343,8 +411,8 @@ function applyPosterDirect(url) {
         aspect_ratio: 0.667,
     };
 
-    GlobalState.posters.unshift(newPoster);
-    GlobalState.currentPoster = 0;
+    SearchState.posters.unshift(newPoster);
+    SearchState.currentPoster = 0;
 
     shiftPoster(0);
 }

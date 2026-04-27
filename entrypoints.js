@@ -13,7 +13,7 @@ const paintPalette = document.getElementById('paintPaletteContainer');
 const paintColorInput = document.getElementById('paintColorInput');
 
 paintColorInput.addEventListener('input', (e) => {
-    GlobalState.currentPaintColor = e.target.value;
+    DesignState.currentPaintColor = e.target.value;
 });
 
 // Efecto hover (highlighter)
@@ -33,119 +33,121 @@ flyer.addEventListener('click', paintEventHandler);
 document.addEventListener('DOMContentLoaded', initializeControlValues);
 
 // JSON EXPORT & IMPORT
-// document.getElementById("exportDataBtn").addEventListener("click",
-//     function (e) {
-//         try {
-//             exportUserData();
-//         } catch (error) {
-//             console.error("Error al exportar datos:", error);
-//             alert("Error al exportar los datos. Por favor intenta de nuevo.");
-//         }
-//     }
-// );
+document.getElementById("exportDataBtn").addEventListener("click",
+    function (e) {
+        try {
+            exportUserData();
+        } catch (error) {
+            console.error("Error al exportar datos:", error);
+            alert("Error al exportar los datos. Por favor intenta de nuevo.");
+        }
+    }
+);
 
-// const fileInput = document.getElementById("importFileInput");
-// fileInput.addEventListener("change", handleFileImport);
-// // Este truco es para usar el file-picker sin que sea visible:
-// document.getElementById("importDataBtn").addEventListener("click", fileInput.click);
+const fileInput = document.getElementById("importFileInput");
+fileInput.addEventListener("change", handleFileImport);
+document.getElementById("importDataBtn").addEventListener("click", () => fileInput.click());
 
 // PANEL
-GlobalState.bandaHidden = GlobalState.bandaHidden || false;
-
 document.getElementById('toggle-banda').addEventListener('click', (e) => {
-    GlobalState.bandaHidden = !GlobalState.bandaHidden;
-    bandavertical.style.display = GlobalState.bandaHidden ? 'none' : 'block';
-    this.textContent = GlobalState.bandaHidden
-        ? 'Mostrar banda vertical'
-        : 'Ocultar banda vertical';
+    const banda_display = DesignState.DOM.bandavertical.style.display;
+    if (banda_display == 'block') {
+        // Si es block, está visible y la vamos a ocultar.
+        this.textContent = 'Mostrar banda vertical';
+        DesignState.DOM.bandavertical.style.display = 'none';
+    } else {
+        this.textContent = 'Ocultar banda vertical';
+        DesignState.DOM.bandavertical.style.display = 'block';
+    }
+});
+
+document.getElementById('strokeColorInput').addEventListener('input', (e) => {
+    DesignState.DOM.strokeColorInput = { value: e.target.value };
 });
 
 document.getElementById('applyStrokeBtn').addEventListener('click', () => {
-    const select = document.getElementById('strokeTargetSelect');
     const color = document.getElementById('strokeColorInput').value;
-    Array.from(select.selectedOptions).forEach((option) => {
-        const target = document.getElementById(option.value);
-        if (target) {
-            target.style.textShadow = `
-                -1px -1px 0 ${color},
-                1px -1px 0 ${color},
-                -1px 1px 0 ${color},
-                1px 1px 0 ${color}
-            `;
-        }
+    const shadow = `-1px -1px 0 ${color}, 1px -1px 0 ${color}, -1px 1px 0 ${color}, 1px 1px 0 ${color}`;
+
+    Array.from(document.getElementById('strokeTargetSelect').selectedOptions).forEach((option) => {
+        const id = option.value;
+        const existing = DesignState.DOM[id] || {};
+        const existingStyle = existing.style || {};
+        DesignState.DOM[id] = { ...existing, style: { ...existingStyle, textShadow: shadow } };
     });
 });
 
 document.getElementById('removeStrokeBtn').addEventListener('click', () => {
-    const select = document.getElementById('strokeTargetSelect');
-    Array.from(select.selectedOptions).forEach((option) => {
-        const target = document.getElementById(option.value);
-        if (target) {
-            target.style.textShadow = '';
-        }
+    Array.from(document.getElementById('strokeTargetSelect').selectedOptions).forEach((option) => {
+        const id = option.value;
+        const existing = DesignState.DOM[id] || {};
+        const existingStyle = existing.style || {};
+        DesignState.DOM[id] = { ...existing, style: { ...existingStyle, textShadow: '' } };
     });
 });
 
-document.getElementById('applyTxtBtn').addEventListener('click', () => {
-    const ciclo = document.getElementById('cicloInput').value.trim();
-    const dateRaw = document.getElementById('dateInput').value.trim();
-    const hourRaw = document.getElementById('hourInput').value.trim();
-    GlobalState.titulo = document.getElementById('titleInput').value.trim();
+function getEdadStyles(value) {
+    const mapped = certificationMap[value] || value;
+    return mapped
+        ? (certificationStyles[mapped] || { display: 'inline-block', backgroundColor: '#777', color: 'white' })
+        : { display: 'none' };
+}
 
-    document.getElementById('dateInput').value = dateRaw;
-    document.getElementById('hourInput').value = hourRaw;
+document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
+    e.preventDefault();
 
-    const edadSugerida = document.getElementById('edadSugeridaSelect').value;
-    GlobalState.edadSugerida = edadSugerida;
 
-    document.getElementById('title').innerHTML = (
-        GlobalState.titulo || 'Título de la película'
-    ).replace(/\n/g, '<br />');
-    document.getElementById('titleInput').value = GlobalState.titulo;
-    document.getElementById('ciclo').textContent = ciclo || 'Ciclo';
-
-    actualizarEdadSugerida(edadSugerida);
-
-    document.getElementById('flyer-date').innerHTML =
-        formatDateToSpanish(dateRaw);
-    document.getElementById('flyer-hour').textContent = hourRaw
-        ? `${hourRaw} HS`
-        : '19:00 HS';
-
+    const titleInput = document.getElementById('titleInput');
+    const cicloInput = document.getElementById('cicloInput');
+    const dateInput = document.getElementById('dateInput');
+    const hourInput = document.getElementById('hourInput');
     const orgInput = document.getElementById('orgInput');
-    if (orgInput) {
-        const orgValue = orgInput.value.trim();
-        GlobalState.orgText = orgValue;
-        const orgEl = document.getElementById('org');
-        if (orgEl) orgEl.textContent = orgValue;
+    //const edadSugeridaInput = document.getElementById('edadSugeridaInput');
+    const edadSugeridaInput = document.getElementById('edadSugeridaSelect');
+    //actualizarEdadSugerida(edadSugerida);
+
+  DesignState.DOM = {
+        ...DesignState.DOM,
+        title: { ...(DesignState.DOM.title || {}), textContent: titleInput.value.replace(/\n/g, "<br />") },
+        flyerCiclo: { ...(DesignState.DOM.flyerCiclo || {}), textContent: cicloInput.value },
+        flyerDate: { ...(DesignState.DOM.flyerDate || {}), textContent: formatDateToSpanish(dateInput.value) },
+        flyerHour: { ...(DesignState.DOM.flyerHour || {}), textContent: hourInput.value },
+        flyerOrg: { ...(DesignState.DOM.flyerOrg || {}), textContent: orgInput.value },
+        edadSugerida: { textContent: edadSugeridaInput ? edadSugeridaInput.value : '', style: getEdadStyles(edadSugeridaInput ? edadSugeridaInput.value.trim() : '') },
+        edadSugeridaInput: { ...(DesignState.DOM.edadSugeridaInput || {}), value: edadSugeridaInput ? edadSugeridaInput.value : '' },
+        titleInput: { value: titleInput.value },
+        cicloInput: { value: cicloInput.value },
+        dateInput: { value: dateInput.value },
+        hourInput: { value: hourInput.value },
+        orgInput: { value: orgInput.value }
+    };
+});
+
+document.getElementById("flyerDateFontSizeInput").addEventListener("input", (e) => {
+    DesignState.DOM.flyerDateFontSizeInput = { value: e.target.value };
+    DesignState.fontSizes.flyerDate = e.target.value;
+    DesignState.DOM.flyerDate = { ...(DesignState.DOM.flyerDate || {}), style: { ...(DesignState.DOM.flyerDate?.style || {}), fontSize: e.target.value + "px" } };
+});
+
+document.getElementById('flyerHourFontSizeInput').addEventListener('input', (e) => {
+    DesignState.DOM.flyerHourFontSizeInput = {value: e.target.value}
+    DesignState.fontSizes.flyerHour = e.target.value;
+    DesignState.DOM.flyerHour = { ...(DesignState.DOM.flyerHour || {}), style: { ...(DesignState.DOM.flyerHour?.style || {}), fontSize: e.target.value + "px" } }
+});
+
+document.getElementById('flyerTitleFontSizeInput').addEventListener('input', (e) => {
+    DesignState.DOM.flyerTitleFontSizeInput = {value: e.target.value}
+    DesignState.fontSizes.flyerTitle = e.target.value;
+    DesignState.DOM.title = {
+        textContent: DesignState.DOM.title?.textContent || '',
+        style: { ...(DesignState.DOM.title?.style || {}), fontSize: e.target.value + "px" }
     }
 });
 
-document
-    .getElementById('flyerDateFontSizeInput')
-    .addEventListener('input', (e) => {
-        document.getElementById('flyer-date').style.fontSize =
-            e.target.value + 'px';
-        console.log('Aplicado tamaño fecha Story:', e.target.value + 'px');
-    });
-
-document
-    .getElementById('flyerHourFontSizeInput')
-    .addEventListener('input', (e) => {
-        document.getElementById('flyer-hour').style.fontSize =
-            e.target.value + 'px';
-        console.log('Aplicado tamaño hora Story:', e.target.value + 'px');
-    });
-
-document
-    .getElementById('flyerTitleFontSizeInput')
-    .addEventListener('input', (e) => {
-        document.getElementById('title').style.fontSize = e.target.value + 'px';
-    });
-
 document.getElementById('rectWidthInput').addEventListener('input', (e) => {
-    document.getElementById('bandavertical').style.width =
-        e.target.value + 'px';
+    DesignState.DOM.rectWidthInput = {value: e.target.value}
+    DesignState.fontSizes.rectWidth = e.target.value;
+    DesignState.DOM.bandavertical = { ...(DesignState.DOM.bandavertical || {}), style: { ...(DesignState.DOM.bandavertical?.style || {}), width: e.target.value + "px" } }
 });
 
 document.getElementById('saveFlyer').addEventListener('click', () => {
@@ -156,13 +158,17 @@ document.getElementById('saveFlyer').addEventListener('click', () => {
 });
 
 // BACKDROP CAROUSEL
-document.getElementById('backdrop-next').addEventListener('click', (e) => {
+document.getElementById('backdrop-next').addEventListener('click',
+  (e) => {
     shiftBackdrop(1);
-});
+  }
+);
 
-document.getElementById('backdrop-prev').addEventListener('click', (e) => {
-    shiftBackdrop(-1);
-});
+document.getElementById('backdrop-prev').addEventListener('click',
+    (e) => {
+      shiftBackdrop(-1);
+    }
+);
 
 document.getElementById('poster-prev').addEventListener('click', (e) => {
     shiftPoster(-1);
@@ -173,11 +179,16 @@ document.getElementById('poster-next').addEventListener('click', (e) => {
 });
 
 document.getElementById('remove-backdrop-bg').addEventListener('click', () => {
-    const flyerStory = document.getElementById('flyer');
+    DesignState.DOM.bandavertical = {
+        ...(DesignState.DOM.bandavertical || {}),
+        style: { ...(DesignState.DOM.bandavertical?.style || {}), display: 'block' }
+    };
 
-    bandavertical.style.display = 'block';
-
-    flyerStory.style.backgroundImage = '';
+    DesignState.backgroundImage = '';
+    DesignState.DOM['flyer'] = {
+        style: { backgroundImage: '' }
+    };
+    delete DesignState.DOM['flyer-blur-bg-story'];
 
     const blurBgStory = document.getElementById('flyer-blur-bg-story');
 
@@ -204,9 +215,9 @@ document
 
 document.getElementById('backdrops').addEventListener('click', (e) => {
     e.preventDefault();
-    if (!GlobalState.selectedMovie.id) return;
+    if (!SearchState.selectedMovie.id) return;
     window.open(
-        `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/backdrops`,
+        `https://www.themoviedb.org/movie/${SearchState.selectedMovie.id}/images/backdrops`,
         '_blank'
     );
 });
@@ -226,17 +237,29 @@ document.getElementById('load-poster-direct').addEventListener('click', () => {
 
 document.getElementById('posters').addEventListener('click', (e) => {
     e.preventDefault();
-    if (!GlobalState.selectedMovie.id) return;
+    if (!SearchState.selectedMovie.id) return;
     window.open(
-        `https://www.themoviedb.org/movie/${GlobalState.selectedMovie.id}/images/posters`,
+        `https://www.themoviedb.org/movie/${SearchState.selectedMovie.id}/images/posters`,
         '_blank'
     );
 });
 
+document.getElementById('deleteLocalS').addEventListener('click', () => {
+    if (confirm('¿Estás seguro de que deseas borrar todos los datos guardados y cargados del Flyer?')) {
+        Object.keys(defaultDesignState).forEach(key => {
+            DesignState[key] = defaultDesignState[key];
+        });
+        Object.keys(defaultSearchState).forEach(key => {
+            SearchState[key] = defaultSearchState[key];
+        });
+        clearAllStorage();
+    }
+});
+
 window.addEventListener('error', (e) => {
-  alert(`En la línea ${e.lineno}\ndel archivo\n${e.filename}\nsucedió:\n${e.message}.`);
-})
+    alert(`En la línea ${e.lineno}\ndel archivo\n${e.filename}\nsucedió:\n${e.message}.`);
+});
 
 window.addEventListener('unhandledrejection', (e) => {
-  alert(`Promesa ${e.promise} rechazada sin manejar.\nRazón: ${e.reason}.`);
+    alert(`Promesa ${e.promise} rechazada sin manejar.\nRazón: ${e.reason}.`);
 });

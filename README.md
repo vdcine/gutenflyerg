@@ -7,6 +7,23 @@ Generador de volantes
 * En los html, sólo dejar los style vinculados a posicionamiento
 * Que no haya funciones más largas que una pantalla
 
+## Arquitectura
+
+* `entrypoints.js` contiene todas las maneras en las que desde el HTML, el usuario provoca ejecución de código JS.
+  * los entrypoint, salvo excepciones justificadas, sólo modifican el **State** global.
+    * `SearchState`
+    * `DesignState`
+  * los **State** son un proxy, que sobrecargan al `set` para
+    * autoreplicarse en el `localStorage` 
+    * actualizar el DOM con el nuevo estado
+      * FIXME: atomizar updates, porque hoy se trigerea por completo
+    * CUIDADO con provocar loops infinitos.
+
+```
+Usario --> GUI HTML --> entrypoints --> State global |--> se replica en el localStorage
+                                                     |--> actualiza el DOM 
+```
+
 ## Rationale: Unificación de tamaños y variantes de flyer
 **El problema:** previo a los cambios introducidos, la generación de flyers para un ciclo de películas constaba de 2 partes:
 1.  El flujo de uso de la pagina comenzaba en la pagina generadora del flyer de ciclos. acá elegías las películas a incluir en el ciclo y editabas 2 variantes del flyer para distintos tamaños específicos según la plataforma de destino (Feed e Historias).
