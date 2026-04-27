@@ -94,6 +94,9 @@ function updateDOMFromState() {
                 el[prop] = v;
             }
         });
+        if (props.dataset && props.dataset.svgColor) {
+            applySvgColor(eid, props.dataset.svgColor);
+        }
     });
 }
 

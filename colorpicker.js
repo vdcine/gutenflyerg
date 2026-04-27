@@ -38,7 +38,18 @@ function migrateStroke() {
 
 let svgCache = {};
 
-// si es un elemento figura(rectangulos) hace el.style.backgroundColor. si es algun texto el.style.color
+
+const SVG_ELEMENT_IDS = ['tape', 'logo-bm', 'bubble-bg'];
+
+function restoreSvgColors() {
+    SVG_ELEMENT_IDS.forEach(id => {
+        const domState = DesignState.DOM[id];
+        if (domState && domState.dataset && domState.dataset.svgColor) {
+            applySvgColor(id, domState.dataset.svgColor);
+        }
+    });
+}
+
 function isBackgroundElement(target) {
     return ['bandavertical', 'bandahorizontal', 'header', 'flyer', 'ciclo-bg'].includes(target.id);
 }
@@ -60,17 +71,10 @@ async function initSvgCache() {
         if (resBubble.ok) svgCache['bubble-bg'] = await resBubble.text();
 
         console.log("SVGs cacheados correctamente en variable global");
+        restoreSvgColors();
     } catch (error) {
         console.error("Error al precargar SVGs:", error);
     }
-
-    // Restaurar colores de SVG guardados en el estado
-    ['tape', 'logo-bm', 'bubble-bg'].forEach(id => {
-        const domState = DesignState.DOM[id];
-        if (domState && domState.dataset && domState.dataset.svgColor) {
-            applySvgColor(id, domState.dataset.svgColor);
-        }
-    });
 }
 initSvgCache();
 
@@ -109,13 +113,11 @@ function paintEventHandler(e) {
     if (comicBalloon) {
         if (e.target.classList.contains('comic-text')) {
             e.target.style.color = currentColor;
-            saveElementColor(comicBalloon, currentColor, false);
+            saveElementColor(e.target, currentColor, false);
         } else {
-            applySvgColor('bubble-bg', currentColor); //TODO: que funcione con updateDOMFromState()
             saveSvgColor('bubble-bg', currentColor);
         }
     } else if (isSvgElement(e.target)) {
-        applySvgColor(e.target.id, currentColor);
         saveSvgColor(e.target.id, currentColor);
     } else if (isBackgroundElement(e.target)) {
         e.target.style.backgroundColor = currentColor;
