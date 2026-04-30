@@ -102,10 +102,7 @@ document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
     const dateInput = document.getElementById('dateInput');
     const hourInput = document.getElementById('hourInput');
     const orgInput = document.getElementById('orgInput');
-    //const edadSugeridaInput = document.getElementById('edadSugeridaInput');
     const edadSugeridaInput = document.getElementById('edadSugeridaSelect');
-    //actualizarEdadSugerida(edadSugerida);
-
   DesignState.DOM = {
         ...DesignState.DOM,
         title: { ...(DesignState.DOM.title || {}), textContent: titleInput.value.replace(/\n/g, "<br />") },
@@ -114,7 +111,7 @@ document.getElementById('applyTxtBtn').addEventListener('click', (e) => {
         flyerHour: { ...(DesignState.DOM.flyerHour || {}), textContent: hourInput.value },
         flyerOrg: { ...(DesignState.DOM.flyerOrg || {}), textContent: orgInput.value },
         edadSugerida: { textContent: edadSugeridaInput ? edadSugeridaInput.value : '', style: getEdadStyles(edadSugeridaInput ? edadSugeridaInput.value.trim() : '') },
-        edadSugeridaInput: { ...(DesignState.DOM.edadSugeridaInput || {}), value: edadSugeridaInput ? edadSugeridaInput.value : '' },
+        edadSugeridaSelect: { ...(DesignState.DOM.edadSugeridaSelect || {}), value: edadSugeridaInput ? edadSugeridaInput.value : '' },
         titleInput: { value: titleInput.value },
         cicloInput: { value: cicloInput.value },
         dateInput: { value: dateInput.value },

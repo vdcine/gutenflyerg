@@ -68,7 +68,7 @@ const defaultDesignState = {
         flyer: { style: { backgroundImage: '' } },
         // edades
         edadSugerida: { textContent: '', style: { display: 'none' } },
-        edadSugeridaInput: { value: '' },
+        edadSugeridaSelect: { value: '' },
         // stroke
         strokeColorInput: { value: '#000000' },
     },

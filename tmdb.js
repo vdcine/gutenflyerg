@@ -201,9 +201,7 @@ async function populateSearchResults() {
             DesignState.DOM.edadSugerida = mappedCertification
                 ? { textContent: mappedCertification, style: getEdadStyles(mappedCertification) }
                 : { textContent: '', style: { display: 'none' } };
-            DesignState.DOM.edadSugeridaInput = { value: mappedCertification || '' };// TODO: ver si esto funciona con el dropdown
-
-            actualizarEdadSugerida(mappedCertification || '');// TODO: ver si esta bien aca
+            DesignState.DOM.edadSugeridaSelect = { value: mappedCertification || '' };
 
             document.getElementById('year').textContent = new Date(
                 movie.release_date

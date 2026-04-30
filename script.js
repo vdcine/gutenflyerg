@@ -5,13 +5,6 @@ const flyerHour = document.getElementById('flyerHour');
 const dateInput = document.getElementById('dateInput');
 const hourInput = document.getElementById('hourInput');
 
-const coloresEdad = {
-    'ATP': '#4CAF50',
-    '+13': '#2196F3',
-    '+16': '#FF9800',
-    '+18': '#f44336',
-};
-
 async function applyBlurToImage(imageUrl) {
     return new Promise((resolve) => {
         const img = new Image();
@@ -270,33 +263,10 @@ async function initializeControlValues() {
         if (flyerEl) flyerEl.style.backgroundImage = `url('${DesignState.backgroundImage}')`;
     }
 
-    if (DesignState.edadSugerida) {
-        const selectEdad = document.getElementById('edadSugeridaSelect');
-        selectEdad.value = DesignState.edadSugerida;
-    }
+    const edadSugeridaValue = DesignState.DOM.edadSugeridaSelect?.value || '';
+    const selectEdad = document.getElementById('edadSugeridaSelect');
+    if (selectEdad) selectEdad.value = edadSugeridaValue;
 
     console.log('Valores de controles inicializados desde estados');
 }
 
-// TODO: ver para que funcion con updateDOMFromState y aplique al State
-function actualizarEdadSugerida(certificacion) {
-    const badge = document.getElementById('edad-sugerida');
-    const select = document.getElementById('edadSugeridaSelect');
-
-    if (select && certificacion !== undefined) {
-        select.value = certificacion;
-    }
-
-    if (!badge) return;
-
-    if (!certificacion) {
-        badge.style.display = 'none';
-        return;
-    }
-
-    badge.textContent = certificacion;
-    badge.style.display = 'inline-block';
-    badge.style.color = 'white';
-
-    badge.style.backgroundColor = coloresEdad[certificacion] || '#777';
-}
