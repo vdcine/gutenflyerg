@@ -2,10 +2,8 @@
 
 function getNextWednesday() {
     const d = new Date();
-    const day = d.getDay();
-    const daysUntilWed = (3 - day + 7) % 7 || 7;
-    d.setDate(d.getDate() + daysUntilWed);
-    return d.toISOString().slice(0, 10);
+    d.setDate(d.getDate() + ((3 - d.getDay() + 7) % 7 || 7));
+    return d.toLocaleDateString('sv');
 }
 
 function toStorage(key, obj) {
@@ -66,6 +64,7 @@ const defaultDesignState = {
         // figuras
         bandavertical: { style: { display: 'block', width: '460px' } },
         flyer: { style: { backgroundImage: '' } },
+        poster: { src: '' },
         // edades
         edadSugerida: { textContent: '', style: { display: 'none' } },
         edadSugeridaSelect: { value: '' },
