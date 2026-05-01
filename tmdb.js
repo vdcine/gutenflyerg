@@ -2,7 +2,7 @@
 const API_KEY = 'c733c18f5b61209aa7ea217bd007b156';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-const bandavertical = document.getElementById('bandavertical');
+
 
 function getSimpleCorsProxiedUrl(imageUrl) {
     if (!imageUrl) return "";
@@ -203,21 +203,12 @@ async function populateSearchResults() {
                 : { textContent: '', style: { display: 'none' } };
             DesignState.DOM.edadSugeridaSelect = { value: mappedCertification || '' };
 
-            document.getElementById('year').textContent = new Date(
-                movie.release_date
-            ).getFullYear();
             const posterUrl = getSimpleCorsProxiedUrl(
                 `https://image.tmdb.org/t/p/w500${movie.poster_path}`
             );
-            document.getElementById('poster').src = posterUrl;
-            document.getElementById('director').textContent = movie.director
-                ? movie.director.name
-                : 'Director no disponible';
+            DesignState.DOM.poster = { src: posterUrl };
 
             console.log(movie.details);
-            document.getElementById('duracion').textContent =
-                `${movie.details.runtime} minutos`;
-
             const backdropUrl = getSimpleCorsProxiedUrl(
                 `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
             );
@@ -249,8 +240,6 @@ async function populateSearchResults() {
         resultsDiv.appendChild(result);
     }
 }
-
-//TODO: quedan getelementbyid que ensucian la logica, hay que ver como sacarlos a entrypoints.js.
 
 function restoreBackdropDisplay() {
     if (!SearchState.backdrops?.length) return;
@@ -300,8 +289,7 @@ function restoreBackdropImage(url) {
 }
 
 function restorePosterImage(url) {
-    const poster = document.getElementById('poster');
-    if (poster) poster.src = url;
+    DesignState.DOM.poster = { src: url };
 }
 
 function shiftBackdrop(delta) {
@@ -317,8 +305,9 @@ function shiftBackdrop(delta) {
         ? filePath
         : `https://image.tmdb.org/t/p/w1280${filePath}`;
 
-    document.getElementById('backdrop-counter').textContent =
-        `${index + 1} de ${backdrops_len}`;
+    SearchState.DOM['backdrop-counter'] = {
+        textContent: `Backdrop ${index + 1} de ${backdrops_len}`
+    };
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
     updateBackdrop(proxiedUrl);
@@ -337,8 +326,9 @@ function shiftPoster(delta) {
         ? filePath
         : `https://image.tmdb.org/t/p/w780${filePath}`;
 
-    document.getElementById('poster-counter').textContent =
-        `${index + 1} de ${posters_len}`;
+    SearchState.DOM['poster-counter'] = {
+        textContent: `Poster ${index + 1} de ${posters_len}`
+    };
 
     const proxiedUrl = getSimpleCorsProxiedUrl(url);
     updatePoster(proxiedUrl);
@@ -366,8 +356,7 @@ function updateBackdrop(url) {
 }
 
 function updatePoster(url) {
-    const poster = document.getElementById('poster');
-    if (poster) poster.src = url;
+    DesignState.DOM.poster = { src: url };
 }
 
 // CARGA DIRECTA POR URL
