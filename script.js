@@ -266,7 +266,5 @@ async function initializeControlValues() {
     const edadSugeridaValue = DesignState.DOM.edadSugeridaSelect?.value || '';
     const selectEdad = document.getElementById('edadSugeridaSelect');
     if (selectEdad) selectEdad.value = edadSugeridaValue;
-
-    console.log('Valores de controles inicializados desde estados');
 }
 

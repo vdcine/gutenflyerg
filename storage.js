@@ -8,7 +8,6 @@ function getNextWednesday() {
 
 function toStorage(key, obj) {
     localStorage[key] = JSON.stringify(obj);
-    console.log(`[Storage] Guardado ${key}:`, JSON.parse(JSON.stringify(obj)));
 }
 
 function fromStorage(key) {
@@ -129,7 +128,6 @@ function createDeepProxy(obj, onChange) {
             return value;
         },
         set(target, prop, value) {
-            console.log(`[State] Cambiando DesignState.${prop}:`, value);
             target[prop] = value;
             onChange();
             return true;
