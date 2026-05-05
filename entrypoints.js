@@ -249,7 +249,7 @@ document.getElementById('deleteLocalS').addEventListener('click', () => {
         Object.keys(defaultSearchState).forEach(key => {
             SearchState[key] = defaultSearchState[key];
         });
-        clearAllStorage();
+        clearAllStorageAndReload();
     }
 });
 

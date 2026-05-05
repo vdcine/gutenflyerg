@@ -15,7 +15,7 @@ function fromStorage(key) {
     return x ? JSON.parse(x) : null;
 }
 
-function clearAllStorage() {
+function clearAllStorageAndReload() {
     localStorage.clear();
     sessionStorage.clear();
     window.location.reload();
