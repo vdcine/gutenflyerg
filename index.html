@@ -6,15 +6,9 @@
         <link rel="stylesheet" href="styles.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <meta property="og:title" content="Gutenflyerg" />
-        <meta
-            property="og:description"
-            content="Crear flyers personalizados para las Veladas de Cine."
-        />
+        <meta property="og:description" content="Crear flyers personalizados para las Veladas de Cine." />
         <meta property="og:type" content="website" />
-        <meta
-            property="og:url"
-            content="https://vdcine.github.io/gutenflyerg/"
-        />
+        <meta property="og:url" content="https://vdcine.github.io/gutenflyerg/" />
         <meta property="og:locale" content="es_ES" />
     </head>
 
@@ -30,12 +24,7 @@
                 <div class="search-flex">
                     <div class="input-group title-group">
                         <label for="movieSearch">Título de la película</label>
-                        <input
-                            type="text"
-                            id="movieSearch"
-                            placeholder="Ej: Terminator"
-                            required
-                        />
+                        <input type="text" id="movieSearch" placeholder="Ej: Terminator" required />
                     </div>
 
                     <div class="input-group lang-group">
@@ -43,21 +32,10 @@
                             <label for="movieLanguage">Idioma</label>
                             <span class="hint-text">(opcional)</span>
                         </div>
-                        <input
-                            type="text"
-                            id="movieLanguage"
-                            placeholder="Ej: es"
-                        />
+                        <input type="text" id="movieLanguage" placeholder="Ej: es" />
                     </div>
 
-                    <button
-                        id="searchButton"
-                        type="submit"
-                        class="btn-buscar"
-                        title="Buscar película"
-                    >
-                        &#8629;
-                    </button>
+                    <button id="searchButton" type="submit" class="btn-buscar" title="Buscar película">&#8629;</button>
                 </div>
             </form>
         </section>
@@ -88,25 +66,14 @@
                         <h2 id="flyerCiclo">Ciclo</h2>
 
                         <div id="bubble" class="dialogo-comic">
-                            <img
-                                id="bubble-bg"
-                                src="images/bubble.svg"
-                                alt="Fondo del globo"
-                            />
-                            <span id="comic-text" class="comic-text"
-                                >¡Debate luego!</span
-                            >
+                            <img id="bubble-bg" src="images/bubble.svg" alt="Fondo del globo" />
+                            <span id="comic-text" class="comic-text">¡Debate luego!</span>
                         </div>
                     </div>
                 </div>
 
                 <div id="poster-container" class="v-box">
-                    <img
-                        id="poster"
-                        src=""
-                        alt="Poster"
-                        crossorigin="anonymous"
-                    />
+                    <img id="poster" src="" alt="Poster" crossorigin="anonymous" />
                 </div>
 
                 <div id="flyer-row" class="v-box">
@@ -125,11 +92,7 @@
                     </div>
                     <div class="flyer-biblioteca-group">
                         <div>
-                            <img
-                                id="logo-bm"
-                                src="./images/LogoBM.svg"
-                                alt="Biblioteca Menéndez"
-                            />
+                            <img id="logo-bm" src="./images/LogoBM.svg" alt="Biblioteca Menéndez" />
                         </div>
                         <div id="biblioteca-text" class="biblioteca-text">
                             Biblioteca<br />Menéndez
@@ -139,10 +102,7 @@
 
                 <div id="event-data" class="v-box">
                     <div id="bandahorizontal"></div>
-                    <span id="flyerOrg">
-                        Organiza Matías Corona con apoyo de la Comisión
-                        Directiva de la Biblioteca Menéndez.
-                    </span>
+                    <span id="flyerOrg">Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.</span>
                 </div>
             </div>
             <!-- flyer -->
@@ -168,37 +128,23 @@
 
                     <div class="input-group">
                         <label for="titleInput">Título de la Película</label>
-                        <textarea
-                            id="titleInput"
-                            type="text"
-                            placeholder=""
-                        ></textarea>
+                        <textarea id="titleInput" type="text" placeholder=""></textarea>
                     </div>
 
                     <div class="input-group">
                         <label for="edadSugeridaSelect">Edad sugerida</label>
                         <select id="edadSugeridaSelect">
                             <option value="">Sin especificar / Ocultar</option>
-                            <option value="ATP">
-                                Apta para todo público (ATP)
-                            </option>
-                            <option value="+13">
-                                Mayores de 13 años (+13)
-                            </option>
-                            <option value="+16">
-                                Mayores de 16 años (+16)
-                            </option>
-                            <option value="+18">
-                                Mayores de 18 años (+18)
-                            </option>
+                            <option value="ATP">Apta para todo público (ATP)</option>
+                            <option value="+13">Mayores de 13 años (+13)</option>
+                            <option value="+16">Mayores de 16 años (+16)</option>
+                            <option value="+18">Mayores de 18 años (+18)</option>
                         </select>
                     </div>
 
                     <div class="input-group">
                         <label>Organización</label>
-                        <textarea id="orgInput" rows="3">
-Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.</textarea
-                        >
+                        <textarea id="orgInput" rows="3">Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Menéndez.</textarea>
                     </div>
 
                     <div class="input-row">
@@ -214,49 +160,25 @@ Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Men
                     <div class="tamanos-grid">
                         <label>Tamaño fecha</label>
                         <div class="input-with-unit">
-                            <input
-                                id="flyerDateFontSizeInput"
-                                type="number"
-                                min="10"
-                                max="100"
-                                value="40"
-                            />
+                            <input id="flyerDateFontSizeInput" type="number" min="10" max="100" value="40" />
                             <span>px</span>
                         </div>
 
                         <label>Tamaño hora</label>
                         <div class="input-with-unit">
-                            <input
-                                id="flyerHourFontSizeInput"
-                                type="number"
-                                min="10"
-                                max="100"
-                                value="45"
-                            />
+                            <input id="flyerHourFontSizeInput" type="number" min="10" max="100" value="45" />
                             <span>px</span>
                         </div>
 
                         <label>Tamaño título</label>
                         <div class="input-with-unit">
-                            <input
-                                id="flyerTitleFontSizeInput"
-                                type="number"
-                                min="10"
-                                max="100"
-                                value="42"
-                            />
+                            <input id="flyerTitleFontSizeInput" type="number" min="10" max="100" value="42" />
                             <span>px</span>
                         </div>
 
                         <label>Ancho banda</label>
                         <div class="input-with-unit">
-                            <input
-                                id="rectWidthInput"
-                                type="number"
-                                min="10"
-                                max="1000"
-                                value="430"
-                            />
+                            <input id="rectWidthInput" type="number" min="10" max="1000" value="430" />
                             <span>px</span>
                         </div>
                     </div>
@@ -271,36 +193,16 @@ Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Men
                             <a id="backdrops" href="#">ver todos</a>
                         </div>
                         <div class="carousel-input">
-                            <input
-                                id="backdrop-direct-input"
-                                type="text"
-                                placeholder="Pegar URL de backdrop"
-                            />
-                            <button
-                                id="load-backdrop-direct"
-                                class="btn-icon"
-                                title="Cargar"
-                            >
-                                &#8629;
-                            </button>
-                            <button
-                                id="remove-backdrop-bg"
-                                class="btn-icon btn-danger"
-                                title="Quitar fondo"
-                            >
-                                &#10005;
-                            </button>
+                            <input id="backdrop-direct-input" type="text" placeholder="Pegar URL de backdrop" />
+                            <button id="load-backdrop-direct" class="btn-icon" title="Cargar">&#8629;</button>
+                            <button id="remove-backdrop-bg" class="btn-icon btn-danger" title="Quitar fondo">&#10005;</button>
                         </div>
                         <div class="carousel-nav">
-                            <button id="backdrop-prev" class="btn-icon">
-                                &#8592;
-                            </button>
+                            <button id="backdrop-prev" class="btn-icon">&#8592;</button>
                             <div id="backdrop-counter" class="carousel-counter">
                                 0 de 0
                             </div>
-                            <button id="backdrop-next" class="btn-icon">
-                                &#8594;
-                            </button>
+                            <button id="backdrop-next" class="btn-icon">&#8594;</button>
                         </div>
                     </div>
 
@@ -312,29 +214,15 @@ Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Men
                             <a id="posters" href="#">ver todos</a>
                         </div>
                         <div class="carousel-input">
-                            <input
-                                id="poster-direct-input"
-                                type="text"
-                                placeholder="Pegar URL de poster"
-                            />
-                            <button
-                                id="load-poster-direct"
-                                class="btn-icon"
-                                title="Cargar"
-                            >
-                                &#8629;
-                            </button>
+                            <input id="poster-direct-input" type="text" placeholder="Pegar URL de poster" />
+                            <button id="load-poster-direct" class="btn-icon" title="Cargar">&#8629;</button>
                         </div>
                         <div class="carousel-nav">
-                            <button id="poster-prev" class="btn-icon">
-                                &#8592;
-                            </button>
+                            <button id="poster-prev" class="btn-icon">&#8592;</button>
                             <div id="poster-counter" class="carousel-counter">
                                 0 de 0
                             </div>
-                            <button id="poster-next" class="btn-icon">
-                                &#8594;
-                            </button>
+                            <button id="poster-next" class="btn-icon">&#8594;</button>
                         </div>
                     </div>
                 </div>
@@ -362,19 +250,11 @@ Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Men
                         <div class="bordes-controles">
                             <div class="input-row">
                                 <label>Color:</label>
-                                <input
-                                    id="strokeColorInput"
-                                    type="color"
-                                    name="strokeColor"
-                                    value="#000000"
-                                />
+                                <input id="strokeColorInput" type="color" name="strokeColor" value="#000000" />
                             </div>
                             <button id="applyStrokeBtn">Aplicar borde</button>
                             <button id="removeStrokeBtn">Quitar borde</button>
-                            <span class="hint-text"
-                                >Se puede seleccionar más de uno con CTRL +
-                                Click</span
-                            >
+                            <span class="hint-text">Se puede seleccionar más de uno con CTRL + Click</span>
                         </div>
                     </div>
                 </div>
@@ -384,43 +264,21 @@ Organiza Matías Corona con apoyo de la Comisión Directiva de la Biblioteca Men
                 <div class="panel-section" id="paintPaletteContainer">
                     <div class="pistola-layout">
                         <h3>Pistola de color:</h3>
-                        <input
-                            id="paintColorInput"
-                            type="color"
-                            value="#00ff00"
-                            title="Elige un color y luego haz click en los elementos del flyer"
-                        />
+                        <input id="paintColorInput" type="color" value="#00ff00" title="Elige un color y luego haz click en los elementos del flyer" />
                     </div>
                 </div>
 
                 <div id="import-export-buttons">
-                    <button
-                        id="exportDataBtn"
-                        title="Exportar toda la configuración actual como archivo JSON"
-                    >
-                        📤 Exportar Datos
-                    </button>
-                    <button
-                        id="importDataBtn"
-                        title="Importar configuración desde archivo JSON"
-                    >
-                        📥 Importar Datos
-                    </button>
-                    <input
-                        id="importFileInput"
-                        type="file"
-                        accept=".json"
-                        style="display: none"
-                    />
+                    <button id="exportDataBtn" title="Exportar toda la configuración actual como archivo JSON">📤 Exportar Datos</button>
+                    <button id="importDataBtn" title="Importar configuración desde archivo JSON">📥 Importar Datos</button>
+                    <input id="importFileInput" type="file" accept=".json" style="display: none" />
                 </div>
 
                 <hr />
                 <div class="panel-section">
                     <div class="button-row">
                         <button type="button" id="saveFlyer">Guardar Flyer</button>
-                        <button type="button" id="deleteLocalS">
-                            Borrar datos del Flyer
-                        </button>
+                        <button type="button" id="deleteLocalS">Borrar datos del Flyer</button>
                     </div>
                 </div>
             </div>
