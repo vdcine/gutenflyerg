@@ -180,14 +180,23 @@ function formatDateToSpanish(dateStr) {
 }
 
 // BOOTSTRAPPER
-// Función auxiliar para obtener el fontsize
 async function initializeControlValues() {
+    // Tenemos que asegurarnos que los elementos dinamicos del flyer existan antes de que el proxy intente actualizarlos
+    if (DesignState.DOM['flyer-blur-bg-story'] && !document.getElementById('flyer-blur-bg-story')) {
+        const flyer = document.getElementById('flyer');
+        if (flyer) {
+            const blurBg = document.createElement('div');
+            blurBg.id = 'flyer-blur-bg-story';
+            blurBg.classList.add('flyer-blur-bg');
+            flyer.prepend(blurBg);
+        }
+    }
+
     migrateElementColors();
     migrateStroke();
     await populateSearchResults();
     shiftPoster(0);
     shiftBackdrop(0);
-
 
     if (SearchState.selectedMovie) {
         const movie = SearchState.selectedMovie;
@@ -235,7 +244,7 @@ async function initializeControlValues() {
     };
 
     if (DesignState.fontSizes) {
-        const { flyerDate, flyerHour, flyerTitle, flyerTitleMarginTop, rectWidth } = DesignState.fontSizes;
+        const { flyerDate, flyerHour, flyerTitle, rectWidth } = DesignState.fontSizes;
         if (flyerDate) {
             const el = document.getElementById('flyerDateFontSizeInput');
             if (el) { el.value = flyerDate; el.dispatchEvent(new Event('input')); }
@@ -247,10 +256,6 @@ async function initializeControlValues() {
         if (flyerTitle) {
             const el = document.getElementById('flyerTitleFontSizeInput');
             if (el) { el.value = flyerTitle; el.dispatchEvent(new Event('input')); }
-        }
-        if (flyerTitleMarginTop) {
-            const el = document.getElementById('flyerTitleMarginTopInput');
-            if (el) { el.value = flyerTitleMarginTop; el.dispatchEvent(new Event('input')); }
         }
         if (rectWidth) {
             const el = document.getElementById('rectWidthInput');
