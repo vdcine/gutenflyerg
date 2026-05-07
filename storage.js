@@ -37,7 +37,6 @@ const defaultDesignState = {
         flyerDate: '34',
         flyerHour: '40',
         flyerTitle: '42',
-        flyerTitleMarginTop: '24',
         rectWidth: '460',
     },
     backgroundImage: '',
@@ -58,7 +57,6 @@ const defaultDesignState = {
         flyerDateFontSizeInput: { value: '34' },
         flyerHourFontSizeInput: { value: '40' },
         flyerTitleFontSizeInput: { value: '42' },
-        flyerTitleMarginTopInput: { value: '24' },
         rectWidthInput: { value: '460' },
         // figuras
         bandavertical: { style: { display: 'block', width: '460px' } },
@@ -76,14 +74,20 @@ function updateDOMFromState() {
     //Object.entries(SearchState.DOM).forEach(([eid, props]) =>  Object.entries(props).forEach(([k, v]) => document.getElementById(eid)[k] = v));
     Object.entries(SearchState.DOM).forEach(([eid, props]) => {
         const el = document.getElementById(eid);
-        if (!el) return;
+        if (!el) {
+            console.error(`[storage.js] Error: No se encontró el elemento con ID "${eid}" en el DOM (SearchState).`);
+            return;
+        }
         Object.entries(props).forEach(([k, v]) => el[k] = v);
     });
 
     Object.entries(DesignState.DOM).forEach(([eid, props]) => {
       // document.getElementByID(eid)[k] = v // mal cuando el valor es un dict , porque pisa todo el previo y no lo actualiza
         const el = document.getElementById(eid);
-        if (!el) return;// TODO: agregarle el else para que tire el error en caso de que haya
+        if (!el) {
+            console.error(`[storage.js] Error: No se encontró el elemento con ID "${eid}" en el DOM (DesignState).`);
+            return;
+        }
         Object.entries(props).forEach(([prop, v]) => {
             if (typeof el[prop] === 'object') { // ¿testear el typo del valor actual o del valor que quiero aplicar?
             // if (typeof v === 'object') { // ¿testear el typo del valor actual o del valor que quiero aplicar?
