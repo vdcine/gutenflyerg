@@ -75,8 +75,7 @@ function updateDOMFromState() {
     Object.entries(SearchState.DOM).forEach(([eid, props]) => {
         const el = document.getElementById(eid);
         if (!el) {
-            console.error(`[storage.js] Error: No se encontró el elemento con ID "${eid}" en el DOM (SearchState).`);
-            return;
+            throw new Error(`[storage.js] No se encontró el elemento con ID "${eid}" en el DOM (SearchState).`);
         }
         Object.entries(props).forEach(([k, v]) => el[k] = v);
     });
@@ -85,8 +84,7 @@ function updateDOMFromState() {
       // document.getElementByID(eid)[k] = v // mal cuando el valor es un dict , porque pisa todo el previo y no lo actualiza
         const el = document.getElementById(eid);
         if (!el) {
-            console.error(`[storage.js] Error: No se encontró el elemento con ID "${eid}" en el DOM (DesignState).`);
-            return;
+            throw new Error(`[storage.js] No se encontró el elemento con ID "${eid}" en el DOM (DesignState).`);
         }
         Object.entries(props).forEach(([prop, v]) => {
             if (typeof el[prop] === 'object') { // ¿testear el typo del valor actual o del valor que quiero aplicar?
