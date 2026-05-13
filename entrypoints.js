@@ -243,12 +243,6 @@ document.getElementById('posters').addEventListener('click', (e) => {
 
 document.getElementById('deleteLocalS').addEventListener('click', () => {
     if (confirm('¿Estás seguro de que deseas borrar todos los datos guardados y cargados del Flyer?')) {
-        Object.keys(defaultDesignState).forEach(key => {
-            DesignState[key] = defaultDesignState[key];
-        });
-        Object.keys(defaultSearchState).forEach(key => {
-            SearchState[key] = defaultSearchState[key];
-        });
         clearAllStorageAndReload();
     }
 });
