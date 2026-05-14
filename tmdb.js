@@ -249,7 +249,9 @@ function restoreBackdropDisplay() {
         ? filePath
         : `https://image.tmdb.org/t/p/w1280${filePath}`;
 
-    SearchState.DOM['backdrop-carousel-img'] = { src: url };
+    if (document.getElementById('backdrop-carousel-img')) {
+        SearchState.DOM['backdrop-carousel-img'] = { src: url };
+    }
     SearchState.DOM['backdrop-counter'] = {
         textContent: `Backdrop ${index + 1} de ${SearchState.backdrops.length}`
     };
@@ -266,7 +268,9 @@ function restorePosterDisplay() {
         ? filePath
         : `https://image.tmdb.org/t/p/w780${filePath}`;
 
-    SearchState.DOM['poster-carousel-img'] = { src: url };
+    if (document.getElementById('poster-carousel-img')) {
+        SearchState.DOM['poster-carousel-img'] = { src: url };
+    }
     SearchState.DOM['poster-counter'] = {
         textContent: `Poster ${index + 1} de ${SearchState.posters.length}`
     };
