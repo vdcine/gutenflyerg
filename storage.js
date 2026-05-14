@@ -29,7 +29,6 @@ const defaultSearchState = {
     currentPoster: 0,
 };
 
-// TODO: ver redundancias
 const defaultDesignState = {
     version: '1',
     currentPaintColor: '#00ff00',
@@ -70,6 +69,7 @@ const defaultDesignState = {
     },
 };
 
+// Esta funcion es una solucion provisoria no tan eficiente, requiere mejora a futuro
 function updateDOMFromState() {
     //Object.entries(SearchState.DOM).forEach(([eid, props]) =>  Object.entries(props).forEach(([k, v]) => document.getElementById(eid)[k] = v));
     Object.entries(SearchState.DOM).forEach(([eid, props]) => {
@@ -103,18 +103,25 @@ function updateDOMFromState() {
 //const initialSearchData = fromStorage('SearchState') || {};
 //initialSearchData[INIT_FLAG] = false;
 
-const SearchState = new Proxy(
-    { ...defaultSearchState, ...fromStorage('SearchState') },
-    {
-        set(target, prop, value) {
-            target[prop] = value;
-            //if (target[INIT_FLAG] && prop !== INIT_FLAG) {
-            toStorage('SearchState', target);
-            updateDOMFromState();
-            return true;
-        },
+const _searchStateTarget = { ...defaultSearchState, ...fromStorage('SearchState') };
+
+const SearchState = new Proxy(_searchStateTarget, {
+    set(target, prop, value) {
+        target[prop] = value;
+        toStorage('SearchState', target);
+        updateDOMFromState();
+        return true;
+    },
+});
+
+function setSearchState(data) {
+    for (const key in _searchStateTarget) {
+        delete _searchStateTarget[key];
     }
-);
+    Object.assign(_searchStateTarget, data);
+    toStorage('SearchState', _searchStateTarget);
+    updateDOMFromState();
+}
 
 //const initialDesignData = { ...defaultDesignState, ...fromStorage('DesignState') };
 //initialDesignData[INIT_FLAG] = false;
@@ -138,13 +145,21 @@ function createDeepProxy(obj, onChange) {
     return new Proxy(obj, handler);
 }
 
-const DesignState = createDeepProxy(
-    { ...defaultDesignState, ...fromStorage('DesignState') },
-    () => {
-        toStorage('DesignState', DesignState);
-        updateDOMFromState();
+const _designStateTarget = { ...defaultDesignState, ...fromStorage('DesignState') };
+
+const DesignState = createDeepProxy(_designStateTarget, () => {
+    toStorage('DesignState', _designStateTarget);
+    updateDOMFromState();
+});
+
+function setDesignState(data) {
+    for (const key in _designStateTarget) {
+        delete _designStateTarget[key];
     }
-);
+    Object.assign(_designStateTarget, data);
+    toStorage('DesignState', _designStateTarget);
+    updateDOMFromState();
+}
 
 //SearchState[INIT_FLAG] = true;
 //DesignState[INIT_FLAG] = true;
