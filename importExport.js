@@ -35,19 +35,25 @@ function importUserData(file) {
         const userData = JSON.parse(e.target.result);
         console.log('Importando datos, versión:', userData.version || 'desconocida');
 
-        if (userData.searchState) {
-            Object.keys(userData.searchState).forEach(key => {
-                SearchState[key] = userData.searchState[key];
-            });
+        if (!userData.searchState && !userData.designState) {
+            alert('El archivo JSON no es compatible con esta aplicación.');
+            return;
         }
 
-        if (userData.designState) {
-            Object.keys(userData.designState).forEach(key => {
-                DesignState[key] = userData.designState[key];
-            });
+        const importedDOM = userData.designState.DOM;
+        if (importedDOM && importedDOM['flyer-blur-bg-story'] && !document.getElementById('flyer-blur-bg-story')) {
+            const flyer = document.getElementById('flyer');
+            if (flyer) {
+                const blurBg = document.createElement('div');
+                blurBg.id = 'flyer-blur-bg-story';
+                blurBg.classList.add('flyer-blur-bg');
+                flyer.prepend(blurBg);
+            }
         }
 
-        updateDOMFromState();
+        setSearchState(userData.searchState);
+        setDesignState(userData.designState);
+
         restoreBackdropDisplay();
         restorePosterDisplay();
         shiftBackdrop(0);
