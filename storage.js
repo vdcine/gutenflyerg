@@ -1,5 +1,3 @@
-// const INIT_FLAG = Symbol('isInitialized');
-
 function getNextWednesday() {
     const d = new Date();
     d.setDate(d.getDate() + ((3 - d.getDay() + 7) % 7 || 7));
@@ -87,8 +85,7 @@ function updateDOMFromState() {
             throw new Error(`[storage.js] No se encontró el elemento con ID "${eid}" en el DOM (DesignState).`);
         }
         Object.entries(props).forEach(([prop, v]) => {
-            if (typeof el[prop] === 'object') { // ¿testear el typo del valor actual o del valor que quiero aplicar?
-            // if (typeof v === 'object') { // ¿testear el typo del valor actual o del valor que quiero aplicar?
+            if (typeof el[prop] === 'object') {
                 Object.assign(el[prop], v);
             } else {
                 el[prop] = v;
@@ -99,9 +96,6 @@ function updateDOMFromState() {
         }
     });
 }
-
-//const initialSearchData = fromStorage('SearchState') || {};
-//initialSearchData[INIT_FLAG] = false;
 
 const _searchStateTarget = { ...defaultSearchState, ...fromStorage('SearchState') };
 
@@ -122,9 +116,6 @@ function setSearchState(data) {
     toStorage('SearchState', _searchStateTarget);
     updateDOMFromState();
 }
-
-//const initialDesignData = { ...defaultDesignState, ...fromStorage('DesignState') };
-//initialDesignData[INIT_FLAG] = false;
 
 // posible proxy recursivo que detecta cambios en objetos anidados
 function createDeepProxy(obj, onChange) {
@@ -160,6 +151,3 @@ function setDesignState(data) {
     toStorage('DesignState', _designStateTarget);
     updateDOMFromState();
 }
-
-//SearchState[INIT_FLAG] = true;
-//DesignState[INIT_FLAG] = true;
