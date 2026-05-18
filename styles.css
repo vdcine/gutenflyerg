@@ -266,6 +266,7 @@ hr.main-divider {
         gap: 15px;
     }
 
+
     #flyer {
         width: 1080px;
         height: 1440px;
@@ -295,6 +296,7 @@ hr.main-divider {
             cursor: crosshair !important;
             transition: outline 0.1s ease-in-out;
         }
+
 
         #bandavertical {
             position: absolute;
@@ -421,7 +423,7 @@ hr.main-divider {
                     pointer-events: auto;
                 }
 
-                #ciclo {
+                #flyerCiclo {
                     position: relative;
                     margin: 0;
                     font-size: 30px;
@@ -527,8 +529,7 @@ hr.main-divider {
                 #title,
                 #year,
                 #director,
-                #duracion,
-                #edad-sugerida {
+                #duracion {
                     font-family: "Gilroy", sans-serif;
                     font-weight: 800;
                     position: relative;
@@ -556,12 +557,13 @@ hr.main-divider {
                     font-size: 22px;
                 }
 
-                #edad-sugerida {
+                #edadSugerida {
                     font-size: 20px;
                     color: white;
                     background-color: rgba(199, 194, 194, 0.9);
                     padding: 3px 8px;
                     border-radius: 4px;
+                    pointer-events: auto;
                 }
             }
 
@@ -618,7 +620,7 @@ hr.main-divider {
                 }
             }
 
-            #org {
+            #flyerOrg {
                 width: 100%;
                 display: block;
                 text-align: center;
@@ -993,4 +995,28 @@ hr.main-divider {
             }
         }
     }
+}
+
+.button-row {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.button-row #saveFlyer {
+    flex: 0 0 70%;
+    width: 70%;
+}
+
+.button-row #deleteLocalS {
+    flex: 1 1 auto;
+    width: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#deleteLocalS:hover {
+    background-color: red !important;
 }
