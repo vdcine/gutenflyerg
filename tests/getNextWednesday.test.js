@@ -1,5 +1,5 @@
 import {test,expect} from "bun:test";
-import {getNextWednesday} from "./getNextWednesday.js";
+import {getNextWednesday} from "../scripts/storage.js";
 test ("que devuelva algun valor", () =>{
 
 	expect(getNextWednesday()).toBeDefined();});
